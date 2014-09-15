@@ -46,3 +46,8 @@ create table treenikaynti(
 
 http://repository.jboss.org/nexus/content/groups/public-jboss/
 http://anonsvn.icefaces.org/repo/maven2/releases/
+
+=== TOOLS ====
+WildFly 8.1.0.Final:	http://download.jboss.org/wildfly/8.1.0.Final/wildfly-8.1.0.Final.zip
+Eclipse:				http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/R/eclipse-jee-luna-R-win32-x86_64.zip
+Maven:					http://maven.apache.org/download.cgi?Preferred=ftp://mirror.reverse.net/pub/apache/

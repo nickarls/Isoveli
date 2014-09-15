@@ -1,3 +1,5 @@
+=== LUONTISCRIPTIT ===
+
 drop table treenikaynti;
 drop table treeni;
 drop table harrastaja;
@@ -39,3 +41,8 @@ create table treenikaynti(
 	constraint harrastaja_viittaus foreign key(harrastaja) references harrastaja(id),
 	constraint treeni_viittaus foreign key(treeni) references treeni(id),
 )
+
+=== MAVEN REPOS ===
+
+http://repository.jboss.org/nexus/content/groups/public-jboss/
+http://anonsvn.icefaces.org/repo/maven2/releases/

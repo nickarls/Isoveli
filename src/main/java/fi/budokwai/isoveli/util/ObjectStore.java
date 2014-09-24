@@ -2,9 +2,12 @@ package fi.budokwai.isoveli.util;
 
 import java.io.Serializable;
 
+import javax.enterprise.context.SessionScoped;
+
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+@SessionScoped
 public class ObjectStore implements Serializable
 {
    private static final long serialVersionUID = 1L;

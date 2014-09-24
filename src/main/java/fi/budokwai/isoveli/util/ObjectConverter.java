@@ -4,11 +4,13 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.inject.Inject;
 
 @FacesConverter("objectConverter")
 public class ObjectConverter implements Converter
 {
-   private ObjectStore objectStore = new ObjectStore();
+   @Inject
+   private ObjectStore objectStore;
 
    public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String string)
    {

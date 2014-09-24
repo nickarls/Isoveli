@@ -4,12 +4,12 @@
 	<h:commandButton action="#{vyökoeAdmin.lisääVyökoe(harrastaja)}" value="x" styleClass="ikoni" image="/kuvat/lisää_vyö.png"
 		immediate="true" />
 	<ace:dataTable value="#{harrastaja.vyökokeet}" var="_vyökoe" selectionMode="single" rows="10"
-		rowSelectListener="#{vyökoeAdmin.vyokoeValittu}">
+		rowSelectListener="#{vyökoeAdmin.vyökoeValittu}">
 		<ace:column>
 			<h:graphicImage value="/kuvat/vyöt/#{_vyökoe.vyöarvo.id}.png" />
 		</ace:column>
 		<ace:column headerText="Vyöarvo">
-			<h:outputText value="#{_vyokoe.vyöarvo.nimi}" />
+			<h:outputText value="#{_vyökoe.vyöarvo.nimi}" />
 		</ace:column>
 		<ace:column headerText="Päivä">
 			<h:outputText value="#{_vyökoe.päivä}">
@@ -35,7 +35,7 @@
 			<h:panelGrid>
 				<ace:message for="form:vyöarvo" />
     			<h:selectOneMenu value="#{vyökoe.vyöarvo}" id="vyöarvo">
-        			<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemLabel="#{_vyöarvo.nimi}"/>
+        			<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}"/>
         			<f:converter converterId="objectConverter" />
     			</h:selectOneMenu>				
 			</h:panelGrid>

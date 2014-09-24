@@ -1,5 +1,6 @@
 package fi.budokwai.isoveli.malli;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -54,8 +57,14 @@ public class Harrastaja
    @OrderBy("vyoarvo")
    private List<Vyökoe> vyökokeet;
 
+   @ManyToMany
+   @JoinTable(name = "kayttajarooli", joinColumns =
+   { @JoinColumn(name = "harrastaja", referencedColumnName = "id") }, inverseJoinColumns =
+   { @JoinColumn(name = "rooli", referencedColumnName = "id") })
+   private List<Rooli> roolit = new ArrayList<Rooli>();
+
    @Size(max = 10)
-   @Column(name="jasennumero")
+   @Column(name = "jasennumero")
    private String jäsennumero;
 
    @Size(max = 100)
@@ -213,5 +222,38 @@ public class Harrastaja
    public void setVyökokeet(List<Vyökoe> vyökokeet)
    {
       this.vyökokeet = vyökokeet;
+   }
+
+   public List<Rooli> getRoolit()
+   {
+      return roolit;
+   }
+
+   public void setRoolit(List<Rooli> roolit)
+   {
+      this.roolit = roolit;
+   }
+
+   private boolean onRoolissa(String roolinimi)
+   {
+      boolean tulos = false;
+      for (Rooli rooli : roolit)
+      {
+         if (roolinimi.equals(rooli.getNimi()))
+         {
+            return true;
+         }
+      }
+      return tulos;
+   }
+
+   public boolean isYlläpitäjä()
+   {
+      return onRoolissa("Ylläpitäjä");
+   }
+
+   public boolean isTreenienVetäjä()
+   {
+      return onRoolissa("Treenien vetjäjä");
    }
 }

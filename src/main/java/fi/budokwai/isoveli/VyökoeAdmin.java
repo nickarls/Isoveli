@@ -103,7 +103,7 @@ public class VyökoeAdmin
       return vyökoe != null && vyökoe.getId() > 0;
    }
 
-   public void vyokoeValittu(SelectEvent e)
+   public void vyökoeValittu(SelectEvent e)
    {
       vyökoe = (Vyökoe) e.getObject();
    }

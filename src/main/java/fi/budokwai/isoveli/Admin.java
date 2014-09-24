@@ -10,9 +10,12 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.icefaces.ace.event.RowEditEvent;
+import org.icefaces.ace.model.table.RowStateMap;
 import org.icefaces.application.PushRenderer;
 
-import fi.budokwai.isoveli.malli.Treenikaynti;
+import fi.budokwai.isoveli.malli.Harrastaja;
+import fi.budokwai.isoveli.malli.Treenikäynti;
 
 @Stateful
 @Named
@@ -22,6 +25,8 @@ public class Admin
    @PersistenceContext
    private EntityManager entityManager;
 
+
+
    @PostConstruct
    public void init()
    {
@@ -29,15 +34,22 @@ public class Admin
    }
 
    @Produces
-   @Named("treenikaynnit")
-   public List<Treenikaynti> getTreenikaynnit()
+   @Named
+   public List<Treenikäynti> getTreenikaynnit()
    {
-      return entityManager.createNamedQuery("treenikaynnit", Treenikaynti.class).getResultList();
+      return entityManager.createNamedQuery("treenikaynnit", Treenikäynti.class).getResultList();
    }
 
-   public void poistaTreenikaynti(Treenikaynti treenikaynti)
+   public void tallennaHarrastaja(RowEditEvent e)
+   {
+      Harrastaja h = (Harrastaja) e.getObject();
+      entityManager.merge(h);
+   }
+
+   public void poistaTreenikaynti(Treenikäynti treenikaynti)
    {
       treenikaynti = entityManager.merge(treenikaynti);
       entityManager.remove(treenikaynti);
    }
+
 }

@@ -2,6 +2,7 @@ package fi.budokwai.isoveli.malli;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
@@ -9,19 +10,21 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@NamedQuery(name = "treenit", query = "select t from Treeni t where t.paiva=:paiva and t.paattyy >= :kello")
+@NamedQuery(name = "treenit", query = "select t from Treeni t where t.p‰iv‰=:p‰iv‰ and t.p‰‰ttyy >= :kello and not exists(select tk from Treenik‰ynti tk where tk.harrastaja=:harrastaja and tk.treeni = t.id and tk.p‰iv‰ = :t‰n‰‰n)")
 public class Treeni
 {
    @Id
    private int id;
 
-   private Paiva paiva;
+   @Column(name="paiva")
+   private P‰iv‰ p‰iv‰;
 
    @Temporal(TemporalType.TIME)
    private Date alkaa;
 
    @Temporal(TemporalType.TIME)
-   private Date paattyy;
+   @Column(name="paattyy")
+   private Date p‰‰ttyy;
 
    private String kuvaus;
 
@@ -45,16 +48,6 @@ public class Treeni
       this.alkaa = alkaa;
    }
 
-   public Date getPaattyy()
-   {
-      return paattyy;
-   }
-
-   public void setPaattyy(Date paattyy)
-   {
-      this.paattyy = paattyy;
-   }
-
    public String getKuvaus()
    {
       return kuvaus;
@@ -63,16 +56,6 @@ public class Treeni
    public void setKuvaus(String kuvaus)
    {
       this.kuvaus = kuvaus;
-   }
-
-   public Paiva getPaiva()
-   {
-      return paiva;
-   }
-
-   public void setPaiva(Paiva paiva)
-   {
-      this.paiva = paiva;
    }
 
    @Override
@@ -90,5 +73,25 @@ public class Treeni
    public int hashCode()
    {
       return Integer.valueOf(id).hashCode();
+   }
+
+   public P‰iv‰ getP‰iv‰()
+   {
+      return p‰iv‰;
+   }
+
+   public void setP‰iv‰(P‰iv‰ p‰iv‰)
+   {
+      this.p‰iv‰ = p‰iv‰;
+   }
+
+   public Date getP‰‰ttyy()
+   {
+      return p‰‰ttyy;
+   }
+
+   public void setP‰‰ttyy(Date p‰‰ttyy)
+   {
+      this.p‰‰ttyy = p‰‰ttyy;
    }
 }

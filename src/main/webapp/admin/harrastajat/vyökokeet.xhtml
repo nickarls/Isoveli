@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	<h:commandButton action="#{vyökoeAdmin.lisääVyökoe(harrastaja)}" value="x" styleClass="ikoni" image="/kuvat/lisää_vyö.png"
+		immediate="true" />
+	<ace:dataTable value="#{harrastaja.vyökokeet}" var="_vyökoe" selectionMode="single" rows="10"
+		rowSelectListener="#{vyökoeAdmin.vyokoeValittu}">
+		<ace:column>
+			<h:graphicImage value="/kuvat/vyöt/#{_vyökoe.vyöarvo.id}.png" />
+		</ace:column>
+		<ace:column headerText="Vyöarvo">
+			<h:outputText value="#{_vyokoe.vyöarvo.nimi}" />
+		</ace:column>
+		<ace:column headerText="Päivä">
+			<h:outputText value="#{_vyökoe.päivä}">
+				<f:convertDateTime pattern="dd.MM.yyyy" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Päiviä välissä">
+			<h:outputText value="#{_vyöokoe.aikaaValissa}" />
+		</ace:column>
+		<ace:column headerText="Seuraavaan kokeeseen">
+			<h:panelGrid columns="2" rendered="#{_vyökoe.tuoreinVyökoe}">
+				<h:outputText value="Päiviä" />
+				<h:outputText value="#{vyökoeAdmin.laskeJäljelläVyökokeeseen(_vyökoe.vyöarvo).päiviä}" />
+				<h:outputText value="Treenikertoja" />
+				<h:outputText value="#{vyökoeAdmin.laskeJäljelläVyökokeeseen(_vyökoe.vyöarvo).treenikertoja}" />
+			</h:panelGrid>
+		</ace:column>
+	</ace:dataTable>
+	<p/>
+	<ace:panel header="Vyökoetiedot" rendered="#{vyökoe != null}" style="width:300px">
+		<h:panelGrid>
+			<h:outputText value="Vyöarvo" />
+			<h:panelGrid>
+				<ace:message for="form:vyöarvo" />
+    			<h:selectOneMenu value="#{vyökoe.vyöarvo}" id="vyöarvo">
+        			<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemLabel="#{_vyöarvo.nimi}"/>
+        			<f:converter converterId="objectConverter" />
+    			</h:selectOneMenu>				
+			</h:panelGrid>
+			<h:outputText value="Päivä" />
+			<h:panelGrid>
+				<ace:message for="form:vyökoepäivä" />
+				<ace:dateTimeEntry value="#{vyökoe.päivä}" renderAsPopup="true" pattern="dd.MM.yyyy" id="vyökoepäivä" />
+			</h:panelGrid>
+		</h:panelGrid>
+	</ace:panel>
+	<h:commandButton rendered="#{vyökoeAdmin.vyökoe != null}" value="x" styleClass="ikoni"
+		action="#{vyökoeAdmin.tallennaVyökoe(harrastaja)}" image="/kuvat/tallenna.jpg" />
+	<h:commandButton rendered="#{vyökoeAdmin.vyökoe != null}" value="x" styleClass="ikoni"
+		action="#{vyökoeAdmin.peruutaMuutos}" image="/kuvat/peruuta_muutos.png" />
+	<h:commandButton rendered="#{vyökoeAdmin.vyökoePoistettavissa}" value="x" styleClass="ikoni"
+		action="#{vyökoeAdmin.poistaVyökoe()}" image="/kuvat/poista_vyö.png" immediate="true" />
+</ui:composition>

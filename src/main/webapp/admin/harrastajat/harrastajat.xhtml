@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	<h:commandButton action="#{harrastajaAdmin.lisääHarrastaja}" value="x" styleClass="ikoni"
+		image="/kuvat/lisää_käyttäjä.png" immediate="true" />
+	<ace:dataTable value="#{harrastajat}" var="_harrastaja" selectionMode="single"
+		stateMap="#{harrastajaAdmin.rowStateMap}" rows="10" rowSelectListener="#{harrastajaAdmin.harrastajaValittu}">
+		<ace:column headerText="ID">
+			<h:outputText value="#{_harrastaja.id}" />
+		</ace:column>
+		<ace:column headerText="Etunimi" sortBy="#{_harrastaja.henkilö.etunimi}" filterBy="#{_harrastaja.henkilö.etunimi}"
+			filterMatchMode="contains">
+			<h:outputText value="#{_harrastaja.henkilö.etunimi}" />
+		</ace:column>
+		<ace:column headerText="Sukunimi" sortBy="#{_harrastaja.henkilö.sukunimi}" filterBy="#{_harrastaja.henkilöo.sukunimi}"
+			filterMatchMode="contains">
+			<h:outputText value="#{_harrastaja.henkilö.sukunimi}" />
+		</ace:column>
+	</ace:dataTable>
+	<p />
+	<ace:tabSet rendered="#{harrastaja != null}">
+		<ace:tabPane label="Perustietot">
+			<ui:include src="perustiedot.xhtml" />
+		</ace:tabPane>
+		<ace:tabPane label="Maksutiedot">
+		</ace:tabPane>
+		<ace:tabPane label="Vyökokeet">
+			<ui:include src="vyökokeet.xhtml" />
+		</ace:tabPane>
+		<ace:tabPane label="Kisatulokset">
+		</ace:tabPane>
+		<ace:tabPane label="Roolit">
+		</ace:tabPane>
+	</ace:tabSet>
+</ui:composition>

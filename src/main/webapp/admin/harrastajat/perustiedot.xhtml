@@ -1,0 +1,86 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	<h:panelGrid columns="3" columnClasses="tabletop, tabletop, tabletop">
+		<ace:panel header="Henkilötiedot" styleClass="panel">
+			<h:panelGrid columns="2">
+				<h:outputText value="Etunimi" />
+				<h:panelGrid>
+					<ace:message for="form:etunimi" />
+					<h:inputText value="#{harrastaja.henkilö.etunimi}" id="etunimi" />
+				</h:panelGrid>
+				<h:outputText value="Sukunimi" />
+				<h:panelGrid>
+					<ace:message for="form:sukunimi" />
+					<h:inputText value="#{harrastaja.henkilö.sukunimi}" id="sukunimi" />
+				</h:panelGrid>
+				<h:outputText value="Sukupuoli" />
+				<h:panelGrid>
+					<ace:message for="form:sukupuoli" />
+					<h:selectOneRadio value="#{harrastaja.sukupuoli}" id="sukupuoli">
+						<f:selectItem itemLabel="Mies" itemValue="M" />
+						<f:selectItem itemLabel="Nainen" itemValue="N" />
+					</h:selectOneRadio>
+				</h:panelGrid>
+				<h:outputText value="Syntymäaika" />
+				<h:panelGrid>
+					<ace:message for="form:syntymaaika" />
+					<ace:dateTimeEntry value="#{harrastaja.syntynyt}" renderAsPopup="true" pattern="dd.MM.yyyy"
+						id="syntymaaika" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</ace:panel>
+		<ace:panel header="Osoitetiedot" styleClass="panel">
+			<h:panelGrid columns="2">
+				<h:outputText value="Osoite" />
+				<h:panelGrid>
+					<ace:message for="form:osoite" />
+					<h:inputText value="#{harrastaja.henkilö.osoite.osoite}" id="osoite" />
+				</h:panelGrid>
+				<h:outputText value="Postinumero" />
+				<h:panelGrid>
+					<ace:message for="form:postinumero" />
+					<h:inputText value="#{harrastaja.henkilö.osoite.postinumero}" id="postinumero" />
+				</h:panelGrid>
+				<h:outputText value="Kaupunki" />
+				<h:panelGrid>
+					<ace:message for="form:kaupunki" />
+					<h:inputText value="#{harrastaja.henkilö.osoite.kaupunki}" id="kaupunki" />
+				</h:panelGrid>
+				<h:outputText value="Sähköposti-osoite" />
+				<h:panelGrid>
+					<ace:message for="form:sähkoposti" />
+					<h:inputText value="#{harrastaja.henkilö.sähköposti}" id="sähköposti" />
+				</h:panelGrid>
+				<h:outputText value="Sähköpostilistalla" />
+				<h:selectBooleanCheckbox />
+			</h:panelGrid>
+		</ace:panel>
+		<ace:panel header="Korttitiedot" styleClass="panel">
+			<h:panelGrid columns="2" style="margin-left: 20px;">
+				<h:outputText value="Jäsennumero" />
+				<h:panelGrid>
+					<ace:message for="form:jasennumero" />
+					<h:inputText value="#{harrastaja.jäsennumero}" id="jasennumero" />
+				</h:panelGrid>
+				<h:outputText value="Korttinumero" />
+				<h:panelGrid>
+					<ace:message for="form:korttinumero" />
+					<h:inputText value="#{harrastaja.korttinumero}" />
+				</h:panelGrid>
+				<h:outputText value="Lisenssinumero" />
+				<h:panelGrid>
+					<ace:message for="form:lisenssinumero" />
+					<h:inputText value="#{harrastaja.lisenssinumero}" id="lisenssinumero" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</ace:panel>
+	</h:panelGrid>
+	<h:commandButton rendered="#{harrastaja != null}" value="x" styleClass="ikoni"
+		action="#{harrastajaAdmin.tallennaHarrastaja}" image="/kuvat/tallenna.jpg" />
+	<h:commandButton rendered="#{harrastajaAdmin.harrastaja != null}" value="x" styleClass="ikoni"
+		action="#{harrastajaAdmin.peruutaMuutos}" image="/kuvat/peruuta_muutos.png" />
+	<h:commandButton rendered="#{harrastajaAdmin.harrastajaPoistettavissa}" value="x" styleClass="ikoni"
+		action="#{harrastajaAdmin.poistaHarrastaja}" image="/kuvat/poista_käyttäjä.png" immediate="true" />
+
+</ui:composition>

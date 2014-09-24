@@ -8,28 +8,110 @@
 	xmlns:ace="http://www.icefaces.org/icefaces/components"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
+	<style>
+.kortti {
+	width: 500px;
+	height: 250px;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+	border-radius: 30px;
+	border: 2px solid #000000;
+	background-color: #f0f0f0;
+	padding: 20px;
+	-webkit-box-shadow: #787878 5px 5px 5px;
+	-moz-box-shadow: #787878 5px 5px 5px;
+	box-shadow: #787878 5px 5px 5px;
+}
+
+.logo {
+	height: 180px;
+}
+
+.syotto {
+	border: 2px solid black;
+	width: 300px;
+	height: 80px;
+	background: #e0e0e0;
+}
+
+.korttinumero {
+	font-size: 40px;
+	text-align: center;
+}
+
+.nimi {
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.treenit {
+	border-collapse: separate;
+	border-spacing: 0 1em;
+}
+
+.ylareuna {
+	vertical-align: top;
+}
+
+.ikoni {
+	margin-left: 30px;
+}
+</style>
 </h:head>
-<h:body >
+<h:body onload="document.getElementById('formi:korttinumero').focus();">
 	<f:view>
 		<h:form id="formi">
-			<h:inputText value="#{ilmoittautuminen.korttinumero}" required="true" requiredMessage="Arvo on pakollinen" />
-			<h:commandButton value="lue kortti"
-				action="#{ilmoittautuminen.lueKortti}" />
-			<h:messages />
-			<ace:dataTable rendered="#{ilmoittautuminen.harrastajaValittu}"
-				value="#{treenit}" var="_treeni" selectionMode="single"
-				stateMap="#{ilmoittautuminen.stateMap}"
-				rowSelectListener="#{ilmoittautuminen.treeniValittu}">
-				<ace:ajax event="select" render="@this formi:tallenna" execute="@this" />
-				<ace:column>
-					<h:outputText value="#{_treeni.kuvaus}" />
-				</ace:column>
-			</ace:dataTable>
-			<h:commandButton value="tallenna" id="tallenna"
-				disabled="#{!ilmoittautuminen.treeniValittu}"
-				action="#{ilmoittautuminen.tallenna}" />
-			<h:commandButton value="peruuta"
-				action="#{ilmoittautuminen.peruuta}" />
+			<h:panelGrid columns="3" columnClasses="ylareuna,ylareuna,ylareuna">
+				<h:panelGroup>
+					<div class="kortti">
+						<table width="500" height="250">
+							<tr>
+								<td><img src="logo.png" class="logo" /></td>
+								<td><h:inputText value="#{ilmoittautuminen.korttinumero}"
+										required="true" styleClass="syotto korttinumero"
+										requiredMessage="Arvo on pakollinen" id="korttinumero"
+										onkeydown="if (event.keyCode == 13) document.getElementById('formi:luekortti').click()" />
+									<h:commandButton action="#{ilmoittautuminen.lueKortti()}"
+										value="." style="display:none" id="luekortti" /> <br /> <h:outputText
+										value="#{harrastaja.nimi}" rendered="#{harrastaja != null}"
+										styleClass="nimi" /></td>
+							</tr>
+						</table>
+					</div>
+				</h:panelGroup>
+				<ace:dataTable rendered="#{ilmoittautuminen.harrastajaValittu}"
+					value="#{treenit}" var="_treeni" selectionMode="single"
+					stateMap="#{ilmoittautuminen.stateMap}"
+					style="margin-left:20px; font-size:25px;"
+					rowSelectListener="#{ilmoittautuminen.treeniValittu}">
+					<ace:ajax event="select" render="@this formi:napit"
+						execute="@this" />
+					<ace:column headerText="Alkaa">
+						<h:outputText value="#{_treeni.alkaa}">
+							<f:convertDateTime pattern="HH:mm" />
+						</h:outputText>
+					</ace:column>
+					<ace:column headerText="Päättyy">
+						<h:outputText value="#{_treeni.paattyy}">
+							<f:convertDateTime pattern="HH:mm" />
+						</h:outputText>
+					</ace:column>
+					<ace:column headerText="Treeni">
+						<h:outputText value="#{_treeni.kuvaus}">
+							<f:convertDateTime pattern="HH:mm" />
+						</h:outputText>
+					</ace:column>
+				</ace:dataTable>
+				<h:panelGrid id="napit">
+					<h:commandButton image="ok.jpg" value="tallenna" id="tallenna"
+						rendered="#{ilmoittautuminen.treeniValittu}" styleClass="ikoni"
+						action="#{ilmoittautuminen.tallenna}" />
+					<h:commandButton image="peruuta.jpg" value="peruuta"
+						styleClass="ikoni" immediate="true"
+						action="#{ilmoittautuminen.peruuta}"
+						rendered="#{ilmoittautuminen.harrastajaValittu || ilmoittautuminen.treeniValittu}" />
+				</h:panelGrid>
+			</h:panelGrid>
 		</h:form>
 	</f:view>
 </h:body>

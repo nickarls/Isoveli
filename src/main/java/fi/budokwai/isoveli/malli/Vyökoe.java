@@ -11,30 +11,32 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 @Entity
-@SequenceGenerator(name = "vyokoe_seq", sequenceName = "vyokoe_seq", allocationSize = 1, initialValue = 2)
 @Table(name = "vyokoe")
 public class Vyökoe
 {
    @Id
-   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vyokoe_seq")
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
    @ManyToOne(optional = false)
    @JoinColumn(name = "harrastaja", insertable = false, updatable = false)
+   @NotNull
    private Harrastaja harrastaja;
 
    @OneToOne(optional = false)
    @JoinColumn(name = "vyoarvo")
+   @NotNull
    private Vyöarvo vyöarvo;
 
    @Temporal(TemporalType.DATE)
    @Column(name = "paiva")
+   @NotNull
    private Date päivä;
 
    public int getId()

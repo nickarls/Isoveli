@@ -1,6 +1,5 @@
 package fi.budokwai.isoveli.malli;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -8,31 +7,28 @@ import java.util.List;
 import javax.enterprise.inject.Typed;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import fi.budokwai.isoveli.SukupuoliConverter;
 
 @Entity
 @NamedQueries(
 { @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.korttinumero=:kortti"),
       @NamedQuery(name = "harrastajat", query = "select h from Harrastaja h order by h.henkilö.etunimi") })
-@SequenceGenerator(name = "harrastaja_seq", sequenceName = "harrastaja_seq", allocationSize = 1, initialValue = 2)
 @Typed(
 {})
 public class Harrastaja
@@ -40,28 +36,34 @@ public class Harrastaja
    public static Harrastaja Tuntematon = new Harrastaja();
 
    @Id
-   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "harrastaja_seq")
+   @GeneratedValue
    private int id;
 
    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
    @JoinColumn(name = "henkilo")
+   @NotNull
    @Valid
    private Henkilö henkilö = new Henkilö();
 
    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
    @JoinColumn(name = "huoltaja")
-   @Valid
-   private Henkilö huoltaja;
+   private Henkilö huoltaja = new Henkilö();
 
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
    @OrderBy("vyoarvo")
    private List<Vyökoe> vyökokeet;
 
-   @ManyToMany
-   @JoinTable(name = "kayttajarooli", joinColumns =
-   { @JoinColumn(name = "harrastaja", referencedColumnName = "id") }, inverseJoinColumns =
-   { @JoinColumn(name = "rooli", referencedColumnName = "id") })
-   private List<Rooli> roolit = new ArrayList<Rooli>();
+   @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
+   @OrderBy("paiva desc")
+   private List<Kisatulos> kisatulokset;
+
+   @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
+   @OrderBy("umpeutuu desc")
+   private List<Sopimus> sopimukset;
+
+   @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
+   @OrderBy("aikaleima desc")
+   private List<Treenikäynti> treenikäynnit;
 
    @Size(max = 10)
    @Column(name = "jasennumero")
@@ -77,12 +79,9 @@ public class Harrastaja
    @NotNull
    private Date syntynyt;
 
-   @Size(max = 1)
    @NotNull
-   private String sukupuoli;
-
-   @Transient
-   private boolean vaatiiHuoltajan;
+   @Convert(converter = SukupuoliConverter.class)
+   private Sukupuoli sukupuoli;
 
    public int getId()
    {
@@ -106,6 +105,10 @@ public class Harrastaja
 
    public Henkilö getHuoltaja()
    {
+      if (huoltaja == null)
+      {
+         huoltaja = new Henkilö();
+      }
       return huoltaja;
    }
 
@@ -149,12 +152,12 @@ public class Harrastaja
       this.syntynyt = syntynyt;
    }
 
-   public String getSukupuoli()
+   public Sukupuoli getSukupuoli()
    {
       return sukupuoli;
    }
 
-   public void setSukupuoli(String sukupuoli)
+   public void setSukupuoli(Sukupuoli sukupuoli)
    {
       this.sukupuoli = sukupuoli;
    }
@@ -189,19 +192,9 @@ public class Harrastaja
       return id == toinenHarrastaja.getId();
    }
 
-   public boolean isVaatiiHuoltajan()
-   {
-      return vaatiiHuoltajan;
-   }
-
-   public void setVaatiiHuoltajan(boolean vaatiiHuoltajan)
-   {
-      this.vaatiiHuoltajan = vaatiiHuoltajan;
-   }
-
    public boolean isAlaikainen()
    {
-      return ika() < 18;
+      return syntynyt == null ? false : ika() < 18;
    }
 
    public List<Vyökoe> getVyökokeet()
@@ -224,36 +217,43 @@ public class Harrastaja
       this.vyökokeet = vyökokeet;
    }
 
-   public List<Rooli> getRoolit()
-   {
-      return roolit;
-   }
-
-   public void setRoolit(List<Rooli> roolit)
-   {
-      this.roolit = roolit;
-   }
-
-   private boolean onRoolissa(String roolinimi)
-   {
-      boolean tulos = false;
-      for (Rooli rooli : roolit)
-      {
-         if (roolinimi.equals(rooli.getNimi()))
-         {
-            return true;
-         }
-      }
-      return tulos;
-   }
-
    public boolean isYlläpitäjä()
    {
-      return onRoolissa("Ylläpitäjä");
+      return henkilö.onRoolissa("Ylläpitäjä");
    }
 
    public boolean isTreenienVetäjä()
    {
-      return onRoolissa("Treenien vetjäjä");
+      return henkilö.onRoolissa("Treenien vetjäjä");
+   }
+
+   public List<Kisatulos> getKisatulokset()
+   {
+      return kisatulokset;
+   }
+
+   public void setKisatulokset(List<Kisatulos> kisatulokset)
+   {
+      this.kisatulokset = kisatulokset;
+   }
+
+   public List<Sopimus> getSopimukset()
+   {
+      return sopimukset;
+   }
+
+   public void setSopimukset(List<Sopimus> sopimukset)
+   {
+      this.sopimukset = sopimukset;
+   }
+
+   public List<Treenikäynti> getTreenikäynnit()
+   {
+      return treenikäynnit;
+   }
+
+   public void setTreenikäynnit(List<Treenikäynti> treenikäynnit)
+   {
+      this.treenikäynnit = treenikäynnit;
    }
 }

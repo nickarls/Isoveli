@@ -18,44 +18,91 @@
 				<h:panelGrid>
 					<ace:message for="form:sukupuoli" />
 					<h:selectOneRadio value="#{harrastaja.sukupuoli}" id="sukupuoli">
-						<f:selectItem itemLabel="Mies" itemValue="M" />
-						<f:selectItem itemLabel="Nainen" itemValue="N" />
+						<f:selectItems value="#{sukupuolet}" />
 					</h:selectOneRadio>
 				</h:panelGrid>
 				<h:outputText value="Syntymäaika" />
 				<h:panelGrid>
 					<ace:message for="form:syntymaaika" />
-					<ace:dateTimeEntry value="#{harrastaja.syntynyt}" renderAsPopup="true" pattern="dd.MM.yyyy"
-						id="syntymaaika" />
+					<ace:dateTimeEntry value="#{harrastaja.syntynyt}" renderAsPopup="true" pattern="dd.MM.yyyy" id="syntymaaika">
+						<ace:ajax event="dateSelect" execute="@this" render="form:huoltaja" />
+						<ace:ajax event="dateTextChange" execute="@this" render="form:huoltaja" />
+					</ace:dateTimeEntry>
 				</h:panelGrid>
 			</h:panelGrid>
 		</ace:panel>
-		<ace:panel header="Osoitetiedot" styleClass="panel">
-			<h:panelGrid columns="2">
-				<h:outputText value="Osoite" />
-				<h:panelGrid>
-					<ace:message for="form:osoite" />
-					<h:inputText value="#{harrastaja.henkilö.osoite.osoite}" id="osoite" />
+		<h:panelGrid>
+			<ace:panel header="Osoitetiedot" styleClass="panel">
+				<h:panelGrid columns="2">
+					<h:outputText value="Osoite" />
+					<h:panelGrid>
+						<ace:message for="form:osoite" />
+						<h:inputText value="#{harrastaja.henkilö.osoite.osoite}" id="osoite" />
+					</h:panelGrid>
+					<h:outputText value="Postinumero" />
+					<h:panelGrid>
+						<ace:message for="form:postinumero" />
+						<h:inputText value="#{harrastaja.henkilö.osoite.postinumero}" id="postinumero" />
+					</h:panelGrid>
+					<h:outputText value="Kaupunki" />
+					<h:panelGrid>
+						<ace:message for="form:kaupunki" />
+						<h:inputText value="#{harrastaja.henkilö.osoite.kaupunki}" id="kaupunki" />
+					</h:panelGrid>
+					<h:outputText value="Sähköposti-osoite" />
+					<h:panelGrid>
+						<ace:message for="form:sähkoposti" />
+						<h:inputText value="#{harrastaja.henkilö.yhteystiedot.sähköposti}" id="sähköposti" />
+					</h:panelGrid>
+					<h:outputText value="Sähköpostilistalla" />
+					<h:panelGrid>
+						<ace:message for="form:sähkopostilistalla" />
+						<h:selectBooleanCheckbox value="#{harrastaja.henkilö.yhteystiedot.sähköpostilistalla}" id="sähköpostilistalla" />
+					</h:panelGrid>
 				</h:panelGrid>
-				<h:outputText value="Postinumero" />
-				<h:panelGrid>
-					<ace:message for="form:postinumero" />
-					<h:inputText value="#{harrastaja.henkilö.osoite.postinumero}" id="postinumero" />
-				</h:panelGrid>
-				<h:outputText value="Kaupunki" />
-				<h:panelGrid>
-					<ace:message for="form:kaupunki" />
-					<h:inputText value="#{harrastaja.henkilö.osoite.kaupunki}" id="kaupunki" />
-				</h:panelGrid>
-				<h:outputText value="Sähköposti-osoite" />
-				<h:panelGrid>
-					<ace:message for="form:sähkoposti" />
-					<h:inputText value="#{harrastaja.henkilö.sähköposti}" id="sähköposti" />
-				</h:panelGrid>
-				<h:outputText value="Sähköpostilistalla" />
-				<h:selectBooleanCheckbox />
-			</h:panelGrid>
-		</ace:panel>
+			</ace:panel>
+			<h:panelGroup id="huoltaja">
+				<ace:panel header="Huoltaja" rendered="#{harrastaja.alaikainen}" styleClass="panel">
+					<h:panelGrid columns="2">
+						<h:outputText value="Etunimi" />
+						<h:panelGrid>
+							<ace:message for="form:h_etunimi" />
+							<h:inputText value="#{harrastaja.huoltaja.etunimi}" id="h_etunimi" />
+						</h:panelGrid>
+						<h:outputText value="Sukunimi" />
+						<h:panelGrid>
+							<ace:message for="form:h_sukunimi" />
+							<h:inputText value="#{harrastaja.huoltaja.sukunimi}" id="h_sukunimi" />
+						</h:panelGrid>
+						<h:outputText value="Osoite" />
+						<h:panelGrid>
+							<ace:message for="form:h_osoite" />
+							<h:inputText value="#{harrastaja.huoltaja.osoite.osoite}" id="h_osoite" />
+						</h:panelGrid>
+						<h:outputText value="Postinumero" />
+						<h:panelGrid>
+							<ace:message for="form:h_postinumero" />
+							<h:inputText value="#{harrastaja.huoltaja.osoite.postinumero}" id="h_postinumero" />
+						</h:panelGrid>
+						<h:outputText value="Kaupunki" />
+						<h:panelGrid>
+							<ace:message for="form:h_kaupunki" />
+							<h:inputText value="#{harrastaja.huoltaja.osoite.kaupunki}" id="h_kaupunki" />
+						</h:panelGrid>
+						<h:outputText value="Sähköposti-osoite" />
+						<h:panelGrid>
+							<ace:message for="form:h_sähkoposti" />
+							<h:inputText value="#{harrastaja.huoltaja.yhteystiedot.sähköposti}" id="h_sähköposti" />
+						</h:panelGrid>
+						<h:outputText value="Sähköpostilistalla" />
+						<h:panelGrid>
+							<ace:message for="form:h_sähkopostilistalla" />
+							<h:selectBooleanCheckbox value="#{harrastaja.huoltaja.yhteystiedot.sähköpostilistalla}" id="h_sähköpostilistalla" />
+						</h:panelGrid>
+					</h:panelGrid>
+				</ace:panel>
+			</h:panelGroup>
+		</h:panelGrid>
 		<ace:panel header="Korttitiedot" styleClass="panel">
 			<h:panelGrid columns="2" style="margin-left: 20px;">
 				<h:outputText value="Jäsennumero" />
@@ -66,7 +113,7 @@
 				<h:outputText value="Korttinumero" />
 				<h:panelGrid>
 					<ace:message for="form:korttinumero" />
-					<h:inputText value="#{harrastaja.korttinumero}" />
+					<h:inputText value="#{harrastaja.korttinumero}" id="korttinumero" />
 				</h:panelGrid>
 				<h:outputText value="Lisenssinumero" />
 				<h:panelGrid>

@@ -4,16 +4,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@SequenceGenerator(name = "osoite_seq", sequenceName = "osoite_seq", allocationSize = 1, initialValue = 2)
 public class Osoite
 {
    @Id
-   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "osoite_seq")
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
    @Size(max = 200)

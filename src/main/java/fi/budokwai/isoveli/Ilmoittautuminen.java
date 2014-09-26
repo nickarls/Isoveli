@@ -20,7 +20,7 @@ import org.icefaces.application.PushRenderer;
 import org.icefaces.util.JavaScriptRunner;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
-import fi.budokwai.isoveli.malli.Päivä;
+import fi.budokwai.isoveli.malli.Viikonpaiva;
 import fi.budokwai.isoveli.malli.Treeni;
 import fi.budokwai.isoveli.malli.Treenikäynti;
 
@@ -40,16 +40,16 @@ public class Ilmoittautuminen
 
    private class Aikaraja
    {
-      public Aikaraja(Päivä paiva, Date aika)
+      public Aikaraja(Viikonpaiva paiva, Date aika)
       {
          this.paiva = paiva;
          this.aika = aika;
       }
 
-      private Päivä paiva;
+      private Viikonpaiva paiva;
       private Date aika;
 
-      public Päivä getPaiva()
+      public Viikonpaiva getPaiva()
       {
          return paiva;
       }
@@ -100,7 +100,7 @@ public class Ilmoittautuminen
       Calendar kalenteri = Calendar.getInstance();
       int tunti = kalenteri.get(Calendar.HOUR_OF_DAY);
       int minuutti = kalenteri.get(Calendar.MINUTE);
-      Päivä paiva = Päivä.values()[kalenteri.get(Calendar.DAY_OF_WEEK)];
+      Viikonpaiva paiva = Viikonpaiva.values()[kalenteri.get(Calendar.DAY_OF_WEEK)];
       kalenteri.clear();
       kalenteri.set(Calendar.HOUR, tunti);
       kalenteri.set(Calendar.MINUTE, minuutti);
@@ -130,7 +130,7 @@ public class Ilmoittautuminen
    public String tallenna()
    {
       Date tanaan = haeTanaanPvm();
-      Treenikäynti treenikaynti = new Treenikäynti(harrastaja, treeni, tanaan);
+      Treenikäynti treenikaynti = new Treenikäynti(harrastaja, null, tanaan);
       entityManager.persist(treenikaynti);
       PushRenderer.render("ilmoittautuminen");
       nollaa();

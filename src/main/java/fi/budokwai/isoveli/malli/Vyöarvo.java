@@ -1,18 +1,25 @@
 package fi.budokwai.isoveli.malli;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @NamedQuery(name = "vyöarvot", query = "select v from Vyöarvo v order by id")
-@Table(name="vyoarvo")
+@Table(name = "vyoarvo")
 public class Vyöarvo
 {
    @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
+   @Size(max = 10)
+   @NotNull
    private String nimi;
 
    private int minimikuukaudet;

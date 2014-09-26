@@ -1,26 +1,29 @@
 package fi.budokwai.isoveli.malli;
 
+import java.sql.Blob;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@SequenceGenerator(name = "henkilo_seq", sequenceName = "henkilo_seq", allocationSize = 1, initialValue = 2)
 @Table(name = "henkilo")
 public class Henkilö
 {
    @Id
-   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "henkilo_seq")
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
    @Size(max = 50)
@@ -31,18 +34,26 @@ public class Henkilö
    @NotNull
    private String sukunimi;
 
-   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
    @JoinColumn(name = "osoite")
    @Valid
    private Osoite osoite;
 
-   @Size(max = 50)
-   @Column(name = "sahkoposti")
-   private String sähköposti;
+   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
+   @JoinColumn(name = "yhteystiedot")
+   @Valid
+   private Yhteystieto yhteystiedot;
 
-   @Size(max = 1)
-   @Column(name = "sahkopostilistalla")
-   private String sähköpostilistalla;
+   @ManyToMany
+   @JoinTable(name = "henkilorooli", joinColumns =
+   { @JoinColumn(name = "henkilo", referencedColumnName = "id") }, inverseJoinColumns =
+   { @JoinColumn(name = "rooli", referencedColumnName = "id") })
+   private List<Rooli> roolit = new ArrayList<Rooli>();
+
+   @Size(max = 50)
+   public String salasana;
+
+   private Blob kuva;
 
    public int getId()
    {
@@ -88,24 +99,61 @@ public class Henkilö
       this.osoite = osoite;
    }
 
-   public String getSähköposti()
+   public Yhteystieto getYhteystiedot()
    {
-      return sähköposti;
+      if (yhteystiedot == null)
+      {
+         yhteystiedot = new Yhteystieto();
+      }
+      return yhteystiedot;
    }
 
-   public void setSähköposti(String sähköposti)
+   public void setYhteystiedot(Yhteystieto yhteystiedot)
    {
-      this.sähköposti = sähköposti;
+      this.yhteystiedot = yhteystiedot;
    }
 
-   public String getSähköpostilistalla()
+   public String getSalasana()
    {
-      return sähköpostilistalla;
+      return salasana;
    }
 
-   public void setSähköpostilistalla(String sähköpostilistalla)
+   public void setSalasana(String salasana)
    {
-      this.sähköpostilistalla = sähköpostilistalla;
+      this.salasana = salasana;
+   }
+
+   public Blob getKuva()
+   {
+      return kuva;
+   }
+
+   public void setKuva(Blob kuva)
+   {
+      this.kuva = kuva;
+   }
+
+   public List<Rooli> getRoolit()
+   {
+      return roolit;
+   }
+
+   public void setRoolit(List<Rooli> roolit)
+   {
+      this.roolit = roolit;
+   }
+
+   public boolean onRoolissa(String roolinimi)
+   {
+      boolean tulos = false;
+      for (Rooli rooli : roolit)
+      {
+         if (roolinimi.equals(rooli.getNimi()))
+         {
+            return true;
+         }
+      }
+      return tulos;
    }
 
 }

@@ -69,7 +69,7 @@ public class Vyökoe
       return harrastaja.getVyökokeet().get(harrastaja.getVyökokeet().size() - 1) == this;
    }
 
-   public long getAikaaValissa()
+   public long getAikaaVälissä()
    {
       int koeIndeksi = harrastaja.getVyökokeet().indexOf(this);
       if (koeIndeksi == 0)

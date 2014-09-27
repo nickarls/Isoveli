@@ -156,4 +156,8 @@ public class Henkilö
       return tulos;
    }
 
+   public String getNimi()
+   {
+      return String.format("%s %s", etunimi, sukunimi);
+   }
 }

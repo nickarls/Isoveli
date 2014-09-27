@@ -7,8 +7,8 @@
 <h:head>
 	<style>
 .ikoni {
-	height: 64px;
-	width: 64px;
+	height: 40px;
+	width: 40px;
 	margin-left: 15px;
 }
 .tabletop {
@@ -20,6 +20,9 @@
 .panel {
 	margin: 10px;
 }
+.capitalized {
+    text-transform: capitalize;
+}
 </style>
 </h:head>
 <h:body>
@@ -29,6 +32,9 @@
 				<ace:tabSet>
 					<ace:tabPane label="Harrastajat">
 						<ui:include src="harrastajat/harrastajat.xhtml" />
+					</ace:tabPane>
+					<ace:tabPane label="Harjoitukset">
+						<ui:include src="treenit/treenit.xhtml"/>
 					</ace:tabPane>
 <!-- 					
 					<ace:tabPane label="Treenikäynnit">

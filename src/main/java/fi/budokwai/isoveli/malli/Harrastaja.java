@@ -1,6 +1,7 @@
 package fi.budokwai.isoveli.malli;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.PostLoad;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.Valid;
@@ -28,7 +30,8 @@ import fi.budokwai.isoveli.SukupuoliConverter;
 @Entity
 @NamedQueries(
 { @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.korttinumero=:kortti"),
-      @NamedQuery(name = "harrastajat", query = "select h from Harrastaja h order by h.henkilö.etunimi") })
+      @NamedQuery(name = "treenivetäjät", query = "select h from Harrastaja h order by h.henkilö.sukunimi, h.henkilö.etunimi"),
+      @NamedQuery(name = "harrastajat", query = "select h from Harrastaja h order by h.henkilö.sukunimi, h.henkilö.etunimi") })
 @Typed(
 {})
 public class Harrastaja
@@ -47,23 +50,23 @@ public class Harrastaja
 
    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
    @JoinColumn(name = "huoltaja")
-   private Henkilö huoltaja = new Henkilö();
+   private Henkilö huoltaja;
 
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
    @OrderBy("vyoarvo")
-   private List<Vyökoe> vyökokeet;
+   private List<Vyökoe> vyökokeet = Collections.emptyList();
 
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
    @OrderBy("paiva desc")
-   private List<Kisatulos> kisatulokset;
+   private List<Kisatulos> kisatulokset = Collections.emptyList();
 
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
    @OrderBy("umpeutuu desc")
-   private List<Sopimus> sopimukset;
+   private List<Sopimus> sopimukset = Collections.emptyList();
 
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
    @OrderBy("aikaleima desc")
-   private List<Treenikäynti> treenikäynnit;
+   private List<Treenikäynti> treenikäynnit = Collections.emptyList();
 
    @Size(max = 10)
    @Column(name = "jasennumero")
@@ -82,6 +85,15 @@ public class Harrastaja
    @NotNull
    @Convert(converter = SukupuoliConverter.class)
    private Sukupuoli sukupuoli;
+
+   @PostLoad
+   public void init()
+   {
+      if (isAlaikäinen() && huoltaja == null)
+      {
+         huoltaja = new Henkilö();
+      }
+   }
 
    public int getId()
    {
@@ -105,10 +117,6 @@ public class Harrastaja
 
    public Henkilö getHuoltaja()
    {
-      if (huoltaja == null)
-      {
-         huoltaja = new Henkilö();
-      }
       return huoltaja;
    }
 
@@ -162,39 +170,31 @@ public class Harrastaja
       this.sukupuoli = sukupuoli;
    }
 
-   private int ika()
+   public int getIkä()
+   {
+      return ikä(syntynyt);
+   }
+
+   private static int ikä(Date päivämäärä)
    {
       Calendar kalenteri = Calendar.getInstance();
-      kalenteri.setTime(syntynyt);
+      kalenteri.setTime(päivämäärä);
       Calendar tanaan = Calendar.getInstance();
-      int ika = tanaan.get(Calendar.YEAR) - kalenteri.get(Calendar.YEAR);
+      int ikä = tanaan.get(Calendar.YEAR) - kalenteri.get(Calendar.YEAR);
       if (tanaan.get(Calendar.MONTH) < kalenteri.get(Calendar.MONTH))
       {
-         ika--;
+         ikä--;
       } else if (tanaan.get(Calendar.MONTH) == kalenteri.get(Calendar.MONTH)
          && tanaan.get(Calendar.DAY_OF_MONTH) < kalenteri.get(Calendar.DAY_OF_MONTH))
       {
-         ika--;
+         ikä--;
       }
-      return ika;
+      return ikä;
    }
 
-   @Override
-   public int hashCode()
+   public boolean isAlaikäinen()
    {
-      return Integer.valueOf(id).hashCode();
-   }
-
-   @Override
-   public boolean equals(Object toinen)
-   {
-      Harrastaja toinenHarrastaja = (Harrastaja) toinen;
-      return id == toinenHarrastaja.getId();
-   }
-
-   public boolean isAlaikainen()
-   {
-      return syntynyt == null ? false : ika() < 18;
+      return syntynyt == null ? false : ikä(syntynyt) < 18;
    }
 
    public List<Vyökoe> getVyökokeet()
@@ -204,7 +204,7 @@ public class Harrastaja
 
    public Vyöarvo getTuoreinVyöarvo()
    {
-      return vyökokeet.get(vyökokeet.size() - 1).getVyöarvo();
+      return vyökokeet.isEmpty() ? Vyöarvo.EI_OOTA : vyökokeet.get(vyökokeet.size() - 1).getVyöarvo();
    }
 
    public String getJäsennumero()
@@ -255,5 +255,28 @@ public class Harrastaja
    public void setTreenikäynnit(List<Treenikäynti> treenikäynnit)
    {
       this.treenikäynnit = treenikäynnit;
+   }
+
+   public static boolean alaikäinen(Date päivämäärä)
+   {
+      return ikä(päivämäärä) < 18;
+   }
+
+   public boolean isPoistettavissa()
+   {
+      return id > 0;
+   }
+
+   @Override
+   public int hashCode()
+   {
+      return Integer.valueOf(id).hashCode();
+   }
+
+   @Override
+   public boolean equals(Object toinen)
+   {
+      Harrastaja toinenHarrastaja = (Harrastaja) toinen;
+      return id == toinenHarrastaja.getId();
    }
 }

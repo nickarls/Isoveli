@@ -5,16 +5,19 @@
 		image="/kuvat/lisää_käyttäjä.png" immediate="true" />
 	<ace:dataTable value="#{harrastajat}" var="_harrastaja" selectionMode="single"
 		stateMap="#{harrastajaAdmin.rowStateMap}" rows="10" rowSelectListener="#{harrastajaAdmin.harrastajaValittu}">
-		<ace:column headerText="ID">
-			<h:outputText value="#{_harrastaja.id}" />
-		</ace:column>
 		<ace:column headerText="Etunimi" sortBy="#{_harrastaja.henkilö.etunimi}" filterBy="#{_harrastaja.henkilö.etunimi}"
 			filterMatchMode="contains">
 			<h:outputText value="#{_harrastaja.henkilö.etunimi}" />
 		</ace:column>
-		<ace:column headerText="Sukunimi" sortBy="#{_harrastaja.henkilö.sukunimi}" filterBy="#{_harrastaja.henkilöo.sukunimi}"
+		<ace:column headerText="Sukunimi" sortBy="#{_harrastaja.henkilö.sukunimi}" filterBy="#{_harrastaja.henkilö.sukunimi}"
 			filterMatchMode="contains">
 			<h:outputText value="#{_harrastaja.henkilö.sukunimi}" />
+		</ace:column>
+		<ace:column headerText="Ikä">
+			<h:outputText value="#{_harrastaja.ikä}" />
+		</ace:column>
+		<ace:column headerText="Vyöarvo">
+			<h:outputText value="#{_harrastaja.tuoreinVyöarvo.nimi}" />
 		</ace:column>
 	</ace:dataTable>
 	<p />

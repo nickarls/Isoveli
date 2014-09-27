@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -26,7 +27,9 @@ import fi.budokwai.isoveli.Kyll‰EiTyyppi;
 
 @Entity
 @TypeDef(name = "Kyll‰Ei", typeClass = Kyll‰EiTyyppi.class)
-//@NamedQuery(name = "treenit", query = "select t from Treeni t where t.p‰iv‰=:p‰iv‰ and t.p‰‰ttyy >= :kello and not exists(select tk from Treenik‰ynti tk where tk.harrastaja=:harrastaja and tk.treeni = t.id and tk.p‰iv‰ = :t‰n‰‰n)")
+// @NamedQuery(name = "treenit", query =
+// "select t from Treeni t where t.p‰iv‰=:p‰iv‰ and t.p‰‰ttyy >= :kello and not exists(select tk from Treenik‰ynti tk where tk.harrastaja=:harrastaja and tk.treeni = t.id and tk.p‰iv‰ = :t‰n‰‰n)")
+@NamedQuery(name = "treenit", query = "select t from Treeni t order by t.p‰iv‰, t.alkaa")
 public class Treeni
 {
    @Id
@@ -50,9 +53,9 @@ public class Treeni
    private Date p‰‰ttyy;
 
    @OneToOne(optional = false)
-   @JoinColumn(name = "treenityyppi")
+   @JoinColumn(name = "tyyppi")
    @NotNull
-   private Treenityyppi treenityyppi;
+   private Treenityyppi tyyppi;
 
    @Type(type = "Kyll‰Ei")
    private boolean power;
@@ -61,7 +64,7 @@ public class Treeni
    @JoinTable(name = "treenivetaja", joinColumns =
    { @JoinColumn(name = "treeni", referencedColumnName = "id") }, inverseJoinColumns =
    { @JoinColumn(name = "harrastaja", referencedColumnName = "id") })
-   private List<Harrastaja> treenivet‰j‰t = new ArrayList<Harrastaja>();
+   private List<Harrastaja> vet‰j‰t = new ArrayList<Harrastaja>();
 
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "treeni", orphanRemoval = true)
    private List<Treenisessio> treenisessiot = new ArrayList<Treenisessio>();
@@ -123,16 +126,6 @@ public class Treeni
       this.p‰‰ttyy = p‰‰ttyy;
    }
 
-   public Treenityyppi getTreenityyppi()
-   {
-      return treenityyppi;
-   }
-
-   public void setTreenityyppi(Treenityyppi treenityyppi)
-   {
-      this.treenityyppi = treenityyppi;
-   }
-
    public String getNimi()
    {
       return nimi;
@@ -153,13 +146,38 @@ public class Treeni
       this.power = power;
    }
 
-   public List<Harrastaja> getTreenivet‰j‰t()
+   public Treenityyppi getTyyppi()
    {
-      return treenivet‰j‰t;
+      return tyyppi;
    }
 
-   public void setTreenivet‰j‰t(List<Harrastaja> treenivet‰j‰t)
+   public void setTyyppi(Treenityyppi tyyppi)
    {
-      this.treenivet‰j‰t = treenivet‰j‰t;
+      this.tyyppi = tyyppi;
+   }
+
+   public List<Treenisessio> getTreenisessiot()
+   {
+      return treenisessiot;
+   }
+
+   public void setTreenisessiot(List<Treenisessio> treenisessiot)
+   {
+      this.treenisessiot = treenisessiot;
+   }
+
+   public List<Harrastaja> getVet‰j‰t()
+   {
+      return vet‰j‰t;
+   }
+
+   public void setVet‰j‰t(List<Harrastaja> vet‰j‰t)
+   {
+      this.vet‰j‰t = vet‰j‰t;
+   }
+
+   public boolean isPoistettavissa()
+   {
+      return id > 0;
    }
 }

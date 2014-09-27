@@ -14,6 +14,8 @@ import javax.validation.constraints.Size;
 @Table(name = "vyoarvo")
 public class Vyöarvo
 {
+   public static final Vyöarvo EI_OOTA = new Vyöarvo("Ei ole");
+
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
@@ -21,6 +23,16 @@ public class Vyöarvo
    @Size(max = 10)
    @NotNull
    private String nimi;
+
+   public Vyöarvo(String nimi)
+   {
+      this.nimi = nimi;
+   }
+
+   public Vyöarvo()
+   {
+
+   }
 
    private int minimikuukaudet;
 

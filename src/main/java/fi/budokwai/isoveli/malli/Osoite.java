@@ -65,4 +65,9 @@ public class Osoite
    {
       this.kaupunki = kaupunki;
    }
+
+   public String getOsoiteString()
+   {
+      return String.format("%s %s %s", osoite, postinumero, kaupunki);
+   }
 }

@@ -1,13 +1,13 @@
 package fi.budokwai.isoveli;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
-import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Named;
@@ -17,10 +17,12 @@ import javax.persistence.PersistenceContextType;
 
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
+import org.icefaces.ace.component.datetimeentry.DateTimeEntry;
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
+import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Sukupuoli;
 
 @Named
@@ -40,7 +42,7 @@ public class HarrastajaAdmin
    @PostConstruct
    public void init()
    {
-      ((Session)entityManager.getDelegate()).setFlushMode(FlushMode.MANUAL);
+      ((Session) entityManager.getDelegate()).setFlushMode(FlushMode.MANUAL);
    }
 
    @Produces
@@ -73,13 +75,17 @@ public class HarrastajaAdmin
       return harrastaja;
    }
 
-   public void yhteinenOsoite(AjaxBehaviorEvent e)
+   public void kopioiOsoitetiedot()
    {
-      HtmlSelectBooleanCheckbox control = (HtmlSelectBooleanCheckbox) e.getComponent();
-      if (control.isSelected())
-      {
-         harrastaja.getHenkilö().setOsoite(harrastaja.getHuoltaja().getOsoite());
-      }
+      harrastaja.getHuoltaja().setSukunimi(harrastaja.getHenkilö().getSukunimi());
+      harrastaja.getHuoltaja().getOsoite().setOsoite(harrastaja.getHenkilö().getOsoite().getOsoite());
+      harrastaja.getHuoltaja().getOsoite().setPostinumero(harrastaja.getHenkilö().getOsoite().getPostinumero());
+      harrastaja.getHuoltaja().getOsoite().setKaupunki(harrastaja.getHenkilö().getOsoite().getKaupunki());
+   }
+
+   public void kopioiOsoitetiedot(AjaxBehaviorEvent e)
+   {
+      kopioiOsoitetiedot();
    }
 
    public void tallennaHarrastaja()
@@ -104,9 +110,17 @@ public class HarrastajaAdmin
       rowStateMap.setAllSelected(false);
    }
 
-   public boolean isHarrastajaPoistettavissa()
+   public void syntymäAikaMuuttui(AjaxBehaviorEvent e)
    {
-      return harrastaja != null && harrastaja.getId() > 0;
+      DateTimeEntry dte = (DateTimeEntry) e.getComponent();
+      Date val = (Date) dte.getValue();
+      if (Harrastaja.alaikäinen(val))
+      {
+         harrastaja.setHuoltaja(new Henkilö());
+      } else
+      {
+         harrastaja.setHuoltaja(null);
+      }
    }
 
    public String lisääHarrastaja()

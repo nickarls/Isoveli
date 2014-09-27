@@ -73,7 +73,7 @@ public class Ilmoittautuminen
 
    @Produces
    @Named
-   public List<Treeni> getTreenit()
+   public List<Treeni> getTreenitx()
    {
       if (harrastaja == null)
       {

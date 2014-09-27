@@ -1,0 +1,50 @@
+package fi.budokwai.isoveli.malli;
+
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+@Entity
+public class Kisatulos
+{
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private int id;
+
+   @ManyToOne(optional = false)
+   @JoinColumn(name = "harrastaja", insertable=false, updatable=false)
+   @NotNull
+   private Harrastaja harrastaja;
+   
+   @OneToOne(optional = false)
+   @JoinColumn(name = "tyyppi")
+   @NotNull
+   private Kisatyyppi kisatyyppi;
+   
+   @Temporal(TemporalType.DATE)
+   @NotNull
+   private Date paiva;
+   
+   @Size(max=50)
+   @NotNull
+   private String kisa;
+   
+   @Size(max=50)
+   @NotNull
+   private String sarja;
+   
+   @Size(max=10)
+   @NotNull
+   private String tulos;
+
+}

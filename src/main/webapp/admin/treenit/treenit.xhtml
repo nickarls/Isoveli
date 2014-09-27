@@ -1,0 +1,96 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	<h:commandButton action="#{treeniAdmin.lisääTreeni}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
+		immediate="true" />
+	<ace:dataTable value="#{treenit}" var="_treeni" selectionMode="single" stateMap="#{treeniAdmin.rowStateMap}" rows="10"
+		rowSelectListener="#{treeniAdmin.treeniValittu}">
+		<ace:column headerText="Nimi">
+			<h:outputText value="#{_treeni.nimi}" />
+		</ace:column>
+		<ace:column headerText="Tyyppi">
+			<h:outputText value="#{_treeni.tyyppi.nimi}" />
+		</ace:column>
+		<ace:column headerText="Päivä">
+			<h:outputText value="#{_treeni.päivä}" />
+		</ace:column>
+		<ace:column headerText="Alkaa">
+			<h:outputText value="#{_treeni.alkaa}">
+				<f:convertDateTime pattern="HH:mm" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Päättyy">
+			<h:outputText value="#{_treeni.päättyy}">
+				<f:convertDateTime pattern="HH:mm" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Vetäjät">
+			<ui:repeat value="#{_treeni.vetäjät}" var="_vetäjä">
+				<h:outputText value="#{_vetäjä.henkilö.nimi}" />
+				<br />
+			</ui:repeat>
+		</ace:column>
+		<ace:column headerText="Power">
+			<h:outputText value="#{_treeni.power ? 'Kyllä' : 'Ei'}" />
+		</ace:column>
+	</ace:dataTable>
+	<p />
+	<h:panelGrid columns="2" columnClasses="tabletop, tabletop">
+		<ace:panel header="Treeni" rendered="#{treeni != null}" styleClass="panel" style="width:350px">
+			<h:panelGrid columns="2">
+				<h:outputText value="Nimi" />
+				<h:panelGrid>
+					<ace:message for="form:treeninimi" />
+					<h:inputText value="#{treeni.nimi}" id="treeninimi" styleClass="capitalized" />
+				</h:panelGrid>
+				<h:outputText value="Tyyppi" />
+				<h:panelGrid>
+					<ace:message for="form:treenityyppi" />
+					<h:selectOneMenu value="#{treeni.tyyppi}" id="treenityyppi">
+						<f:selectItems value="#{treenityypit}" var="_tyyppi" itemValue="#{_tyyppi}" itemLabel="#{_tyyppi.nimi}" />
+						<f:converter converterId="objectConverter" />
+					</h:selectOneMenu>
+				</h:panelGrid>
+				<h:outputText value="Päivä" />
+				<h:panelGrid>
+					<ace:message for="form:treenipäivä" />
+					<h:selectOneMenu value="#{treeni.päivä}" id="treenipäivä">
+						<f:selectItems value="#{viikonpäivät}" var="_viikonpäivä" itemValue="#{_viikonpäivä}" itemLabel="#{_viikonpäivä}" />
+					</h:selectOneMenu>
+				</h:panelGrid>
+				<h:outputText value="Alkaa" />
+				<h:panelGrid>
+					<ace:message for="form:treenialkaa" />
+					<ace:dateTimeEntry value="#{treeni.alkaa}" renderAsPopup="true" pattern="HH:mm" id="treenialkaa" />
+				</h:panelGrid>
+				<h:outputText value="Päättyy" />
+				<h:panelGrid>
+					<ace:message for="form:treenipäättyy" />
+					<ace:dateTimeEntry value="#{treeni.päättyy}" renderAsPopup="true" pattern="HH:mm" id="treenipäättyy" />
+				</h:panelGrid>
+				<h:outputText value="Power" />
+				<h:panelGrid>
+					<ace:message for="form:treenipower" />
+					<h:selectBooleanCheckbox value="#{treeni.power}" id="treenipower" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</ace:panel>
+		<ace:panel header="Vetäjät" rendered="#{treeni != null}" styleClass="panel" style="width:600px">
+			<ace:listControl>
+				<ace:list value="#{treenivetäjät}" var="_vetäjä" selectionMode="multiple">
+					<h:outputText value="#{_vetäjä.henkilö.nimi}" />
+				</ace:list>
+				<ace:list value="#{treeni.vetäjät}" var="_vetäjä" selectionMode="multiple">
+					<h:outputText value="#{_vetäjä.henkilö.nimi}" />
+				</ace:list>
+			</ace:listControl>
+		</ace:panel>
+	</h:panelGrid>
+	<h:commandButton rendered="#{treeni != null}" value="x" styleClass="ikoni" action="#{treeniAdmin.tallennaTreeni()}"
+		image="/kuvat/tallenna.jpg" />
+	<h:commandButton rendered="#{treeni != null}" value="x" styleClass="ikoni" action="#{treeniAdmin.peruutaMuutos}"
+		image="/kuvat/peruuta_muutos.png" />
+	<h:commandButton rendered="#{treeni.poistettavissa}" value="x" styleClass="ikoni" action="#{treeniAdmin.poistaTreeni}"
+		image="/kuvat/poista.png" immediate="true" />
+
+</ui:composition>

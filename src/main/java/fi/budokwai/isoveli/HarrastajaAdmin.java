@@ -123,10 +123,9 @@ public class HarrastajaAdmin
       }
    }
 
-   public String lisääHarrastaja()
+   public void lisääHarrastaja()
    {
       harrastaja = new Harrastaja();
-      return "admin.xhtml";
    }
 
    public void harrastajaValittu(SelectEvent e)

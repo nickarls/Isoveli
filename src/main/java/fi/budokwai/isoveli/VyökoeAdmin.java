@@ -95,7 +95,6 @@ public class VyökoeAdmin
       }
       vyökoe.setVyöarvo(seuraavaVyöarvo);
       vyökoe.setPäivä(new Date());
-
    }
 
    public boolean isVyökoePoistettavissa()

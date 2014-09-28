@@ -64,15 +64,25 @@ public class TreeniAdmin
       if (kaikkivet‰j‰t == null)
       {
          kaikkivet‰j‰t = entityManager.createNamedQuery("treenivet‰j‰t", Harrastaja.class).getResultList();
-//         kaikkivet‰j‰t = Collections2.filter(kaikkivet‰j‰t, new Predicate<Harrastaja>()
-//         {
-//
-//            @Override
-//            public boolean apply(Harrastaja harrastaja)
-//            {
-//               return harrastaja.isTreenienVet‰j‰();
-//            }
-//         });
+         Collection<Harrastaja> tulos = new ArrayList<Harrastaja>();
+         for (Harrastaja harrastaja : kaikkivet‰j‰t)
+         {
+            if (harrastaja.isTreenienVet‰j‰())
+            {
+               tulos.add(harrastaja);
+            }
+         }
+         kaikkivet‰j‰t = tulos;
+         // kaikkivet‰j‰t = Collections2.filter(kaikkivet‰j‰t, new
+         // Predicate<Harrastaja>()
+         // {
+         //
+         // @Override
+         // public boolean apply(Harrastaja harrastaja)
+         // {
+         // return harrastaja.isTreenienVet‰j‰();
+         // }
+         // });
       }
       if (treenivet‰j‰t == null)
       {
@@ -151,10 +161,10 @@ public class TreeniAdmin
       return treeni != null && treeni.getId() > 0;
    }
 
-   public String lis‰‰Treeni()
+   public void lis‰‰Treeni()
    {
       treeni = new Treeni();
-      return "admin.xhtml";
+      treenivet‰j‰t = null;
    }
 
    public void treeniValittu(SelectEvent e)

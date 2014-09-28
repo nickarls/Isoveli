@@ -29,7 +29,8 @@ import fi.budokwai.isoveli.SukupuoliConverter;
 
 @Entity
 @NamedQueries(
-{ @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.korttinumero=:kortti"),
+{
+      @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.korttinumero=:kortti"),
       @NamedQuery(name = "treenivetäjät", query = "select h from Harrastaja h order by h.henkilö.sukunimi, h.henkilö.etunimi"),
       @NamedQuery(name = "harrastajat", query = "select h from Harrastaja h order by h.henkilö.sukunimi, h.henkilö.etunimi") })
 @Typed(
@@ -199,6 +200,7 @@ public class Harrastaja
 
    public List<Vyökoe> getVyökokeet()
    {
+      System.out.println(vyökokeet.size());
       return vyökokeet;
    }
 
@@ -224,7 +226,7 @@ public class Harrastaja
 
    public boolean isTreenienVetäjä()
    {
-      return henkilö.onRoolissa("Treenien vetjäjä");
+      return henkilö.onRoolissa("Treenien vetäjä");
    }
 
    public List<Kisatulos> getKisatulokset()

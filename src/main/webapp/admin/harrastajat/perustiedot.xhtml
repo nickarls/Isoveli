@@ -131,9 +131,9 @@
 	</h:panelGrid>
 	<h:commandButton rendered="#{harrastaja != null}" value="x" styleClass="ikoni"
 		action="#{harrastajaAdmin.tallennaHarrastaja}" image="/kuvat/tallenna.jpg" />
-	<h:commandButton rendered="#{harrastaja != null}" value="x" styleClass="ikoni"
+	<h:commandButton rendered="#{harrastaja != null}" value="x" styleClass="ikoni" immediate="true"
 		action="#{harrastajaAdmin.peruutaMuutos}" image="/kuvat/peruuta_muutos.png" />
 	<h:commandButton rendered="#{harrastaja.poistettavissa}" value="x" styleClass="ikoni"
-		action="#{harrastajaAdmin.poistaHarrastaja}" image="/kuvat/poista_käyttäjä.png" immediate="true" />
+		action="#{harrastajaAdmin.poistaHarrastaja}" image="/kuvat/poista.png" immediate="true" />
 
 </ui:composition>

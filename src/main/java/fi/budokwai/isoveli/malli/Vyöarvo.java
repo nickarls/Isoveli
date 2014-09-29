@@ -31,7 +31,7 @@ public class Vyöarvo
 
    private int minimitreenit;
 
-   @OneToMany(mappedBy = "id.vyöarvo")
+   @OneToMany(mappedBy = "vyöarvo")
    private List<Vyökoe> vyökokeet = new ArrayList<Vyökoe>();
 
    public Vyöarvo(String nimi)

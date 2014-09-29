@@ -37,19 +37,14 @@ public class Treenikäynti
    @Temporal(TemporalType.TIMESTAMP)
    private Date aikaleima = new Date();
 
-   @Temporal(TemporalType.DATE)
-   @Column(name = "paiva")
-   private Date päivä;
-
    public Treenikäynti()
    {
    }
 
-   public Treenikäynti(Harrastaja harrastaja, Treenisessio treenisessio, Date päivä)
+   public Treenikäynti(Harrastaja harrastaja, Treenisessio treenisessio)
    {
       this.harrastaja = harrastaja;
       this.treenisessio = treenisessio;
-      this.päivä = päivä;
    }
 
    public int getId()
@@ -80,16 +75,6 @@ public class Treenikäynti
    public void setAikaleima(Date aikaleima)
    {
       this.aikaleima = aikaleima;
-   }
-
-   public Date getPäivä()
-   {
-      return päivä;
-   }
-
-   public void setPäivä(Date päivä)
-   {
-      this.päivä = päivä;
    }
 
    public Treenisessio getTreenisessio()

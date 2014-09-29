@@ -162,6 +162,7 @@ public class TreeniAdmin
    {
       treeni = new Treeni();
       treenivetäjät = null;
+      rowStateMap.setAllSelected(false);
    }
 
    public void treeniValittu(SelectEvent e)

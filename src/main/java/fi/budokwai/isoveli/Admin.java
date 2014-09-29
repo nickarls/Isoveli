@@ -9,6 +9,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 
 import org.icefaces.ace.event.RowEditEvent;
 import org.icefaces.application.PushRenderer;
@@ -21,10 +22,8 @@ import fi.budokwai.isoveli.malli.Treenikäynti;
 @SessionScoped
 public class Admin
 {
-   @PersistenceContext
+   @PersistenceContext(type = PersistenceContextType.EXTENDED)
    private EntityManager entityManager;
-
-
 
    @PostConstruct
    public void init()
@@ -36,7 +35,7 @@ public class Admin
    @Named
    public List<Treenikäynti> getTreenikaynnit()
    {
-      return entityManager.createNamedQuery("treenikaynnit", Treenikäynti.class).getResultList();
+      return entityManager.createNamedQuery("treenikäynnit", Treenikäynti.class).getResultList();
    }
 
    public void tallennaHarrastaja(RowEditEvent e)

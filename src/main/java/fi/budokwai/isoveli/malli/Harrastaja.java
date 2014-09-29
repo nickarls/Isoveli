@@ -55,8 +55,8 @@ public class Harrastaja
    @JoinColumn(name = "huoltaja")
    private Henkilö huoltaja;
 
-   @OneToMany(cascade = CascadeType.ALL, mappedBy = "id.harrastaja", orphanRemoval = true)
-   @OrderBy("vyoarvo")
+   @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
+   @OrderBy("vyoarvo asc")
    private List<Vyökoe> vyökokeet = Collections.emptyList();
 
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)

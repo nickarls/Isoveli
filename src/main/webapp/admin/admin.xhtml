@@ -30,41 +30,18 @@
 		<icecore:focusManager>
 			<h:form id="form">
 				<ace:tabSet>
+					<ace:tabPane label="Imoittautumiset">
+						<ui:include src="ilmoittautumiset.xhtml" />
+					</ace:tabPane>
 					<ace:tabPane label="Harrastajat">
 						<ui:include src="harrastajat/harrastajat.xhtml" />
 					</ace:tabPane>
 					<ace:tabPane label="Harjoitukset">
 						<ui:include src="treenit/treenit.xhtml"/>
 					</ace:tabPane>
+					
 <!-- 					
 					<ace:tabPane label="Treenikäynnit">
-						<ace:dataTable value="#{treenikaynnit}" var="_treenikaynti">
-							<ace:ajax event="editSubmit" render="facesMsgs" />
-							<ace:column headerText="ID">
-								<h:outputText value="#{_treenikaynti.id}" />
-							</ace:column>
-							<ace:column headerText="Aikaleima">
-								<ace:cellEditor>
-									<f:facet name="output">
-										<h:outputText value="#{_treenikaynti.aikaleima}">
-											<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="EET" />
-										</h:outputText>
-									</f:facet>
-									<f:facet name="input">
-										<h:inputText value="#{_treenikaynti.aikaleima}" />
-									</f:facet>
-								</ace:cellEditor>
-							</ace:column>
-							<ace:column headerText="Harrastaja">
-								<h:outputText value="#{_treenikaynti.harrastaja.nimi}" class="teksti" />
-							</ace:column>
-							<ace:column headerText="Treeni">
-								<h:outputText value="#{_treenikaynti.treeni.kuvaus}" class="teksti" />
-							</ace:column>
-							<ace:column id="options" headerText="Muokkaa">
-								<h:commandButton value="X" image="poista.png" action="#{admin.poistaTreenikaynti(_treenikaynti)}" />
-							</ace:column>
-						</ace:dataTable>
 					</ace:tabPane>
 -->					
 				</ace:tabSet>

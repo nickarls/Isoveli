@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	<h:commandButton action="#{treeniAdmin.lisääTreeni}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
+		immediate="true">
+		<ace:ajax render="@form" />
+	</h:commandButton>
+	<ace:dataTable value="#{treenikaynnit}" var="_treenikaynti">
+		<ace:column headerText="Aikaleima">
+			<h:outputText value="#{_treenikaynti.aikaleima}">
+				<f:convertDateTime pattern="HH:mm:ss" timeZone="EET" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Harrastaja">
+			<h:outputText value="#{_treenikaynti.harrastaja.henkilö.nimi}" class="teksti" />
+		</ace:column>
+		<ace:column headerText="Treeni">
+			<h:outputText value="#{_treenikaynti.treenisessio.treeni.nimi}" class="teksti" />
+		</ace:column>
+		<ace:column headerText="Päivä">
+			<h:outputText value="#{_treenikaynti.treenisessio.treeni.päivä}" class="teksti" />
+		</ace:column>
+		<ace:column headerText="Harrastajia">
+			<h:outputText value="#{_treenikaynti.treenisessio.treenikäynnit.size()}" class="teksti" />
+		</ace:column>
+	</ace:dataTable>
+	<p />
+</ui:composition>

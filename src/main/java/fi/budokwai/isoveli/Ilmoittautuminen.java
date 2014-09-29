@@ -129,8 +129,7 @@ public class Ilmoittautuminen
 
    public String tallenna()
    {
-      Date tanaan = haeTanaanPvm();
-      Treenikäynti treenikaynti = new Treenikäynti(harrastaja, null, tanaan);
+      Treenikäynti treenikaynti = new Treenikäynti(harrastaja, null);
       entityManager.persist(treenikaynti);
       PushRenderer.render("ilmoittautuminen");
       nollaa();

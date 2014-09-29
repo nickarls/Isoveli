@@ -3,66 +3,37 @@ package fi.budokwai.isoveli.malli;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import javax.persistence.AssociationOverride;
-import javax.persistence.AssociationOverrides;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import fi.budokwai.isoveli.malli.Harrastaja;
-import fi.budokwai.isoveli.malli.Vyökoe;
-
 @Entity
 @Table(name = "vyokoe")
-@AssociationOverrides(
-{ @AssociationOverride(name = "id.vyöarvo", joinColumns = @JoinColumn(name = "vyoarvo")),
-      @AssociationOverride(name = "id.harrastaja", joinColumns = @JoinColumn(name = "harrastaja")) })
 public class Vyökoe
 {
-   private Vyökoeavain id = new Vyökoeavain();
+   @Id
+   @GeneratedValue
+   private int id;
 
-   private Date päivä;
+   @ManyToOne
+   @JoinColumn(name="vyoarvo")
+   private Vyöarvo vyöarvo;
 
-   @EmbeddedId
-   private Vyökoeavain getId()
-   {
-      return id;
-   }
-
-   private void setId(Vyökoeavain id)
-   {
-      this.id = id;
-   }
-
-   @Transient
-   public Vyöarvo getVyöarvo()
-   {
-      return getId().getVyöarvo();
-   }
-
-   public void setVyöarvo(Vyöarvo vyöarvo)
-   {
-      getId().setVyöarvo(vyöarvo);
-   }
-
-   @Transient
-   public Harrastaja getHarrastaja()
-   {
-      return getId().getHarrastaja();
-   }
-
-   public void setHarrastaja(Harrastaja harrastaja)
-   {
-      getId().setHarrastaja(harrastaja);
-   }
+   @ManyToOne
+   @JoinColumn(name="harrastaja")
+   private Harrastaja harrastaja;
 
    @Temporal(TemporalType.DATE)
    @Column(name = "paiva")
+   private Date päivä;
+
    public Date getPäivä()
    {
       return päivä;
@@ -71,6 +42,36 @@ public class Vyökoe
    public void setPäivä(Date päivä)
    {
       this.päivä = päivä;
+   }
+
+   public int getId()
+   {
+      return id;
+   }
+
+   public void setId(int id)
+   {
+      this.id = id;
+   }
+
+   public Vyöarvo getVyöarvo()
+   {
+      return vyöarvo;
+   }
+
+   public void setVyöarvo(Vyöarvo vyöarvo)
+   {
+      this.vyöarvo = vyöarvo;
+   }
+
+   public Harrastaja getHarrastaja()
+   {
+      return harrastaja;
+   }
+
+   public void setHarrastaja(Harrastaja harrastaja)
+   {
+      this.harrastaja = harrastaja;
    }
 
    @Transient
@@ -82,7 +83,7 @@ public class Vyökoe
    @Transient
    public boolean isPoistettavissa()
    {
-      return id != null && id.getHarrastaja() != null && id.getVyöarvo() != null;
+      return id > 0;
    }
 
    @Transient
@@ -100,25 +101,13 @@ public class Vyökoe
 
    public boolean equals(Object o)
    {
-      if (this == o)
-      {
-         return true;
-      }
-      if (o == null || getClass() != o.getClass())
-      {
-         return false;
-      }
-      Vyökoe that = (Vyökoe) o;
-      if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null)
-      {
-         return false;
-      }
-      return true;
+      Vyökoe toinen = (Vyökoe) o;
+      return id == toinen.getId();
    }
 
    public int hashCode()
    {
-      return (getId() != null ? getId().hashCode() : 0);
+      return Integer.valueOf(id).hashCode();
    }
 
 }

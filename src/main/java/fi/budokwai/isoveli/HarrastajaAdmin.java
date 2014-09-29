@@ -145,6 +145,7 @@ public class HarrastajaAdmin
    public void lisääHarrastaja()
    {
       harrastaja = new Harrastaja();
+      rowStateMap.setAllSelected(false);
    }
 
    public void harrastajaValittu(SelectEvent e)

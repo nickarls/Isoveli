@@ -20,9 +20,6 @@ import org.hibernate.Session;
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Treeni;
 import fi.budokwai.isoveli.malli.Treenityyppi;

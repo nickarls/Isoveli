@@ -1,28 +1,38 @@
 package fi.budokwai.isoveli.malli;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@NamedQuery(name = "vyöarvot", query = "select v from Vyöarvo v order by id")
+@NamedQuery(name = "vyöarvot", query = "select v from Vyöarvo v order by v.id")
 @Table(name = "vyoarvo")
 public class Vyöarvo
 {
    public static final Vyöarvo EI_OOTA = new Vyöarvo("Ei ole");
 
    @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   @GeneratedValue
    private int id;
 
    @Size(max = 10)
    @NotNull
    private String nimi;
+
+   private int minimikuukaudet;
+
+   private int minimitreenit;
+
+   @OneToMany(mappedBy = "id.vyöarvo")
+   private List<Vyökoe> vyökokeet = new ArrayList<Vyökoe>();
 
    public Vyöarvo(String nimi)
    {
@@ -31,12 +41,7 @@ public class Vyöarvo
 
    public Vyöarvo()
    {
-
    }
-
-   private int minimikuukaudet;
-
-   private int minimitreenit;
 
    public int getId()
    {
@@ -58,14 +63,14 @@ public class Vyöarvo
       this.nimi = nimi;
    }
 
-   public int getMinimitreenit()
+   public List<Vyökoe> getVyökokeet()
    {
-      return minimitreenit;
+      return vyökokeet;
    }
 
-   public void setMinimitreenit(int minimitreenit)
+   public void setVyökokeet(List<Vyökoe> vyökokeet)
    {
-      this.minimitreenit = minimitreenit;
+      this.vyökokeet = vyökokeet;
    }
 
    public int getMinimikuukaudet()
@@ -76,6 +81,16 @@ public class Vyöarvo
    public void setMinimikuukaudet(int minimikuukaudet)
    {
       this.minimikuukaudet = minimikuukaudet;
+   }
+
+   public int getMinimitreenit()
+   {
+      return minimitreenit;
+   }
+
+   public void setMinimitreenit(int minimitreenit)
+   {
+      this.minimitreenit = minimitreenit;
    }
 
    @Override

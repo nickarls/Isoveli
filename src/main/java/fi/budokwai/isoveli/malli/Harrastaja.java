@@ -53,7 +53,7 @@ public class Harrastaja
    @JoinColumn(name = "huoltaja")
    private Henkilö huoltaja;
 
-   @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
+   @OneToMany(cascade = CascadeType.ALL, mappedBy = "id.harrastaja", orphanRemoval = true)
    @OrderBy("vyoarvo")
    private List<Vyökoe> vyökokeet = Collections.emptyList();
 
@@ -68,7 +68,7 @@ public class Harrastaja
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
    @OrderBy("aikaleima desc")
    private List<Treenikäynti> treenikäynnit = Collections.emptyList();
-
+   
    @Size(max = 10)
    @Column(name = "jasennumero")
    private String jäsennumero;
@@ -200,7 +200,6 @@ public class Harrastaja
 
    public List<Vyökoe> getVyökokeet()
    {
-      System.out.println(vyökokeet.size());
       return vyökokeet;
    }
 
@@ -281,4 +280,5 @@ public class Harrastaja
       Harrastaja toinenHarrastaja = (Harrastaja) toinen;
       return id == toinenHarrastaja.getId();
    }
+
 }

@@ -28,16 +28,16 @@
 			</h:panelGrid>
 		</ace:column>
 	</ace:dataTable>
-	<p/>
-	<ace:panel header="Vyökoetiedot" rendered="#{vyökoe != null}" style="width:300px">
+	<p />
+	<ace:panel header="Vyökoetiedot" rendered="#{vyökoe != null}" style="width:300px" id="vyökoepanel">
 		<h:panelGrid>
 			<h:outputText value="Vyöarvo" />
 			<h:panelGrid>
 				<ace:message for="form:vyöarvo" />
-    			<h:selectOneMenu value="#{vyökoe.vyöarvo}" id="vyöarvo">
-        			<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}"/>
-        			<f:converter converterId="objectConverter" />
-    			</h:selectOneMenu>				
+				<h:selectOneMenu value="#{vyökoe.vyöarvo}" id="vyöarvo">
+					<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}" />
+					<f:converter converterId="objectConverter" />
+				</h:selectOneMenu>
 			</h:panelGrid>
 			<h:outputText value="Päivä" />
 			<h:panelGrid>
@@ -46,10 +46,16 @@
 			</h:panelGrid>
 		</h:panelGrid>
 	</ace:panel>
+	<h:commandButton rendered="#{vyökoeAdmin.vyökoe != null}" styleClass="ikoni"
+	 image="/kuvat/tallenna.jpg">
+		<ace:ajax execute="form:vyökoepanel" listener="#{vyökoeAdmin.tallennaVyökoe(harrastaja)}" render="@form" />
+	</h:commandButton>
 	<h:commandButton rendered="#{vyökoeAdmin.vyökoe != null}" value="x" styleClass="ikoni"
-		action="#{vyökoeAdmin.tallennaVyökoe(harrastaja)}" image="/kuvat/tallenna.jpg" />
-	<h:commandButton rendered="#{vyökoeAdmin.vyökoe != null}" value="x" styleClass="ikoni"
-		action="#{vyökoeAdmin.peruutaMuutos}" image="/kuvat/peruuta_muutos.png" />
+		action="#{vyökoeAdmin.peruutaMuutos}" image="/kuvat/peruuta_muutos.png">
+		<ace:ajax render="@form" />
+	</h:commandButton>
 	<h:commandButton rendered="#{vyökoeAdmin.vyökoePoistettavissa}" value="x" styleClass="ikoni"
-		action="#{vyökoeAdmin.poistaVyökoe()}" image="/kuvat/poista_vyö.png" immediate="true" />
+		action="#{vyökoeAdmin.poistaVyökoe(harrastaja)}" image="/kuvat/poista.png" immediate="true">
+		<ace:ajax render="@form" />
+	</h:commandButton>
 </ui:composition>

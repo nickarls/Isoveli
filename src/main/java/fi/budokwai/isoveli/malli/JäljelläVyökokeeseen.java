@@ -5,6 +5,12 @@ public class JäljelläVyökokeeseen
    private int päiviä;
    private int treenikertoja;
 
+   public JäljelläVyökokeeseen(int päiviä, int treenikertoja)
+   {
+      this.päiviä = päiviä;
+      this.treenikertoja = treenikertoja;
+   }
+
    public int getTreenikertoja()
    {
       return treenikertoja;

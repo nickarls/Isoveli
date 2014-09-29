@@ -51,7 +51,7 @@ public class Henkilö
    private List<Rooli> roolit = new ArrayList<Rooli>();
 
    @Size(max = 50)
-   public String salasana;
+   private String salasana;
 
    private Blob kuva;
 

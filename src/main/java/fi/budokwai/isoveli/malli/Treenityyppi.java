@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@NamedQuery(name = "treenityypit", query = "select t from Treenityyppi t order by nimi")
+@NamedQuery(name = "treenityypit", query = "select t from Treenityyppi t order by t.nimi")
 public class Treenityyppi
 {
    @Id

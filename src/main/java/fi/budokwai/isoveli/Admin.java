@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.icefaces.ace.event.RowEditEvent;
-import org.icefaces.ace.model.table.RowStateMap;
 import org.icefaces.application.PushRenderer;
 
 import fi.budokwai.isoveli.malli.Harrastaja;

@@ -3,89 +3,66 @@ package fi.budokwai.isoveli.malli;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Transient;
+
+import fi.budokwai.isoveli.malli.Harrastaja;
+import fi.budokwai.isoveli.malli.Vyökoe;
 
 @Entity
 @Table(name = "vyokoe")
+@AssociationOverrides(
+{ @AssociationOverride(name = "id.vyöarvo", joinColumns = @JoinColumn(name = "vyoarvo")),
+      @AssociationOverride(name = "id.harrastaja", joinColumns = @JoinColumn(name = "harrastaja")) })
 public class Vyökoe
 {
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private int id;
+   private Vyökoeavain id = new Vyökoeavain();
 
-   @ManyToOne(optional = false)
-   @JoinColumn(name = "harrastaja", insertable = false, updatable = false)
-   @NotNull
-   private Harrastaja harrastaja;
-
-   @OneToOne(optional = false)
-   @JoinColumn(name = "vyoarvo")
-   @NotNull
-   private Vyöarvo vyöarvo;
-
-   @Temporal(TemporalType.DATE)
-   @Column(name = "paiva")
-   @NotNull
    private Date päivä;
 
-   public int getId()
+   @EmbeddedId
+   private Vyökoeavain getId()
    {
       return id;
    }
 
-   public void setId(int id)
+   private void setId(Vyökoeavain id)
    {
       this.id = id;
    }
 
-   public Harrastaja getHarrastaja()
-   {
-      return harrastaja;
-   }
-
-   public void setHarrastaja(Harrastaja harrastaja)
-   {
-      this.harrastaja = harrastaja;
-   }
-
+   @Transient
    public Vyöarvo getVyöarvo()
    {
-      return vyöarvo;
-   }
-
-   public boolean isTuoreinVyökoe()
-   {
-      return harrastaja.getVyökokeet().get(harrastaja.getVyökokeet().size() - 1) == this;
-   }
-
-   public long getAikaaVälissä()
-   {
-      int koeIndeksi = harrastaja.getVyökokeet().indexOf(this);
-      if (koeIndeksi == 0)
-      {
-         return 0;
-      }
-      Vyökoe edellinenKoe = harrastaja.getVyökokeet().get(koeIndeksi - 1);
-      long diff = päivä.getTime() - edellinenKoe.getPäivä().getTime();
-      return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+      return getId().getVyöarvo();
    }
 
    public void setVyöarvo(Vyöarvo vyöarvo)
    {
-      this.vyöarvo = vyöarvo;
+      getId().setVyöarvo(vyöarvo);
    }
 
+   @Transient
+   public Harrastaja getHarrastaja()
+   {
+      return getId().getHarrastaja();
+   }
+
+   public void setHarrastaja(Harrastaja harrastaja)
+   {
+      getId().setHarrastaja(harrastaja);
+   }
+
+   @Temporal(TemporalType.DATE)
+   @Column(name = "paiva")
    public Date getPäivä()
    {
       return päivä;
@@ -95,4 +72,47 @@ public class Vyökoe
    {
       this.päivä = päivä;
    }
+
+   @Transient
+   public boolean isTuoreinVyökoe()
+   {
+      return getHarrastaja().getVyökokeet().get(getHarrastaja().getVyökokeet().size() - 1) == this;
+   }
+
+   @Transient
+   public long getAikaaVälissä()
+   {
+      int koeIndeksi = getHarrastaja().getVyökokeet().indexOf(this);
+      if (koeIndeksi == 0)
+      {
+         return 0;
+      }
+      Vyökoe edellinenKoe = getHarrastaja().getVyökokeet().get(koeIndeksi - 1);
+      long diff = päivä.getTime() - edellinenKoe.getPäivä().getTime();
+      return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+   }
+
+   public boolean equals(Object o)
+   {
+      if (this == o)
+      {
+         return true;
+      }
+      if (o == null || getClass() != o.getClass())
+      {
+         return false;
+      }
+      Vyökoe that = (Vyökoe) o;
+      if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null)
+      {
+         return false;
+      }
+      return true;
+   }
+
+   public int hashCode()
+   {
+      return (getId() != null ? getId().hashCode() : 0);
+   }
+
 }

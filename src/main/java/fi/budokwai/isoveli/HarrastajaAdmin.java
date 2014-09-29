@@ -7,8 +7,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
-import javax.enterprise.event.Observes;
-import javax.enterprise.event.TransactionPhase;
 import javax.enterprise.inject.Produces;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -26,7 +24,7 @@ import org.icefaces.ace.model.table.RowStateMap;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Sukupuoli;
-import fi.budokwai.isoveli.util.Muuttui;
+import fi.budokwai.isoveli.malli.Vyökoe;
 
 @Named
 @SessionScoped
@@ -113,6 +111,24 @@ public class HarrastajaAdmin
       rowStateMap.setAllSelected(false);
    }
 
+   public void tallennaVyökoe(Vyökoe vyökoe)
+   {
+      vyökoe.setHarrastaja(harrastaja);
+      if (!harrastaja.getVyökokeet().contains(vyökoe))
+      {
+         harrastaja.getVyökokeet().add(vyökoe);
+      }
+      entityManager.persist(harrastaja);
+      entityManager.flush();
+   }
+
+   public void poistaVyökoe(Vyökoe vyökoe)
+   {
+      harrastaja.getVyökokeet().remove(vyökoe);
+      entityManager.persist(harrastaja);
+      entityManager.flush();
+   }
+
    public void syntymäAikaMuuttui(AjaxBehaviorEvent e)
    {
       DateTimeEntry dte = (DateTimeEntry) e.getComponent();
@@ -124,11 +140,6 @@ public class HarrastajaAdmin
       {
          harrastaja.setHuoltaja(null);
       }
-   }
-
-   public void harrastajaMuuttui(@Observes(during = TransactionPhase.AFTER_COMPLETION) @Muuttui Object o)
-   {
-      entityManager.refresh(this.harrastaja);
    }
 
    public void lisääHarrastaja()

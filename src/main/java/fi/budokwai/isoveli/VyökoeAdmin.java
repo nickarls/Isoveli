@@ -6,9 +6,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
-import javax.enterprise.event.Event;
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,7 +20,6 @@ import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.JäljelläVyökokeeseen;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Vyökoe;
-import fi.budokwai.isoveli.util.Muuttui;
 
 @Named
 @SessionScoped
@@ -35,9 +33,6 @@ public class VyökoeAdmin
    @PersistenceContext(type = PersistenceContextType.EXTENDED)
    private EntityManager entityManager;
 
-   @Inject @Muuttui
-   private Event<Object> harrastajaMuuttui;
-   
    private List<Vyöarvo> vyöarvot;
 
    @PostConstruct
@@ -72,31 +67,15 @@ public class VyökoeAdmin
       return tulos;
    }
 
-   public void tallennaVyökoe(Harrastaja harrastaja)
-   {
-      harrastaja = entityManager.merge(harrastaja);
-      vyökoe.setHarrastaja(harrastaja);
-      harrastaja.getVyökokeet().add(vyökoe);
-      entityManager.persist(harrastaja);
-      vyökoe = null;
-      rowStateMap.setAllSelected(false);
-      harrastajaMuuttui.fire(new Object());
-   }
-
    public void peruutaMuutos()
    {
       vyökoe = null;
       rowStateMap.setAllSelected(false);
    }
 
-   public void poistaVyökoe(Harrastaja harrastaja)
+   public void piilotaVyökoe()
    {
-      harrastaja = entityManager.merge(harrastaja);
-      harrastaja.getVyökokeet().remove(vyökoe);
-      entityManager.persist(harrastaja);
-      entityManager.flush();
       vyökoe = null;
-      harrastajaMuuttui.fire(harrastaja);
    }
 
    public void lisääVyökoe(Harrastaja harrastaja)
@@ -109,11 +88,6 @@ public class VyökoeAdmin
       }
       vyökoe.setVyöarvo(seuraavaVyöarvo);
       vyökoe.setPäivä(new Date());
-   }
-
-   public boolean isVyökoePoistettavissa()
-   {
-      return vyökoe != null;
    }
 
    public void vyökoeValittu(SelectEvent e)

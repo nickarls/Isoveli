@@ -25,6 +25,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Cascade;
+
 import fi.budokwai.isoveli.SukupuoliConverter;
 
 @Entity

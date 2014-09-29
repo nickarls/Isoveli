@@ -80,6 +80,12 @@ public class Vyökoe
    }
 
    @Transient
+   public boolean isPoistettavissa()
+   {
+      return id != null && id.getHarrastaja() != null && id.getVyöarvo() != null;
+   }
+
+   @Transient
    public long getAikaaVälissä()
    {
       int koeIndeksi = getHarrastaja().getVyökokeet().indexOf(this);

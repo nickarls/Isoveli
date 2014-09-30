@@ -23,7 +23,9 @@ import org.icefaces.ace.model.table.RowStateMap;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
+import fi.budokwai.isoveli.malli.Rooli;
 import fi.budokwai.isoveli.malli.Sukupuoli;
+import fi.budokwai.isoveli.malli.Treenikäynti;
 import fi.budokwai.isoveli.malli.Vyökoe;
 
 @Named
@@ -32,6 +34,7 @@ import fi.budokwai.isoveli.malli.Vyökoe;
 public class HarrastajaAdmin extends Perustoiminnallisuus
 {
    private List<Harrastaja> harrastajat;
+   private List<Rooli> roolit;
 
    @PersistenceContext(type = PersistenceContextType.EXTENDED)
    private EntityManager entityManager;
@@ -55,6 +58,18 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          harrastajat = entityManager.createNamedQuery("harrastajat", Harrastaja.class).getResultList();
       }
       return harrastajat;
+   }
+
+   @Produces
+   @Named
+   public List<Rooli> getRoolit()
+   {
+      if (roolit == null)
+      {
+         roolit = entityManager.createNamedQuery("roolit", Rooli.class).getResultList();
+         roolit.removeAll(harrastaja.getHenkilö().getRoolit());
+      }
+      return roolit;
    }
 
    @Produces
@@ -151,6 +166,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void lisääHarrastaja()
    {
       harrastaja = new Harrastaja();
+      roolit = null;
       rowStateMap.setAllSelected(false);
       info("Uusi harrastaja alustettu");
    }
@@ -158,6 +174,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void harrastajaValittu(SelectEvent e)
    {
       harrastaja = (Harrastaja) e.getObject();
+      roolit = null;
    }
 
    public RowStateMap getRowStateMap()

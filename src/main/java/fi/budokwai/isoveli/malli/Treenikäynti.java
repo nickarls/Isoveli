@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,8 +29,9 @@ public class Treenikäynti
    @NotNull
    private Harrastaja harrastaja;
 
-   @OneToOne(optional = false, cascade = CascadeType.ALL, orphanRemoval = true)
+   @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
    @JoinColumn(name = "treenisessio")
+   @NotNull
    private Treenisessio treenisessio;
 
    @Temporal(TemporalType.TIMESTAMP)
@@ -39,6 +39,7 @@ public class Treenikäynti
 
    public Treenikäynti()
    {
+
    }
 
    public Treenikäynti(Harrastaja harrastaja, Treenisessio treenisessio)
@@ -87,4 +88,16 @@ public class Treenikäynti
       this.treenisessio = treenisessio;
    }
 
+   @Override
+   public int hashCode()
+   {
+      return Integer.valueOf(id).hashCode();
+   }
+
+   @Override
+   public boolean equals(Object other)
+   {
+      Treenikäynti toinen = (Treenikäynti) other;
+      return id == toinen.getId();
+   }
 }

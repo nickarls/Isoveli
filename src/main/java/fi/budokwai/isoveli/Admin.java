@@ -33,11 +33,17 @@ public class Admin
 
    @Produces
    @Named
-   public List<Treenikäynti> getTreenikaynnit()
+   public List<Treenikäynti> getTreenikäynnit()
    {
       return entityManager.createNamedQuery("treenikäynnit", Treenikäynti.class).getResultList();
    }
 
+   public void poistaTreenikäynti(Treenikäynti treenikäynti)
+   {
+      entityManager.remove(treenikäynti);
+      entityManager.flush();
+   }
+   
    public void tallennaHarrastaja(RowEditEvent e)
    {
       Harrastaja h = (Harrastaja) e.getObject();

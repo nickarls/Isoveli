@@ -150,6 +150,10 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
    public void tallenna()
    {
       Treenisessio treenisessio = haeTreenisessio();
+      for (Harrastaja h : treeni.getVetäjät())
+      {
+         treenisessio.getTreenivetäjät().add(h);
+      }
       Treenikäynti treenikaynti = new Treenikäynti(harrastaja, treenisessio);
       harrastaja.getTreenikäynnit().add(treenikaynti);
       entityManager.persist(harrastaja);

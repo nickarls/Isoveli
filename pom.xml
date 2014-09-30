@@ -11,6 +11,7 @@
 		<icefaces.version>4.0.0-RC1</icefaces.version>
 		<wildfly.version>8.1.0.Final</wildfly.version>
 		<wildfly.plugin.version>1.0.1.Final</wildfly.plugin.version>
+		<deltaspike.version>1.0.2</deltaspike.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -19,6 +20,30 @@
 			<version>${javaee.version}</version>
 			<type>pom</type>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.deltaspike.core</groupId>
+			<artifactId>deltaspike-core-api</artifactId>
+			<version>${deltaspike.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.deltaspike.core</groupId>
+			<artifactId>deltaspike-core-impl</artifactId>
+			<version>${deltaspike.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.deltaspike.modules</groupId>
+			<artifactId>deltaspike-jsf-module-api</artifactId>
+			<version>${deltaspike.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.deltaspike.modules</groupId>
+			<artifactId>deltaspike-jsf-module-impl</artifactId>
+			<version>${deltaspike.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.icefaces</groupId>

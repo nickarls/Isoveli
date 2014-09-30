@@ -1,6 +1,6 @@
 package fi.budokwai.isoveli.malli;
 
-public enum Viikonpaiva
+public enum Viikonpäivä
 {
    Sunnuntai, Maanantai, Tiistai, Keskiviikko, Torstai, Perjantai, Lauantai;
 }

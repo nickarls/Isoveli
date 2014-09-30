@@ -1,13 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:icecore="http://www.icefaces.org/icefaces/core"
-	xmlns:ace="http://www.icefaces.org/icefaces/components"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
+	<h:outputStylesheet library="css" name="jquery.growl.css" target="head" />
+	<h:outputScript library="skriptit" name="jquery.min.js" target="head" />
+	<h:outputScript library="skriptit" name="jquery.growl.js" target="head" />
 	<style>
 .kortti {
 	width: 500px;
@@ -55,6 +55,8 @@
 
 .ikoni {
 	margin-left: 30px;
+	height: 64px;
+	width: 64px;
 }
 </style>
 </h:head>
@@ -66,50 +68,45 @@
 					<div class="kortti">
 						<table width="500" height="250">
 							<tr>
-								<td><img src="logo.png" class="logo" /></td>
-								<td><h:inputText value="#{ilmoittautuminen.korttinumero}"
-										required="true" styleClass="syotto korttinumero"
+								<td><img src="kuvat/logo.png" class="logo" /></td>
+								<td><h:inputText value="#{ilmoittautuminen.korttinumero}" required="true" styleClass="syotto korttinumero"
 										requiredMessage="Arvo on pakollinen" id="korttinumero"
-										onkeydown="if (event.keyCode == 13) document.getElementById('formi:luekortti').click()" />
-									<h:commandButton action="#{ilmoittautuminen.lueKortti()}"
-										value="." style="display:none" id="luekortti" /> <br /> <h:outputText
-										value="#{harrastaja.nimi}" rendered="#{harrastaja != null}"
-										styleClass="nimi" /></td>
+										onkeydown="if (event.keyCode == 13) document.getElementById('formi:luekortti').click()" /> <h:commandButton
+										action="#{ilmoittautuminen.lueKortti()}" value="." style="display:none" id="luekortti" /> <br /> <h:outputText
+										value="#{treeniharrastaja.henkilö.nimi}" rendered="#{treeniharrastaja != null}" styleClass="nimi" /></td>
 							</tr>
 						</table>
 					</div>
 				</h:panelGroup>
-				<ace:dataTable rendered="#{ilmoittautuminen.harrastajaValittu}"
-					value="#{treenit}" var="_treeni" selectionMode="single"
-					stateMap="#{ilmoittautuminen.stateMap}"
-					style="margin-left:20px; font-size:25px;"
+				<ace:dataTable rendered="#{treeniharrastaja != null}" value="#{tulevatTreenit}" var="_treeni"
+					selectionMode="single" stateMap="#{ilmoittautuminen.stateMap}" style="margin-left:20px; font-size:25px;"
 					rowSelectListener="#{ilmoittautuminen.treeniValittu}">
-					<ace:ajax event="select" render="@this formi:napit"
-						execute="@this" />
+					<ace:ajax event="select" render="@this formi:napit" execute="@this" />
+					<ace:column headerText="Päivä">
+						<h:outputText value="#{_treeni.päivä}" />
+					</ace:column>
 					<ace:column headerText="Alkaa">
 						<h:outputText value="#{_treeni.alkaa}">
 							<f:convertDateTime pattern="HH:mm" />
 						</h:outputText>
 					</ace:column>
 					<ace:column headerText="Päättyy">
-						<h:outputText value="#{_treeni.paattyy}">
+						<h:outputText value="#{_treeni.päättyy}">
 							<f:convertDateTime pattern="HH:mm" />
 						</h:outputText>
 					</ace:column>
 					<ace:column headerText="Treeni">
-						<h:outputText value="#{_treeni.kuvaus}">
+						<h:outputText value="#{_treeni.nimi}">
 							<f:convertDateTime pattern="HH:mm" />
 						</h:outputText>
 					</ace:column>
 				</ace:dataTable>
 				<h:panelGrid id="napit">
-					<h:commandButton image="ok.jpg" value="tallenna" id="tallenna"
-						rendered="#{ilmoittautuminen.treeniValittu}" styleClass="ikoni"
-						action="#{ilmoittautuminen.tallenna}" />
-					<h:commandButton image="peruuta.jpg" value="peruuta"
-						styleClass="ikoni" immediate="true"
+					<h:commandButton image="kuvat/ok.jpg" value="tallenna" id="tallenna" rendered="#{ilmoittautuminen.treeniValittu}"
+						styleClass="ikoni" action="#{ilmoittautuminen.tallenna}" />
+					<h:commandButton image="kuvat/peruuta.jpg" value="peruuta" styleClass="ikoni" immediate="true"
 						action="#{ilmoittautuminen.peruuta}"
-						rendered="#{ilmoittautuminen.harrastajaValittu || ilmoittautuminen.treeniValittu}" />
+						rendered="#{treeniharrastaja != null || ilmoittautuminen.treeniValittu}" />
 				</h:panelGrid>
 			</h:panelGrid>
 		</h:form>

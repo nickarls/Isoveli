@@ -2,7 +2,7 @@ package fi.budokwai.isoveli.malli;
 
 import java.util.Date;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,11 +26,11 @@ public class Treenikäynti
    private int id;
 
    @ManyToOne(optional = false)
-   @JoinColumn(name = "harrastaja", insertable = false, updatable = false)
+   @JoinColumn(name = "harrastaja")
    @NotNull
    private Harrastaja harrastaja;
 
-   @OneToOne(optional = false)
+   @OneToOne(optional = false, cascade = CascadeType.ALL, orphanRemoval = true)
    @JoinColumn(name = "treenisessio")
    private Treenisessio treenisessio;
 

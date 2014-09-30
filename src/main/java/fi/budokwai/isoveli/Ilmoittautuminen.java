@@ -4,54 +4,55 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 import org.icefaces.application.PushRenderer;
-import org.icefaces.util.JavaScriptRunner;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
-import fi.budokwai.isoveli.malli.Viikonpaiva;
 import fi.budokwai.isoveli.malli.Treeni;
 import fi.budokwai.isoveli.malli.Treenik‰ynti;
+import fi.budokwai.isoveli.malli.Treenisessio;
+import fi.budokwai.isoveli.malli.Viikonp‰iv‰;
 
 @Named
 @SessionScoped
 @Stateful
-public class Ilmoittautuminen
+public class Ilmoittautuminen extends Perustoiminnallisuus
 {
-   @PersistenceContext
+   @PersistenceContext(type = PersistenceContextType.EXTENDED)
    private EntityManager entityManager;
 
    private String korttinumero;
    private Treeni treeni;
    private Harrastaja harrastaja;
-   private List<Treeni> treenit;
+   private List<Treeni> tulevatTreenit;
    private RowStateMap stateMap = new RowStateMap();
 
    private class Aikaraja
    {
-      public Aikaraja(Viikonpaiva paiva, Date aika)
+      public Aikaraja(Viikonp‰iv‰ p‰iv‰, Date aika)
       {
-         this.paiva = paiva;
+         this.p‰iv‰ = p‰iv‰;
          this.aika = aika;
       }
 
-      private Viikonpaiva paiva;
+      private Viikonp‰iv‰ p‰iv‰;
       private Date aika;
 
-      public Viikonpaiva getPaiva()
+      public Viikonp‰iv‰ getP‰iv‰()
       {
-         return paiva;
+         return p‰iv‰;
       }
 
       public Date getAika()
@@ -66,33 +67,35 @@ public class Ilmoittautuminen
       PushRenderer.addCurrentSession("ilmoittautuminen");
    }
 
-   public Harrastaja getHarrastaja()
+   @Produces
+   @Named
+   public Harrastaja getTreeniharrastaja()
    {
       return harrastaja;
    }
 
    @Produces
    @Named
-   public List<Treeni> getTreenitx()
+   public List<Treeni> getTulevatTreenit()
    {
       if (harrastaja == null)
       {
          return Collections.emptyList();
       }
-      if (treenit == null)
+      if (tulevatTreenit == null)
       {
-         haeTreenit();
+         haeTulevatTreenit();
       }
-      return treenit;
+      return tulevatTreenit;
 
    }
 
-   private void haeTreenit()
+   private void haeTulevatTreenit()
    {
       Aikaraja aikaraja = haeAikaraja();
-      treenit = entityManager.createNamedQuery("treenit", Treeni.class).setParameter("paiva", aikaraja.getPaiva())
-         .setParameter("kello", aikaraja.getAika()).setParameter("harrastaja", harrastaja)
-         .setParameter("tanaan", haeTanaanPvm()).getResultList();
+      tulevatTreenit = entityManager.createNamedQuery("tulevatTreenit", Treeni.class)
+         .setParameter("p‰iv‰", aikaraja.getP‰iv‰()).setParameter("kello", aikaraja.getAika())
+         .setParameter("harrastaja", harrastaja).setParameter("t‰n‰‰n", haeT‰n‰‰nPvm()).getResultList();
    }
 
    private Aikaraja haeAikaraja()
@@ -100,26 +103,43 @@ public class Ilmoittautuminen
       Calendar kalenteri = Calendar.getInstance();
       int tunti = kalenteri.get(Calendar.HOUR_OF_DAY);
       int minuutti = kalenteri.get(Calendar.MINUTE);
-      Viikonpaiva paiva = Viikonpaiva.values()[kalenteri.get(Calendar.DAY_OF_WEEK)];
+      kalenteri.setFirstDayOfWeek(Calendar.SUNDAY);
+      Viikonp‰iv‰ p‰iv‰ = Viikonp‰iv‰.values()[kalenteri.get(Calendar.DAY_OF_WEEK) - 1];
       kalenteri.clear();
       kalenteri.set(Calendar.HOUR, tunti);
       kalenteri.set(Calendar.MINUTE, minuutti);
-      return new Aikaraja(paiva, kalenteri.getTime());
+      return new Aikaraja(p‰iv‰, kalenteri.getTime());
    }
 
    public void lueKortti()
+   {
+      harrastaja = haeHarrastaja();
+      if (harrastaja == null)
+      {
+         virhe("Tuntematon kortti '%s'", korttinumero);
+         fokusoi("formi:korttinumero");
+         korttinumero = null;
+         return;
+      }
+      haeTulevatTreenit();
+      String nimi = harrastaja.getHenkilˆ().getNimi();
+      if (tulevatTreenit.isEmpty())
+      {
+         virhe("Tervetuloa %s, valitettavasti t‰n‰‰n ei en‰‰ ole treenej‰", nimi);
+         return;
+      }
+      info("Tervetuloa %s, valitse treeni", nimi);
+   }
+
+   private Harrastaja haeHarrastaja()
    {
       List<Harrastaja> kortinOmistaja = entityManager.createNamedQuery("kortti", Harrastaja.class)
          .setParameter("kortti", korttinumero).getResultList();
       if (kortinOmistaja.isEmpty())
       {
-         harrastaja = Harrastaja.Tuntematon;
-         JavaScriptRunner.runScript(FacesContext.getCurrentInstance(),
-            "document.getElementById('formi:korttinumero').focus()");
-         korttinumero = null;
-         return;
+         return null;
       }
-      harrastaja = kortinOmistaja.iterator().next();
+      return kortinOmistaja.iterator().next();
    }
 
    public void treeniValittu(SelectEvent e)
@@ -127,21 +147,44 @@ public class Ilmoittautuminen
       treeni = (Treeni) e.getObject();
    }
 
-   public String tallenna()
+   public void tallenna()
    {
-      Treenik‰ynti treenikaynti = new Treenik‰ynti(harrastaja, null);
-      entityManager.persist(treenikaynti);
+      Treenisessio treenisessio = haeTreenisessio();
+      Treenik‰ynti treenikaynti = new Treenik‰ynti(harrastaja, treenisessio);
+      harrastaja.getTreenik‰ynnit().add(treenikaynti);
+      entityManager.persist(harrastaja);
+      entityManager.flush();
       PushRenderer.render("ilmoittautuminen");
       nollaa();
-      return "ilmoittautuminen?faces-redirect=true";
+      info("K‰ynti rekisterˆity");
+      fokusoi("formi:korttinumero");
    }
 
-   private Date haeTanaanPvm()
+   private Treenisessio haeTreenisessio()
+   {
+      Date t‰n‰‰n = haeT‰n‰‰nPvm();
+      List<Treenisessio> treenisessiot = entityManager.createNamedQuery("treenisessio", Treenisessio.class)
+         .setParameter("treeni", treeni).setParameter("p‰iv‰", t‰n‰‰n).getResultList();
+      Treenisessio treenisessio = new Treenisessio();
+      if (!treenisessiot.isEmpty())
+      {
+         treenisessio = treenisessiot.iterator().next();
+      } else
+      {
+         treenisessio.setP‰iv‰(t‰n‰‰n);
+         treenisessio.setTreeni(treeni);
+      }
+      return treenisessio;
+   }
+
+   private Date haeT‰n‰‰nPvm()
    {
       Calendar kalenteri = Calendar.getInstance();
-      kalenteri.clear(Calendar.MINUTE);
-      kalenteri.clear(Calendar.SECOND);
-      kalenteri.clear(Calendar.MILLISECOND);
+      kalenteri.setTimeZone(TimeZone.getTimeZone("EET"));
+      kalenteri.set(Calendar.HOUR_OF_DAY, 0);
+      kalenteri.set(Calendar.MINUTE, 0);
+      kalenteri.set(Calendar.SECOND, 0);
+      kalenteri.set(Calendar.MILLISECOND, 0);
       return kalenteri.getTime();
    }
 
@@ -165,11 +208,6 @@ public class Ilmoittautuminen
       this.treeni = treeni;
    }
 
-   public boolean isHarrastajaValittu()
-   {
-      return harrastaja != null && harrastaja != Harrastaja.Tuntematon;
-   }
-
    public boolean isTreeniValittu()
    {
       return treeni != null;
@@ -188,6 +226,7 @@ public class Ilmoittautuminen
    public String peruuta()
    {
       nollaa();
+      virhe("Toiminto peruttu");
       return "ilmoittautuminen?faces-redirect=true";
    }
 
@@ -197,6 +236,6 @@ public class Ilmoittautuminen
       treeni = null;
       harrastaja = null;
       stateMap = new RowStateMap();
-      treenit = null;
+      tulevatTreenit = null;
    }
 }

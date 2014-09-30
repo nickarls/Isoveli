@@ -14,18 +14,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@NamedQuery(name="treenisessio", query="select t from Treenisessio t where t.treeni = :treeni and t.päivä=:päivä")
 public class Treenisessio
 {
    @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   @GeneratedValue
    private int id;
 
    @ManyToOne(optional = false)
-   @JoinColumn(name = "treeni", insertable = false, updatable = false)
+   @JoinColumn(name = "treeni")
    @NotNull
    private Treeni treeni;
 

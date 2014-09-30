@@ -25,8 +25,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.Cascade;
-
 import fi.budokwai.isoveli.SukupuoliConverter;
 
 @Entity
@@ -39,8 +37,6 @@ import fi.budokwai.isoveli.SukupuoliConverter;
 {})
 public class Harrastaja
 {
-   public static Harrastaja Tuntematon = new Harrastaja();
-
    @Id
    @GeneratedValue
    private int id;
@@ -70,7 +66,7 @@ public class Harrastaja
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
    @OrderBy("aikaleima desc")
    private List<Treenikäynti> treenikäynnit = Collections.emptyList();
-   
+
    @Size(max = 10)
    @Column(name = "jasennumero")
    private String jäsennumero;
@@ -88,6 +84,10 @@ public class Harrastaja
    @NotNull
    @Convert(converter = SukupuoliConverter.class)
    private Sukupuoli sukupuoli;
+
+   public Harrastaja()
+   {
+   }
 
    @PostLoad
    public void init()

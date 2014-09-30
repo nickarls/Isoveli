@@ -23,7 +23,7 @@ import org.icefaces.ace.model.table.RowStateMap;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Treeni;
 import fi.budokwai.isoveli.malli.Treenityyppi;
-import fi.budokwai.isoveli.malli.Viikonpaiva;
+import fi.budokwai.isoveli.malli.Viikonpäivä;
 
 @Named
 @SessionScoped
@@ -95,7 +95,7 @@ public class TreeniAdmin
    public List<SelectItem> getViikonpäivät()
    {
       List<SelectItem> tulos = new ArrayList<SelectItem>();
-      for (Viikonpaiva viikonpaiva : Viikonpaiva.values())
+      for (Viikonpäivä viikonpaiva : Viikonpäivä.values())
       {
          tulos.add(new SelectItem(viikonpaiva, viikonpaiva.toString()));
       }

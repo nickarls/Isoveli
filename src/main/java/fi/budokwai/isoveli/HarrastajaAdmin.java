@@ -29,7 +29,7 @@ import fi.budokwai.isoveli.malli.Vyökoe;
 @Named
 @SessionScoped
 @Stateful
-public class HarrastajaAdmin
+public class HarrastajaAdmin extends Perustoiminnallisuus
 {
    private List<Harrastaja> harrastajat;
 
@@ -82,6 +82,7 @@ public class HarrastajaAdmin
       harrastaja.getHuoltaja().getOsoite().setOsoite(harrastaja.getHenkilö().getOsoite().getOsoite());
       harrastaja.getHuoltaja().getOsoite().setPostinumero(harrastaja.getHenkilö().getOsoite().getPostinumero());
       harrastaja.getHuoltaja().getOsoite().setKaupunki(harrastaja.getHenkilö().getOsoite().getKaupunki());
+      info("Osoitetiedot kopioitu");
    }
 
    public void kopioiOsoitetiedot(AjaxBehaviorEvent e)
@@ -94,12 +95,14 @@ public class HarrastajaAdmin
       entityManager.persist(harrastaja);
       entityManager.flush();
       harrastajat = null;
+      info("Harrastaja tallennettu");
    }
 
    public void peruutaMuutos()
    {
       harrastaja = null;
       rowStateMap.setAllSelected(false);
+      virhe("Muutos peruttu");
    }
 
    public void poistaHarrastaja()
@@ -109,6 +112,7 @@ public class HarrastajaAdmin
       harrastaja = null;
       harrastajat = null;
       rowStateMap.setAllSelected(false);
+      info("Harrastaja poistettu");
    }
 
    public void tallennaVyökoe(Vyökoe vyökoe)
@@ -120,6 +124,7 @@ public class HarrastajaAdmin
       }
       entityManager.persist(harrastaja);
       entityManager.flush();
+      info("Vyökoe tallennettu");
    }
 
    public void poistaVyökoe(Vyökoe vyökoe)
@@ -127,6 +132,7 @@ public class HarrastajaAdmin
       harrastaja.getVyökokeet().remove(vyökoe);
       entityManager.persist(harrastaja);
       entityManager.flush();
+      info("Vyökoe poistettu");
    }
 
    public void syntymäAikaMuuttui(AjaxBehaviorEvent e)
@@ -146,6 +152,7 @@ public class HarrastajaAdmin
    {
       harrastaja = new Harrastaja();
       rowStateMap.setAllSelected(false);
+      info("Uusi harrastaja alustettu");
    }
 
    public void harrastajaValittu(SelectEvent e)

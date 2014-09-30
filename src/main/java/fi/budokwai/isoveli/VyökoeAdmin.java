@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -24,7 +23,7 @@ import fi.budokwai.isoveli.malli.Vyökoe;
 @Named
 @SessionScoped
 @Stateful
-public class VyökoeAdmin
+public class VyökoeAdmin extends Perustoiminnallisuus
 {
    private Vyökoe vyökoe;
 
@@ -71,6 +70,7 @@ public class VyökoeAdmin
    {
       vyökoe = null;
       rowStateMap.setAllSelected(false);
+      virhe("Muutokset peruttu");
    }
 
    public void piilotaVyökoe()
@@ -88,6 +88,7 @@ public class VyökoeAdmin
       }
       vyökoe.setVyöarvo(seuraavaVyöarvo);
       vyökoe.setPäivä(new Date());
+      info("Uusi vyökoe alustettu");
    }
 
    public void vyökoeValittu(SelectEvent e)

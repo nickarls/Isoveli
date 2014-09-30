@@ -5,23 +5,31 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:icecore="http://www.icefaces.org/icefaces/core"
 	xmlns:ace="http://www.icefaces.org/icefaces/components" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
+	<h:outputStylesheet library="css" name="jquery.growl.css" target="head" />
+	<h:outputScript library="skriptit" name="jquery.min.js" target="head" />
+	<h:outputScript library="skriptit" name="jquery.growl.js" target="head" />
 	<style>
 .ikoni {
 	height: 40px;
 	width: 40px;
 	margin-left: 15px;
 }
+
 .tabletop {
-	display:table-cell;vertical-align:top
+	display: table-cell;
+	vertical-align: top
 }
+
 .lefttext {
-	text-align:left;
+	text-align: left;
 }
+
 .panel {
 	margin: 10px;
 }
+
 .capitalized {
-    text-transform: capitalize;
+	text-transform: capitalize;
 }
 </style>
 </h:head>
@@ -37,13 +45,13 @@
 						<ui:include src="harrastajat/harrastajat.xhtml" />
 					</ace:tabPane>
 					<ace:tabPane label="Harjoitukset">
-						<ui:include src="treenit/treenit.xhtml"/>
+						<ui:include src="treenit/treenit.xhtml" />
 					</ace:tabPane>
-					
-<!-- 					
+
+					<!-- 					
 					<ace:tabPane label="Treenikäynnit">
 					</ace:tabPane>
--->					
+-->
 				</ace:tabSet>
 
 			</h:form>

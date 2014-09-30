@@ -28,7 +28,7 @@ import fi.budokwai.isoveli.malli.Viikonpäivä;
 @Named
 @SessionScoped
 @Stateful
-public class TreeniAdmin
+public class TreeniAdmin extends Perustoiminnallisuus
 {
    private Collection<Treeni> treenit;
 
@@ -70,16 +70,6 @@ public class TreeniAdmin
             }
          }
          kaikkivetäjät = tulos;
-         // kaikkivetäjät = Collections2.filter(kaikkivetäjät, new
-         // Predicate<Harrastaja>()
-         // {
-         //
-         // @Override
-         // public boolean apply(Harrastaja harrastaja)
-         // {
-         // return harrastaja.isTreenienVetäjä();
-         // }
-         // });
       }
       if (treenivetäjät == null)
       {
@@ -136,12 +126,14 @@ public class TreeniAdmin
       entityManager.persist(treeni);
       entityManager.flush();
       treenit = null;
+      info("Treeni tallennettu");
    }
 
    public void peruutaMuutos()
    {
       treeni = null;
       rowStateMap.setAllSelected(false);
+      virhe("Muutokset peruttu");
    }
 
    public void poistaTreeni()
@@ -151,6 +143,7 @@ public class TreeniAdmin
       treeni = null;
       treenit = null;
       rowStateMap.setAllSelected(false);
+      info("Treeni poistettu");
    }
 
    public boolean isTreeniPoistettavissa()
@@ -163,6 +156,7 @@ public class TreeniAdmin
       treeni = new Treeni();
       treenivetäjät = null;
       rowStateMap.setAllSelected(false);
+      info("Uusi treeni alustettu");
    }
 
    public void treeniValittu(SelectEvent e)

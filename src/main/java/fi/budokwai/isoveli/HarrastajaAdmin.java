@@ -1,6 +1,7 @@
 package fi.budokwai.isoveli;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -64,6 +65,10 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    @Named
    public List<Rooli> getRoolit()
    {
+      if (harrastaja == null)
+      {
+         return Collections.emptyList();
+      }
       if (roolit == null)
       {
          roolit = entityManager.createNamedQuery("roolit", Rooli.class).getResultList();

@@ -1,5 +1,6 @@
 package fi.budokwai.isoveli.util;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -31,8 +32,13 @@ public class DSExceptionHandler implements Serializable
       logger.error("Virhe", e.getException());
       HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
       session.setAttribute("exception", e.getException());
-      FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
-         .handleNavigation(FacesContext.getCurrentInstance(), null, "virhe.xhtml");
+      try
+      {
+         FacesContext.getCurrentInstance().getExternalContext().redirect("/Isoveli/virhe.xhtml");
+      } catch (IOException e1)
+      {
+         e1.printStackTrace();
+      }
       e.handled();
    }
 

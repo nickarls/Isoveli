@@ -1,7 +1,12 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:ace="http://www.icefaces.org/icefaces/components">
-	<ace:dataTable value="#{treenikäynnit}" var="_treenikäynti">
+	<h:commandButton action="#{ilmoittautumisAdmin.lisääIlmoittautuminen}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
+		immediate="true">
+		<ace:ajax render="@form" />
+	</h:commandButton>
+	<ace:dataTable value="#{treenikäynnit}" var="_treenikäynti" selectionMode="single"
+		stateMap="#{ilmoittautumisAdmin.rowStateMap}" rows="10" rowSelectListener="#{ilmoittautumisAdmin.treeniKäyntiValittu}">
 		<ace:column headerText="Aikaleima">
 			<h:outputText value="#{_treenikäynti.aikaleima}">
 				<f:convertDateTime pattern="HH:mm:ss" timeZone="EET" />
@@ -14,14 +19,24 @@
 			<h:outputText value="#{_treenikäynti.treenisessio.treeni.nimi}" class="teksti" />
 		</ace:column>
 		<ace:column headerText="Päivä">
-			<h:outputText value="#{_treenikaäynti.treenisessio.treeni.päivä}" class="teksti" />
-		</ace:column>
-		<ace:column headerText="Harrastajia">
-			<h:outputText value="#{_treenikäynti.treenisessio.treenikäynnit.size()}" class="teksti" />
-		</ace:column>
-		<ace:column headerText="Poista">
-			<h:commandButton action="#{admin.poistaTreenikäynti(_treenikäynti)}" image="/kuvat/poista.png"
-				style="height:20px; width:20px" />
+			<h:outputText value="#{_treenikäynti.treenisessio.treeni.päivä}" class="teksti" />
 		</ace:column>
 	</ace:dataTable>
+	<p/>
+	<ace:panel header="Treenikäynti" styleClass="panel" rendered="#{treenikäynti != null}">
+		<h:panelGrid columns="2" style="margin-left: 20px;">
+			<h:outputText value="Aikaleima" />
+			<h:panelGrid>
+				<ace:message for="form:aikaleima" />
+				<ace:dateTimeEntry value="#{treenikäynti.aikaleima}" renderAsPopup="true" pattern="dd.MM.yyyy HH:mm:ss"
+					id="aikaleima" />
+			</h:panelGrid>
+		</h:panelGrid>
+	</ace:panel>
+	<h:commandButton rendered="#{treenikäynti != null}" value="x" styleClass="ikoni"
+		action="#{ilmoittautumisAdmin.tallennaTreenikäynti}" image="/kuvat/tallenna.jpg" />
+	<h:commandButton rendered="#{treenikäynti != null}" value="x" styleClass="ikoni" immediate="true"
+		action="#{ilmoittautumisAdmin.peruutaMuutos}" image="/kuvat/peruuta_muutos.png" />
+	<h:commandButton rendered="#{treenikäynti.poistettavissa}" value="x" styleClass="ikoni"
+		action="#{ilmoittautumisAdmin.poistaTreenikäynti}" image="/kuvat/poista.png" immediate="true" />
 </ui:composition>

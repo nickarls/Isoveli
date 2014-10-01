@@ -18,7 +18,7 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@NamedQuery(name="treenisessio", query="select t from Treenisessio t where t.treeni = :treeni and t.päivä=:päivä")
+@NamedQuery(name = "treenisessio", query = "select t from Treenisessio t where t.treeni = :treeni and t.päivä=:päivä")
 public class Treenisessio
 {
    @Id
@@ -90,5 +90,10 @@ public class Treenisessio
    public void setTreenikäynnit(List<Treenikäynti> treenikäynnit)
    {
       this.treenikäynnit = treenikäynnit;
+   }
+
+   public boolean isTallentamaton()
+   {
+      return id == 0;
    }
 }

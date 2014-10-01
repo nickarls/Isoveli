@@ -25,6 +25,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
+
 import fi.budokwai.isoveli.SukupuoliConverter;
 
 @Entity
@@ -273,14 +276,19 @@ public class Harrastaja
    @Override
    public int hashCode()
    {
-      return Integer.valueOf(id).hashCode();
+      return Objects.hashCode(id);
    }
 
    @Override
    public boolean equals(Object toinen)
    {
-      Harrastaja toinenHarrastaja = (Harrastaja) toinen;
-      return id == toinenHarrastaja.getId();
+      return Objects.equal(id, ((Harrastaja) toinen).getId());
+   }
+
+   @Override
+   public String toString()
+   {
+      return MoreObjects.toStringHelper(Harrastaja.class).add("Nimi", henkilö.getNimi()).toString();
    }
 
 }

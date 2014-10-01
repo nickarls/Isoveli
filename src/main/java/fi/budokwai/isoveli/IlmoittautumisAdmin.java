@@ -1,6 +1,9 @@
 package fi.budokwai.isoveli;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
@@ -17,7 +20,10 @@ import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 import org.icefaces.application.PushRenderer;
 
+import fi.budokwai.isoveli.malli.Harrastaja;
+import fi.budokwai.isoveli.malli.Treeni;
 import fi.budokwai.isoveli.malli.Treenik‰ynti;
+import fi.budokwai.isoveli.malli.Treenisessio;
 
 @Stateful
 @Named
@@ -45,6 +51,11 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       PushRenderer.addCurrentSession("ilmoittautuminen");
    }
 
+   public void harrastajaValittu(SelectEvent e)
+   {
+      treenik‰ynti.setHarrastaja((Harrastaja) e.getObject());
+   }
+
    @Produces
    @Named
    public List<Treenik‰ynti> getTreenik‰ynnit()
@@ -58,6 +69,38 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       info("Uusi treenik‰ynti alustettu");
    }
 
+   private Treenisessio haeTreenisessio(Treeni treeni)
+   {
+      Date t‰n‰‰n = haeT‰n‰‰nPvm();
+      List<Treenisessio> treenisessiot = entityManager.createNamedQuery("treenisessio", Treenisessio.class)
+         .setParameter("treeni", treeni).setParameter("p‰iv‰", t‰n‰‰n).getResultList();
+      Treenisessio treenisessio = new Treenisessio();
+      if (!treenisessiot.isEmpty())
+      {
+         treenisessio = treenisessiot.iterator().next();
+      } else
+      {
+         treenisessio.setP‰iv‰(t‰n‰‰n);
+         treenisessio.setTreeni(treeni);
+         for (Harrastaja treenivet‰j‰ : treeni.getVet‰j‰t())
+         {
+            treenisessio.getTreenivet‰j‰t().add(treenivet‰j‰);
+         }
+      }
+      return treenisessio;
+   }
+
+   private Date haeT‰n‰‰nPvm()
+   {
+      Calendar kalenteri = Calendar.getInstance();
+      kalenteri.setTimeZone(TimeZone.getTimeZone("EET"));
+      kalenteri.set(Calendar.HOUR_OF_DAY, 0);
+      kalenteri.set(Calendar.MINUTE, 0);
+      kalenteri.set(Calendar.SECOND, 0);
+      kalenteri.set(Calendar.MILLISECOND, 0);
+      return kalenteri.getTime();
+   }
+
    public void poistaTreenik‰ynti()
    {
       entityManager.remove(treenik‰ynti);
@@ -68,9 +111,15 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
 
    public void tallennaTreenik‰ynti()
    {
+      if (treenik‰ynti.getTreenisessio().isTallentamaton())
+      {
+         Treenisessio sessio = haeTreenisessio(treenik‰ynti.getTreenisessio().getTreeni());
+         treenik‰ynti.setTreenisessio(sessio);
+      }
       entityManager.persist(treenik‰ynti);
       entityManager.flush();
       info("Treenik‰ynti tallennettu");
+      treenik‰ynti = null;
    }
 
    public void treeniK‰yntiValittu(SelectEvent e)

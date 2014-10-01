@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -28,12 +29,14 @@ public class Treenikäynti
    @ManyToOne(optional = false)
    @JoinColumn(name = "harrastaja")
    @NotNull
+   @Valid
    private Harrastaja harrastaja;
 
    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
    @JoinColumn(name = "treenisessio")
    @NotNull
-   private Treenisessio treenisessio;
+   @Valid
+   private Treenisessio treenisessio = new Treenisessio();
 
    @Temporal(TemporalType.TIMESTAMP)
    private Date aikaleima = new Date();

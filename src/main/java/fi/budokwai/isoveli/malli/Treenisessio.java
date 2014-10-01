@@ -31,7 +31,8 @@ public class Treenisessio
    private Treeni treeni;
 
    @Column(name = "paiva")
-   private Date päivä;
+   @NotNull
+   private Date päivä = new Date();
 
    @ManyToMany
    @JoinTable(name = "treenisessiovetaja", joinColumns =

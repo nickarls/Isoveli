@@ -17,6 +17,8 @@ import org.icefaces.ace.event.SelectEvent;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Rooli;
+import fi.budokwai.isoveli.malli.Treeni;
+import fi.budokwai.isoveli.malli.Treenityyppi;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 
 @Named
@@ -26,20 +28,24 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 {
    private Rooli rooli;
    private Vyöarvo vyöarvo;
+   private Treenityyppi treenityyppi;
 
    @PersistenceContext(type = PersistenceContextType.EXTENDED)
    private EntityManager entityManager;
 
    private List<Rooli> roolit;
    private List<Vyöarvo> vyöarvot;
+   private List<Treenityyppi> treenityypit;
    private List<Harrastaja> vyöarvoKäyttö;
    private List<Henkilö> rooliKäyttö;
+   private List<Treeni> treenityyppiKäyttö;
 
    @PostConstruct
    public void alusta()
    {
       haeRoolit();
       haeVyöarvot();
+      haeTreenityypit();
    }
 
    @Produces
@@ -58,6 +64,13 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    @Produces
    @Named
+   public List<Treenityyppi> getKaikkiTreenityypit()
+   {
+      return treenityypit;
+   }
+
+   @Produces
+   @Named
    public Rooli getRooli()
    {
       return rooli;
@@ -70,10 +83,18 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       return vyöarvo;
    }
 
+   @Produces
+   @Named
+   public Treenityyppi getTreenityyppi()
+   {
+      return treenityyppi;
+   }
+
    public void peruutaMuutos()
    {
       rooli = null;
       vyöarvo = null;
+      treenityyppi = null;
       virhe("Muutokset peruttu");
    }
 
@@ -87,6 +108,11 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       vyöarvo = null;
    }
 
+   public void piilotaTreenityyppi()
+   {
+      treenityyppi = null;
+   }
+
    public void lisääRooli()
    {
       rooli = new Rooli();
@@ -97,6 +123,12 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       vyöarvo = new Vyöarvo();
       info("Uusi vyöarvo alustettu");
+   }
+
+   public void lisääTreenityyppi()
+   {
+      treenityyppi = new Treenityyppi();
+      info("Uusi treenityyppi alustettu");
    }
 
    public void tallennaRooli()
@@ -113,6 +145,13 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       info("Vyöarvo tallennettu");
    }
 
+   public void tallennaTreenityyppi()
+   {
+      entityManager.persist(treenityyppi);
+      haeTreenityypit();
+      info("Treenityyppi tallennettu");
+   }
+
    private void haeRoolit()
    {
       roolit = entityManager.createNamedQuery("roolit", Rooli.class).getResultList();
@@ -121,6 +160,11 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    private void haeVyöarvot()
    {
       vyöarvot = entityManager.createNamedQuery("vyöarvot", Vyöarvo.class).getResultList();
+   }
+
+   private void haeTreenityypit()
+   {
+      treenityypit = entityManager.createNamedQuery("treenityypit", Treenityyppi.class).getResultList();
    }
 
    public void poistaRooli()
@@ -135,6 +179,13 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       entityManager.remove(vyöarvo);
       haeVyöarvot();
       info("Vyöarvo poistettu");
+   }
+
+   public void poistaTreenityyppi()
+   {
+      entityManager.remove(treenityyppi);
+      haeTreenityypit();
+      info("Treenityyppi poistettu");
    }
 
    @Produces
@@ -169,6 +220,22 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       return vyöarvoKäyttö;
    }
 
+   @Produces
+   @Named
+   public List<Treeni> getTreenityyppiKäyttö()
+   {
+      if (treenityyppi == null || !treenityyppi.isPoistettavissa())
+      {
+         return Collections.emptyList();
+      }
+      if (treenityyppiKäyttö == null)
+      {
+         treenityyppiKäyttö = entityManager.createNamedQuery("treenityyppikäyttö", Treeni.class)
+            .setParameter("treenityyppi", treenityyppi).getResultList();
+      }
+      return treenityyppiKäyttö;
+   }
+
    public void rooliValittu(SelectEvent e)
    {
       rooli = (Rooli) e.getObject();
@@ -180,5 +247,11 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       vyöarvo = (Vyöarvo) e.getObject();
       vyöarvoKäyttö = null;
    }
+   
+   public void treenityyppiValittu(SelectEvent e)
+   {
+      treenityyppi = (Treenityyppi) e.getObject();
+      treenityyppiKäyttö = null;
+   }   
 
 }

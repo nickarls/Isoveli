@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:ace="http://www.icefaces.org/icefaces/components">
+	<h:panelGrid>
+		<h:commandButton action="#{perustietoAdmin.lisääTreenityyppi}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
+			immediate="true">
+			<ace:ajax render="@form" />
+		</h:commandButton>
+		<h:panelGrid columns="3" columnClasses="tabletop, tabletop, tabletop">
+			<ace:dataTable value="#{kaikkiTreenityypit}" var="_treenityyppi" selectionMode="single" rows="10" style="width:300px"
+				rowSelectListener="#{perustietoAdmin.treenityyppiValittu}">
+				<ace:column headerText="Treenityyppi">
+					<h:outputText value="#{_treenityyppi.nimi}" />
+				</ace:column>
+			</ace:dataTable>
+			<h:panelGrid style="margin-left:20px">
+				<ace:panel header="Treenityyppi" rendered="#{treenityyppi != null}" style="width:300px">
+					<h:panelGrid columns="2">
+						<h:outputText value="Nimi" />
+						<h:panelGrid>
+							<ace:message for="form:a_treenityyppi" />
+							<h:inputText value="#{treenityyppi.nimi}" id="a_treenityyppi" />
+						</h:panelGrid>
+					</h:panelGrid>
+				</ace:panel>
+				<h:panelGrid columns="3">
+					<h:commandButton rendered="#{treenityyppi != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
+						actionListener="#{perustietoAdmin.tallennaTreenityyppi}" action="#{perustietoAdmin.piilotaTreenityyppi}" />
+					<h:commandButton rendered="#{treenityyppi != null}" value="x" styleClass="ikoni"
+						action="#{perustietoAdmin.peruutaMuutos}" image="/kuvat/peruuta_muutos.png" immediate="true" />
+					<h:commandButton rendered="#{treenityyppi.poistettavissa and fn:length(treenityyppiKäyttö) == 0}" value="x"
+						styleClass="ikoni" actionListener="#{perustietoAdmin.poistaTreenityyppi}"
+						action="#{perustietoAdmin.piilotaTreenityyppi}" image="/kuvat/poista.png" immediate="true" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<ace:panel header="Käyttö" style="width:300px" rendered="#{treenityyppi != null and treenityyppi.poistettavissa}">
+				<ace:dataTable value="#{treenityyppiKäyttö}" var="_treeni" rows="10" rendered="#{fn:length(treenityyppiKäyttö) > 0}">
+					<ace:column headerText="Käytössä (#{fn:length(treenityyppiKäyttö)})">
+						<h:outputText value="#{_treeni.nimi}" />
+					</ace:column>
+				</ace:dataTable>
+				<h:outputText value="Ei käytössä" rendered="#{fn:length(treenityyppiKäyttö) == 0}" />
+			</ace:panel>
+		</h:panelGrid>
+	</h:panelGrid>
+</ui:composition>

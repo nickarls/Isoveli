@@ -34,9 +34,9 @@
 						immediate="true" />
 				</h:panelGrid>
 			</h:panelGrid>
-			<ace:panel header="Käyttö" style="width:300px" rendered="#{rooli != null}" >
+			<ace:panel header="Käyttö" style="width:300px" rendered="#{rooli != null and rooli.poistettavissa}" >
 				<ace:dataTable value="#{rooliKäyttö}" var="_henkilö" rows="10" rendered="#{fn:length(rooliKäyttö) > 0}">
-					<ace:column headerText="Rooli">
+					<ace:column headerText="Käytössä (#{fn:length(rooliKäyttö)})">
 						<h:outputText value="#{_henkilö.nimi}" />
 					</ace:column>
 				</ace:dataTable>

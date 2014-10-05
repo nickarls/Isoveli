@@ -6,14 +6,18 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@NamedQuery(name = "vyöarvot", query = "select v from Vyöarvo v order by v.id")
+@NamedQueries(
+{ @NamedQuery(name = "vyöarvot", query = "select v from Vyöarvo v order by v.id"),
+      @NamedQuery(name = "vyöarvokäyttö", query = "select h from Harrastaja h join h.vyökokeet k join k.vyöarvo v where v = :vyöarvo") })
 @Table(name = "vyoarvo")
 public class Vyöarvo
 {
@@ -108,5 +112,11 @@ public class Vyöarvo
       }
       Vyöarvo toinenVyöarvo = (Vyöarvo) toinen;
       return id == toinenVyöarvo.getId();
+   }
+
+   @Transient
+   public boolean isPoistettavissa()
+   {
+      return id > 0;
    }
 }

@@ -28,7 +28,7 @@
 			</h:panelGrid>
 		</ace:column>
 		<ace:column headerText="Vetäjä">
-			<ui:repeat value="#{_treenikäynti.treenisessio.treenivetäjät}" var="_vetäjä">
+			<ui:repeat value="#{_treenikäynti.treenisessio.vetäjät}" var="_vetäjä">
 				<h:outputText value="#{_vetäjä.henkilö.nimi}" />
 				<br />
 			</ui:repeat>

@@ -48,9 +48,9 @@
 			</h:panelGrid>
 		</h:panelGrid>
 	</ace:panel>
-	<h:commandButton rendered="#{vyökoeAdmin.vyökoe != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
+	<h:commandButton rendered="#{vyökoe != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
 		actionListener="#{harrastajaAdmin.tallennaVyökoe(vyökoe)}" action="#{vyökoeAdmin.piilotaVyökoe}" />
-	<h:commandButton rendered="#{vyökoeAdmin.vyökoe != null}" value="x" styleClass="ikoni"
+	<h:commandButton rendered="#{vyökoe != null}" value="x" styleClass="ikoni" immediate="true"
 		action="#{vyökoeAdmin.peruutaMuutos}" image="/kuvat/peruuta_muutos.png" />
 	<h:commandButton rendered="#{vyökoe.poistettavissa}" value="x" styleClass="ikoni"
 		actionListener="#{harrastajaAdmin.poistaVyökoe(vyökoe)}" action="#{vyökoeAdmin.piilotaVyökoe}"

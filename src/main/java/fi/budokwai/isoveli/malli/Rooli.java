@@ -4,12 +4,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@NamedQuery(name = "roolit", query = "select r from Rooli r order by r.nimi")
+@NamedQueries(
+{ @NamedQuery(name = "roolit", query = "select r from Rooli r order by r.nimi"),
+      @NamedQuery(name = "roolikäyttö", query = "select h from Henkilö h join h.roolit r where r = :rooli") })
 public class Rooli
 {
    @Id
@@ -55,5 +59,11 @@ public class Rooli
       }
       Rooli toinenRooli = (Rooli) toinen;
       return id == toinenRooli.getId();
+   }
+
+   @Transient
+   public boolean isPoistettavissa()
+   {
+      return id > 0;
    }
 }

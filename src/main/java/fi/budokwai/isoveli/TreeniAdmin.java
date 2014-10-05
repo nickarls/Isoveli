@@ -52,7 +52,7 @@ public class TreeniAdmin extends Perustoiminnallisuus
 
    @Produces
    @Named
-   public Collection<Harrastaja> getTreenivetäjät()
+   public Collection<Harrastaja> getVetäjät()
    {
       if (treeni == null)
       {

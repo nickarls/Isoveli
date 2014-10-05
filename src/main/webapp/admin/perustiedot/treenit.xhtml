@@ -79,7 +79,7 @@
 		</ace:panel>
 		<ace:panel header="Vetäjät" rendered="#{treeni != null}" styleClass="panel" style="width:600px">
 			<ace:listControl>
-				<ace:list value="#{treenivetäjät}" var="_vetäjä" selectionMode="multiple">
+				<ace:list value="#{vetäjät}" var="_vetäjä" selectionMode="multiple">
 					<h:outputText value="#{_vetäjä.henkilö.nimi}" />
 				</ace:list>
 				<ace:list value="#{treeni.vetäjät}" var="_vetäjä" selectionMode="multiple">

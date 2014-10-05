@@ -78,8 +78,8 @@
 						</table>
 					</div>
 				</h:panelGroup>
-				<ace:dataTable rendered="#{treeniharrastaja != null}" value="#{tulevatTreenit}" var="_treeni"
-					selectionMode="single" stateMap="#{ilmoittautuminen.stateMap}" style="margin-left:20px; font-size:25px;"
+				<ace:dataTable rendered="#{treeniharrastaja != null}" value="#{tulevatTreenit}" var="_treeni" selectionMode="single"
+					stateMap="#{ilmoittautuminen.stateMap}" style="margin-left:20px; font-size:25px;"
 					rowSelectListener="#{ilmoittautuminen.treeniValittu}">
 					<ace:ajax event="select" render="@this formi:napit" execute="@this" />
 					<ace:column headerText="Päivä">
@@ -105,8 +105,7 @@
 					<h:commandButton image="kuvat/ok.jpg" value="tallenna" id="tallenna" rendered="#{ilmoittautuminen.treeniValittu}"
 						styleClass="ikoni" action="#{ilmoittautuminen.tallenna}" />
 					<h:commandButton image="kuvat/peruuta.jpg" value="peruuta" styleClass="ikoni" immediate="true"
-						action="#{ilmoittautuminen.peruuta}"
-						rendered="#{treeniharrastaja != null || ilmoittautuminen.treeniValittu}" />
+						action="#{ilmoittautuminen.peruuta}" rendered="#{treeniharrastaja != null || ilmoittautuminen.treeniValittu}" />
 				</h:panelGrid>
 			</h:panelGrid>
 		</h:form>

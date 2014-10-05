@@ -82,9 +82,9 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       {
          treenisessio.setP‰iv‰(t‰n‰‰n);
          treenisessio.setTreeni(treeni);
-         for (Harrastaja treenivet‰j‰ : treeni.getVet‰j‰t())
+         for (Harrastaja vet‰j‰ : treeni.getVet‰j‰t())
          {
-            treenisessio.getTreenivet‰j‰t().add(treenivet‰j‰);
+            treenisessio.getVet‰j‰t().add(vet‰j‰);
          }
       }
       return treenisessio;

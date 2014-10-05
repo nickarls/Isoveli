@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+	<style>
+.tabletop {
+	display: table-cell;
+	vertical-align: top
+}
+</style>
+</h:head>
+<h:body>
+	<f:view>
+		<h:form>
+			<h:commandButton action="#{x.resetoiPuu()}" value="x" />
+			<ace:dateTimeEntry value="#{x.alkaa}" renderAsPopup="true" pattern="dd.MM.yyyy">
+				<ace:ajax event="dateSelect" execute="@this" render="@form" />
+				<ace:ajax event="dateTextChange" execute="@this" render="@form" />
+			</ace:dateTimeEntry>
+			<ace:dateTimeEntry value="#{x.päättyy}" renderAsPopup="true" pattern="dd.MM.yyyy">
+				<ace:ajax event="dateSelect" execute="@this" render="@form" />
+				<ace:ajax event="dateTextChange" execute="@this" render="@form" />
+			</ace:dateTimeEntry>
+			<h:panelGrid columns="2" columnClasses="tabletop, tabletop">
+				<ace:tree value="#{x.juuri}" var="noodi" type="#{noodi.type}" expansion="true" stateMap="#{x.nsm}"
+					selectMultiple="false" selection="true">
+					<ace:ajax event="select" render="@all" execute="@all" />
+					<ace:node type="otsikko">
+						<h:outputText value="#{noodi.data} (#{noodi.childCount})" />
+					</ace:node>
+					<ace:node type="päivä">
+						<h:outputText value="#{noodi.data}">
+							<f:convertDateTime pattern="dd.MM.yyyy" />
+						</h:outputText>
+						<h:outputText value=" (#{noodi.childCount})" />
+					</ace:node>
+					<ace:node type="sessio">
+						<h:outputText value="#{noodi.data.treeni.nimi} (#{noodi.childCount})" />
+					</ace:node>
+					<ace:node type="käynti">
+						<h:outputText value="#{noodi.data.harrastaja.henkilö.nimi}" />
+					</ace:node>
+				</ace:tree>
+				<h:panelGroup>
+					<h:outputText value="juuri" rendered="#{x.juuriValittu}" />
+					<h:outputText value="päivä" rendered="#{x.päiväValittu}" />
+					<ace:panel header="Treenisessio" rendered="#{x.sessioValittu}" style="width:400">
+						<h:panelGrid columns="2">
+							<h:outputText value="Treeni" />
+							<h:outputText value="#{x.valittu.treeni.nimi}" />
+							<h:outputText value="Päivä" />
+							<h:outputText value="#{x.valittu.päivä}">
+								<f:convertDateTime pattern="dd.MM.yyyy" />/>
+							</h:outputText>
+							<h:outputText value="Vetäjät" />
+							<ui:repeat value="#{x.valittu.vetäjät}" var="_vetäjä">
+								<h:outputText value="#{_vetäjä.henkilö.nimi}" />
+								<br />
+							</ui:repeat>
+						</h:panelGrid>
+						<h:commandButton value="x" action="#{x.poistaValittu()}">
+							<f:ajax render="@form" />
+						</h:commandButton>
+					</ace:panel>
+					<ace:panel header="Treenikäynti" rendered="#{x.käyntiValittu}" style="width:400">
+						<h:panelGrid columns="2">
+							<h:outputText value="Aikaleima" />
+							<h:outputText value="#{x.valittu.aikaleima}">
+								<f:convertDateTime pattern="HH:mm:ss" />
+							</h:outputText>
+							<h:outputText value="Harrastaja" />
+							<h:outputText value="#{x.valittu.harrastaja.henkilö.nimi}" />
+							<h:outputText value="Vyöarvo" />
+							<h:outputText value="#{x.valittu.harrastaja.tuoreinVyöarvo.nimi}" />
+						</h:panelGrid>
+						<h:commandButton value="x" action="#{x.poistaValittu()}">
+							<f:ajax render="@form" listener="#{x.resetoiPuu}" />
+						</h:commandButton>
+					</ace:panel>
+				</h:panelGroup>
+			</h:panelGrid>
+		</h:form>
+	</f:view>
+</h:body>
+
+</html>

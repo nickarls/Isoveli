@@ -32,7 +32,7 @@ public class Treenikäynti
    @Valid
    private Harrastaja harrastaja;
 
-   @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+   @ManyToOne(optional = false)
    @JoinColumn(name = "treenisessio")
    @NotNull
    @Valid

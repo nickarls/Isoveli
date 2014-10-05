@@ -9,17 +9,17 @@
 		stateMap="#{ilmoittautumisAdmin.rowStateMap}" rows="10" rowSelectListener="#{ilmoittautumisAdmin.treeniKäyntiValittu}">
 		<ace:column headerText="Aikaleima">
 			<h:outputText value="#{_treenikäynti.aikaleima}">
-				<f:convertDateTime pattern="HH:mm:ss" timeZone="EET" />
+				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET" />
 			</h:outputText>
-		</ace:column>
-		<ace:column headerText="Harrastaja">
-			<h:outputText value="#{_treenikäynti.harrastaja.henkilö.nimi}" class="teksti" />
 		</ace:column>
 		<ace:column headerText="Treeni">
 			<h:outputText value="#{_treenikäynti.treenisessio.treeni.nimi}" class="teksti" />
 		</ace:column>
-		<ace:column headerText="Päivä">
-			<h:outputText value="#{_treenikäynti.treenisessio.treeni.päivä}" class="teksti" />
+		<ace:column headerText="Harrastaja">
+			<h:outputText value="#{_treenikäynti.harrastaja.henkilö.nimi}" class="teksti" />
+		</ace:column>
+		<ace:column headerText="Vyöarvo">
+			<h:outputText value="#{_treenikäynti.harrastaja.tuoreinVyöarvo.nimi}" class="teksti" />
 		</ace:column>
 	</ace:dataTable>
 	<p />
@@ -35,19 +35,20 @@
 				<h:outputText value="Harrastaja" />
 				<h:panelGrid>
 					<ace:message for="form:harrastaja" />
-					<!-- 				
-				<ace:dataTable value="#{harrastajat}" var="_harrastaja" selectionMode="single" id="harrastaja" rows="5" rowSelectListener="#{ilmoittautumisAdmin.harrastajaValittu}">
-					<ace:column headerText="Nimi" filterBy="#{_harrastaja.henkilö.nimi}" filterMatchMode="contains">
-						<h:outputText value="#{_harrastaja.henkilö.nimi}" />
-					</ace:column>
-				</ace:dataTable>
-				-->
+					<ace:dataTable value="#{harrastajat}" var="_harrastaja" selectionMode="single" id="harrastaja" rows="5"
+						rowSelectListener="#{ilmoittautumisAdmin.harrastajaValittu}">
+						<ace:column headerText="Nimi" filterBy="#{_harrastaja.henkilö.nimi}" filterMatchMode="contains">
+							<h:outputText value="#{_harrastaja.henkilö.nimi}" />
+						</ace:column>
+					</ace:dataTable>
+					<!-- 
 					<ace:autoCompleteEntry id="harrastaja" value="#{treenikäynti.harrastaja}" listVar="_h" listValue="#{harrastajat}"
 						filterBy="#{_h.henkilö.nimi}" converter="objectConverter">
 						<f:facet name="row">
 							<h:outputText value="#{_h.henkilö.nimi}" />
 						</f:facet>
 					</ace:autoCompleteEntry>
+			-->
 					<!-- 				
 				<ace:autoCompleteEntry id="harrastaja" value="#{treenikäynti.harrastaja}" filterBy="#{_harrastaja.henkilö.nimi}" rows="5">
 					<f:selectItems value="#{harrastajat}" var="_h" itemLabel="#{_h.henkilö.nimi}" itemValue="#{_h}" />
@@ -71,14 +72,16 @@
 			</h:panelGrid>
 		</ace:panel>
 		<ace:panel header="Vetäjät" styleClass="panel" style="width:500px">
+		<!-- 
 			<ace:listControl>
-				<ace:list value="#{treenivetäjät}" var="_vetäjä" selectionMode="multiple">
+				<ace:list value="#{vetäjät}" var="_vetäjä" selectionMode="multiple">
 					<h:outputText value="#{_vetäjä.henkilö.nimi}" />
 				</ace:list>
 				<ace:list value="#{treeni.vetäjät}" var="_vetäjä" selectionMode="multiple">
 					<h:outputText value="#{_vetäjä.henkilö.nimi}" />
 				</ace:list>
 			</ace:listControl>
+		-->
 		</ace:panel>
 	</h:panelGrid>
 	<h:commandButton rendered="#{treenikäynti != null}" value="x" styleClass="ikoni"

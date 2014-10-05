@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.ViewExpiredException;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -39,6 +40,11 @@ public class DSExceptionHandler implements Serializable
       {
          e1.printStackTrace();
       }
+      e.handled();
+   }
+
+   void handleViewExpired(@Handles ExceptionEvent<ViewExpiredException> e)
+   {
       e.handled();
    }
 

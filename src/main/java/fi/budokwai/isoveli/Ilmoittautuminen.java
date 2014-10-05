@@ -154,8 +154,9 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
       {
          for (Harrastaja h : treeni.getVetäjät())
          {
-            treenisessio.getTreenivetäjät().add(h);
+            treenisessio.getVetäjät().add(h);
          }
+         entityManager.persist(treenisessio);
       }
       Treenikäynti treenikaynti = new Treenikäynti(harrastaja, treenisessio);
       harrastaja.getTreenikäynnit().add(treenikaynti);

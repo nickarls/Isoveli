@@ -13,12 +13,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@NamedQuery(name = "treenisessio", query = "select t from Treenisessio t where t.treeni = :treeni and t.p‰iv‰=:p‰iv‰")
+@NamedQueries(
+{
+      @NamedQuery(name = "treenisessio", query = "select t from Treenisessio t where t.treeni = :treeni and t.p‰iv‰=:p‰iv‰"),
+      @NamedQuery(name = "treenisessiot", query = "select t from Treenisessio t where t.p‰iv‰ between :alkaa and :p‰‰ttyy order by t.p‰iv‰ desc") })
 public class Treenisessio
 {
    @Id
@@ -38,9 +43,9 @@ public class Treenisessio
    @JoinTable(name = "treenisessiovetaja", joinColumns =
    { @JoinColumn(name = "treenisessio", referencedColumnName = "id") }, inverseJoinColumns =
    { @JoinColumn(name = "harrastaja", referencedColumnName = "id") })
-   private List<Harrastaja> treenivet‰j‰t = new ArrayList<Harrastaja>();
+   private List<Harrastaja> vet‰j‰t = new ArrayList<Harrastaja>();
 
-   @OneToMany(cascade = CascadeType.ALL, mappedBy = "treenisessio", orphanRemoval = true)
+   @OneToMany(cascade=CascadeType.REMOVE, mappedBy = "treenisessio", orphanRemoval = true)
    private List<Treenik‰ynti> treenik‰ynnit = new ArrayList<Treenik‰ynti>();
 
    public int getId()
@@ -73,14 +78,14 @@ public class Treenisessio
       this.p‰iv‰ = p‰iv‰;
    }
 
-   public List<Harrastaja> getTreenivet‰j‰t()
+   public List<Harrastaja> getVet‰j‰t()
    {
-      return treenivet‰j‰t;
+      return vet‰j‰t;
    }
 
-   public void setTreenivet‰j‰t(List<Harrastaja> treenivet‰j‰t)
+   public void setVet‰j‰t(List<Harrastaja> vet‰j‰t)
    {
-      this.treenivet‰j‰t = treenivet‰j‰t;
+      this.vet‰j‰t = vet‰j‰t;
    }
 
    public List<Treenik‰ynti> getTreenik‰ynnit()
@@ -97,4 +102,5 @@ public class Treenisessio
    {
       return id == 0;
    }
+
 }

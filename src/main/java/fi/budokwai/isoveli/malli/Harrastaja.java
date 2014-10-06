@@ -55,7 +55,7 @@ public class Harrastaja
    private Henkilö huoltaja;
 
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
-   @OrderBy("vyoarvo asc")
+   @OrderBy("päivä asc")
    private List<Vyökoe> vyökokeet = Collections.emptyList();
 
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)

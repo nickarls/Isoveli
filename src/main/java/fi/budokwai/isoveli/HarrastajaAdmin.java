@@ -49,6 +49,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    private RowStateMap rowStateMap = new RowStateMap();
    private RowStateMap vyökoeRSM = new RowStateMap();
+   private RowStateMap sopimusRSM = new RowStateMap();
 
    @PostConstruct
    public void init()
@@ -167,6 +168,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       {
          sopimus = null;
       }
+      virhe("Muutos peruttu");
    }
 
    public void peruutaVyökoemuutos()
@@ -178,6 +180,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       {
          vyökoe = null;
       }
+      virhe("Muutos peruttu");
    }
 
    public void poistaHarrastaja()
@@ -196,22 +199,23 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       {
          vyökoe.setHarrastaja(harrastaja);
          harrastaja.getVyökokeet().add(vyökoe);
-         vyökoeRSM.get(vyökoe).setSelected(true);
       }
       entityManager.persist(harrastaja);
       entityManager.flush();
+      vyökoeRSM.get(vyökoe).setSelected(true);
       info("Vyökoe tallennettu");
    }
 
    public void tallennaSopimus()
    {
-      sopimus.setHarrastaja(harrastaja);
       if (!harrastaja.getSopimukset().contains(sopimus))
       {
+         sopimus.setHarrastaja(harrastaja);         
          harrastaja.getSopimukset().add(sopimus);
       }
       entityManager.persist(harrastaja);
       entityManager.flush();
+      sopimusRSM.get(sopimus).setSelected(true);
       info("Sopimus tallennettu");
    }
 
@@ -265,6 +269,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void lisääSopimus()
    {
       sopimus = new Sopimus();
+      rowStateMap.setAllSelected(false);      
       info("Uusi sopimus alustettu");
    }
 
@@ -301,6 +306,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       roolit = null;
       vyökoe = null;
       vyökoeRSM = new RowStateMap();
+      sopimusRSM = new RowStateMap();
    }
 
    public void vyökoeValittu(SelectEvent e)
@@ -331,6 +337,16 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void setVyökoeRSM(RowStateMap vyökoeRSM)
    {
       this.vyökoeRSM = vyökoeRSM;
+   }
+
+   public RowStateMap getSopimusRSM()
+   {
+      return sopimusRSM;
+   }
+
+   public void setSopimusRSM(RowStateMap sopimusRSM)
+   {
+      this.sopimusRSM = sopimusRSM;
    }
 
 }

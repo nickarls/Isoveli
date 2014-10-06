@@ -2,7 +2,7 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:ace="http://www.icefaces.org/icefaces/components">
 	<h:commandButton action="#{harrastajaAdmin.lisääSopimus}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
-		immediate="true">
+		immediate="true" stateMap="#{harrastajaAdmin.sopimusRSM}">
 		<ace:ajax render="@form" />
 	</h:commandButton>
 	<ace:dataTable value="#{harrastaja.sopimukset}" var="_sopimus" selectionMode="single" rows="10"
@@ -30,7 +30,9 @@
 		</h:panelGrid>
 	</ace:panel>
 	<h:commandButton rendered="#{sopimus != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
-		actionListener="#{harrastajaAdmin.tallennaSopimus}" action="#{harrastajaAdmin.piilotaSopimus}" />
+		action="#{harrastajaAdmin.tallennaSopimus}">
+		<f:ajax execute="@form" render="@form" />
+	</h:commandButton>
 	<h:commandButton rendered="#{sopimus != null}" value="x" styleClass="ikoni" immediate="true"
 		action="#{harrastajaAdmin.peruutaSopimusmuutos}" image="/kuvat/peruuta_muutos.png">
 		<f:ajax render="@form" />

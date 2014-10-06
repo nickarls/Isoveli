@@ -12,6 +12,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -33,11 +34,14 @@ public class Vyöarvo
    @NotNull
    private String nimi;
 
+   @Min(value = 1)
    private int minimikuukaudet;
 
+   @Min(value = 1)
    private int minimitreenit;
 
    @Column(name = "jarjestys")
+   @Min(value = 1)
    private int järjestys;
 
    @OneToMany(mappedBy = "vyöarvo")

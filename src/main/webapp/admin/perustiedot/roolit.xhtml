@@ -26,12 +26,16 @@
 				</ace:panel>
 				<h:panelGrid columns="3">
 					<h:commandButton rendered="#{rooli != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
-						actionListener="#{perustietoAdmin.tallennaRooli}" action="#{perustietoAdmin.piilotaRooli}" />
-					<h:commandButton rendered="#{rooli != null}" value="x" styleClass="ikoni" action="#{perustietoAdmin.peruutaMuutos}"
-						image="/kuvat/peruuta_muutos.png" immediate="true" />
-					<h:commandButton rendered="#{rooli.poistettavissa and fn:length(rooliKäyttö) == 0}" value="x" styleClass="ikoni"
-						actionListener="#{perustietoAdmin.poistaRooli}" action="#{perustietoAdmin.piilotaRooli}" image="/kuvat/poista.png"
-						immediate="true" />
+						action="#{perustietoAdmin.tallennaRooli}">
+						<f:ajax execute="@form" render="@form" />
+					</h:commandButton>
+					<h:commandButton rendered="#{rooli != null}" value="x" styleClass="ikoni"
+						action="#{perustietoAdmin.peruutaRoolimuutos}" image="/kuvat/peruuta_muutos.png" immediate="true">
+						<f:ajax render="@form" />
+					</h:commandButton>
+					<h:commandButton rendered="#{rooli.poistettavissa and fn:length(rooliKäyttö) == 0}" value="x"
+						styleClass="ikoni" actionListener="#{perustietoAdmin.poistaRooli}"
+						action="#{perustietoAdmin.piilotaRooli}" image="/kuvat/poista.png" immediate="true" />
 				</h:panelGrid>
 			</h:panelGrid>
 			<ace:panel header="Käyttö" style="width:300px" rendered="#{rooli != null and rooli.poistettavissa}" >

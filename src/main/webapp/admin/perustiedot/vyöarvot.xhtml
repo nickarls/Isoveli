@@ -8,13 +8,22 @@
 			<ace:ajax render="@form" />
 		</h:commandButton>
 		<h:panelGrid columns="3" columnClasses="tabletop, tabletop, tabletop">
-			<ace:dataTable value="#{kaikkiVyöarvot}" var="_vyöarvo" selectionMode="single" rows="10" style="width:300px"
-				rowSelectListener="#{perustietoAdmin.vyöarvoValittu}">
+			<ace:dataTable value="#{kaikkiVyöarvot}" var="_vyöarvo" selectionMode="single" rows="15" paginator="true" paginatorPosition="bottom"
+				rowSelectListener="#{perustietoAdmin.vyöarvoValittu}" stateMap="#{perustietoAdmin.vyöarvoRSM}">
 				<ace:column headerText="Vyöarvo">
 					<h:outputText value="#{_vyöarvo.nimi}" />
 				</ace:column>
+				<ace:column headerText="Minimikuukaudet">
+					<h:outputText value="#{_vyöarvo.minimikuukaudet}" />
+				</ace:column>
+				<ace:column headerText="Minimitreenit">
+					<h:outputText value="#{_vyöarvo.minimitreenit}" />
+				</ace:column>
+				<ace:column headerText="Järjestys">
+					<h:outputText value="#{_vyöarvo.järjestys}" />
+				</ace:column>
 			</ace:dataTable>
-			<h:panelGrid style="margin-left:20px">
+			<h:panelGrid style="margin-left:20px; width:300px">
 				<ace:panel header="Vyöarvo" rendered="#{vyöarvo != null}" style="width:350px">
 					<h:panelGrid columns="2">
 						<h:outputText value="Nimi" />
@@ -32,16 +41,25 @@
 							<ace:message for="form:minimitreenit" />
 							<h:inputText value="#{vyöarvo.minimitreenit}" id="minimitreenit" size="12"/>
 						</h:panelGrid>
+						<h:outputText value="Järjestys" />
+						<h:panelGrid>
+							<ace:message for="form:järjestys" />
+							<h:inputText value="#{vyöarvo.järjestys}" id="järjestys" size="12"/>
+						</h:panelGrid>
 					</h:panelGrid>					
 				</ace:panel>
 				<h:panelGrid columns="3">
 					<h:commandButton rendered="#{vyöarvo != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
-						actionListener="#{perustietoAdmin.tallennaVyöarvo}" action="#{perustietoAdmin.piilotaVyöarvo}" />
-					<h:commandButton rendered="#{vyöarvo != null}" value="x" styleClass="ikoni" action="#{perustietoAdmin.peruutaMuutos}"
-						image="/kuvat/peruuta_muutos.png" immediate="true" />
-					<h:commandButton rendered="#{vyöarvo.poistettavissa and fn:length(vyöarvoKäyttö) == 0}" value="x" styleClass="ikoni"
-						actionListener="#{perustietoAdmin.poistaVyöarvo}" action="#{perustietoAdmin.piilotaVyöarvo}" image="/kuvat/poista.png"
-						immediate="true" />
+						action="#{perustietoAdmin.tallennaVyöarvo}">
+						<f:ajax execute="@form" render="@form" />
+					</h:commandButton>
+					<h:commandButton rendered="#{vyöarvo != null}" value="x" styleClass="ikoni"
+						action="#{perustietoAdmin.peruutaVyöarvomuutos}" image="/kuvat/peruuta_muutos.png" immediate="true">
+						<f:ajax render="@form" />
+					</h:commandButton>
+					<h:commandButton rendered="#{vyöarvo.poistettavissa and fn:length(vyöarvoKäyttö) == 0}" value="x"
+						styleClass="ikoni" actionListener="#{perustietoAdmin.poistaVyöarvo}"
+						action="#{perustietoAdmin.piilotaVyöarvo}" image="/kuvat/poista.png" immediate="true" />
 				</h:panelGrid>
 			</h:panelGrid>
 			<ace:panel header="Käyttö" style="width:300px" rendered="#{vyöarvo != null and vyöarvo.poistettavissa}" >

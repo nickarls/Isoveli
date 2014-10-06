@@ -156,7 +156,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       {
          harrastaja = null;
       }
-      virhe("Muutos peruttu");
+      virhe("Muutokset peruttu");
    }
 
    public void peruutaSopimusmuutos()
@@ -168,7 +168,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       {
          sopimus = null;
       }
-      virhe("Muutos peruttu");
+      virhe("Muutokset peruttu");
    }
 
    public void peruutaVyökoemuutos()
@@ -180,7 +180,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       {
          vyökoe = null;
       }
-      virhe("Muutos peruttu");
+      virhe("Muutokset peruttu");
    }
 
    public void poistaHarrastaja()

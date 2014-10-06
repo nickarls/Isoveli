@@ -43,6 +43,8 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    private List<Treeni> treenityyppiKäyttö;
 
    private RowStateMap treenityyppiRSM = new RowStateMap();
+   private RowStateMap vyöarvoRSM = new RowStateMap();
+   private RowStateMap rooliRSM = new RowStateMap();
 
    @PostConstruct
    public void alusta()
@@ -94,6 +96,18 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       return treenityyppi;
    }
 
+   public void peruutaRoolimuutos()
+   {
+      if (rooli.isPoistettavissa())
+      {
+         entityManager.refresh(rooli);
+      } else
+      {
+         rooli = null;
+      }
+      virhe("Muutokset peruttu");
+   }   
+   
    public void peruutaTreenityyppimuutos()
    {
       if (treenityyppi.isPoistettavissa())
@@ -102,6 +116,18 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       } else
       {
          treenityyppi = null;
+      }
+      virhe("Muutokset peruttu");
+   }
+
+   public void peruutaVyöarvomuutos()
+   {
+      if (vyöarvo.isPoistettavissa())
+      {
+         entityManager.refresh(vyöarvo);
+      } else
+      {
+         vyöarvo = null;
       }
       virhe("Muutokset peruttu");
    }
@@ -132,12 +158,16 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void lisääRooli()
    {
       rooli = new Rooli();
+      rooliRSM = new RowStateMap();
+      rooliKäyttö = null;
       info("Uusi rooli alustettu");
    }
 
    public void lisääVyöarvo()
    {
       vyöarvo = new Vyöarvo();
+      vyöarvoRSM = new RowStateMap();
+      vyöarvoKäyttö = null;
       info("Uusi vyöarvo alustettu");
    }
 
@@ -152,6 +182,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void tallennaRooli()
    {
       entityManager.persist(rooli);
+      rooliRSM.get(rooli).setSelected(true);
       haeRoolit();
       info("Rooli tallennettu");
    }
@@ -159,6 +190,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void tallennaVyöarvo()
    {
       entityManager.persist(vyöarvo);
+      vyöarvoRSM.get(vyöarvo).setSelected(true);
       haeVyöarvot();
       info("Vyöarvo tallennettu");
    }
@@ -281,6 +313,26 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void setTreenityyppiRSM(RowStateMap treenityyppiRSM)
    {
       this.treenityyppiRSM = treenityyppiRSM;
+   }
+
+   public RowStateMap getVyöarvoRSM()
+   {
+      return vyöarvoRSM;
+   }
+
+   public void setVyöarvoRSM(RowStateMap vyöarvoRSM)
+   {
+      this.vyöarvoRSM = vyöarvoRSM;
+   }
+
+   public RowStateMap getRooliRSM()
+   {
+      return rooliRSM;
+   }
+
+   public void setRooliRSM(RowStateMap rooliRSM)
+   {
+      this.rooliRSM = rooliRSM;
    }
 
 }

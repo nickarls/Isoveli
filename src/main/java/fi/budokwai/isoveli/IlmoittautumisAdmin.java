@@ -141,7 +141,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
    {
       treenikäynti = null;
       rowStateMap.setAllSelected(false);
-      virhe("Muutos peruttu");
+      virhe("Muutokset peruttu");
    }
 
 }

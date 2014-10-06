@@ -13,6 +13,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 
 import org.icefaces.ace.event.SelectEvent;
+import org.icefaces.ace.model.table.RowStateMap;
+import org.icefaces.ace.model.tree.NodeStateMap;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
@@ -39,6 +41,8 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    private List<Harrastaja> vyöarvoKäyttö;
    private List<Henkilö> rooliKäyttö;
    private List<Treeni> treenityyppiKäyttö;
+
+   private RowStateMap treenityyppiRSM = new RowStateMap();
 
    @PostConstruct
    public void alusta()
@@ -90,6 +94,18 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       return treenityyppi;
    }
 
+   public void peruutaTreenityyppimuutos()
+   {
+      if (treenityyppi.isPoistettavissa())
+      {
+         entityManager.refresh(treenityyppi);
+      } else
+      {
+         treenityyppi = null;
+      }
+      virhe("Muutokset peruttu");
+   }
+
    public void peruutaMuutos()
    {
       rooli = null;
@@ -128,6 +144,8 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void lisääTreenityyppi()
    {
       treenityyppi = new Treenityyppi();
+      treenityyppiRSM = new RowStateMap();
+      treenityyppiKäyttö = null;
       info("Uusi treenityyppi alustettu");
    }
 
@@ -148,6 +166,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void tallennaTreenityyppi()
    {
       entityManager.persist(treenityyppi);
+      treenityyppiRSM.get(treenityyppi).setSelected(true);
       haeTreenityypit();
       info("Treenityyppi tallennettu");
    }
@@ -247,11 +266,21 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       vyöarvo = (Vyöarvo) e.getObject();
       vyöarvoKäyttö = null;
    }
-   
+
    public void treenityyppiValittu(SelectEvent e)
    {
       treenityyppi = (Treenityyppi) e.getObject();
       treenityyppiKäyttö = null;
-   }   
+   }
+
+   public RowStateMap getTreenityyppiRSM()
+   {
+      return treenityyppiRSM;
+   }
+
+   public void setTreenityyppiRSM(RowStateMap treenityyppiRSM)
+   {
+      this.treenityyppiRSM = treenityyppiRSM;
+   }
 
 }

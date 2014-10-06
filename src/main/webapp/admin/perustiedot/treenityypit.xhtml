@@ -8,7 +8,7 @@
 		</h:commandButton>
 		<h:panelGrid columns="3" columnClasses="tabletop, tabletop, tabletop">
 			<ace:dataTable value="#{kaikkiTreenityypit}" var="_treenityyppi" selectionMode="single" rows="10" style="width:300px"
-				rowSelectListener="#{perustietoAdmin.treenityyppiValittu}">
+				rowSelectListener="#{perustietoAdmin.treenityyppiValittu}" stateMap="#{perustietoAdmin.treenityyppiRSM}">
 				<ace:column headerText="Treenityyppi">
 					<h:outputText value="#{_treenityyppi.nimi}" />
 				</ace:column>
@@ -25,9 +25,13 @@
 				</ace:panel>
 				<h:panelGrid columns="3">
 					<h:commandButton rendered="#{treenityyppi != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
-						actionListener="#{perustietoAdmin.tallennaTreenityyppi}" action="#{perustietoAdmin.piilotaTreenityyppi}" />
+						action="#{perustietoAdmin.tallennaTreenityyppi}">
+						<f:ajax execute="@form" render="@form" />
+					</h:commandButton>
 					<h:commandButton rendered="#{treenityyppi != null}" value="x" styleClass="ikoni"
-						action="#{perustietoAdmin.peruutaMuutos}" image="/kuvat/peruuta_muutos.png" immediate="true" />
+						action="#{perustietoAdmin.peruutaTreenityyppimuutos}" image="/kuvat/peruuta_muutos.png" immediate="true">
+						<f:ajax render="@form" />
+					</h:commandButton>
 					<h:commandButton rendered="#{treenityyppi.poistettavissa and fn:length(treenityyppiKäyttö) == 0}" value="x"
 						styleClass="ikoni" actionListener="#{perustietoAdmin.poistaTreenityyppi}"
 						action="#{perustietoAdmin.piilotaTreenityyppi}" image="/kuvat/poista.png" immediate="true" />

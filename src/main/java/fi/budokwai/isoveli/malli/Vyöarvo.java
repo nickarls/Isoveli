@@ -3,6 +3,7 @@ package fi.budokwai.isoveli.malli;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,7 +17,8 @@ import javax.validation.constraints.Size;
 
 @Entity
 @NamedQueries(
-{ @NamedQuery(name = "vyöarvot", query = "select v from Vyöarvo v order by v.id"),
+{
+      @NamedQuery(name = "vyöarvot", query = "select v from Vyöarvo v order by v.järjestys"),
       @NamedQuery(name = "vyöarvokäyttö", query = "select h from Harrastaja h join h.vyökokeet k join k.vyöarvo v where v = :vyöarvo") })
 @Table(name = "vyoarvo")
 public class Vyöarvo
@@ -34,6 +36,9 @@ public class Vyöarvo
    private int minimikuukaudet;
 
    private int minimitreenit;
+
+   @Column(name = "jarjestys")
+   private int järjestys;
 
    @OneToMany(mappedBy = "vyöarvo")
    private List<Vyökoe> vyökokeet = new ArrayList<Vyökoe>();
@@ -118,5 +123,15 @@ public class Vyöarvo
    public boolean isPoistettavissa()
    {
       return id > 0;
+   }
+
+   public int getJärjestys()
+   {
+      return järjestys;
+   }
+
+   public void setJärjestys(int järjestys)
+   {
+      this.järjestys = järjestys;
    }
 }

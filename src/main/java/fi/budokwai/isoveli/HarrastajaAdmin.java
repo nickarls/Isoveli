@@ -25,8 +25,8 @@ import org.icefaces.ace.model.table.RowStateMap;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Rooli;
+import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sukupuoli;
-import fi.budokwai.isoveli.malli.Treenikäynti;
 import fi.budokwai.isoveli.malli.Vyökoe;
 
 @Named
@@ -36,6 +36,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 {
    private List<Harrastaja> harrastajat;
    private List<Rooli> roolit;
+   private Sopimus sopimus;
 
    @PersistenceContext(type = PersistenceContextType.EXTENDED)
    private EntityManager entityManager;
@@ -48,6 +49,13 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void init()
    {
       ((Session) entityManager.getDelegate()).setFlushMode(FlushMode.MANUAL);
+   }
+
+   @Produces
+   @Named
+   public Sopimus getSopimus()
+   {
+      return sopimus;
    }
 
    @Produces
@@ -118,11 +126,27 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       info("Harrastaja tallennettu");
    }
 
-   public void peruutaMuutos()
+   public void peruutaPerustietomuutos()
    {
-      harrastaja = null;
-      rowStateMap.setAllSelected(false);
+      if (harrastaja.isPoistettavissa())
+      {
+         entityManager.refresh(harrastaja);
+      } else
+      {
+         harrastaja = null;
+      }
       virhe("Muutos peruttu");
+   }
+
+   public void peruutaSopimusmuutos()
+   {
+      if (sopimus.isPoistettavissa())
+      {
+         entityManager.refresh(sopimus);
+      } else
+      {
+         sopimus = null;
+      }
    }
 
    public void poistaHarrastaja()
@@ -147,12 +171,37 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       info("Vyökoe tallennettu");
    }
 
+   public void tallennaSopimus()
+   {
+      sopimus.setHarrastaja(harrastaja);
+      if (!harrastaja.getSopimukset().contains(sopimus))
+      {
+         harrastaja.getSopimukset().add(sopimus);
+      }
+      entityManager.persist(harrastaja);
+      entityManager.flush();
+      info("Sopimus tallennettu");
+   }
+
    public void poistaVyökoe(Vyökoe vyökoe)
    {
       harrastaja.getVyökokeet().remove(vyökoe);
       entityManager.persist(harrastaja);
       entityManager.flush();
       info("Vyökoe poistettu");
+   }
+
+   public void poistaSopimus()
+   {
+      harrastaja.getSopimukset().remove(sopimus);
+      entityManager.persist(harrastaja);
+      entityManager.flush();
+      info("Sopimus poistettu");
+   }
+
+   public void piilotaSopimus()
+   {
+      sopimus = null;
    }
 
    public void syntymäAikaMuuttui(AjaxBehaviorEvent e)
@@ -176,10 +225,21 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       info("Uusi harrastaja alustettu");
    }
 
+   public void lisääSopimus()
+   {
+      sopimus = new Sopimus();
+      info("Uusi sopimus alustettu");
+   }
+
    public void harrastajaValittu(SelectEvent e)
    {
       harrastaja = (Harrastaja) e.getObject();
       roolit = null;
+   }
+
+   public void sopimusValittu(SelectEvent e)
+   {
+      sopimus = (Sopimus) e.getObject();
    }
 
    public RowStateMap getRowStateMap()

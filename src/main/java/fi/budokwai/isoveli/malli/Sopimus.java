@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -97,6 +98,25 @@ public class Sopimus
    public void setTyyppi(Sopimustyyppi tyyppi)
    {
       this.tyyppi = tyyppi;
+   }
+
+   @Transient
+   public boolean isPoistettavissa()
+   {
+      return id > 0;
+   }
+
+   @Override
+   public int hashCode()
+   {
+      return Integer.valueOf(id).hashCode();
+   }
+
+   @Override
+   public boolean equals(Object toinen)
+   {
+      Sopimus toinenSopimus = (Sopimus) toinen;
+      return id == toinenSopimus.getId();
    }
 
 }

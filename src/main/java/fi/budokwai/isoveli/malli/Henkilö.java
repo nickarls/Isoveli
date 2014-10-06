@@ -18,7 +18,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
+import fi.budokwai.isoveli.KylläEiTyyppi;
+
 @Entity
+@TypeDef(name = "KylläEi", typeClass = KylläEiTyyppi.class)
 @Table(name = "henkilo")
 public class Henkilö
 {
@@ -54,6 +60,9 @@ public class Henkilö
    private String salasana;
 
    private Blob kuva;
+   
+   @Type(type = "KylläEi")
+   private boolean arkistoitu;   
 
    public int getId()
    {
@@ -159,5 +168,15 @@ public class Henkilö
    public String getNimi()
    {
       return String.format("%s %s", etunimi, sukunimi);
+   }
+
+   public boolean isArkistoitu()
+   {
+      return arkistoitu;
+   }
+
+   public void setArkistoitu(boolean arkistoitu)
+   {
+      this.arkistoitu = arkistoitu;
    }
 }

@@ -29,7 +29,9 @@ public class GrowlPhaseListener
                message.getSummary());
             JavaScriptRunner.runScript(event.getFacesContext(), script);
          }
+         messages.remove();
       }
+      
    }
 
 }

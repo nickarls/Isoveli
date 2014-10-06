@@ -23,11 +23,11 @@ public class Vyökoe
    private int id;
 
    @ManyToOne
-   @JoinColumn(name="vyoarvo")
+   @JoinColumn(name = "vyoarvo")
    private Vyöarvo vyöarvo;
 
    @ManyToOne
-   @JoinColumn(name="harrastaja")
+   @JoinColumn(name = "harrastaja")
    private Harrastaja harrastaja;
 
    @Temporal(TemporalType.DATE)
@@ -99,10 +99,10 @@ public class Vyökoe
       return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
    }
 
-   public boolean equals(Object o)
+   public boolean equals(Object toinen)
    {
-      Vyökoe toinen = (Vyökoe) o;
-      return id == toinen.getId();
+      Vyökoe toinenVyökoe = (Vyökoe) toinen;
+      return id == toinenVyökoe.getId();
    }
 
    public int hashCode()

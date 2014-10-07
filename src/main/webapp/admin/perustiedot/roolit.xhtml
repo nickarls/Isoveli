@@ -9,7 +9,7 @@
 		</h:commandButton>
 		<h:panelGrid columns="3" columnClasses="tabletop, tabletop, tabletop">
 			<ace:dataTable value="#{kaikkiRoolit}" var="_rooli" selectionMode="single" rows="10" style="width:300px"
-				rowSelectListener="#{perustietoAdmin.rooliValittu}">
+				rowSelectListener="#{perustietoAdmin.rooliValittu}" stateMap="#{perustietoAdmin.rooliRSM}">
 				<ace:column headerText="Rooli">
 					<h:outputText value="#{_rooli.nimi}" />
 				</ace:column>

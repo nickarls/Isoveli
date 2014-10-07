@@ -1,0 +1,115 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:ace="http://www.icefaces.org/icefaces/components">
+	<h:panelGrid>
+		<h:commandButton action="#{perustietoAdmin.lisääSopimustyyppi}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
+			immediate="true">
+			<ace:ajax render="@form" />
+		</h:commandButton>
+		<h:panelGrid columns="3" columnClasses="tabletop, tabletop, tabletop">
+			<ace:dataTable value="#{kaikkiSopimustyypit}" var="_sopimustyyppi" selectionMode="single" rows="10" style="width:300px"
+				rowSelectListener="#{perustietoAdmin.sopimustyyppiValittu}" stateMap="#{perustietoAdmin.rooliRSM}">
+				<ace:column headerText="Sopimustyyppi">
+					<h:outputText value="#{_sopimustyyppi.nimi}" />
+				</ace:column>
+				<ace:column headerText="Jäsenmaksu">
+					<h:outputText value="#{_sopimustyyppi.jäsenmaksu}" />
+				</ace:column>
+				<ace:column headerText="Jatkuva">
+					<h:outputText value="#{_sopimustyyppi.jatkuva}" />
+				</ace:column>
+				<ace:column headerText="Treenikertoja">
+					<h:outputText value="#{_sopimustyyppi.treenikertoja}" />
+				</ace:column>
+				<ace:column headerText="Alkeiskurssi">
+					<h:outputText value="#{_sopimustyyppi.alkeiskurssi}" />
+				</ace:column>
+				<ace:column headerText="Koeaika">
+					<h:outputText value="#{_sopimustyyppi.koeaika}" />
+				</ace:column>
+				<ace:column headerText="Vapautus">
+					<h:outputText value="#{_sopimustyyppi.vapautus}" />
+				</ace:column>
+				<ace:column headerText="Power">
+					<h:outputText value="#{_sopimustyyppi.power}" />
+				</ace:column>
+				<ace:column headerText="Perhealennus">
+					<h:outputText value="#{_sopimustyyppi.perhealennus}" />
+				</ace:column>
+			</ace:dataTable>
+			<h:panelGrid style="margin-left:20px">
+				<ace:panel header="Rooli" rendered="#{sopimustyyppi != null}" style="width:300px">
+					<h:panelGrid columns="2">
+						<h:outputText value="Nimi" />
+						<h:panelGrid>
+							<ace:message for="form:nimi" />
+							<h:inputText value="#{sopimustyyppi.nimi}" id="nimi" />
+						</h:panelGrid>
+						<h:outputText value="Jäsenmaksu" />
+						<h:panelGrid>
+							<ace:message for="form:jäsenmaksu" />
+							<h:selectBooleanCheckbox value="#{sopimustyyppi.nimi}" id="jäsenmaksu" />
+						</h:panelGrid>
+						<h:outputText value="Jatkuva" />
+						<h:panelGrid>
+							<ace:message for="form:jatkuva" />
+							<h:selectBooleanCheckbox value="#{sopimustyyppi.jatkuva}" id="jatkuva" />
+						</h:panelGrid>
+						<h:outputText value="Treenikertoja" />
+						<h:panelGrid>
+							<ace:message for="form:treenikertoja" />
+							<h:selectBooleanCheckbox value="#{sopimustyyppi.treenikertoja}" id="treenikertoja" />
+						</h:panelGrid>
+						<h:outputText value="Alkeiskurssi" />
+						<h:panelGrid>
+							<ace:message for="form:alkeiskurssi" />
+							<h:selectBooleanCheckbox value="#{sopimustyyppi.alkeiskurssi}" id="alkeiskurssi" />
+						</h:panelGrid>
+						<h:outputText value="Koeaika" />
+						<h:panelGrid>
+							<ace:message for="form:koeaika" />
+							<h:selectBooleanCheckbox value="#{sopimustyyppi.koeaika}" id="koeaika" />
+						</h:panelGrid>
+						<h:outputText value="Vapautus" />
+						<h:panelGrid>
+							<ace:message for="form:vapautus" />
+							<h:selectBooleanCheckbox value="#{sopimustyyppi.vapautus}" id="vapautus" />
+						</h:panelGrid>
+						<h:outputText value="Power" />
+						<h:panelGrid>
+							<ace:message for="form:power" />
+							<h:selectBooleanCheckbox value="#{sopimustyyppi.power}" id="power" />
+						</h:panelGrid>
+						<h:outputText value="Perhealennus" />
+						<h:panelGrid>
+							<ace:message for="form:perhealennus" />
+							<h:selectBooleanCheckbox value="#{sopimustyyppi.perhealennus}" id="perhealennus" />
+						</h:panelGrid>
+					</h:panelGrid>
+				</ace:panel>
+				<h:panelGrid columns="3">
+					<h:commandButton rendered="#{sopimustyyppi != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
+						action="#{perustietoAdmin.tallennaSopimustyyppi}">
+						<f:ajax execute="@form" render="@form" />
+					</h:commandButton>
+					<h:commandButton rendered="#{sopimustyyppi != null}" value="x" styleClass="ikoni"
+						action="#{perustietoAdmin.peruutaSopimustyyppimuutos}" image="/kuvat/peruuta_muutos.png" immediate="true">
+						<f:ajax render="@form" />
+					</h:commandButton>
+					<h:commandButton rendered="#{sopimustyyppi.poistettavissa and fn:length(sopimustyyppiKäyttö) == 0}" value="x" styleClass="ikoni"
+						actionListener="#{perustietoAdmin.poistaSopimustyyppi}" action="#{perustietoAdmin.piilotaSopimustyyppi}" image="/kuvat/poista.png"
+						immediate="true" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<ace:panel header="Käyttö (#{fn:length(sopimustyyppiKäyttö)})" style="width:300px"
+				rendered="#{sopimustyyppi != null and sopimustyyppi.poistettavissa}">
+				<ace:dataTable value="#{sopimustyyppiKäyttö}" var="_sopimus" rows="10" rendered="#{fn:length(sopimustyyppiKäyttö) > 0}">
+					<ace:column>
+						<h:outputText value="#{_sopimus.tyyppi.nimi}" />
+					</ace:column>
+				</ace:dataTable>
+				<h:outputText value="Ei käytössä" rendered="#{fn:length(sopimustyyppiKäyttö) == 0}" />
+			</ace:panel>
+		</h:panelGrid>
+	</h:panelGrid>
+</ui:composition>

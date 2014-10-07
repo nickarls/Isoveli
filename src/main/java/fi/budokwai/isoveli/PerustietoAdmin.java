@@ -21,6 +21,8 @@ import org.icefaces.ace.model.table.RowStateMap;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Rooli;
+import fi.budokwai.isoveli.malli.Sopimus;
+import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.malli.Treeni;
 import fi.budokwai.isoveli.malli.Treenisessio;
 import fi.budokwai.isoveli.malli.Treenityyppi;
@@ -36,6 +38,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    private Vyöarvo vyöarvo;
    private Treenityyppi treenityyppi;
    private Treeni treeni;
+   private Sopimustyyppi sopimustyyppi;
 
    @PersistenceContext(type = PersistenceContextType.EXTENDED)
    private EntityManager entityManager;
@@ -46,15 +49,18 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    private List<Harrastaja> vyöarvoKäyttö;
    private List<Henkilö> rooliKäyttö;
    private List<Treeni> treenityyppiKäyttö;
-   private List<Treenisessio> treenikäyttö;
+   private List<Treenisessio> treeniKäyttö;
+   private List<Sopimus> sopimustyyppiKäyttö;
    private List<Harrastaja> treenivetäjät;
    private List<Harrastaja> kaikkivetäjät;
    private List<Treeni> treenit;
+   private List<Sopimustyyppi> sopimustyypit;
 
    private RowStateMap treenityyppiRSM = new RowStateMap();
    private RowStateMap vyöarvoRSM = new RowStateMap();
    private RowStateMap rooliRSM = new RowStateMap();
    private RowStateMap treeniRSM = new RowStateMap();
+   private RowStateMap sopimustyyppiRSM = new RowStateMap();
 
    @PostConstruct
    public void alusta()
@@ -63,6 +69,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       haeVyöarvot();
       haeTreenityypit();
       haeTreenit();
+      haeSopimustyypit();
    }
 
    @Produces
@@ -140,6 +147,20 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public List<Treenityyppi> getKaikkiTreenityypit()
    {
       return treenityypit;
+   }
+
+   @Produces
+   @Named
+   public List<Sopimustyyppi> getKaikkiSopimustyypit()
+   {
+      return sopimustyypit;
+   }
+
+   @Produces
+   @Named
+   public Sopimustyyppi getSopimustyyppi()
+   {
+      return sopimustyyppi;
    }
 
    @Produces
@@ -222,17 +243,26 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       virhe("Muutokset peruttu");
    }
 
-   public void peruutaMuutos()
+   public void peruutaSopimustyyppimuutos()
    {
-      rooli = null;
-      vyöarvo = null;
-      treenityyppi = null;
+      if (sopimustyyppi.isPoistettavissa())
+      {
+         entityManager.refresh(sopimustyyppi);
+      } else
+      {
+         sopimustyyppi = null;
+      }
       virhe("Muutokset peruttu");
    }
 
    public void piilotaRooli()
    {
       rooli = null;
+   }
+
+   public void piilotaSopimustyyppi()
+   {
+      sopimustyyppi = null;
    }
 
    public void piilotaVyöarvo()
@@ -270,7 +300,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       treeni = new Treeni();
       treenivetäjät = null;
-      treenikäyttö = null;
+      treeniKäyttö = null;
       treeniRSM.setAllSelected(false);
       info("Uusi treeni alustettu");
    }
@@ -283,12 +313,28 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       info("Uusi treenityyppi alustettu");
    }
 
+   public void lisääSopimustyyppi()
+   {
+      sopimustyyppi = new Sopimustyyppi();
+      sopimustyyppiRSM = new RowStateMap();
+      sopimustyyppiKäyttö = null;
+      info("Uusi sopimustyyppi alustettu");
+   }
+
    public void tallennaRooli()
    {
       entityManager.persist(rooli);
       rooliRSM.get(rooli).setSelected(true);
       haeRoolit();
       info("Rooli tallennettu");
+   }
+
+   public void tallennaSopimustyyppi()
+   {
+      entityManager.persist(sopimustyyppi);
+      rooliRSM.get(sopimustyyppi).setSelected(true);
+      haeSopimustyypit();
+      info("Sopimustyyppi tallennettu");
    }
 
    public void tallennaTreeni()
@@ -318,6 +364,11 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    private void haeTreenit()
    {
       treenit = entityManager.createNamedQuery("treenit", Treeni.class).getResultList();
+   }
+
+   private void haeSopimustyypit()
+   {
+      sopimustyypit = entityManager.createNamedQuery("sopimustyypit", Sopimustyyppi.class).getResultList();
    }
 
    private void haeRoolit()
@@ -363,6 +414,13 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       info("Treenityyppi poistettu");
    }
 
+   public void poistaSopimustyyppi()
+   {
+      entityManager.remove(sopimustyyppi);
+      haeSopimustyypit();
+      info("Sopimustyyppi poistettu");
+   }
+
    @Produces
    @Named
    public List<Henkilö> getRooliKäyttö()
@@ -387,12 +445,12 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       {
          return Collections.emptyList();
       }
-      if (treenikäyttö == null)
+      if (treeniKäyttö == null)
       {
-         treenikäyttö = entityManager.createNamedQuery("treenikäyttö", Treenisessio.class)
+         treeniKäyttö = entityManager.createNamedQuery("treenikäyttö", Treenisessio.class)
             .setParameter("treeni", treeni).getResultList();
       }
-      return treenikäyttö;
+      return treeniKäyttö;
    }
 
    @Produces
@@ -409,6 +467,22 @@ public class PerustietoAdmin extends Perustoiminnallisuus
             .setParameter("vyöarvo", vyöarvo).getResultList();
       }
       return vyöarvoKäyttö;
+   }
+
+   @Produces
+   @Named
+   public List<Sopimus> getSopimustyyppiKäyttö()
+   {
+      if (sopimustyyppi == null || !sopimustyyppi.isPoistettavissa())
+      {
+         return Collections.emptyList();
+      }
+      if (sopimustyyppiKäyttö == null)
+      {
+         sopimustyyppiKäyttö = entityManager.createNamedQuery("sopimustyyppikäyttö", Sopimus.class)
+            .setParameter("sopimustyyppi", sopimustyyppi).getResultList();
+      }
+      return sopimustyyppiKäyttö;
    }
 
    @Produces
@@ -437,7 +511,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       treeni = (Treeni) e.getObject();
       treenivetäjät = null;
-      treenikäyttö = null;
+      treeniKäyttö = null;
    }
 
    public void vyöarvoValittu(SelectEvent e)
@@ -450,6 +524,12 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       treenityyppi = (Treenityyppi) e.getObject();
       treenityyppiKäyttö = null;
+   }
+
+   public void sopimustyyppiValittu(SelectEvent e)
+   {
+      sopimustyyppi = (Sopimustyyppi) e.getObject();
+      sopimustyyppiKäyttö = null;
    }
 
    public RowStateMap getTreenityyppiRSM()
@@ -490,6 +570,16 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void setTreeniRSM(RowStateMap treeniRSM)
    {
       this.treeniRSM = treeniRSM;
+   }
+
+   public RowStateMap getSopimustyyppiRSM()
+   {
+      return sopimustyyppiRSM;
+   }
+
+   public void setSopimustyyppiRSM(RowStateMap sopimustyyppiRSM)
+   {
+      this.sopimustyyppiRSM = sopimustyyppiRSM;
    }
 
 }

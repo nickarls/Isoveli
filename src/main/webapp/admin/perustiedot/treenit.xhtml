@@ -33,7 +33,7 @@
 			</ui:repeat>
 		</ace:column>
 		<ace:column headerText="Power">
-			<h:outputText value="#{_treeni.power ? 'Kyllä' : 'Ei'}" />
+			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_treeni.power}" />
 		</ace:column>
 	</ace:dataTable>
 	<p />

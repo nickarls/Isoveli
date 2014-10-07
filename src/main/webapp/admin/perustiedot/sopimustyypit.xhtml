@@ -7,38 +7,39 @@
 			<ace:ajax render="@form" />
 		</h:commandButton>
 		<h:panelGrid columns="3" columnClasses="tabletop, tabletop, tabletop">
-			<ace:dataTable value="#{kaikkiSopimustyypit}" var="_sopimustyyppi" selectionMode="single" rows="10" style="width:300px"
-				rowSelectListener="#{perustietoAdmin.sopimustyyppiValittu}" stateMap="#{perustietoAdmin.rooliRSM}">
-				<ace:column headerText="Sopimustyyppi">
+			<ace:dataTable value="#{kaikkiSopimustyypit}" var="_sopimustyyppi" selectionMode="single" rows="10"
+				rowSelectListener="#{perustietoAdmin.sopimustyyppiValittu}"
+				stateMap="#{perustietoAdmin.rooliRSM}">
+				<ace:column headerText="Nimi">
 					<h:outputText value="#{_sopimustyyppi.nimi}" />
 				</ace:column>
-				<ace:column headerText="Jäsenmaksu">
-					<h:outputText value="#{_sopimustyyppi.jäsenmaksu}" />
+				<ace:column headerText="Jäsen">
+					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.jäsenmaksu}" />
 				</ace:column>
 				<ace:column headerText="Jatkuva">
-					<h:outputText value="#{_sopimustyyppi.jatkuva}" />
+					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.jatkuva}" />
 				</ace:column>
-				<ace:column headerText="Treenikertoja">
-					<h:outputText value="#{_sopimustyyppi.treenikertoja}" />
+				<ace:column headerText="Kertoja">
+					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.treenikertoja}" />
 				</ace:column>
-				<ace:column headerText="Alkeiskurssi">
-					<h:outputText value="#{_sopimustyyppi.alkeiskurssi}" />
+				<ace:column headerText="Alkeis">
+					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.alkeiskurssi}" />
 				</ace:column>
-				<ace:column headerText="Koeaika">
-					<h:outputText value="#{_sopimustyyppi.koeaika}" />
+				<ace:column headerText="Koe">
+					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.koeaika}" />
 				</ace:column>
 				<ace:column headerText="Vapautus">
-					<h:outputText value="#{_sopimustyyppi.vapautus}" />
+					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.vapautus}" />
 				</ace:column>
 				<ace:column headerText="Power">
-					<h:outputText value="#{_sopimustyyppi.power}" />
+					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.power}" />
 				</ace:column>
-				<ace:column headerText="Perhealennus">
-					<h:outputText value="#{_sopimustyyppi.perhealennus}" />
+				<ace:column headerText="Perheale">
+					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.perhealennus}" />
 				</ace:column>
 			</ace:dataTable>
 			<h:panelGrid style="margin-left:20px">
-				<ace:panel header="Rooli" rendered="#{sopimustyyppi != null}" style="width:300px">
+				<ace:panel header="Rooli" rendered="#{sopimustyyppi != null}" >
 					<h:panelGrid columns="2">
 						<h:outputText value="Nimi" />
 						<h:panelGrid>
@@ -48,7 +49,7 @@
 						<h:outputText value="Jäsenmaksu" />
 						<h:panelGrid>
 							<ace:message for="form:jäsenmaksu" />
-							<h:selectBooleanCheckbox value="#{sopimustyyppi.nimi}" id="jäsenmaksu" />
+							<h:selectBooleanCheckbox value="#{sopimustyyppi.jäsenmaksu}" id="jäsenmaksu" />
 						</h:panelGrid>
 						<h:outputText value="Jatkuva" />
 						<h:panelGrid>
@@ -96,14 +97,15 @@
 						action="#{perustietoAdmin.peruutaSopimustyyppimuutos}" image="/kuvat/peruuta_muutos.png" immediate="true">
 						<f:ajax render="@form" />
 					</h:commandButton>
-					<h:commandButton rendered="#{sopimustyyppi.poistettavissa and fn:length(sopimustyyppiKäyttö) == 0}" value="x" styleClass="ikoni"
-						actionListener="#{perustietoAdmin.poistaSopimustyyppi}" action="#{perustietoAdmin.piilotaSopimustyyppi}" image="/kuvat/poista.png"
-						immediate="true" />
+					<h:commandButton rendered="#{sopimustyyppi.poistettavissa and fn:length(sopimustyyppiKäyttö) == 0}" value="x"
+						styleClass="ikoni" actionListener="#{perustietoAdmin.poistaSopimustyyppi}"
+						action="#{perustietoAdmin.piilotaSopimustyyppi}" image="/kuvat/poista.png" immediate="true" />
 				</h:panelGrid>
 			</h:panelGrid>
 			<ace:panel header="Käyttö (#{fn:length(sopimustyyppiKäyttö)})" style="width:300px"
 				rendered="#{sopimustyyppi != null and sopimustyyppi.poistettavissa}">
-				<ace:dataTable value="#{sopimustyyppiKäyttö}" var="_sopimus" rows="10" rendered="#{fn:length(sopimustyyppiKäyttö) > 0}">
+				<ace:dataTable value="#{sopimustyyppiKäyttö}" var="_sopimus" rows="10"
+					rendered="#{fn:length(sopimustyyppiKäyttö) > 0}">
 					<ace:column>
 						<h:outputText value="#{_sopimus.tyyppi.nimi}" />
 					</ace:column>

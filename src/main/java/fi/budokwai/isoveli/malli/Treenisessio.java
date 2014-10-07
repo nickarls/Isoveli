@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -16,18 +17,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @NamedQueries(
 {
       @NamedQuery(name = "treenisessio", query = "select t from Treenisessio t where t.treeni = :treeni and t.päivä=:päivä"),
+      @NamedQuery(name="treenikäyttö", query="select t from Treenisessio t where t.treeni = :treeni"),
       @NamedQuery(name = "treenisessiot", query = "select t from Treenisessio t where t.päivä between :alkaa and :päättyy order by t.päivä desc") })
 public class Treenisessio
 {
    @Id
-   @GeneratedValue
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
    @ManyToOne(optional = false)

@@ -62,9 +62,9 @@
 						action="#{perustietoAdmin.piilotaVyöarvo}" image="/kuvat/poista.png" immediate="true" />
 				</h:panelGrid>
 			</h:panelGrid>
-			<ace:panel header="Käyttö" style="width:300px" rendered="#{vyöarvo != null and vyöarvo.poistettavissa}" >
+			<ace:panel header="Käyttö (#{fn:length(vyöarvoKäyttö)})" style="width:300px" rendered="#{vyöarvo != null and vyöarvo.poistettavissa}" >
 				<ace:dataTable value="#{vyöarvoKäyttö}" var="_harrastaja" rows="10" rendered="#{fn:length(vyöarvoKäyttö) > 0}">
-					<ace:column headerText="Käytössä (#{fn:length(vyöarvoKäyttö)})">
+					<ace:column>
 						<h:outputText value="#{_harrastaja.henkilö.nimi}" />
 					</ace:column>
 				</ace:dataTable>

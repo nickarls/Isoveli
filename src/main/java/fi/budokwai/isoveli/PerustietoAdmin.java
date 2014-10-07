@@ -1,5 +1,7 @@
 package fi.budokwai.isoveli;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
+import javax.faces.model.SelectItem;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,13 +17,14 @@ import javax.persistence.PersistenceContextType;
 
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
-import org.icefaces.ace.model.tree.NodeStateMap;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Rooli;
 import fi.budokwai.isoveli.malli.Treeni;
+import fi.budokwai.isoveli.malli.Treenisessio;
 import fi.budokwai.isoveli.malli.Treenityyppi;
+import fi.budokwai.isoveli.malli.Viikonpäivä;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 
 @Named
@@ -31,6 +35,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    private Rooli rooli;
    private Vyöarvo vyöarvo;
    private Treenityyppi treenityyppi;
+   private Treeni treeni;
 
    @PersistenceContext(type = PersistenceContextType.EXTENDED)
    private EntityManager entityManager;
@@ -41,10 +46,15 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    private List<Harrastaja> vyöarvoKäyttö;
    private List<Henkilö> rooliKäyttö;
    private List<Treeni> treenityyppiKäyttö;
+   private List<Treenisessio> treenikäyttö;
+   private List<Harrastaja> treenivetäjät;
+   private List<Harrastaja> kaikkivetäjät;
+   private List<Treeni> treenit;
 
    private RowStateMap treenityyppiRSM = new RowStateMap();
    private RowStateMap vyöarvoRSM = new RowStateMap();
    private RowStateMap rooliRSM = new RowStateMap();
+   private RowStateMap treeniRSM = new RowStateMap();
 
    @PostConstruct
    public void alusta()
@@ -52,6 +62,63 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       haeRoolit();
       haeVyöarvot();
       haeTreenityypit();
+      haeTreenit();
+   }
+
+   @Produces
+   @Named
+   public Collection<Treeni> getTreenit()
+   {
+      return treenit;
+   }
+
+   @Produces
+   @Named
+   public List<Harrastaja> getVetäjät()
+   {
+      if (treeni == null)
+      {
+         return Collections.emptyList();
+      }
+      if (kaikkivetäjät == null)
+      {
+         kaikkivetäjät = entityManager.createNamedQuery("treenivetäjät", Harrastaja.class).getResultList();
+         List<Harrastaja> tulos = new ArrayList<Harrastaja>();
+         for (Harrastaja harrastaja : kaikkivetäjät)
+         {
+            if (harrastaja.isTreenienVetäjä())
+            {
+               tulos.add(harrastaja);
+            }
+         }
+         kaikkivetäjät = tulos;
+      }
+      if (treenivetäjät == null)
+      {
+         treenivetäjät = new ArrayList<Harrastaja>();
+         treenivetäjät.addAll(kaikkivetäjät);
+         treenivetäjät.removeAll(treeni.getVetäjät());
+      }
+      return treenivetäjät;
+   }
+
+   @Produces
+   @Named
+   public Treeni getTreeni()
+   {
+      return treeni;
+   }
+
+   @Produces
+   @Named
+   public List<SelectItem> getViikonpäivät()
+   {
+      List<SelectItem> tulos = new ArrayList<SelectItem>();
+      for (Viikonpäivä viikonpaiva : Viikonpäivä.values())
+      {
+         tulos.add(new SelectItem(viikonpaiva, viikonpaiva.toString()));
+      }
+      return tulos;
    }
 
    @Produces
@@ -96,6 +163,17 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       return treenityyppi;
    }
 
+   @Produces
+   @Named
+   public Collection<Treenityyppi> getTreenityypit()
+   {
+      if (treenityypit == null)
+      {
+         treenityypit = entityManager.createNamedQuery("treenityypit", Treenityyppi.class).getResultList();
+      }
+      return treenityypit;
+   }
+
    public void peruutaRoolimuutos()
    {
       if (rooli.isPoistettavissa())
@@ -106,8 +184,20 @@ public class PerustietoAdmin extends Perustoiminnallisuus
          rooli = null;
       }
       virhe("Muutokset peruttu");
-   }   
-   
+   }
+
+   public void peruutaTreenimuutos()
+   {
+      if (treeni.isPoistettavissa())
+      {
+         entityManager.refresh(treeni);
+      } else
+      {
+         treeni = null;
+      }
+      virhe("Muutokset peruttu");
+   }
+
    public void peruutaTreenityyppimuutos()
    {
       if (treenityyppi.isPoistettavissa())
@@ -155,6 +245,11 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       treenityyppi = null;
    }
 
+   public void piilotaTreeni()
+   {
+      treeni = null;
+   }
+
    public void lisääRooli()
    {
       rooli = new Rooli();
@@ -169,6 +264,15 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       vyöarvoRSM = new RowStateMap();
       vyöarvoKäyttö = null;
       info("Uusi vyöarvo alustettu");
+   }
+
+   public void lisääTreeni()
+   {
+      treeni = new Treeni();
+      treenivetäjät = null;
+      treenikäyttö = null;
+      treeniRSM.setAllSelected(false);
+      info("Uusi treeni alustettu");
    }
 
    public void lisääTreenityyppi()
@@ -187,6 +291,14 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       info("Rooli tallennettu");
    }
 
+   public void tallennaTreeni()
+   {
+      entityManager.persist(treeni);
+      treeniRSM.get(treeni).setSelected(true);
+      haeTreenit();
+      info("Treeni tallennettu");
+   }
+
    public void tallennaVyöarvo()
    {
       entityManager.persist(vyöarvo);
@@ -201,6 +313,11 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       treenityyppiRSM.get(treenityyppi).setSelected(true);
       haeTreenityypit();
       info("Treenityyppi tallennettu");
+   }
+
+   private void haeTreenit()
+   {
+      treenit = entityManager.createNamedQuery("treenit", Treeni.class).getResultList();
    }
 
    private void haeRoolit()
@@ -223,6 +340,13 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       entityManager.remove(rooli);
       haeRoolit();
       info("Rooli poistettu");
+   }
+
+   public void poistaTreeni()
+   {
+      entityManager.remove(treeni);
+      haeTreenit();
+      info("Treeni poistettu");
    }
 
    public void poistaVyöarvo()
@@ -253,6 +377,22 @@ public class PerustietoAdmin extends Perustoiminnallisuus
             .getResultList();
       }
       return rooliKäyttö;
+   }
+
+   @Produces
+   @Named
+   public List<Treenisessio> getTreeniKäyttö()
+   {
+      if (treeni == null || !treeni.isPoistettavissa())
+      {
+         return Collections.emptyList();
+      }
+      if (treenikäyttö == null)
+      {
+         treenikäyttö = entityManager.createNamedQuery("treenikäyttö", Treenisessio.class)
+            .setParameter("treeni", treeni).getResultList();
+      }
+      return treenikäyttö;
    }
 
    @Produces
@@ -291,6 +431,13 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       rooli = (Rooli) e.getObject();
       rooliKäyttö = null;
+   }
+
+   public void treeniValittu(SelectEvent e)
+   {
+      treeni = (Treeni) e.getObject();
+      treenivetäjät = null;
+      treenikäyttö = null;
    }
 
    public void vyöarvoValittu(SelectEvent e)
@@ -333,6 +480,16 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void setRooliRSM(RowStateMap rooliRSM)
    {
       this.rooliRSM = rooliRSM;
+   }
+
+   public RowStateMap getTreeniRSM()
+   {
+      return treeniRSM;
+   }
+
+   public void setTreeniRSM(RowStateMap treeniRSM)
+   {
+      this.treeniRSM = treeniRSM;
    }
 
 }

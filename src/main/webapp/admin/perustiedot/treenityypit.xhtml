@@ -37,9 +37,9 @@
 						action="#{perustietoAdmin.piilotaTreenityyppi}" image="/kuvat/poista.png" immediate="true" />
 				</h:panelGrid>
 			</h:panelGrid>
-			<ace:panel header="Käyttö" style="width:300px" rendered="#{treenityyppi != null and treenityyppi.poistettavissa}">
+			<ace:panel header="Käyttö (#{fn:length(treenityyppiKäyttö)})" style="width:300px" rendered="#{treenityyppi != null and treenityyppi.poistettavissa}">
 				<ace:dataTable value="#{treenityyppiKäyttö}" var="_treeni" rows="10" rendered="#{fn:length(treenityyppiKäyttö) > 0}">
-					<ace:column headerText="Käytössä (#{fn:length(treenityyppiKäyttö)})">
+					<ace:column>
 						<h:outputText value="#{_treeni.nimi}" />
 					</ace:column>
 				</ace:dataTable>

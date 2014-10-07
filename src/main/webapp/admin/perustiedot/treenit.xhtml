@@ -1,12 +1,12 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:ace="http://www.icefaces.org/icefaces/components">
-	<h:commandButton action="#{treeniAdmin.lisääTreeni}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:ace="http://www.icefaces.org/icefaces/components">
+	<h:commandButton action="#{perustietoAdmin.lisääTreeni}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
 		immediate="true">
 		<ace:ajax render="@form" />
 	</h:commandButton>
-	<ace:dataTable value="#{treenit}" var="_treeni" selectionMode="single" stateMap="#{treeniAdmin.rowStateMap}" rows="10"
-		rowSelectListener="#{treeniAdmin.treeniValittu}">
+	<ace:dataTable value="#{treenit}" var="_treeni" selectionMode="single" stateMap="#{perustietoAdmin.treeniRSM}"
+		rows="10" rowSelectListener="#{perustietoAdmin.treeniValittu}">
 		<ace:column headerText="Nimi">
 			<h:outputText value="#{_treeni.nimi}" />
 		</ace:column>
@@ -18,12 +18,12 @@
 		</ace:column>
 		<ace:column headerText="Alkaa">
 			<h:outputText value="#{_treeni.alkaa}">
-				<f:convertDateTime pattern="HH:mm" />
+				<f:convertDateTime pattern="HH:mm" timeZone="EET"/>
 			</h:outputText>
 		</ace:column>
 		<ace:column headerText="Päättyy">
 			<h:outputText value="#{_treeni.päättyy}">
-				<f:convertDateTime pattern="HH:mm" />
+				<f:convertDateTime pattern="HH:mm" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
 		<ace:column headerText="Vetäjät">
@@ -63,12 +63,12 @@
 				<h:outputText value="Alkaa" />
 				<h:panelGrid>
 					<ace:message for="form:treenialkaa" />
-					<ace:dateTimeEntry value="#{treeni.alkaa}" renderAsPopup="true" pattern="HH:mm" id="treenialkaa" />
+					<ace:dateTimeEntry value="#{treeni.alkaa}" renderAsPopup="true" pattern="HH:mm" id="treenialkaa" timeZone="EET"/>
 				</h:panelGrid>
 				<h:outputText value="Päättyy" />
 				<h:panelGrid>
 					<ace:message for="form:treenipäättyy" />
-					<ace:dateTimeEntry value="#{treeni.päättyy}" renderAsPopup="true" pattern="HH:mm" id="treenipäättyy" />
+					<ace:dateTimeEntry value="#{treeni.päättyy}" renderAsPopup="true" pattern="HH:mm" id="treenipäättyy" timeZone="EET"/>
 				</h:panelGrid>
 				<h:outputText value="Power" />
 				<h:panelGrid>
@@ -88,13 +88,18 @@
 			</ace:listControl>
 		</ace:panel>
 	</h:panelGrid>
-	<h:commandButton rendered="#{treeni != null}" value="x" styleClass="ikoni" action="#{treeniAdmin.tallennaTreeni()}"
-		image="/kuvat/tallenna.jpg" />
-	<h:commandButton rendered="#{treeni != null}" value="x" styleClass="ikoni" action="#{treeniAdmin.peruutaMuutos}"
-		image="/kuvat/peruuta_muutos.png">
-		<ace:ajax render="@form" />
-	</h:commandButton>
-	<h:commandButton rendered="#{treeni.poistettavissa}" value="x" styleClass="ikoni" action="#{treeniAdmin.poistaTreeni}"
-		image="/kuvat/poista.png" immediate="true" />
+	<h:panelGrid columns="3">
+		<h:commandButton rendered="#{treeni != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
+			action="#{perustietoAdmin.tallennaTreeni}">
+			<f:ajax execute="@form" render="@form" />
+		</h:commandButton>
+		<h:commandButton rendered="#{treeni != null}" value="x" styleClass="ikoni"
+			action="#{perustietoAdmin.peruutaTreenimuutos}" image="/kuvat/peruuta_muutos.png" immediate="true">
+			<f:ajax render="@form" />
+		</h:commandButton>
+		<h:commandButton rendered="#{treeni.poistettavissa and fn:length(treeniKäyttö) == 0}" value="x" styleClass="ikoni"
+			actionListener="#{perustietoAdmin.poistaTreeni}" action="#{perustietoAdmin.piilotaTreeni}" image="/kuvat/poista.png"
+			immediate="true" />
+	</h:panelGrid>
 
 </ui:composition>

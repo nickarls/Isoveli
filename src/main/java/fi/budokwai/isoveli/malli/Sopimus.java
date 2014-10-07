@@ -23,8 +23,7 @@ public class Sopimus
    private int id;
 
    @ManyToOne(optional = false)
-   @JoinColumn(name = "harrastaja", insertable = false, updatable = false)
-   @NotNull
+   @JoinColumn(name = "harrastaja")
    private Harrastaja harrastaja;
 
    @OneToOne(optional = false)
@@ -117,6 +116,15 @@ public class Sopimus
    {
       Sopimus toinenSopimus = (Sopimus) toinen;
       return id == toinenSopimus.getId();
+   }
+
+   public boolean isVoimassa()
+   {
+      if (umpeutuu == null)
+      {
+         return true;
+      }
+      return umpeutuu.after(new Date());
    }
 
 }

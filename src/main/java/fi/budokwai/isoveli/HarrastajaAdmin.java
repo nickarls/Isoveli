@@ -210,7 +210,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    {
       if (!harrastaja.getSopimukset().contains(sopimus))
       {
-         sopimus.setHarrastaja(harrastaja);         
+         sopimus.setHarrastaja(harrastaja);
          harrastaja.getSopimukset().add(sopimus);
       }
       entityManager.persist(harrastaja);
@@ -269,7 +269,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void lisääSopimus()
    {
       sopimus = new Sopimus();
-      rowStateMap.setAllSelected(false);      
+      rowStateMap.setAllSelected(false);
       info("Uusi sopimus alustettu");
    }
 

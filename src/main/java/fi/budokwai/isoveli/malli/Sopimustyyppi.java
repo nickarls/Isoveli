@@ -163,4 +163,17 @@ public class Sopimustyyppi
       this.perhealennus = perhealennus;
    }
 
+   @Override
+   public int hashCode()
+   {
+      return Integer.valueOf(id).hashCode();
+   }
+
+   @Override
+   public boolean equals(Object toinen)
+   {
+      Sopimustyyppi toinenSopimustyyppi = (Sopimustyyppi) toinen;
+      return id == toinenSopimustyyppi.getId(); 
+   }
+
 }

@@ -9,7 +9,7 @@
 		<h:panelGrid columns="3" columnClasses="tabletop, tabletop, tabletop">
 			<ace:dataTable value="#{kaikkiSopimustyypit}" var="_sopimustyyppi" selectionMode="single" rows="10"
 				rowSelectListener="#{perustietoAdmin.sopimustyyppiValittu}"
-				stateMap="#{perustietoAdmin.rooliRSM}">
+				stateMap="#{perustietoAdmin.sopimustyyppiRSM}">
 				<ace:column headerText="Nimi">
 					<h:outputText value="#{_sopimustyyppi.nimi}" />
 				</ace:column>

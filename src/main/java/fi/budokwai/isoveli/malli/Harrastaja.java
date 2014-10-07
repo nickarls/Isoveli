@@ -1,9 +1,15 @@
 package fi.budokwai.isoveli.malli;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.enterprise.inject.Typed;
 import javax.persistence.CascadeType;
@@ -177,26 +183,16 @@ public class Harrastaja
       this.sukupuoli = sukupuoli;
    }
 
-   public int getIk‰()
+   public long getIk‰()
    {
       return ik‰(syntynyt);
    }
 
-   private static int ik‰(Date p‰iv‰m‰‰r‰)
+   private static long ik‰(Date p‰iv‰m‰‰r‰)
    {
-      Calendar kalenteri = Calendar.getInstance();
-      kalenteri.setTime(p‰iv‰m‰‰r‰);
-      Calendar tanaan = Calendar.getInstance();
-      int ik‰ = tanaan.get(Calendar.YEAR) - kalenteri.get(Calendar.YEAR);
-      if (tanaan.get(Calendar.MONTH) < kalenteri.get(Calendar.MONTH))
-      {
-         ik‰--;
-      } else if (tanaan.get(Calendar.MONTH) == kalenteri.get(Calendar.MONTH)
-         && tanaan.get(Calendar.DAY_OF_MONTH) < kalenteri.get(Calendar.DAY_OF_MONTH))
-      {
-         ik‰--;
-      }
-      return ik‰;
+      Date d = new Date(p‰iv‰m‰‰r‰.getTime());
+      LocalDate p‰iv‰ = LocalDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault()).toLocalDate();
+      return p‰iv‰.until(LocalDate.now(), ChronoUnit.YEARS);
    }
 
    public boolean isAlaik‰inen()
@@ -290,6 +286,59 @@ public class Harrastaja
    public String toString()
    {
       return MoreObjects.toStringHelper(Harrastaja.class).add("Nimi", henkilˆ.getNimi()).toString();
+   }
+
+   public Maksutarkistus tarkistaMaksut()
+   {
+      Maksutarkistus j‰senmaksu = tarkistaJ‰senmaksu();
+      if (!j‰senmaksu.isOK())
+      {
+         return j‰senmaksu;
+      }
+      return tarkistaMaksu();
+   }
+
+   public boolean isMaksutOK()
+   {
+      return tarkistaMaksut().isOK();
+   }
+
+   private Maksutarkistus tarkistaMaksu()
+   {
+      Optional<Sopimus> maksut = sopimukset.stream()
+         .filter(p -> !(p.getTyyppi().isJ‰senmaksu() || p.getTyyppi().isPerhealennus()))
+         .sorted((s1, s2) -> s1.getUmpeutuu().compareTo(s2.getUmpeutuu())).findFirst();
+      if (!maksut.isPresent())
+      {
+         return new Maksutarkistus("Ei sopimuksia");
+      }
+      Sopimus maksu = maksut.get();
+      if (!maksu.isVoimassa())
+      {
+         LocalDate pvm = maksu.getUmpeutuu().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+         String viesti = String.format("Sopimus '%s' umpeutui %s", maksu.getTyyppi().getNimi(),
+            pvm.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+         return new Maksutarkistus(viesti);
+      }
+      return new Maksutarkistus();
+   }
+
+   private Maksutarkistus tarkistaJ‰senmaksu()
+   {
+      Optional<Sopimus> j‰senmaksut = sopimukset.stream().filter(p -> p.getTyyppi().isJ‰senmaksu())
+         .sorted((s1, s2) -> s1.getUmpeutuu().compareTo(s2.getUmpeutuu())).findFirst();
+      if (!j‰senmaksut.isPresent())
+      {
+         return new Maksutarkistus("J‰senmaksuja ei lˆytynyt");
+      }
+      Sopimus j‰senmaksu = j‰senmaksut.get();
+      if (!j‰senmaksu.isVoimassa())
+      {
+         LocalDate pvm = j‰senmaksu.getUmpeutuu().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+         String viesti = String.format("J‰senmaksu umpeutui %s", pvm.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+         return new Maksutarkistus(viesti);
+      }
+      return new Maksutarkistus();
    }
 
 }

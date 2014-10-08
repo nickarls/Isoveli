@@ -279,7 +279,12 @@ public class Harrastaja
    @Override
    public boolean equals(Object toinen)
    {
-      return Objects.equal(id, ((Harrastaja) toinen).getId());
+      if (!(toinen instanceof Harrastaja))
+      {
+         return false;
+      }
+      Harrastaja toinenHarrastaja = (Harrastaja) toinen;
+      return id == toinenHarrastaja.getId();
    }
 
    @Override

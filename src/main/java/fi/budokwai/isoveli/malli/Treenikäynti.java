@@ -98,10 +98,14 @@ public class Treenikäynti
    }
 
    @Override
-   public boolean equals(Object other)
+   public boolean equals(Object toinen)
    {
-      Treenikäynti toinen = (Treenikäynti) other;
-      return id == toinen.getId();
+      if (!(toinen instanceof Treenikäynti))
+      {
+         return false;
+      }
+      Treenikäynti toinenTreenikäynti = (Treenikäynti) toinen;
+      return id == toinenTreenikäynti.getId();
    }
 
    @Transient

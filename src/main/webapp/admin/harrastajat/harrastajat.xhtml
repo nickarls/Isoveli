@@ -6,7 +6,7 @@
 		<f:ajax render="@form" />
 	</h:commandButton>
 	<ace:dataTable value="#{harrastajat}" var="_harrastaja" selectionMode="single"
-		stateMap="#{harrastajaAdmin.rowStateMap}" rows="10" rowSelectListener="#{harrastajaAdmin.harrastajaValittu}">
+		stateMap="#{harrastajaAdmin.harrastajaRSM}" rows="10" rowSelectListener="#{harrastajaAdmin.harrastajaValittu}">
 		<ace:column headerText="Etunimi" sortBy="#{_harrastaja.henkilö.etunimi}" filterBy="#{_harrastaja.henkilö.etunimi}"
 			filterMatchMode="contains">
 			<h:outputText value="#{_harrastaja.henkilö.etunimi}" />
@@ -42,10 +42,10 @@
 		<ace:tabPane label="Sopimukset">
 			<ui:include src="sopimukset.xhtml" />
 		</ace:tabPane>
-		<ace:tabPane label="Tulokset">
-		</ace:tabPane>
 		<ace:tabPane label="Roolit">
 			<ui:include src="roolit.xhtml" />
+		</ace:tabPane>
+		<ace:tabPane label="Tulokset">
 		</ace:tabPane>
 	</ace:tabSet>
 </ui:composition>

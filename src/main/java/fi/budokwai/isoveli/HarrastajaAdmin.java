@@ -1,5 +1,13 @@
 package fi.budokwai.isoveli;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -47,7 +55,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    private Sopimus sopimus;
    private Vyökoe vyökoe;
 
-   private RowStateMap rowStateMap = new RowStateMap();
+   private RowStateMap harrastajaRSM = new RowStateMap();
    private RowStateMap vyökoeRSM = new RowStateMap();
    private RowStateMap sopimusRSM = new RowStateMap();
 
@@ -56,6 +64,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    {
       ((Session) entityManager.getDelegate()).setFlushMode(FlushMode.MANUAL);
       vyöarvot = entityManager.createNamedQuery("vyöarvot", Vyöarvo.class).getResultList();
+      haeHarrastajat();
    }
 
    @Produces
@@ -69,10 +78,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    @Named
    public List<Harrastaja> getHarrastajat()
    {
-      if (harrastajat == null)
-      {
-         harrastajat = entityManager.createNamedQuery("harrastajat", Harrastaja.class).getResultList();
-      }
       return harrastajat;
    }
 
@@ -139,11 +144,17 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       kopioiOsoitetiedot();
    }
 
+   private void haeHarrastajat()
+   {
+      harrastajat = entityManager.createNamedQuery("harrastajat", Harrastaja.class).getResultList();
+   }
+
    public void tallennaHarrastaja()
    {
       entityManager.persist(harrastaja);
       entityManager.flush();
-      harrastajat = null;
+      harrastajaRSM.get(harrastaja).setSelected(true);
+      haeHarrastajat();
       info("Harrastaja tallennettu");
    }
 
@@ -188,8 +199,8 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       entityManager.remove(harrastaja);
       entityManager.flush();
       harrastaja = null;
-      harrastajat = null;
-      rowStateMap.setAllSelected(false);
+      haeHarrastajat();
+      harrastajaRSM.setAllSelected(false);
       info("Harrastaja poistettu");
    }
 
@@ -245,6 +256,11 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       vyökoe = null;
    }
 
+   public void piilotaHarrastaja()
+   {
+      harrastaja = null;
+   }
+
    public void syntymäAikaMuuttui(AjaxBehaviorEvent e)
    {
       DateTimeEntry dte = (DateTimeEntry) e.getComponent();
@@ -262,14 +278,14 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    {
       harrastaja = new Harrastaja();
       roolit = null;
-      rowStateMap.setAllSelected(false);
+      harrastajaRSM.setAllSelected(false);
       info("Uusi harrastaja alustettu");
    }
 
    public void lisääSopimus()
    {
       sopimus = new Sopimus();
-      rowStateMap.setAllSelected(false);
+      sopimusRSM.setAllSelected(false);
       info("Uusi sopimus alustettu");
    }
 
@@ -286,6 +302,28 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       vyökoe.setHarrastaja(harrastaja);
       vyökoeRSM.setAllSelected(false);
       info("Uusi vyökoe alustettu");
+   }
+
+   public void sopimustyyppiMuuttui()
+   {
+      sopimus.setTreenikertoja(sopimus.getTyyppi().getOletusTreenikerrat());
+      sopimus.setMaksuväli(sopimus.getTyyppi().getOletusMaksuväli());
+      if (sopimus.getTyyppi().getOletusKuukaudetVoimassa() > 0)
+      {
+         sopimus.setUmpeutuu(Date.from(LocalDate.now()
+            .plus(sopimus.getTyyppi().getOletusKuukaudetVoimassa(), ChronoUnit.MONTHS).atStartOfDay()
+            .atZone(ZoneId.systemDefault()).toInstant()));
+      } else
+      {
+         sopimus.setUmpeutuu(null);
+      }
+      if (sopimus.getTyyppi().isJäsenmaksu())
+      {
+         LocalDate päivä = LocalDate.now();
+         päivä = päivä.plus(1, ChronoUnit.YEARS);
+         päivä = päivä.withMonth(1).with(TemporalAdjusters.lastDayOfMonth());
+         sopimus.setUmpeutuu(Date.from(päivä.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+      }
    }
 
    public JäljelläVyökokeeseen laskeJäljelläVyökokeeseen(Vyöarvo vyöarvo)
@@ -319,16 +357,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       sopimus = (Sopimus) e.getObject();
    }
 
-   public RowStateMap getRowStateMap()
-   {
-      return rowStateMap;
-   }
-
-   public void setRowStateMap(RowStateMap rowStateMap)
-   {
-      this.rowStateMap = rowStateMap;
-   }
-
    public RowStateMap getVyökoeRSM()
    {
       return vyökoeRSM;
@@ -347,6 +375,16 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void setSopimusRSM(RowStateMap sopimusRSM)
    {
       this.sopimusRSM = sopimusRSM;
+   }
+
+   public RowStateMap getHarrastajaRSM()
+   {
+      return harrastajaRSM;
+   }
+
+   public void setHarrastajaRSM(RowStateMap harrastajaRSM)
+   {
+      this.harrastajaRSM = harrastajaRSM;
    }
 
 }

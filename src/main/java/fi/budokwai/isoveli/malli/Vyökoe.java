@@ -102,6 +102,10 @@ public class Vyökoe
 
    public boolean equals(Object toinen)
    {
+      if (!(toinen instanceof Vyökoe))
+      {
+         return false;
+      }
       Vyökoe toinenVyökoe = (Vyökoe) toinen;
       return id == toinenVyökoe.getId();
    }

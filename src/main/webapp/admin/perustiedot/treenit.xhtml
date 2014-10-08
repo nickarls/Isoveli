@@ -1,6 +1,14 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:ace="http://www.icefaces.org/icefaces/components">
+	<ace:confirmationDialog id="vahvistaTreeninPoisto" message="Oletko varma?" header="Vahvista" width="350" height="200"
+		closable="true" position="center">
+		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
+			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaTreeninPoisto').hide()"
+				action="#{perustietoAdmin.piilotaTreeni}" actionListener="#{perustietoAdmin.poistaTreeni}" />
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreeninPoisto').hide()" />
+		</h:panelGrid>
+	</ace:confirmationDialog>	
 	<h:commandButton action="#{perustietoAdmin.lisääTreeni}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
 		immediate="true">
 		<ace:ajax render="@form" />
@@ -98,7 +106,7 @@
 			<f:ajax render="@form" />
 		</h:commandButton>
 		<h:commandButton rendered="#{treeni.poistettavissa and fn:length(treeniKäyttö) == 0}" value="x" styleClass="ikoni"
-			actionListener="#{perustietoAdmin.poistaTreeni}" action="#{perustietoAdmin.piilotaTreeni}" image="/kuvat/poista.png"
+			onclick="ice.ace.instance('form:vahvistaTreeninPoisto').show();" image="/kuvat/poista.png"
 			immediate="true" />
 	</h:panelGrid>
 

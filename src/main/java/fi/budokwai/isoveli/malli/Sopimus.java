@@ -114,6 +114,10 @@ public class Sopimus
    @Override
    public boolean equals(Object toinen)
    {
+      if (!(toinen instanceof Sopimus))
+      {
+         return false;
+      }
       Sopimus toinenSopimus = (Sopimus) toinen;
       return id == toinenSopimus.getId();
    }

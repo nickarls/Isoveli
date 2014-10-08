@@ -1,6 +1,14 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	<ace:confirmationDialog id="vahvistaSopimuksenPoisto" message="Oletko varma?" header="Vahvista" width="350" height="200"
+		closable="true" position="center">
+		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
+			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaSopimuksenPoisto').hide()"
+				action="#{harrastajaAdmin.piilotaSopimus}" actionListener="#{harrastajaAdmin.poistaSopimus}" />
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaSopimuksenPoisto').hide()" />
+		</h:panelGrid>
+	</ace:confirmationDialog>		
 	<h:commandButton action="#{harrastajaAdmin.lisääSopimus()}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
 		immediate="true" stateMap="#{harrastajaAdmin.sopimusRSM}">
 		<ace:ajax render="@form" />
@@ -23,15 +31,17 @@
 		</ace:column>
 	</ace:dataTable>
 	<p />
-	<ace:panel header="Sopimustiedot" rendered="#{sopimus != null}" style="width:350px">
+	<ace:panel header="Sopimustiedot" rendered="#{sopimus != null}" style="width:350px" id="sopimuspanel">
 		<h:panelGrid columns="2">
 			<h:outputText value="Tyyppi" />
 			<h:panelGrid>
 				<ace:message for="form:sopimustyyppi" />
-				<h:selectOneMenu value="#{sopimus.tyyppi}" id="sopimustyyppi">
+				<h:selectOneMenu value="#{sopimus.tyyppi}" id="sopimustyyppi" hideNoSelectionOption="true">
+					<f:selectItem itemLabel="Valitse" itemValue="" noSelectionOption="true"/>
 					<f:selectItems value="#{kaikkiSopimustyypit}" var="_sopimustyyppi" itemValue="#{_sopimustyyppi}"
 						itemLabel="#{_sopimustyyppi.nimi}" />
 					<f:converter converterId="objectConverter" />
+					<f:ajax execute="@this" render="form:sopimuspanel" listener="#{harrastajaAdmin.sopimustyyppiMuuttui}"/>
 				</h:selectOneMenu>
 			</h:panelGrid>
 			<h:outputText value="Umpeutuu" />
@@ -63,6 +73,6 @@
 		<f:ajax render="@form" />
 	</h:commandButton>
 	<h:commandButton rendered="#{sopimus.poistettavissa}" value="x" styleClass="ikoni"
-		actionListener="#{harrastajaAdmin.poistaSopimus}" action="#{harrastajaAdmin.piilotaSopimus}" image="/kuvat/poista.png"
+		onclick="ice.ace.instance('form:vahvistaSopimuksenPoisto').show();" image="/kuvat/poista.png"
 		immediate="true" />
 </ui:composition>

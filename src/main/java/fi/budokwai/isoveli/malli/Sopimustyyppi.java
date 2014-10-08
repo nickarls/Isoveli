@@ -57,6 +57,13 @@ public class Sopimustyyppi
    @Type(type = "Kyll‰Ei")
    private boolean perhealennus;
 
+   private int oletusKuukaudetVoimassa;
+
+   @Column(name = "oletusmaksuvali")
+   private int oletusMaksuv‰li;
+
+   private int oletusTreenikerrat;
+
    public int getId()
    {
       return id;
@@ -172,8 +179,42 @@ public class Sopimustyyppi
    @Override
    public boolean equals(Object toinen)
    {
+      if (!(toinen instanceof Sopimustyyppi))
+      {
+         return false;
+      }
       Sopimustyyppi toinenSopimustyyppi = (Sopimustyyppi) toinen;
-      return id == toinenSopimustyyppi.getId(); 
+      return id == toinenSopimustyyppi.getId();
+   }
+
+   public int getOletusKuukaudetVoimassa()
+   {
+      return oletusKuukaudetVoimassa;
+   }
+
+   public void setOletusKuukaudetVoimassa(int oletusKuukaudetVoimassa)
+   {
+      this.oletusKuukaudetVoimassa = oletusKuukaudetVoimassa;
+   }
+
+   public int getOletusMaksuv‰li()
+   {
+      return oletusMaksuv‰li;
+   }
+
+   public void setOletusMaksuv‰li(int oletusMaksuv‰li)
+   {
+      this.oletusMaksuv‰li = oletusMaksuv‰li;
+   }
+
+   public int getOletusTreenikerrat()
+   {
+      return oletusTreenikerrat;
+   }
+
+   public void setOletusTreenikerrat(int oletusTreenikerrat)
+   {
+      this.oletusTreenikerrat = oletusTreenikerrat;
    }
 
 }

@@ -1,6 +1,5 @@
 package fi.budokwai.isoveli.malli;
 
-import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +58,7 @@ public class Henkilö
    @Size(max = 50)
    private String salasana;
 
-   private Blob kuva;
+   private byte[] kuva;
    
    @Type(type = "KylläEi")
    private boolean arkistoitu;   
@@ -132,12 +131,12 @@ public class Henkilö
       this.salasana = salasana;
    }
 
-   public Blob getKuva()
+   public byte[] getKuva()
    {
       return kuva;
    }
 
-   public void setKuva(Blob kuva)
+   public void setKuva(byte[] kuva)
    {
       this.kuva = kuva;
    }

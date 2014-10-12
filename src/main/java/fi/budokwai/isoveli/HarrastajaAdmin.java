@@ -1,13 +1,10 @@
 package fi.budokwai.isoveli;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
-import java.time.temporal.TemporalAmount;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -18,12 +15,14 @@ import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 
+import org.apache.http.impl.client.AIMDBackoffManager;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.icefaces.ace.component.datetimeentry.DateTimeEntry;
@@ -33,6 +32,8 @@ import org.icefaces.ace.model.table.RowStateMap;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.JäljelläVyökokeeseen;
+import fi.budokwai.isoveli.malli.Osoite;
+import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Rooli;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sukupuoli;
@@ -47,6 +48,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    private List<Harrastaja> harrastajat;
    private List<Rooli> roolit;
    private List<Vyöarvo> vyöarvot;
+   private List<Perhe> perheet;
 
    @PersistenceContext(type = PersistenceContextType.EXTENDED)
    private EntityManager entityManager;
@@ -59,12 +61,46 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    private RowStateMap vyökoeRSM = new RowStateMap();
    private RowStateMap sopimusRSM = new RowStateMap();
 
+   public void perheMuuttui(ValueChangeEvent e)
+   {
+      Perhe vanhaPerhe = (Perhe) e.getOldValue();
+      Perhe uusiPerhe = (Perhe) e.getNewValue();
+      if (vanhaPerhe != null && uusiPerhe == null)
+      {
+         harrastaja.getHenkilö().setOsoite(new Osoite());
+         vanhaPerhe.getPerheenjäsenet().remove(harrastaja.getHenkilö());
+         entityManager.persist(vanhaPerhe);
+      } else if (vanhaPerhe == null && uusiPerhe != null)
+      {
+         harrastaja.getHenkilö().setOsoite(null);
+      }
+   }
+
+   public void lisääPerhe()
+   {
+      Perhe perhe = new Perhe();
+      perhe.setNimi(harrastaja.getHenkilö().getSukunimi());
+      perhe.getPerheenjäsenet().add(harrastaja.getHenkilö());
+      perhe.setOsoite(harrastaja.getHenkilö().getOsoite());
+      harrastaja.getHenkilö().setOsoite(null);
+      harrastaja.getHenkilö().setPerhe(perhe);
+      perheet.add(0, perhe);
+   }
+
    @PostConstruct
    public void init()
    {
       ((Session) entityManager.getDelegate()).setFlushMode(FlushMode.MANUAL);
       vyöarvot = entityManager.createNamedQuery("vyöarvot", Vyöarvo.class).getResultList();
+      haePerheet();
       haeHarrastajat();
+   }
+
+   @Produces
+   @Named
+   public List<Perhe> getPerheet()
+   {
+      return perheet;
    }
 
    @Produces
@@ -149,12 +185,18 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastajat = entityManager.createNamedQuery("harrastajat", Harrastaja.class).getResultList();
    }
 
+   private void haePerheet()
+   {
+      perheet = entityManager.createNamedQuery("perheet", Perhe.class).getResultList();
+   }
+
    public void tallennaHarrastaja()
    {
       entityManager.persist(harrastaja);
       entityManager.flush();
       harrastajaRSM.get(harrastaja).setSelected(true);
       haeHarrastajat();
+      haePerheet();
       info("Harrastaja tallennettu");
    }
 
@@ -267,10 +309,30 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       Date val = (Date) dte.getValue();
       if (Harrastaja.alaikäinen(val))
       {
-         harrastaja.setHuoltaja(new Henkilö());
+         Henkilö huoltaja = new Henkilö();
+         Perhe perhe = harrastaja.getHenkilö().getPerhe();
+         if (perhe != null)
+         {
+            perhe.getPerheenjäsenet().add(huoltaja);
+            huoltaja.setSukunimi(harrastaja.getHenkilö().getSukunimi());
+            huoltaja.setPerhe(perhe);
+            huoltaja.setOsoite(null);
+         }
+         harrastaja.setHuoltaja(huoltaja);
       } else
       {
          harrastaja.setHuoltaja(null);
+      }
+   }
+
+   public void poistaHuoltaja()
+   {
+      if (harrastaja.getHuoltaja() != null)
+      {
+         harrastaja.setHuoltaja(null);;
+         entityManager.persist(harrastaja);
+         entityManager.flush();
+         haePerheet();
       }
    }
 
@@ -328,14 +390,16 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public JäljelläVyökokeeseen laskeJäljelläVyökokeeseen(Vyöarvo vyöarvo)
    {
-      Vyöarvo seuraavaArvo = entityManager.find(Vyöarvo.class, vyöarvo.getId() + 1);
-      if (seuraavaArvo == null)
+      List<Vyöarvo> seuraavatArvot = entityManager.createNamedQuery("vyöarvo", Vyöarvo.class)
+         .setParameter("järjestys", vyöarvo.getJärjestys() + 1).getResultList();
+      if (seuraavatArvot.size() == 0)
       {
-         return new JäljelläVyökokeeseen(0, 0);
+         return JäljelläVyökokeeseen.EI_OOTA;
       }
-      JäljelläVyökokeeseen tulos = new JäljelläVyökokeeseen(seuraavaArvo.getMinimikuukaudet() * 30,
-         seuraavaArvo.getMinimitreenit());
-      return tulos;
+      Vyöarvo seuraavaVyöarvo = seuraavatArvot.iterator().next();
+      long treenit = seuraavaVyöarvo.getMinimitreenit() - harrastaja.getTreenejäViimeVyökokeesta();
+      Period aika = harrastaja.getAikaaViimeVyökokeesta();
+      return new JäljelläVyökokeeseen(aika, treenit);
    }
 
    public void harrastajaValittu(SelectEvent e)

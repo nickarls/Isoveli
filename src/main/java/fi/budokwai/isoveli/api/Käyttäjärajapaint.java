@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli;
+package fi.budokwai.isoveli.api;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -12,9 +12,9 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
 
-@Path("API")
+@Path("käyttäjä")
 @Stateless
-public class UploadFileService
+public class Käyttäjärajapaint
 {
    @javax.persistence.PersistenceContext
    private EntityManager entityManager;
@@ -22,11 +22,11 @@ public class UploadFileService
    @POST
    @Path("/kuva/{id}")
    @Consumes("multipart/form-data")
-   public Response uploadFile(@MultipartForm FileUploadForm form, @PathParam("id") int id)
+   public Response tallennaKuva(@MultipartForm Kuvatieto kuvatieto, @PathParam("id") int id)
    {
-      Harrastaja h = entityManager.find(Harrastaja.class, id);
-      h.getHenkilö().setKuva(form.getData());
-      entityManager.persist(h);
+      Harrastaja henkilö = entityManager.find(Harrastaja.class, id);
+      henkilö.getHenkilö().setKuva(kuvatieto.getTieto());
+      entityManager.persist(henkilö);
       return Response.status(200).entity("OK").build();
    }
 

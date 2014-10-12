@@ -1,6 +1,13 @@
 package fi.budokwai.isoveli.malli;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import javax.persistence.Column;
@@ -15,10 +22,14 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import fi.budokwai.isoveli.util.Util;
+
 @Entity
 @Table(name = "vyokoe")
 public class Vyökoe
 {
+   public static final Vyökoe EI_OOTA = new Vyökoe();
+
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
@@ -78,7 +89,7 @@ public class Vyökoe
    @Transient
    public boolean isTuoreinVyökoe()
    {
-      return getHarrastaja().getVyökokeet().get(getHarrastaja().getVyökokeet().size() - 1) == this;
+      return harrastaja.getTuoreinVyöarvo() == vyöarvo;
    }
 
    @Transient
@@ -87,17 +98,30 @@ public class Vyökoe
       return id > 0;
    }
 
-   @Transient
-   public long getAikaaVälissä()
+   private Period getAikaEdellisestäKokeesta()
    {
-      int koeIndeksi = getHarrastaja().getVyökokeet().indexOf(this);
-      if (koeIndeksi == 0)
+      LocalDate tämä = LocalDateTime.ofInstant(Instant.ofEpochMilli(päivä.getTime()), ZoneId.systemDefault())
+         .toLocalDate();
+      Optional<Vyökoe> edellinenVyökoe = harrastaja
+         .getVyökokeet()
+         .stream()
+         .filter(v -> v.getVyöarvo().getJärjestys() < vyöarvo.getJärjestys())
+         .sorted(
+            (v1, v2) -> Integer.valueOf(v2.vyöarvo.getJärjestys())
+               .compareTo(Integer.valueOf(v1.vyöarvo.getJärjestys()))).findFirst();
+      if (!edellinenVyökoe.isPresent())
       {
-         return 0;
+         return Period.ZERO;
       }
-      Vyökoe edellinenKoe = getHarrastaja().getVyökokeet().get(koeIndeksi - 1);
-      long diff = päivä.getTime() - edellinenKoe.getPäivä().getTime();
-      return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+      LocalDate edellinen = LocalDateTime.ofInstant(Instant.ofEpochMilli(edellinenVyökoe.get().getPäivä().getTime()),
+         ZoneId.systemDefault()).toLocalDate();
+      return Period.between(edellinen, tämä);
+   }
+
+   public String getAikaaVälissä()
+   {
+      Period aika = getAikaEdellisestäKokeesta();
+      return Util.period2String(aika);
    }
 
    public boolean equals(Object toinen)

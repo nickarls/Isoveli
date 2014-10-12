@@ -11,8 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -39,7 +41,7 @@ public class Henkilö
    @NotNull
    private String sukunimi;
 
-   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
+   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = true)
    @JoinColumn(name = "osoite")
    @Valid
    private Osoite osoite;
@@ -55,13 +57,17 @@ public class Henkilö
    { @JoinColumn(name = "rooli", referencedColumnName = "id") })
    private List<Rooli> roolit = new ArrayList<Rooli>();
 
+   @ManyToOne(cascade = CascadeType.PERSIST)
+   @JoinColumn(name = "perhe")
+   private Perhe perhe;
+
    @Size(max = 50)
    private String salasana;
 
    private byte[] kuva;
-   
+
    @Type(type = "KylläEi")
-   private boolean arkistoitu;   
+   private boolean arkistoitu;
 
    public int getId()
    {
@@ -95,10 +101,15 @@ public class Henkilö
 
    public Osoite getOsoite()
    {
-      if (osoite == null)
+      if (osoite != null)
       {
-         osoite = new Osoite();
+         return osoite;
       }
+      if (perhe != null)
+      {
+         return perhe.getOsoite();
+      }
+      osoite = new Osoite();
       return osoite;
    }
 
@@ -177,5 +188,21 @@ public class Henkilö
    public void setArkistoitu(boolean arkistoitu)
    {
       this.arkistoitu = arkistoitu;
+   }
+
+   public Perhe getPerhe()
+   {
+      return perhe;
+   }
+
+   public void setPerhe(Perhe perhe)
+   {
+      this.perhe = perhe;
+   }
+
+   @Transient
+   public boolean isKuvallinen()
+   {
+      return kuva != null && kuva.length > 0;
    }
 }

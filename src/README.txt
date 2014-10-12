@@ -10,7 +10,6 @@ create table osoite(
 	constraint pk_osoite primary key(id)
 );
 insert into osoite(id, osoite, postinumero, kaupunki) values (1, 'Vaakunatie 10 as 7', '20780', 'Kaarina');
-insert into osoite(id, osoite, postinumero, kaupunki) values (2, 'Trappaksentie 25', '06650', 'Hamari');
 
 // YHTEYSTIETO
 drop table if exists yhteystieto;
@@ -35,11 +34,36 @@ create table henkilo(
 	kuva blob,
 	arkistoitu varchar(1) default 'E' not null,
 	constraint pk_henkilo primary key(id),
-	constraint osoite_viittaus foreign key(osoite) references osoite(id),	
-	constraint yhteystieto_viittaus foreign key(yhteystiedot) references yhteystieto(id),	
+	constraint henkilo_osoite_viittaus foreign key(osoite) references osoite(id),	
+	constraint henkilo_yhteystieto_viittaus foreign key(yhteystiedot) references yhteystieto(id),	
 );
-insert into henkilo(id, etunimi, sukunimi, osoite, yhteystiedot, salasana) values (1, 'Nicklas', 'Karlsson', 1, 1, 'secret');
-insert into henkilo(id, etunimi, sukunimi, osoite, yhteystiedot, salasana) values (2, 'Heidi', 'Karlsson', 2, 2, 'secret');
+insert into henkilo(id, etunimi, sukunimi, yhteystiedot, salasana) values (1, 'Nicklas', 'Karlsson', 1, 'secret');
+insert into henkilo(id, etunimi, sukunimi, yhteystiedot, salasana) values (2, 'Heidi', 'Karlsson', 2, 'secret');
+
+// PERHE
+drop table if exists perhe;
+create table perhe
+(
+	id int not null auto_increment,
+	nimi varchar(50) not null,
+	osoite int not null,
+	constraint pk_perhe primary key(id),
+	constraint perhe_osoite_viittaus foreign key(osoite) references osoite(id)	
+);
+insert into perhe(id, nimi, osoite) values (1, 'Karlsson', 1);
+
+// PERHEJASEN
+drop table if exists perhejasen;
+create table perhejasen
+(
+	henkilo int not null,
+	perhe int not null,
+	constraint uniikki_perhejasen unique(henkilo, perhe),
+	constraint perhejasen_henkilo_viittaus foreign key(henkilo) references henkilo(id),
+	constraint perhejasen_perhe_viittaus foreign key(perhe) references perhe(id)	
+);
+insert into perhejasen(henkilo, perhe) values (1, 1);
+insert into perhejasen(henkilo, perhe) values (2, 1);
 
 // HARRASTAJA
 drop table if exists harrastaja;
@@ -73,15 +97,14 @@ create table rooli(
 insert into rooli(id, nimi) values (1, 'Ylläpitäjä');
 insert into rooli(id, nimi) values (2, 'Treenien vetäjä');
 
-
 // HENKILOROOLI
 drop table if exists henkilorooli;
 create table henkilorooli(
 	henkilo int not null,
 	rooli int not null,
-	constraint uniikki_kayttajarooli unique(henkilo, rooli),
-	constraint kayttajarooli_harrastaja_viittaus foreign key(henkilo) references henkilo(id),
-	constraint kayttajarooli_rooli_viittaus foreign key(rooli) references rooli(id)
+	constraint uniikki_henkilorooli unique(henkilo, rooli),
+	constraint henkilorooli_harrastaja_viittaus foreign key(henkilo) references henkilo(id),
+	constraint henkilorooli_rooli_viittaus foreign key(rooli) references rooli(id)
 );
 insert into henkilorooli(henkilo, rooli) values (1, 1);
 insert into henkilorooli(henkilo, rooli) values (1, 2);

@@ -67,6 +67,21 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
       PushRenderer.addCurrentSession("ilmoittautuminen");
    }
 
+   public boolean isMies()
+   {
+      return harrastaja != null && harrastaja.isMies() && !harrastaja.getHenkilö().isKuvallinen();
+   }
+
+   public boolean isNainen()
+   {
+      return harrastaja != null && harrastaja.isNainen() && !harrastaja.getHenkilö().isKuvallinen();
+   }
+
+   public boolean isOmaKuva()
+   {
+      return harrastaja != null && harrastaja.getHenkilö().isKuvallinen();
+   }
+
    @Produces
    @Named
    public Harrastaja getTreeniharrastaja()

@@ -70,4 +70,5 @@ public class Osoite
    {
       return String.format("%s %s %s", osoite, postinumero, kaupunki);
    }
+
 }

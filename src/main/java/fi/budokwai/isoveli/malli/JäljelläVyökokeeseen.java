@@ -1,33 +1,38 @@
 package fi.budokwai.isoveli.malli;
 
+import java.time.Period;
+
+import fi.budokwai.isoveli.util.Util;
+
 public class JäljelläVyökokeeseen
 {
-   private int päiviä;
-   private int treenikertoja;
+   public static JäljelläVyökokeeseen EI_OOTA = new JäljelläVyökokeeseen();
+   private Period aika = Period.ZERO;
+   private long treenikertoja;
 
-   public JäljelläVyökokeeseen(int päiviä, int treenikertoja)
+   public JäljelläVyökokeeseen(Period aika, long treenikertoja)
    {
-      this.päiviä = päiviä;
+      this.aika = aika;
       this.treenikertoja = treenikertoja;
    }
 
-   public int getTreenikertoja()
+   public JäljelläVyökokeeseen()
+   {
+   }
+
+   public long getTreenikertoja()
    {
       return treenikertoja;
    }
 
-   public void setTreenikertoja(int treenikertoja)
+   public Period getAika()
    {
-      this.treenikertoja = treenikertoja;
+      return aika;
    }
 
-   public int getPäiviä()
+   public String getAikaString()
    {
-      return päiviä;
+      return Util.period2String(aika);
    }
 
-   public void setPäiviä(int päiviä)
-   {
-      this.päiviä = päiviä;
-   }
 }

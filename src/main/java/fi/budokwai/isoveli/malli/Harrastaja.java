@@ -1,11 +1,12 @@
 package fi.budokwai.isoveli.malli;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +26,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
-import javax.persistence.PostLoad;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.Valid;
@@ -97,15 +97,6 @@ public class Harrastaja
 
    public Harrastaja()
    {
-   }
-
-   @PostLoad
-   public void init()
-   {
-      if (isAlaikäinen() && huoltaja == null)
-      {
-         huoltaja = new Henkilö();
-      }
    }
 
    public int getId()
@@ -205,9 +196,20 @@ public class Harrastaja
       return vyökokeet;
    }
 
+   private Vyökoe getTuoreinVyökoe()
+   {
+      Optional<Vyökoe> vyökoe = vyökokeet
+         .stream()
+         .sorted(
+            (v1, v2) -> Integer.valueOf(v2.getVyöarvo().getJärjestys()).compareTo(
+               Integer.valueOf(v1.getVyöarvo().getJärjestys()))).findFirst();
+      return vyökoe.isPresent() ? vyökoe.get() : Vyökoe.EI_OOTA;
+   }
+
    public Vyöarvo getTuoreinVyöarvo()
    {
-      return vyökokeet.isEmpty() ? Vyöarvo.EI_OOTA : vyökokeet.get(vyökokeet.size() - 1).getVyöarvo();
+      Vyökoe vyökoe = getTuoreinVyökoe();
+      return vyökoe == Vyökoe.EI_OOTA ? Vyöarvo.EI_OOTA : vyökoe.getVyöarvo();
    }
 
    public String getJäsennumero()
@@ -344,6 +346,38 @@ public class Harrastaja
          return new Maksutarkistus(viesti);
       }
       return new Maksutarkistus();
+   }
+
+   public boolean isMies()
+   {
+      return Sukupuoli.Mies == sukupuoli;
+   }
+
+   public boolean isNainen()
+   {
+      return Sukupuoli.Nainen == sukupuoli;
+   }
+
+   public long getTreenejäViimeVyökokeesta()
+   {
+      Vyökoe vyökoe = getTuoreinVyökoe();
+      if (vyökoe == Vyökoe.EI_OOTA)
+      {
+         return treenikäynnit.size();
+      }
+      return treenikäynnit.stream().filter(t -> t.getAikaleima().after(vyökoe.getPäivä())).count();
+   }
+
+   public Period getAikaaViimeVyökokeesta()
+   {
+      Vyökoe vyökoe = getTuoreinVyökoe();
+      if (vyökoe == Vyökoe.EI_OOTA)
+      {
+         return Period.ZERO;
+      }
+      LocalDate edellinen = LocalDateTime.ofInstant(Instant.ofEpochMilli(vyökoe.getPäivä().getTime()),
+         ZoneId.systemDefault()).toLocalDate();
+      return Period.between(edellinen, LocalDate.now());
    }
 
 }

@@ -4,10 +4,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
+@NamedQuery(name = "poista_tyhjät_osoitteet", query = "delete from Osoite o where not exists(select h from Henkilö h where h.osoite.id=o.id) and not exists(select p from Perhe p where p.osoite.id=o.id)")
 public class Osoite
 {
    @Id

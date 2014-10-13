@@ -30,7 +30,7 @@ import fi.budokwai.isoveli.Kyll‰EiTyyppi;
 @TypeDef(name = "Kyll‰Ei", typeClass = Kyll‰EiTyyppi.class)
 @NamedQueries(
 {
-      @NamedQuery(name = "tulevatTreenit", query = "select t from Treeni t where t.p‰iv‰=:p‰iv‰ and t.p‰‰ttyy >= :kello and not exists(select tk from Treenik‰ynti tk, Treenisessio ts where tk.harrastaja=:harrastaja and tk.treenisessio=ts and ts.treeni=t and ts.p‰iv‰ = :t‰n‰‰n)"),
+      @NamedQuery(name = "tulevat_treenit", query = "select t from Treeni t where t.p‰iv‰=:p‰iv‰ and t.p‰‰ttyy >= :kello and not exists(select tk from Treenik‰ynti tk, Treenisessio ts where tk.harrastaja=:harrastaja and tk.treenisessio=ts and ts.treeni=t and ts.p‰iv‰ = :t‰n‰‰n)"),
       @NamedQuery(name = "treenit", query = "select t from Treeni t order by t.p‰iv‰, t.alkaa") })
 public class Treeni
 {

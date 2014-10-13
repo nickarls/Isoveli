@@ -9,7 +9,7 @@ public class Perustoiminnallisuus
 {
    protected void fokusoi(String kenttä)
    {
-      String js = String.format("document.getElementById('%s').focus()", kenttä);
+      String js = String.format("document.getElementById('%s').focus();", kenttä);
       JavaScriptRunner.runScript(FacesContext.getCurrentInstance(), js);
    }
    

@@ -205,4 +205,10 @@ public class Henkilö
    {
       return kuva != null && kuva.length > 0;
    }
+
+   @Transient
+   public boolean isTallentamaton()
+   {
+      return id == 0;
+   }
 }

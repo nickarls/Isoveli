@@ -108,7 +108,7 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
    private void haeTulevatTreenit()
    {
       Aikaraja aikaraja = haeAikaraja();
-      tulevatTreenit = entityManager.createNamedQuery("tulevatTreenit", Treeni.class)
+      tulevatTreenit = entityManager.createNamedQuery("tulevat_treenit", Treeni.class)
          .setParameter("p‰iv‰", aikaraja.getP‰iv‰()).setParameter("kello", aikaraja.getAika())
          .setParameter("harrastaja", harrastaja).setParameter("t‰n‰‰n", haeT‰n‰‰nPvm()).getResultList();
    }

@@ -10,12 +10,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-@NamedQuery(name = "perheet", query = "select p from Perhe p order by p.nimi")
+@NamedQueries(
+{
+      @NamedQuery(name = "perheet", query = "select p from Perhe p order by p.nimi"),
+      @NamedQuery(name = "poista_tyhjät_perheet", query = "delete from Perhe p where not exists(select h from Henkilö h where h.perhe.id=p.id)") })
 public class Perhe
 {
    @Id
@@ -24,7 +28,7 @@ public class Perhe
 
    private String nimi;
 
-   @OneToMany(cascade=CascadeType.ALL, mappedBy = "perhe", orphanRemoval=true)
+   @OneToMany(cascade = CascadeType.ALL, mappedBy = "perhe", orphanRemoval = true)
    private List<Henkilö> perheenjäsenet = new ArrayList<Henkilö>();
 
    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
@@ -90,6 +94,11 @@ public class Perhe
          sb.append(")");
       }
       return sb.toString();
+   }
+
+   public List<Henkilö> getHuoltajat()
+   {
+      return perheenjäsenet;
    }
 
    @Override

@@ -28,6 +28,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -57,7 +58,7 @@ public class Harrastaja
    @Valid
    private Henkilö henkilö = new Henkilö();
 
-   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+   @OneToOne(cascade = CascadeType.PERSIST)
    @JoinColumn(name = "huoltaja")
    private Henkilö huoltaja;
 
@@ -95,6 +96,9 @@ public class Harrastaja
    @Convert(converter = SukupuoliConverter.class)
    private Sukupuoli sukupuoli;
 
+   @Transient
+   public boolean osoiteMuuttunut;
+   
    public Harrastaja()
    {
    }
@@ -378,6 +382,16 @@ public class Harrastaja
       LocalDate edellinen = LocalDateTime.ofInstant(Instant.ofEpochMilli(vyökoe.getPäivä().getTime()),
          ZoneId.systemDefault()).toLocalDate();
       return Period.between(edellinen, LocalDate.now());
+   }
+
+   public boolean isOsoiteMuuttunut()
+   {
+      return osoiteMuuttunut;
+   }
+
+   public void setOsoiteMuuttunut(boolean osoiteMuuttunut)
+   {
+      this.osoiteMuuttunut = osoiteMuuttunut;
    }
 
 }

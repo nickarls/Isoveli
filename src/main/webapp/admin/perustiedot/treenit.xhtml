@@ -36,7 +36,7 @@
 		</ace:column>
 		<ace:column headerText="Vetäjät">
 			<ui:repeat value="#{_treeni.vetäjät}" var="_vetäjä">
-				<h:outputText value="#{_vetäjä.henkilö.nimi}" />
+				<h:outputText value="#{_vetäjä.nimi}" />
 				<br />
 			</ui:repeat>
 		</ace:column>
@@ -88,10 +88,10 @@
 		<ace:panel header="Vetäjät" rendered="#{treeni != null}" styleClass="panel" style="width:600px">
 			<ace:listControl>
 				<ace:list value="#{vetäjät}" var="_vetäjä" selectionMode="multiple">
-					<h:outputText value="#{_vetäjä.henkilö.nimi}" />
+					<h:outputText value="#{_vetäjä.nimi}" />
 				</ace:list>
 				<ace:list value="#{treeni.vetäjät}" var="_vetäjä" selectionMode="multiple">
-					<h:outputText value="#{_vetäjä.henkilö.nimi}" />
+					<h:outputText value="#{_vetäjä.nimi}" />
 				</ace:list>
 			</ace:listControl>
 		</ace:panel>

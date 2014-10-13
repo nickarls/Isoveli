@@ -12,7 +12,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -125,7 +124,6 @@ public class Vyöarvo
       return id == toinenVyöarvo.getId();
    }
 
-   @Transient
    public boolean isPoistettavissa()
    {
       return id > 0;

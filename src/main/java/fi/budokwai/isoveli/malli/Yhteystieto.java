@@ -70,4 +70,10 @@ public class Yhteystieto
    {
       this.sähköpostilistalla = sähköpostilistalla;
    }
+
+   public boolean isKäyttämätön()
+   {
+      return id == 0 && (puhelinnumero == null || "".equals(puhelinnumero))
+         && (sähköposti == null || "".equals(sähköposti));
+   }
 }

@@ -41,7 +41,7 @@
 						<h:outputText value="#{noodi.data.treeni.nimi} (#{noodi.childCount})" />
 					</ace:node>
 					<ace:node type="käynti">
-						<h:outputText value="#{noodi.data.harrastaja.henkilö.nimi}" />
+						<h:outputText value="#{noodi.data.harrastaja.nimi}" />
 					</ace:node>
 				</ace:tree>
 				<h:panelGroup>
@@ -57,7 +57,7 @@
 							</h:outputText>
 							<h:outputText value="Vetäjät" />
 							<ui:repeat value="#{x.valittu.vetäjät}" var="_vetäjä">
-								<h:outputText value="#{_vetäjä.henkilö.nimi}" />
+								<h:outputText value="#{_vetäjä.nimi}" />
 								<br />
 							</ui:repeat>
 						</h:panelGrid>
@@ -72,7 +72,7 @@
 								<f:convertDateTime pattern="HH:mm:ss" />
 							</h:outputText>
 							<h:outputText value="Harrastaja" />
-							<h:outputText value="#{x.valittu.harrastaja.henkilö.nimi}" />
+							<h:outputText value="#{x.valittu.harrastaja.nimi}" />
 							<h:outputText value="Vyöarvo" />
 							<h:outputText value="#{x.valittu.harrastaja.tuoreinVyöarvo.nimi}" />
 						</h:panelGrid>

@@ -62,14 +62,13 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void perheMuuttui(ValueChangeEvent e)
    {
-      Perhe vanhaPerhe = (Perhe) e.getOldValue();
       Perhe uusiPerhe = (Perhe) e.getNewValue();
-      if (vanhaPerhe != null && uusiPerhe == null)
+      if (uusiPerhe == null)
       {
-         harrastaja.getHenkilö().setOsoite(new Osoite());
-      } else if (vanhaPerhe == null && uusiPerhe != null)
+         harrastaja.setOsoite(new Osoite());
+      } else
       {
-         harrastaja.getHenkilö().setOsoite(null);
+         harrastaja.setOsoite(null);
       }
       harrastaja.setOsoiteMuuttunut(true);
       fokusoi("form:osoite");
@@ -78,11 +77,11 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void lisääPerhe()
    {
       Perhe perhe = new Perhe();
-      perhe.setNimi(harrastaja.getHenkilö().getSukunimi());
-      perhe.getPerheenjäsenet().add(harrastaja.getHenkilö());
-      perhe.setOsoite(harrastaja.getHenkilö().getOsoite());
-      harrastaja.getHenkilö().setOsoite(null);
-      harrastaja.getHenkilö().setPerhe(perhe);
+      perhe.setNimi(harrastaja.getSukunimi());
+      perhe.getPerheenjäsenet().add(harrastaja);
+      perhe.setOsoite(harrastaja.getOsoite());
+      harrastaja.setOsoite(null);
+      harrastaja.setPerhe(perhe);
       entityManager.persist(perhe);
       entityManager.flush();
       perheet.forEach(p -> entityManager.refresh(p));
@@ -144,7 +143,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       if (roolit == null)
       {
          roolit = entityManager.createNamedQuery("roolit", Rooli.class).getResultList();
-         roolit.removeAll(harrastaja.getHenkilö().getRoolit());
+         roolit.removeAll(harrastaja.getRoolit());
       }
       return roolit;
    }
@@ -180,6 +179,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void tallennaHarrastaja()
    {
+      harrastaja.siivoa();
       entityManager.persist(harrastaja);
       entityManager.flush();
       harrastajaRSM.get(harrastaja).setSelected(true);
@@ -204,10 +204,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    {
       if (harrastaja.isPoistettavissa())
       {
-         if (harrastaja.getHenkilö().getOsoite().getId() == 0)
-         {
-            harrastaja.getHenkilö().setOsoite(null);
-         }
+         harrastaja.siivoa();
          entityManager.refresh(harrastaja);
       } else
       {
@@ -314,7 +311,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       if (Harrastaja.alaikäinen(val))
       {
          harrastaja.setHuoltaja(new Henkilö());
-         harrastaja.getHenkilö().setPerhe(new Perhe());
+         harrastaja.setPerhe(new Perhe());
       } else
       {
          harrastaja.setHuoltaja(null);
@@ -324,11 +321,11 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void lisääHuoltaja()
    {
       Henkilö huoltaja = new Henkilö();
-      Perhe perhe = harrastaja.getHenkilö().getPerhe();
+      Perhe perhe = harrastaja.getPerhe();
       if (perhe != null)
       {
          perhe.getPerheenjäsenet().add(huoltaja);
-         huoltaja.setSukunimi(harrastaja.getHenkilö().getSukunimi());
+         huoltaja.setSukunimi(harrastaja.getSukunimi());
          huoltaja.setPerhe(perhe);
          harrastaja.setHuoltaja(huoltaja);
       }

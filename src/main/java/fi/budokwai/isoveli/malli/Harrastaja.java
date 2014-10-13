@@ -17,9 +17,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -29,34 +26,22 @@ import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 
 import fi.budokwai.isoveli.SukupuoliConverter;
 
 @Entity
 @NamedQueries(
-{
-      @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.korttinumero=:kortti"),
-      @NamedQuery(name = "treenivetäjät", query = "select h from Harrastaja h order by h.henkilö.sukunimi, h.henkilö.etunimi"),
-      @NamedQuery(name = "harrastajat", query = "select h from Harrastaja h order by h.henkilö.sukunimi, h.henkilö.etunimi") })
+{ @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.korttinumero=:kortti"),
+      @NamedQuery(name = "treenivetäjät", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi"),
+      @NamedQuery(name = "harrastajat", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi") })
 @Typed(
 {})
-public class Harrastaja
+public class Harrastaja extends Henkilö
 {
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private int id;
-
-   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
-   @JoinColumn(name = "henkilo")
-   @NotNull
-   @Valid
-   private Henkilö henkilö = new Henkilö();
 
    @OneToOne(cascade = CascadeType.PERSIST)
    @JoinColumn(name = "huoltaja")
@@ -98,29 +83,9 @@ public class Harrastaja
 
    @Transient
    public boolean osoiteMuuttunut;
-   
+
    public Harrastaja()
    {
-   }
-
-   public int getId()
-   {
-      return id;
-   }
-
-   public void setId(int id)
-   {
-      this.id = id;
-   }
-
-   public Henkilö getHenkilö()
-   {
-      return henkilö;
-   }
-
-   public void setHenkilö(Henkilö henkilö)
-   {
-      this.henkilö = henkilö;
    }
 
    public Henkilö getHuoltaja()
@@ -226,16 +191,6 @@ public class Harrastaja
       this.vyökokeet = vyökokeet;
    }
 
-   public boolean isYlläpitäjä()
-   {
-      return henkilö.onRoolissa("Ylläpitäjä");
-   }
-
-   public boolean isTreenienVetäjä()
-   {
-      return henkilö.onRoolissa("Treenien vetäjä");
-   }
-
    public List<Kisatulos> getKisatulokset()
    {
       return kisatulokset;
@@ -271,32 +226,10 @@ public class Harrastaja
       return ikä(päivämäärä) < 18;
    }
 
-   public boolean isPoistettavissa()
-   {
-      return id > 0;
-   }
-
-   @Override
-   public int hashCode()
-   {
-      return Objects.hashCode(id);
-   }
-
-   @Override
-   public boolean equals(Object toinen)
-   {
-      if (!(toinen instanceof Harrastaja))
-      {
-         return false;
-      }
-      Harrastaja toinenHarrastaja = (Harrastaja) toinen;
-      return id == toinenHarrastaja.getId();
-   }
-
    @Override
    public String toString()
    {
-      return MoreObjects.toStringHelper(Harrastaja.class).add("Nimi", henkilö.getNimi()).toString();
+      return MoreObjects.toStringHelper(Harrastaja.class).add("Nimi", getNimi()).toString();
    }
 
    public Maksutarkistus tarkistaMaksut()
@@ -392,6 +325,23 @@ public class Harrastaja
    public void setOsoiteMuuttunut(boolean osoiteMuuttunut)
    {
       this.osoiteMuuttunut = osoiteMuuttunut;
+   }
+
+   public void siivoa()
+   {
+      if (osoite != null && osoite.isKäyttämätön())
+      {
+         osoite = null;
+      }
+      if (yhteystiedot != null && yhteystiedot.isKäyttämätön())
+      {
+         yhteystiedot = null;
+      }
+   }
+
+   public boolean isTreenienVetäjä()
+   {
+      return onRoolissa("Treenien vetäjä");
    }
 
 }

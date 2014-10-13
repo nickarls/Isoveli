@@ -18,15 +18,15 @@ public class Osoite
 
    @Size(max = 200)
    @NotNull
-   private String osoite;
+   private String osoite = "";
 
    @Size(max = 10)
    @NotNull
-   private String postinumero;
+   private String postinumero = "";
 
    @Size(max = 50)
    @NotNull
-   private String kaupunki;
+   private String kaupunki = "";
 
    public int getId()
    {
@@ -71,6 +71,12 @@ public class Osoite
    public String getOsoiteString()
    {
       return String.format("%s %s %s", osoite, postinumero, kaupunki);
+   }
+
+   public boolean isKäyttämätön()
+   {
+      return id == 0 && (kaupunki == null || "".equals(kaupunki)) && (osoite == null || "".equals(osoite))
+         && (postinumero == null && "".equals(postinumero));
    }
 
 }

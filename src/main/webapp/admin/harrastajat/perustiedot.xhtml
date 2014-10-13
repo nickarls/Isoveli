@@ -15,12 +15,12 @@
 				<h:outputText value="Etunimi" />
 				<h:panelGrid>
 					<ace:message for="form:etunimi" />
-					<h:inputText value="#{harrastaja.henkilö.etunimi}" id="etunimi" styleClass="capitalized" />
+					<h:inputText value="#{harrastaja.etunimi}" id="etunimi" styleClass="capitalized" />
 				</h:panelGrid>
 				<h:outputText value="Sukunimi" />
 				<h:panelGrid>
 					<ace:message for="form:sukunimi" />
-					<h:inputText value="#{harrastaja.henkilö.sukunimi}" id="sukunimi" styleClass="capitalized" />
+					<h:inputText value="#{harrastaja.sukunimi}" id="sukunimi" styleClass="capitalized" />
 				</h:panelGrid>
 				<h:outputText value="Sukupuoli" />
 				<h:panelGrid>
@@ -40,14 +40,14 @@
 				<h:outputText value="Arkistoitu" />
 				<h:panelGrid>
 					<ace:message for="form:arkistoitu" />
-					<h:selectBooleanCheckbox value="#{harrastaja.henkilö.arkistoitu}" id="arkistoitu" />
+					<h:selectBooleanCheckbox value="#{harrastaja.arkistoitu}" id="arkistoitu" />
 				</h:panelGrid>
 			</h:panelGrid>
 		</ace:panel>
 		<h:panelGrid>
 			<ace:panel header="Perhe" styleClass="panel" id="perhepanel" style="width:450px">
 				<h:panelGrid columns="2">
-					<h:selectOneMenu value="#{harrastaja.henkilö.perhe}" valueChangeListener="#{harrastajaAdmin.perheMuuttui}">
+					<h:selectOneMenu value="#{harrastaja.perhe}" valueChangeListener="#{harrastajaAdmin.perheMuuttui}">
 						<f:selectItem itemValue="#{null}" itemLabel="" noSelectionItem="true" />
 						<f:selectItems value="#{perheet}" var="_perhe" itemValue="#{_perhe}" itemLabel="#{_perhe.kuvaus}" />
 						<f:converter converterId="objectConverter" />
@@ -66,13 +66,13 @@
 							<ace:message for="huoltaja"/>
 							<h:selectOneMenu value="#{harrastaja.huoltaja}" required="true" id="huoltaja">
 								<f:selectItem itemValue="#{null}" itemLabel="" noSelectionItem="true" />
-								<f:selectItems value="#{harrastaja.henkilö.perhe.huoltajat}" var="_huoltaja" itemValue="#{_huoltaja}"
+								<f:selectItems value="#{harrastaja.perhe.huoltajat}" var="_huoltaja" itemValue="#{_huoltaja}"
 									itemLabel="#{_huoltaja.nimi}" />
 								<f:converter converterId="objectConverter" />
 							</h:selectOneMenu>
 						</h:panelGrid>
 						<h:commandButton action="#{harrastajaAdmin.lisääHuoltaja}" value="x" image="/kuvat/lisää_huoltaja.jpg"
-							rendered="#{harrastaja.henkilö.perhe != null}" style="height:50px; width:50px; margin-left:15px">
+							rendered="#{harrastaja.perhe != null}" style="height:50px; width:50px; margin-left:15px">
 							<f:ajax execute="form:sukunimi form:etunimi" render="form:huoltajapanel" />
 						</h:commandButton>
 						<h:outputText value="Etunimi" rendered="#{harrastaja.huoltaja != null and harrastaja.huoltaja.tallentamaton}" />
@@ -89,30 +89,30 @@
 					<h:outputText value="Osoite" />
 					<h:panelGrid>
 						<ace:message for="form:osoite" />
-						<h:inputText value="#{harrastaja.henkilö.osoite.osoite}" id="osoite" styleClass="capitalized" />
+						<h:inputText value="#{harrastaja.osoite.osoite}" id="osoite" styleClass="capitalized" />
 					</h:panelGrid>
 					<h:outputText value="Postinumero" />
 					<h:panelGrid>
 						<ace:message for="form:postinumero" />
-						<h:inputText value="#{harrastaja.henkilö.osoite.postinumero}" id="postinumero" />
+						<h:inputText value="#{harrastaja.osoite.postinumero}" id="postinumero" />
 					</h:panelGrid>
 					<h:outputText value="Kaupunki" />
 					<h:panelGrid>
 						<ace:message for="form:kaupunki" />
-						<h:inputText value="#{harrastaja.henkilö.osoite.kaupunki}" id="kaupunki" styleClass="capitalized" />
+						<h:inputText value="#{harrastaja.osoite.kaupunki}" id="kaupunki" styleClass="capitalized" />
 					</h:panelGrid>
 					<h:outputText value="Sähköposti-osoite" />
 					<h:panelGrid>
 						<ace:message for="form:sähkoposti" />
-						<h:inputText value="#{harrastaja.henkilö.yhteystiedot.sähköposti}" id="sähköposti" />
+						<h:inputText value="#{harrastaja.yhteystiedot.sähköposti}" id="sähköposti" />
 					</h:panelGrid>
 					<h:outputText value="Sähköpostilistalla" />
 					<h:panelGrid>
 						<ace:message for="form:sähkopostilistalla" />
-						<h:selectBooleanCheckbox value="#{harrastaja.henkilö.yhteystiedot.sähköpostilistalla}" id="sähköpostilistalla" />
+						<h:selectBooleanCheckbox value="#{harrastaja.yhteystiedot.sähköpostilistalla}" id="sähköpostilistalla" />
 					</h:panelGrid>
 					<!-- 
-					<ace:gMap style="width: 150px; height: 150px" zoomLevel="12" locateAddress="true" address="#{harrastaja.henkilö.osoite.osoiteString}"/>
+					<ace:gMap style="width: 150px; height: 150px" zoomLevel="12" locateAddress="true" address="#{harrastaja.osoite.osoiteString}"/>
 					-->
 				</h:panelGrid>
 			</ace:panel>

@@ -7,14 +7,19 @@
 <h:head>
 </h:head>
 <h:body>
-	<h:panelGrid style="width:80%; margin-left:auto; margin-right:auto">
-		<h:outputText value="Ohjelma kaatus, tässä lohdutukseksi koiranpentu" />
-		<p/>
-		<h:graphicImage value="/kuvat/puppy.png" />
-		<p/>
-		<h:outputText value="#{exceptionHandler.stackTrace(sessionScope['exception'])}"
-				rendered="#{not empty sessionScope['exception']}" />
-	</h:panelGrid>
+	<f:view>
+		<h:form>
+			<h:panelGrid style="width:80%; margin-left:auto; margin-right:auto">
+				<h:outputText value="Ohjelma kaatus, tässä lohdutukseksi koiranpentu" />
+				<h:commandLink action="#{exceptionHandler.tapaSessio}" value="Ota vauhtia" />
+				<p />
+				<h:graphicImage value="/kuvat/puppy.png" />
+				<p />
+				<h:outputText value="#{exceptionHandler.stackTrace(sessionScope['exception'])}"
+					rendered="#{not empty sessionScope['exception']}" />
+			</h:panelGrid>
+		</h:form>
+	</f:view>
 </h:body>
 
 </html>

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
@@ -90,15 +91,8 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       if (kaikkivetäjät == null)
       {
          kaikkivetäjät = entityManager.createNamedQuery("treenivetäjät", Harrastaja.class).getResultList();
+         kaikkivetäjät = kaikkivetäjät.stream().filter(h -> h.isTreenienVetäjä()).collect(Collectors.toList());
          List<Harrastaja> tulos = new ArrayList<Harrastaja>();
-         for (Harrastaja harrastaja : kaikkivetäjät)
-         {
-            if (harrastaja.isTreenienVetäjä())
-            {
-               tulos.add(harrastaja);
-            }
-         }
-         kaikkivetäjät = tulos;
       }
       if (treenivetäjät == null)
       {

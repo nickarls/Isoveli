@@ -14,7 +14,7 @@ import fi.budokwai.isoveli.malli.Harrastaja;
 
 @Path("käyttäjä")
 @Stateless
-public class Käyttäjärajapaint
+public class Käyttäjärajapinta
 {
    @javax.persistence.PersistenceContext
    private EntityManager entityManager;
@@ -25,7 +25,7 @@ public class Käyttäjärajapaint
    public Response tallennaKuva(@MultipartForm Kuvatieto kuvatieto, @PathParam("id") int id)
    {
       Harrastaja henkilö = entityManager.find(Harrastaja.class, id);
-      henkilö.getHenkilö().setKuva(kuvatieto.getTieto());
+      henkilö.setKuva(kuvatieto.getTieto());
       entityManager.persist(henkilö);
       return Response.status(200).entity("OK").build();
    }

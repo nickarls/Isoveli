@@ -69,17 +69,17 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
 
    public boolean isMies()
    {
-      return harrastaja != null && harrastaja.isMies() && !harrastaja.getHenkilö().isKuvallinen();
+      return harrastaja != null && harrastaja.isMies() && !harrastaja.isKuvallinen();
    }
 
    public boolean isNainen()
    {
-      return harrastaja != null && harrastaja.isNainen() && !harrastaja.getHenkilö().isKuvallinen();
+      return harrastaja != null && harrastaja.isNainen() && !harrastaja.isKuvallinen();
    }
 
    public boolean isOmaKuva()
    {
-      return harrastaja != null && harrastaja.getHenkilö().isKuvallinen();
+      return harrastaja != null && harrastaja.isKuvallinen();
    }
 
    @Produces
@@ -137,7 +137,7 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
          return;
       }
       haeTulevatTreenit();
-      String nimi = harrastaja.getHenkilö().getNimi();
+      String nimi = harrastaja.getNimi();
       if (tulevatTreenit.isEmpty())
       {
          virhe("Tervetuloa %s, valitettavasti tänään ei enää ole treenejä", nimi);

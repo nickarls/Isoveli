@@ -74,7 +74,7 @@
 				rendered="#{vyöarvo != null and vyöarvo.poistettavissa}">
 				<ace:dataTable value="#{vyöarvoKäyttö}" var="_harrastaja" rows="10" rendered="#{fn:length(vyöarvoKäyttö) > 0}">
 					<ace:column>
-						<h:outputText value="#{_harrastaja.henkilö.nimi}" />
+						<h:outputText value="#{_harrastaja.nimi}" />
 					</ace:column>
 				</ace:dataTable>
 				<h:outputText value="Ei käytössä" rendered="#{fn:length(vyöarvoKäyttö) == 0}" />

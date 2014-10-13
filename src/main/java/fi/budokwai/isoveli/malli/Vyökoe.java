@@ -5,10 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -86,7 +84,6 @@ public class Vyökoe
       this.harrastaja = harrastaja;
    }
 
-   @Transient
    public boolean isTuoreinVyökoe()
    {
       return harrastaja.getTuoreinVyöarvo() == vyöarvo;

@@ -28,6 +28,19 @@ public class DSExceptionHandler implements Serializable
    @Inject
    private Logger logger;
 
+   public void tapaSessio()
+   {
+      HttpSession sessio = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+      sessio.invalidate();
+      try
+      {
+         FacesContext.getCurrentInstance().getExternalContext().redirect("/Isoveli/admin/admin.xhtml");
+      } catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+   }
+
    void handleException(@Handles ExceptionEvent<Throwable> e)
    {
       logger.error("Virhe", e.getException());

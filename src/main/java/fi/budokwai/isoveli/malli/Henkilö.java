@@ -8,13 +8,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -27,47 +28,48 @@ import fi.budokwai.isoveli.Kyll‰EiTyyppi;
 @Entity
 @TypeDef(name = "Kyll‰Ei", typeClass = Kyll‰EiTyyppi.class)
 @Table(name = "henkilo")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Henkilˆ
 {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private int id;
+   protected int id;
 
    @Size(max = 50)
    @NotNull
-   private String etunimi;
+   protected String etunimi;
 
    @Size(max = 50)
    @NotNull
-   private String sukunimi;
+   protected String sukunimi;
 
    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = true)
    @JoinColumn(name = "osoite")
    @Valid
-   private Osoite osoite;
+   protected Osoite osoite;
 
    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
    @JoinColumn(name = "yhteystiedot")
    @Valid
-   private Yhteystieto yhteystiedot;
+   protected Yhteystieto yhteystiedot;
 
    @ManyToMany
    @JoinTable(name = "henkilorooli", joinColumns =
    { @JoinColumn(name = "henkilo", referencedColumnName = "id") }, inverseJoinColumns =
    { @JoinColumn(name = "rooli", referencedColumnName = "id") })
-   private List<Rooli> roolit = new ArrayList<Rooli>();
+   protected List<Rooli> roolit = new ArrayList<Rooli>();
 
    @ManyToOne(cascade = CascadeType.PERSIST)
    @JoinColumn(name = "perhe")
-   private Perhe perhe;
+   protected Perhe perhe;
 
    @Size(max = 50)
-   private String salasana;
+   protected String salasana;
 
-   private byte[] kuva;
+   protected byte[] kuva;
 
    @Type(type = "Kyll‰Ei")
-   private boolean arkistoitu;
+   protected boolean arkistoitu;
 
    public int getId()
    {
@@ -200,15 +202,18 @@ public class Henkilˆ
       this.perhe = perhe;
    }
 
-   @Transient
    public boolean isKuvallinen()
    {
       return kuva != null && kuva.length > 0;
    }
 
-   @Transient
    public boolean isTallentamaton()
    {
       return id == 0;
+   }
+
+   public boolean isPoistettavissa()
+   {
+      return id > 0;
    }
 }

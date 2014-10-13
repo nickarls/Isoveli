@@ -95,7 +95,7 @@ public class X
             {
                XTreeNode käyntinoodi = new XTreeNode(käynti);
                käyntinoodit.add(käyntinoodi);
-               System.out.println("TK " + käynti.getHarrastaja().getHenkilö().getNimi());
+               System.out.println("TK " + käynti.getHarrastaja().getNimi());
             }
             XTreeNode sessionoodi = new XTreeNode(sessio, käyntinoodit.toArray(new XTreeNode[]
             {}));

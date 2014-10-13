@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -99,7 +98,6 @@ public class Sopimus
       this.tyyppi = tyyppi;
    }
 
-   @Transient
    public boolean isPoistettavissa()
    {
       return id > 0;

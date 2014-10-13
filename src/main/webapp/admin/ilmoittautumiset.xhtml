@@ -16,7 +16,7 @@
 			<h:outputText value="#{_treenikäynti.treenisessio.treeni.nimi}" class="teksti" />
 		</ace:column>
 		<ace:column headerText="Harrastaja">
-			<h:outputText value="#{_treenikäynti.harrastaja.henkilö.nimi}" class="teksti" />
+			<h:outputText value="#{_treenikäynti.harrastaja.nimi}" class="teksti" />
 		</ace:column>
 		<ace:column headerText="Vyöarvo">
 			<h:outputText value="#{_treenikäynti.harrastaja.tuoreinVyöarvo.nimi}" class="teksti" />
@@ -37,21 +37,21 @@
 					<ace:message for="form:harrastaja" />
 					<ace:dataTable value="#{harrastajat}" var="_harrastaja" selectionMode="single" id="harrastaja" rows="5"
 						rowSelectListener="#{ilmoittautumisAdmin.harrastajaValittu}">
-						<ace:column headerText="Nimi" filterBy="#{_harrastaja.henkilö.nimi}" filterMatchMode="contains">
-							<h:outputText value="#{_harrastaja.henkilö.nimi}" />
+						<ace:column headerText="Nimi" filterBy="#{_harrastaja.nimi}" filterMatchMode="contains">
+							<h:outputText value="#{_harrastaja.nimi}" />
 						</ace:column>
 					</ace:dataTable>
 					<!-- 
 					<ace:autoCompleteEntry id="harrastaja" value="#{treenikäynti.harrastaja}" listVar="_h" listValue="#{harrastajat}"
-						filterBy="#{_h.henkilö.nimi}" converter="objectConverter">
+						filterBy="#{_h.nimi}" converter="objectConverter">
 						<f:facet name="row">
-							<h:outputText value="#{_h.henkilö.nimi}" />
+							<h:outputText value="#{_h.nimi}" />
 						</f:facet>
 					</ace:autoCompleteEntry>
 			-->
 					<!-- 				
-				<ace:autoCompleteEntry id="harrastaja" value="#{treenikäynti.harrastaja}" filterBy="#{_harrastaja.henkilö.nimi}" rows="5">
-					<f:selectItems value="#{harrastajat}" var="_h" itemLabel="#{_h.henkilö.nimi}" itemValue="#{_h}" />
+				<ace:autoCompleteEntry id="harrastaja" value="#{treenikäynti.harrastaja}" filterBy="#{_harrastaja.nimi}" rows="5">
+					<f:selectItems value="#{harrastajat}" var="_h" itemLabel="#{_h.nimi}" itemValue="#{_h}" />
 					<f:converter converterId="objectConverter" />
 				</ace:autoCompleteEntry>
 -->
@@ -75,10 +75,10 @@
 		<!-- 
 			<ace:listControl>
 				<ace:list value="#{vetäjät}" var="_vetäjä" selectionMode="multiple">
-					<h:outputText value="#{_vetäjä.henkilö.nimi}" />
+					<h:outputText value="#{_vetäjä.nimi}" />
 				</ace:list>
 				<ace:list value="#{treeni.vetäjät}" var="_vetäjä" selectionMode="multiple">
-					<h:outputText value="#{_vetäjä.henkilö.nimi}" />
+					<h:outputText value="#{_vetäjä.nimi}" />
 				</ace:list>
 			</ace:listControl>
 		-->

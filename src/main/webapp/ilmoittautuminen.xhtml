@@ -72,13 +72,13 @@
 									<ace:graphicImage value="kuvat/logo.png" class="logo" rendered="#{treeniharrastaja == null}"/>
 									<ace:graphicImage value="kuvat/mies.jpg" class="logo" rendered="#{ilmoittautuminen.mies}"/>
 									<ace:graphicImage value="kuvat/nainen.jpg" class="logo" rendered="#{ilmoittautuminen.nainen}"/>
-									<ace:graphicImage value="#{treeniharrastaja.henkilö.kuva}" class="logo" rendered="#{ilmoittautuminen.omaKuva}"/>
+									<ace:graphicImage value="#{treeniharrastaja.kuva}" class="logo" rendered="#{ilmoittautuminen.omaKuva}"/>
 								</td>
 								<td><h:inputText value="#{ilmoittautuminen.korttinumero}" required="true" styleClass="syotto korttinumero"
 										requiredMessage="Arvo on pakollinen" id="korttinumero"
 										onkeydown="if (event.keyCode == 13) document.getElementById('formi:luekortti').click()" /> <h:commandButton
 										action="#{ilmoittautuminen.lueKortti()}" value="." style="display:none" id="luekortti" /> <br /> <h:outputText
-										value="#{treeniharrastaja.henkilö.nimi}" rendered="#{treeniharrastaja != null}" styleClass="nimi" /></td>
+										value="#{treeniharrastaja.nimi}" rendered="#{treeniharrastaja != null}" styleClass="nimi" /></td>
 							</tr>
 							<tr>
 								<td>

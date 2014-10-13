@@ -1,8 +1,8 @@
 package fi.budokwai.isoveli.malli;
 
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -28,7 +28,7 @@ public class Perhe
 
    private String nimi;
 
-   @OneToMany(cascade = CascadeType.ALL, mappedBy = "perhe", orphanRemoval = true)
+   @OneToMany(mappedBy = "perhe")
    private List<Henkilö> perheenjäsenet = new ArrayList<Henkilö>();
 
    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
@@ -47,7 +47,10 @@ public class Perhe
 
    public List<Henkilö> getPerheenjäsenet()
    {
-      return perheenjäsenet;
+      return perheenjäsenet
+         .stream()
+         .filter(h -> (!(h instanceof Harrastaja)) || ((h instanceof Harrastaja) && (!((Harrastaja) h).isAlaikäinen())))
+         .collect(Collectors.toList());
    }
 
    public void setPerheenjäsenet(List<Henkilö> perheenjäsenet)
@@ -75,7 +78,6 @@ public class Perhe
       this.nimi = nimi;
    }
 
-   @Transient
    public String getKuvaus()
    {
       StringBuilder sb = new StringBuilder();

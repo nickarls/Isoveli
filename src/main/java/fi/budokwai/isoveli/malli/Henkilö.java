@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -179,7 +180,7 @@ public class Henkilö
 
    public String getNimi()
    {
-      return String.format("%s %s", etunimi, sukunimi);
+      return String.format("%s %s", etunimi == null ? "Tallentamaton" : etunimi, sukunimi);
    }
 
    public boolean isArkistoitu()
@@ -216,4 +217,5 @@ public class Henkilö
    {
       return id > 0;
    }
+
 }

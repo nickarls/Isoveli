@@ -1,5 +1,4 @@
 === LUONTISCRIPTIT ===
-
 // OSOITE
 drop table if exists osoite;
 create table osoite(
@@ -22,24 +21,6 @@ create table yhteystieto(
 insert into yhteystieto(id, puhelinnumero, sahkoposti, sahkopostilistalla) values (1, '0405062266', 'nickarls@gmail.com', 'K');
 insert into yhteystieto(id, puhelinnumero, sahkoposti, sahkopostilistalla) values (2, '0407218809', 'heidi.karlsson@abo.fi', 'K');
 
-// HENKILÖ
-drop table if exists henkilo;
-create table henkilo(
-	id int not null auto_increment,
-	etunimi varchar(50) not null,
-	sukunimi varchar(50) not null,
-	osoite int,
-	yhteystiedot int,
-	salasana varchar(50),
-	kuva blob,
-	arkistoitu varchar(1) default 'E' not null,
-	constraint pk_henkilo primary key(id),
-	constraint henkilo_osoite_viittaus foreign key(osoite) references osoite(id),	
-	constraint henkilo_yhteystieto_viittaus foreign key(yhteystiedot) references yhteystieto(id),	
-);
-insert into henkilo(id, etunimi, sukunimi, yhteystiedot, salasana) values (1, 'Nicklas', 'Karlsson', 1, 'secret');
-insert into henkilo(id, etunimi, sukunimi, yhteystiedot, salasana) values (2, 'Heidi', 'Karlsson', 2, 'secret');
-
 // PERHE
 drop table if exists perhe;
 create table perhe
@@ -52,24 +33,30 @@ create table perhe
 );
 insert into perhe(id, nimi, osoite) values (1, 'Karlsson', 1);
 
-// PERHEJASEN
-drop table if exists perhejasen;
-create table perhejasen
-(
-	henkilo int not null,
-	perhe int not null,
-	constraint uniikki_perhejasen unique(henkilo, perhe),
-	constraint perhejasen_henkilo_viittaus foreign key(henkilo) references henkilo(id),
-	constraint perhejasen_perhe_viittaus foreign key(perhe) references perhe(id)	
+// HENKILÖ
+drop table if exists henkilo;
+create table henkilo(
+	id int not null auto_increment,
+	etunimi varchar(50) not null,
+	sukunimi varchar(50) not null,
+	osoite int,
+	yhteystiedot int,
+	perhe int,
+	salasana varchar(50),
+	kuva blob,
+	arkistoitu varchar(1) default 'E' not null,
+	constraint pk_henkilo primary key(id),
+	constraint henkilo_osoite_viittaus foreign key(osoite) references osoite(id),	
+	constraint henkilo_perhe_viittaus foreign key(perhe) references perhe(id),	
+	constraint henkilo_yhteystieto_viittaus foreign key(yhteystiedot) references yhteystieto(id),	
 );
-insert into perhejasen(henkilo, perhe) values (1, 1);
-insert into perhejasen(henkilo, perhe) values (2, 1);
+insert into henkilo(id, etunimi, sukunimi, yhteystiedot, salasana, perhe) values (1, 'Nicklas', 'Karlsson', 1, 'secret', 1);
+insert into henkilo(id, etunimi, sukunimi, yhteystiedot, salasana, perhe) values (2, 'Heidi', 'Karlsson', 2, 'secret', 1);
 
 // HARRASTAJA
 drop table if exists harrastaja;
 create table harrastaja(
 	id int not null auto_increment,
-	henkilo int not null,
 	huoltaja int,
 	jasennumero varchar(10),
 	korttinumero varchar(100),
@@ -80,11 +67,10 @@ create table harrastaja(
 	constraint uniikki_kortti unique(korttinumero),
 	constraint uniikki_jasennumero unique(jasennumero),
 	constraint uniikki_lisenssinumero unique(lisenssinumero),
-	constraint harrastja_henkilo_viittaus foreign key(henkilo) references henkilo(id),
 	constraint harrastaja_huoltaja_viittaus foreign key(huoltaja) references henkilo(id),
 );
-insert into harrastaja (id, henkilo, jasennumero, korttinumero, lisenssinumero, syntynyt, sukupuoli) values (1, 1, '666', '123', '666', parsedatetime('28.06.1975', 'dd.MM.yyyy'), 'M');
-insert into harrastaja (id, henkilo, jasennumero, korttinumero, lisenssinumero, syntynyt, sukupuoli) values (2, 2, '667', '124', '667', parsedatetime('09.08.1976', 'dd.MM.yyyy'), 'N');
+insert into harrastaja (id, jasennumero, korttinumero, lisenssinumero, syntynyt, sukupuoli) values (1, '666', '123', '666', parsedatetime('28.06.1975', 'dd.MM.yyyy'), 'M');
+insert into harrastaja (id, jasennumero, korttinumero, lisenssinumero, syntynyt, sukupuoli) values (2, '667', '124', '667', parsedatetime('09.08.1976', 'dd.MM.yyyy'), 'N');
 
 // ROOLI
 drop table if exists rooli;
@@ -295,6 +281,7 @@ create table treenisessiovetaja(
 	constraint treenisessiovetaja_treenisessio_viittaus foreign key(treenisessio) references treenisessio(id),
 );
 insert into treenisessiovetaja(id, harrastaja, treenisessio) values (1, 1, 1);
+
 
 === MAVEN REPOS ===
 

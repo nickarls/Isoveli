@@ -73,16 +73,12 @@
 						</h:panelGrid>
 						<h:commandButton action="#{harrastajaAdmin.lisääHuoltaja}" value="x" image="/kuvat/lisää_huoltaja.jpg"
 							rendered="#{harrastaja.perhe != null}" style="height:50px; width:50px; margin-left:15px">
-							<f:ajax execute="form:sukunimi form:etunimi" render="form:huoltajapanel" />
+							<f:ajax execute="form:sukunimi" render="form:huoltajapanel" />
 						</h:commandButton>
-<!-- 						
-						<h:outputText value="Etunimi" rendered="#{harrastaja.huoltaja != null and harrastaja.huoltaja.tallentamaton}" />
 						<h:inputText value="#{harrastaja.huoltaja.etunimi}"
 							rendered="#{harrastaja.huoltaja != null and harrastaja.huoltaja.tallentamaton}" />
-						<h:outputText value="Sukunimi" rendered="#{harrastaja.huoltaja != null and harrastaja.huoltaja.tallentamaton}" />
 						<h:inputText value="#{harrastaja.huoltaja.sukunimi}"
 							rendered="#{harrastaja.huoltaja != null and harrastaja.huoltaja.tallentamaton}" />
--->							
 					</h:panelGrid>
 				</ace:panel>
 			</h:panelGroup>

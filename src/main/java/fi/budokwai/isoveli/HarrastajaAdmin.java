@@ -317,11 +317,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    {
       DateTimeEntry dte = (DateTimeEntry) e.getComponent();
       Date val = (Date) dte.getValue();
-      if (Harrastaja.alaikäinen(val))
-      {
-         harrastaja.setHuoltaja(new Henkilö());
-         harrastaja.setPerhe(new Perhe());
-      } else
+      if (!Harrastaja.alaikäinen(val))
       {
          harrastaja.setHuoltaja(null);
       }

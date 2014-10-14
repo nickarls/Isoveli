@@ -180,7 +180,7 @@ public class Henkilö
 
    public String getNimi()
    {
-      return String.format("%s %s", etunimi == null ? "Tallentamaton" : etunimi, sukunimi);
+      return String.format("%s %s", etunimi == null ? "Uusi" : etunimi, sukunimi);
    }
 
    public boolean isArkistoitu()

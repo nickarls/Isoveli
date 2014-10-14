@@ -47,10 +47,7 @@ public class Perhe
 
    public List<Henkilö> getPerheenjäsenet()
    {
-      return perheenjäsenet
-         .stream()
-         .filter(h -> (!(h instanceof Harrastaja)) || ((h instanceof Harrastaja) && (!((Harrastaja) h).isAlaikäinen())))
-         .collect(Collectors.toList());
+      return perheenjäsenet;
    }
 
    public void setPerheenjäsenet(List<Henkilö> perheenjäsenet)
@@ -101,7 +98,10 @@ public class Perhe
 
    public List<Henkilö> getHuoltajat()
    {
-      return perheenjäsenet;
+      return perheenjäsenet
+         .stream()
+         .filter(h -> (!(h instanceof Harrastaja)) || ((h instanceof Harrastaja) && (!((Harrastaja) h).isAlaikäinen())))
+         .collect(Collectors.toList());
    }
 
    @Override

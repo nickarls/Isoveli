@@ -69,6 +69,10 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       } else
       {
          harrastaja.setOsoite(null);
+         if (uusiPerhe.getHuoltajat().size() > 0)
+         {
+            harrastaja.setHuoltaja(uusiPerhe.getHuoltajat().iterator().next());
+         }
       }
       harrastaja.setOsoiteMuuttunut(true);
       fokusoi("form:osoite");

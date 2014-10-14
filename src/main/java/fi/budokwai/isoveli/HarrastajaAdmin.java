@@ -185,12 +185,12 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastajaRSM.get(harrastaja).setSelected(true);
       if (harrastaja.isOsoiteMuuttunut())
       {
-         haeHarrastajat();
          poistaTyhjätPerheetJaOsoitteet();
       }
       harrastaja.setOsoiteMuuttunut(false);
       haePerheet();
       perheet.forEach(p -> entityManager.refresh(p));
+      haeHarrastajat();
       info("Harrastaja tallennettu");
    }
 

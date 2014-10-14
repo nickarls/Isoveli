@@ -48,7 +48,7 @@ public class Henkilö
    @Valid
    protected Osoite osoite;
 
-   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
+   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = true)
    @JoinColumn(name = "yhteystiedot")
    @Valid
    protected Yhteystieto yhteystiedot;

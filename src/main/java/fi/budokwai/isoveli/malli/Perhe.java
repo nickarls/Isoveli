@@ -80,6 +80,7 @@ public class Perhe
 
    public String getKuvaus()
    {
+      int x = perheenjäsenet.size();
       StringBuilder sb = new StringBuilder();
       sb.append(nimi);
       if (!perheenjäsenet.isEmpty())

@@ -329,7 +329,7 @@ public class Harrastaja extends Henkilö
 
    public void siivoa()
    {
-      if (osoite != null && osoite.isKäyttämätön())
+      if (osoiteMuuttunut || (osoite != null && osoite.isKäyttämätön()))
       {
          osoite = null;
       }

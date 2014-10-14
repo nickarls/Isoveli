@@ -84,8 +84,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastaja.setPerhe(perhe);
       entityManager.persist(perhe);
       entityManager.flush();
-      perheet.forEach(p -> entityManager.refresh(p));
-      haePerheet();
+      virkistäPerheet();
    }
 
    @PostConstruct
@@ -177,6 +176,12 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       perheet = entityManager.createNamedQuery("perheet", Perhe.class).getResultList();
    }
 
+   private void virkistäPerheet()
+   {
+      haePerheet();
+      perheet.forEach(p -> entityManager.refresh(p));
+   }
+
    public void tallennaHarrastaja()
    {
       harrastaja.siivoa();
@@ -188,8 +193,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          poistaTyhjätPerheetJaOsoitteet();
       }
       harrastaja.setOsoiteMuuttunut(false);
-      haePerheet();
-      perheet.forEach(p -> entityManager.refresh(p));
+      virkistäPerheet();
       haeHarrastajat();
       info("Harrastaja tallennettu");
    }
@@ -243,6 +247,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       entityManager.flush();
       harrastaja = null;
       haeHarrastajat();
+      virkistäPerheet();
       harrastajaRSM.setAllSelected(false);
       info("Harrastaja poistettu");
    }

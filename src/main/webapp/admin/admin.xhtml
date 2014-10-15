@@ -37,7 +37,7 @@
 	<f:view>
 		<icecore:focusManager>
 			<h:form id="form">		
-				<ace:tabSet>
+				<ace:tabSet tabChangeListener="#{ilmoittautumisAdmin.tabiMuuttui}">
 					<ace:tabPane label="Harrastajat">
 						<ui:include src="harrastajat/harrastajat.xhtml" />
 					</ace:tabPane>

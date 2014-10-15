@@ -79,11 +79,8 @@ public class Perhe
 
    public String getKuvaus()
    {
-      StringBuilder sb = new StringBuilder();
-      sb.append(nimi);
-      String etunimet = Joiner.on(", ").join(
-         perheenjäsenet.stream().filter(h -> h.getEtunimi() != null).map(h -> h.getEtunimi())
-            .collect(Collectors.toList()));
+      String etunimet = perheenjäsenet.stream().filter(h -> h.getEtunimi() != null).map(h -> h.getEtunimi())
+         .collect(Collectors.joining(", "));
       return "".equals(etunimet) ? nimi : String.format("%s (%s)", nimi, etunimet);
    }
 

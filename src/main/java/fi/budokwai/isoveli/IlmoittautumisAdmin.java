@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
+import javax.faces.event.ValueChangeEvent;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,6 +34,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
    @PersistenceContext(type = PersistenceContextType.EXTENDED)
    private EntityManager entityManager;
 
+   private List<Treenik‰ynti> treenik‰ynnit;
    private Treenik‰ynti treenik‰ynti;
 
    private RowStateMap rowStateMap = new RowStateMap();
@@ -56,11 +58,29 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       treenik‰ynti.setHarrastaja((Harrastaja) e.getObject());
    }
 
+   public void tabiMuuttui(ValueChangeEvent e)
+   {
+      int uusiTabi = (int) e.getNewValue();
+      if (uusiTabi == 1)
+      {
+         treenik‰ynnit = null;
+      }
+   }
+
    @Produces
    @Named
    public List<Treenik‰ynti> getTreenik‰ynnit()
    {
-      return entityManager.createNamedQuery("treenik‰ynnit", Treenik‰ynti.class).getResultList();
+      if (treenik‰ynnit == null)
+      {
+         haeTreenik‰ynnit();
+      }
+      return treenik‰ynnit;
+   }
+
+   private void haeTreenik‰ynnit()
+   {
+      treenik‰ynnit = entityManager.createNamedQuery("treenik‰ynnit", Treenik‰ynti.class).getResultList();
    }
 
    public void lis‰‰Ilmoittautuminen()

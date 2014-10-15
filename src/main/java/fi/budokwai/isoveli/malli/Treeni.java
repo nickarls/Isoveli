@@ -62,6 +62,13 @@ public class Treeni
    @Type(type = "Kyll‰Ei")
    private boolean power;
 
+   @Temporal(TemporalType.DATE)
+   private Date voimassaAlkaa;
+
+   @Column(name = "voimassapaattyy")
+   @Temporal(TemporalType.DATE)
+   private Date voimassaP‰‰ttyy;
+
    @ManyToMany
    @JoinTable(name = "treenivetaja", joinColumns =
    { @JoinColumn(name = "treeni", referencedColumnName = "id") }, inverseJoinColumns =
@@ -181,5 +188,25 @@ public class Treeni
    public boolean isPoistettavissa()
    {
       return id > 0;
+   }
+
+   public Date getVoimassaAlkaa()
+   {
+      return voimassaAlkaa;
+   }
+
+   public void setVoimassaAlkaa(Date voimassaAlkaa)
+   {
+      this.voimassaAlkaa = voimassaAlkaa;
+   }
+
+   public Date getVoimassaP‰‰ttyy()
+   {
+      return voimassaP‰‰ttyy;
+   }
+
+   public void setVoimassaP‰‰ttyy(Date voimassaP‰‰ttyy)
+   {
+      this.voimassaP‰‰ttyy = voimassaP‰‰ttyy;
    }
 }

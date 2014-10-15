@@ -344,4 +344,21 @@ public class Harrastaja extends Henkilö
       return onRoolissa("Treenien vetäjä");
    }
 
+   @Override
+   public int hashCode()
+   {
+      return Integer.valueOf(id).hashCode();
+   }
+
+   @Override
+   public boolean equals(Object toinen)
+   {
+      if (!(toinen instanceof Harrastaja))
+      {
+         return false;
+      }
+      Harrastaja toinenHarrastaja = (Harrastaja) toinen;
+      return id == toinenHarrastaja.getId();
+   }
+
 }

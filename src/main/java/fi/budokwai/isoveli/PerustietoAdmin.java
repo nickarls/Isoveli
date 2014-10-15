@@ -92,7 +92,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       {
          kaikkivetäjät = entityManager.createNamedQuery("treenivetäjät", Harrastaja.class).getResultList();
          kaikkivetäjät = kaikkivetäjät.stream().filter(h -> h.isTreenienVetäjä()).collect(Collectors.toList());
-         List<Harrastaja> tulos = new ArrayList<Harrastaja>();
       }
       if (treenivetäjät == null)
       {

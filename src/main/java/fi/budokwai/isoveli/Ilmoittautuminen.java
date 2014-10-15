@@ -64,7 +64,7 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
    @PostConstruct
    public void init()
    {
-      PushRenderer.addCurrentSession("ilmoittautuminen");
+//      PushRenderer.addCurrentSession("ilmoittautuminen");
    }
 
    public boolean isMies()

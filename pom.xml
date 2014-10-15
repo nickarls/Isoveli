@@ -61,11 +61,13 @@
 			<artifactId>icefaces-ace</artifactId>
 			<version>${icefaces.version}</version>
 		</dependency>
+<!-- 		
 		<dependency>
 			<groupId>org.icepush</groupId>
 			<artifactId>icepush</artifactId>
 			<version>${icefaces.version}</version>
 		</dependency>
+-->		
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>

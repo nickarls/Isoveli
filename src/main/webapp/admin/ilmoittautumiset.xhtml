@@ -5,7 +5,7 @@
 		height="200" closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
 			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').hide()"
-				action="#{harrastajaAdmin.piilotaHarrastaja}" actionListener="#{harrastajaAdmin.poistaHarrastaja}" />
+				action="#{ilmoittautumisAdmin.piilotaTreenikäynti}" actionListener="#{ilmoittautumisAdmin.poistaTreenikäynti}" />
 			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').hide()" />
 		</h:panelGrid>
 	</ace:confirmationDialog>
@@ -38,12 +38,12 @@
 	</ace:dataTable>
 	<p />
 	<h:panelGrid columns="2" columnClasses="tabletop, tabletop" rendered="#{treenikäynti != null}">
-		<ace:panel header="Treenikäynti" styleClass="panel" style="width: 400px">
+		<ace:panel header="Treenikäynti" styleClass="panel" style="width: 500px">
 			<h:panelGrid columns="2" style="margin-left: 20px;">
 				<h:outputText value="Harrastaja" />
 				<h:panelGrid>
 					<ace:message for="form:harrastaja" />
-					<h:selectOneMenu id="harrastaja" value="#{treenikäynti.harrastaja}">
+					<h:selectOneMenu id="harrastaja" value="#{treenikäynti.harrastaja}" style="width:350px">
 						<f:selectItems value="#{harrastajat}" var="_harrastaja" itemLabel="#{_harrastaja.nimi}" itemValue="#{_harrastaja}" />
 						<f:converter converterId="objectConverter" />
 					</h:selectOneMenu>
@@ -51,7 +51,7 @@
 				<h:outputText value="Sessio" />
 				<h:panelGrid>
 					<ace:message for="form:treenisessio" />
-					<h:selectOneMenu value="#{treenikäynti.treenisessio}" id="treenisessio">
+					<h:selectOneMenu value="#{treenikäynti.treenisessio}" id="treenisessio" style="width:350px">
 						<f:selectItems value="#{kaikkiTreenisessiot}" var="_treenisessio" itemValue="#{_treenisessio}" itemLabel="#{_treenisessio.kuvaus}" />
 						<f:converter converterId="objectConverter" />
 					</h:selectOneMenu>

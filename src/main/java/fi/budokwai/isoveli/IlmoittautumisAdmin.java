@@ -19,7 +19,6 @@ import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
-import org.icefaces.application.PushRenderer;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Treeni;
@@ -57,7 +56,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
    public void init()
    {
       ((Session) entityManager.getDelegate()).setFlushMode(FlushMode.MANUAL);
-      PushRenderer.addCurrentSession("ilmoittautuminen");
+//      PushRenderer.addCurrentSession("ilmoittautuminen");
    }
 
    public void harrastajaValittu(SelectEvent e)
@@ -72,6 +71,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       {
          treenikäynnit = null;
       }
+//      entityManager.clear();
    }
 
    @Produces
@@ -134,7 +134,13 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       entityManager.remove(treenikäynti);
       entityManager.flush();
       treenikäynti = null;
+      treenikäynnit = null;
       info("Treenikäynti poistettu");
+   }
+
+   public void piilotaTreenikäynti()
+   {
+      treenikäynti = null;
    }
 
    public void tallennaTreenikäynti()

@@ -37,7 +37,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
    private List<Treenikäynti> treenikäynnit;
    private Treenikäynti treenikäynti;
 
-   private RowStateMap rowStateMap = new RowStateMap();
+   private RowStateMap treenikäyntiRSM = new RowStateMap();
 
    @Produces
    @Named
@@ -87,6 +87,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
    {
       treenikäynti = new Treenikäynti();
       info("Uusi treenikäynti alustettu");
+      treenikäyntiRSM.setAllSelected(false);
    }
 
    private Treenisessio haeTreenisessio(Treeni treeni)
@@ -138,8 +139,9 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       }
       entityManager.persist(treenikäynti);
       entityManager.flush();
+      treenikäyntiRSM.get(treenikäynti).setSelected(true);
+      haeTreenikäynnit();
       info("Treenikäynti tallennettu");
-      treenikäynti = null;
    }
 
    public void treeniKäyntiValittu(SelectEvent e)
@@ -147,21 +149,26 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       treenikäynti = (Treenikäynti) e.getObject();
    }
 
-   public RowStateMap getRowStateMap()
-   {
-      return rowStateMap;
-   }
-
-   public void setRowStateMap(RowStateMap rowStateMap)
-   {
-      this.rowStateMap = rowStateMap;
-   }
-
    public void peruutaMuutos()
    {
-      treenikäynti = null;
-      rowStateMap.setAllSelected(false);
+      if (treenikäynti.isPoistettavissa())
+      {
+         entityManager.refresh(treenikäynti);
+      } else
+      {
+         treenikäynti = null;
+      }
       virhe("Muutokset peruttu");
+   }
+
+   public RowStateMap getTreenikäyntiRSM()
+   {
+      return treenikäyntiRSM;
+   }
+
+   public void setTreenikäyntiRSM(RowStateMap treenikäyntiRSM)
+   {
+      this.treenikäyntiRSM = treenikäyntiRSM;
    }
 
 }

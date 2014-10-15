@@ -20,8 +20,8 @@
 				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Treeni">
-			<h:outputText value="#{_treenikäynti.treenisessio.treeni.nimi}" class="teksti" />
+		<ace:column headerText="Päivä">
+			<h:outputText value="#{_treenikäynti.treenisessio.treeni.päivä}" class="teksti" />
 		</ace:column>
 		<ace:column headerText="Harrastaja">
 			<h:outputText value="#{_treenikäynti.harrastaja.nimi}" class="teksti" />
@@ -29,17 +29,17 @@
 		<ace:column headerText="Vyöarvo">
 			<h:outputText value="#{_treenikäynti.harrastaja.tuoreinVyöarvo.nimi}" class="teksti" />
 		</ace:column>
+		<ace:column headerText="Treeni">
+			<h:outputText value="#{_treenikäynti.treenisessio.treeni.nimi}" class="teksti" />
+		</ace:column>
+		<ace:column headerText="Tyyppi">
+			<h:outputText value="#{_treenikäynti.treenisessio.treeni.tyyppi.nimi}" class="teksti" />
+		</ace:column>
 	</ace:dataTable>
 	<p />
 	<h:panelGrid columns="2" columnClasses="tabletop, tabletop" rendered="#{treenikäynti != null}">
 		<ace:panel header="Treenikäynti" styleClass="panel" style="width: 400px">
 			<h:panelGrid columns="2" style="margin-left: 20px;">
-				<h:outputText value="Aikaleima" />
-				<h:panelGrid>
-					<ace:message for="form:aikaleima" />
-					<ace:dateTimeEntry value="#{treenikäynti.aikaleima}" renderAsPopup="true" pattern="dd.MM.yyyy HH:mm:ss"
-						id="aikaleima" />
-				</h:panelGrid>
 				<h:outputText value="Harrastaja" />
 				<h:panelGrid>
 					<ace:message for="form:harrastaja" />
@@ -47,33 +47,12 @@
 						<f:selectItems value="#{harrastajat}" var="_harrastaja" itemLabel="#{_harrastaja.nimi}" itemValue="#{_harrastaja}" />
 						<f:converter converterId="objectConverter" />
 					</h:selectOneMenu>
-
-					<!-- 					
-					<ace:dataTable value="#{harrastajat}" var="_harrastaja" selectionMode="single" id="harrastaja" rows="5"
-						rowSelectListener="#{ilmoittautumisAdmin.harrastajaValittu}">
-						<ace:column headerText="Nimi" filterBy="#{_harrastaja.nimi}" filterMatchMode="contains">
-							<h:outputText value="#{_harrastaja.nimi}" />
-						</ace:column>
-					</ace:dataTable>
-
-					<ace:autoCompleteEntry id="harrastaja" value="#{treenikäynti.harrastaja}" listVar="_h" listValue="#{harrastajat}"
-						filterBy="#{_h.nimi}" converter="objectConverter">
-						<f:facet name="row">
-							<h:outputText value="#{_h.nimi}" />
-						</f:facet>
-					</ace:autoCompleteEntry>
-
-					<ace:autoCompleteEntry id="harrastaja" value="#{treenikäynti.harrastaja}" filterBy="#{_harrastaja.nimi}" rows="5">
-						<f:selectItems value="#{harrastajat}" var="_h" itemLabel="#{_h.nimi}" itemValue="#{_h}" />
-						<f:converter converterId="objectConverter" />
-					</ace:autoCompleteEntry>
-					-->
 				</h:panelGrid>
-				<h:outputText value="Treeni" />
+				<h:outputText value="Sessio" />
 				<h:panelGrid>
-					<ace:message for="form:treeni" />
-					<h:selectOneMenu value="#{treenikäynti.treenisessio.treeni}" id="treeni">
-						<f:selectItems value="#{treenit}" var="_treeni" itemValue="#{_treeni}" itemLabel="#{_treeni.nimi}" />
+					<ace:message for="form:treenisessio" />
+					<h:selectOneMenu value="#{treenikäynti.treenisessio}" id="treenisessio">
+						<f:selectItems value="#{kaikkiTreenisessiot}" var="_treenisessio" itemValue="#{_treenisessio}" itemLabel="#{_treenisessio.kuvaus}" />
 						<f:converter converterId="objectConverter" />
 					</h:selectOneMenu>
 				</h:panelGrid>

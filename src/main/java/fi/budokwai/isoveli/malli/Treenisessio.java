@@ -1,5 +1,6 @@
 package fi.budokwai.isoveli.malli;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,8 @@ import javax.validation.constraints.NotNull;
 @NamedQueries(
 {
       @NamedQuery(name = "treenisessio", query = "select t from Treenisessio t where t.treeni = :treeni and t.päivä=:päivä"),
-      @NamedQuery(name="treenikäyttö", query="select t from Treenisessio t where t.treeni = :treeni"),
+      @NamedQuery(name = "treenikäyttö", query = "select t from Treenisessio t where t.treeni = :treeni"),
+      @NamedQuery(name = "kaikki_treenisessiot", query = "select t from Treenisessio t order by t.päivä desc"),
       @NamedQuery(name = "treenisessiot", query = "select t from Treenisessio t where t.päivä between :alkaa and :päättyy order by t.päivä desc") })
 public class Treenisessio
 {
@@ -46,7 +48,7 @@ public class Treenisessio
    { @JoinColumn(name = "harrastaja", referencedColumnName = "id") })
    private List<Harrastaja> vetäjät = new ArrayList<Harrastaja>();
 
-   @OneToMany(cascade=CascadeType.REMOVE, mappedBy = "treenisessio", orphanRemoval = true)
+   @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "treenisessio", orphanRemoval = true)
    private List<Treenikäynti> treenikäynnit = new ArrayList<Treenikäynti>();
 
    public int getId()
@@ -102,6 +104,12 @@ public class Treenisessio
    public boolean isTallentamaton()
    {
       return id == 0;
+   }
+
+   public String getKuvaus()
+   {
+      SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+      return String.format("%s: %s", treeni.getNimi(), sdf.format(päivä));
    }
 
 }

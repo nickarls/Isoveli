@@ -15,8 +15,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.google.common.base.Joiner;
-
 @Entity
 @NamedQueries(
 {

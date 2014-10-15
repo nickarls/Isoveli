@@ -46,6 +46,13 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       return treenikäynti;
    }
 
+   @Produces
+   @Named
+   public List<Treenisessio> getKaikkiTreenisessiot()
+   {
+      return entityManager.createNamedQuery("kaikki_treenisessiot", Treenisessio.class).getResultList();
+   }
+
    @PostConstruct
    public void init()
    {

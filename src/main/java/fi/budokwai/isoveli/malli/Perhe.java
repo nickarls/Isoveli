@@ -15,6 +15,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.google.common.base.Joiner;
+
 @Entity
 @NamedQueries(
 {
@@ -77,23 +79,12 @@ public class Perhe
 
    public String getKuvaus()
    {
-      int x = perheenjäsenet.size();
       StringBuilder sb = new StringBuilder();
       sb.append(nimi);
-      if (!perheenjäsenet.isEmpty())
-      {
-         sb.append(" (");
-         for (Henkilö jäsen : perheenjäsenet)
-         {
-            sb.append(jäsen.getEtunimi());
-            if (perheenjäsenet.indexOf(jäsen) != (perheenjäsenet.size() - 1))
-            {
-               sb.append(", ");
-            }
-         }
-         sb.append(")");
-      }
-      return sb.toString();
+      String etunimet = Joiner.on(", ").join(
+         perheenjäsenet.stream().filter(h -> h.getEtunimi() != null).map(h -> h.getEtunimi())
+            .collect(Collectors.toList()));
+      return "".equals(etunimet) ? nimi : String.format("%s (%s)", nimi, etunimet);
    }
 
    public List<Henkilö> getHuoltajat()

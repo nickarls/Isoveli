@@ -327,13 +327,17 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    {
       Henkilö huoltaja = new Henkilö();
       Perhe perhe = harrastaja.getPerhe();
-      if (perhe != null)
+      if (perhe == null)
       {
-         perhe.getPerheenjäsenet().add(huoltaja);
-         huoltaja.setSukunimi(harrastaja.getSukunimi());
-         huoltaja.setPerhe(perhe);
-         harrastaja.setHuoltaja(huoltaja);
+         perhe = new Perhe();
+         perhe.setNimi(harrastaja.getSukunimi());
+         harrastaja.setPerhe(perhe);
       }
+      perhe.getPerheenjäsenet().add(huoltaja);
+      huoltaja.setSukunimi(harrastaja.getSukunimi());
+      huoltaja.setPerhe(perhe);
+      harrastaja.setHuoltaja(huoltaja);
+      perheet.add(perhe);
    }
 
    public void lisääHarrastaja()

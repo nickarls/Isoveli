@@ -9,12 +9,12 @@
 			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').hide()" />
 		</h:panelGrid>
 	</ace:confirmationDialog>
-	<h:commandButton action="#{ilmoittautumisAdmin.lisääIlmoittautuminen}" value="x" styleClass="ikoni"
+	<h:commandButton action="#{ilmoittautumisAdmin.lisääTreenikäynti}" value="x" styleClass="ikoni"
 		image="/kuvat/lisää.png" immediate="true">
 		<ace:ajax render="@form" />
 	</h:commandButton>
 	<ace:dataTable value="#{treenikäynnit}" var="_treenikäynti" selectionMode="single"
-		stateMap="#{ilmoittautumisAdmin.treenikäyntiRSM}" rows="10" rowSelectListener="#{ilmoittautumisAdmin.treeniKäyntiValittu}">
+		stateMap="#{ilmoittautumisAdmin.treenikäyntiRSM}" rows="10" rowSelectListener="#{ilmoittautumisAdmin.treenikäyntiValittu}">
 		<ace:column headerText="Aikaleima">
 			<h:outputText value="#{_treenikäynti.aikaleima}">
 				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET" />
@@ -37,7 +37,7 @@
 		</ace:column>
 	</ace:dataTable>
 	<p />
-	<h:panelGrid columns="2" columnClasses="tabletop, tabletop" rendered="#{treenikäynti != null}">
+	<h:panelGrid columnClasses="tabletop, tabletop" rendered="#{treenikäynti != null}">
 		<ace:panel header="Treenikäynti" styleClass="panel" style="width: 500px">
 			<h:panelGrid columns="2" style="margin-left: 20px;">
 				<h:outputText value="Harrastaja" />
@@ -58,24 +58,12 @@
 				</h:panelGrid>
 			</h:panelGrid>
 		</ace:panel>
-		<ace:panel header="Vetäjät" styleClass="panel" style="width:500px">
-			<!-- 
-			<ace:listControl>
-				<ace:list value="#{vetäjät}" var="_vetäjä" selectionMode="multiple">
-					<h:outputText value="#{_vetäjä.nimi}" />
-				</ace:list>
-				<ace:list value="#{treeni.vetäjät}" var="_vetäjä" selectionMode="multiple">
-					<h:outputText value="#{_vetäjä.nimi}" />
-				</ace:list>
-			</ace:listControl>
-		-->
-		</ace:panel>
 	</h:panelGrid>
 
 	<h:commandButton rendered="#{treenikäynti != null}" value="x" styleClass="ikoni"
 		action="#{ilmoittautumisAdmin.tallennaTreenikäynti}" image="/kuvat/tallenna.jpg" />
 	<h:commandButton rendered="#{treenikäynti != null}" value="x" styleClass="ikoni" immediate="true"
-		action="#{ilmoittautumisAdmin.peruutaMuutos}" image="/kuvat/peruuta_muutos.png">
+		action="#{ilmoittautumisAdmin.peruutaTreenikäyntimuutos}" image="/kuvat/peruuta_muutos.png">
 		<f:ajax render="@form" />
 	</h:commandButton>
 	<h:commandButton rendered="#{treenikäynti.poistettavissa}" value="x" styleClass="ikoni"

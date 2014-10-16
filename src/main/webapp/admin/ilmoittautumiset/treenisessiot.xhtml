@@ -1,4 +1,78 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	xmlns:ace="http://www.icefaces.org/icefaces/components" xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	<ace:confirmationDialog id="vahvistaTreenisessionPoisto" message="Oletko varma?" header="Vahvista" width="350"
+		height="200" closable="true" position="center">
+		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
+			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaTreenisessionPoisto').hide()"
+				action="#{ilmoittautumisAdmin.piilotaTreenisessio}" actionListener="#{ilmoittautumisAdmin.poistaTreenisessio}" />
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreenisessionPoisto').hide()" />
+		</h:panelGrid>
+	</ace:confirmationDialog>
+	<h:commandButton action="#{ilmoittautumisAdmin.lisääTreenisessio}" value="x" styleClass="ikoni"
+		image="/kuvat/lisää.png" immediate="true">
+		<ace:ajax render="@form" />
+	</h:commandButton>
+	<ace:dataTable value="#{kaikkiTreenisessiot}" var="_treenisessio" selectionMode="single"
+		stateMap="#{ilmoittautumisAdmin.treenisessioRSM}" rows="10"
+		rowSelectListener="#{ilmoittautumisAdmin.treenisessioValittu}">
+		<ace:column headerText="Treeni">
+			<h:outputText value="#{_treenisessio.treeni.nimi}" class="teksti" />
+		</ace:column>
+		<ace:column headerText="Päivä">
+			<h:outputText value="#{_treenisessio.päivä}">
+				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Kävijöitä">
+			<h:outputText value="#{fn:length(_treenisessio.treenikäynnit)}" class="teksti" />
+		</ace:column>
+		<ace:column headerText="Vetäjät">
+			<ui:repeat value="#{_treenisessio.vetäjät}" var="_vetäjä">
+				<h:outputText value="#{_vetäjä.nimi}" />
+				<br />
+			</ui:repeat>
+		</ace:column>
+	</ace:dataTable>
+	<p />
+	<h:panelGrid columns="2" columnClasses="tabletop, tabletop" rendered="#{treenisessio != null}">
+		<ace:panel header="Treenisessio" styleClass="panel" style="width: 500px">
+			<h:panelGrid columns="2" style="margin-left: 20px;">
+				<h:outputText value="Treeni" />
+				<h:panelGrid columns="2">
+					<ace:message for="form:treeni" />
+					<h:selectOneMenu id="treeni" value="#{treenisessio.treeni}" style="width:350px">
+						<f:selectItems value="#{treenit}" var="_treeni" itemLabel="#{_treeni.nimi}" itemValue="#{_treeni}" />
+						<f:converter converterId="objectConverter" />
+					</h:selectOneMenu>
+				</h:panelGrid>
+				<h:outputText value="Päivä" />
+				<h:panelGrid columns="2">
+					<ace:message for="form:päivä" />
+					<ace:dateTimeEntry value="#{treenisessio.päivä}" renderAsPopup="true" pattern="dd.MM.yyyy" id="päivä" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</ace:panel>
+		<ace:panel header="Vetäjät" styleClass="panel" style="width:500px">
+<!-- 		
+			<ace:listControl>
+				<ace:list value="#{vetäjät}" var="_vetäjä" selectionMode="multiple">
+					<h:outputText value="#{_vetäjä.nimi}" />
+				</ace:list>
+				<ace:list value="#{treeni.vetäjät}" var="_vetäjä" selectionMode="multiple">
+					<h:outputText value="#{_vetäjä.nimi}" />
+				</ace:list>
+			</ace:listControl>
+-->			
+		</ace:panel>
+	</h:panelGrid>
+
+	<h:commandButton rendered="#{treenisessio != null}" value="x" styleClass="ikoni"
+		action="#{ilmoittautumisAdmin.tallennaTreenisessio}" image="/kuvat/tallenna.jpg" />
+	<h:commandButton rendered="#{treenisessio != null}" value="x" styleClass="ikoni" immediate="true"
+		action="#{ilmoittautumisAdmin.peruutaTreenisessiomuutos}" image="/kuvat/peruuta_muutos.png">
+		<f:ajax render="@form" />
+	</h:commandButton>
+	<h:commandButton rendered="#{treenisessio.poistettavissa}" value="x" styleClass="ikoni"
+		onclick="ice.ace.instance('form:vahvistaTreenisessionPoisto').show();" image="/kuvat/poista.png" immediate="true" />
 </ui:composition>

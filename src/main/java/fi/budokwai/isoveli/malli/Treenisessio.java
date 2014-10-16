@@ -26,6 +26,7 @@ import javax.validation.constraints.NotNull;
       @NamedQuery(name = "treenisessio", query = "select t from Treenisessio t where t.treeni = :treeni and t.päivä=:päivä"),
       @NamedQuery(name = "treenikäyttö", query = "select t from Treenisessio t where t.treeni = :treeni"),
       @NamedQuery(name = "kaikki_treenisessiot", query = "select t from Treenisessio t order by t.päivä desc"),
+      @NamedQuery(name = "poista_tyhjät_treenisessiot", query = "delete from Treenisessio t where size(t.treenikäynnit)=0"),
       @NamedQuery(name = "treenisessiot", query = "select t from Treenisessio t where t.päivä between :alkaa and :päättyy order by t.päivä desc") })
 public class Treenisessio
 {
@@ -110,6 +111,11 @@ public class Treenisessio
    {
       SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
       return String.format("%s: %s", treeni.getNimi(), sdf.format(päivä));
+   }
+
+   public boolean isPoistettavissa()
+   {
+      return id > 0;
    }
 
 }

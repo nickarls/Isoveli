@@ -35,8 +35,11 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
 
    private List<Treenik‰ynti> treenik‰ynnit;
    private Treenik‰ynti treenik‰ynti;
+   private Treenisessio treenisessio;
+   private List<Treenisessio> treenisessiot;
 
    private RowStateMap treenik‰yntiRSM = new RowStateMap();
+   private RowStateMap treenisessioRSM = new RowStateMap();
 
    @Produces
    @Named
@@ -47,31 +50,55 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
 
    @Produces
    @Named
-   public List<Treenisessio> getKaikkiTreenisessiot()
+   public Treenisessio getTreenisessio()
    {
-      return entityManager.createNamedQuery("kaikki_treenisessiot", Treenisessio.class).getResultList();
+      return treenisessio;
    }
 
    @PostConstruct
    public void init()
    {
       ((Session) entityManager.getDelegate()).setFlushMode(FlushMode.MANUAL);
-//      PushRenderer.addCurrentSession("ilmoittautuminen");
+      // PushRenderer.addCurrentSession("ilmoittautuminen");
    }
 
-   public void harrastajaValittu(SelectEvent e)
+   public void treenisessioValittu(SelectEvent e)
    {
-      treenik‰ynti.setHarrastaja((Harrastaja) e.getObject());
+      treenisessio = (Treenisessio) e.getObject();
+   }
+
+   public void treenik‰yntiValittu(SelectEvent e)
+   {
+      treenik‰ynti = (Treenik‰ynti) e.getObject();
    }
 
    public void tabiMuuttui(ValueChangeEvent e)
    {
       int uusiTabi = (int) e.getNewValue();
-      if (uusiTabi == 1)
+      if (uusiTabi == 0)
       {
          treenik‰ynnit = null;
+         treenik‰ynti = null;
+         treenik‰yntiRSM.setAllSelected(false);
+      } else if (uusiTabi == 1)
+      {
+         treenisessiot = null;
+         treenisessio = null;
+         treenisessioRSM.setAllSelected(false);
       }
-//      entityManager.clear();
+      // entityManager.clear();
+   }
+
+   @Produces
+   @Named
+   public List<Treenisessio> getKaikkiTreenisessiot()
+   {
+      if (treenisessiot == null)
+      {
+         haeTreenisessiot();
+         treenisessiot.forEach(t -> entityManager.refresh(t));
+      }
+      return treenisessiot;
    }
 
    @Produces
@@ -90,11 +117,23 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       treenik‰ynnit = entityManager.createNamedQuery("treenik‰ynnit", Treenik‰ynti.class).getResultList();
    }
 
-   public void lis‰‰Ilmoittautuminen()
+   private void haeTreenisessiot()
+   {
+      treenisessiot = entityManager.createNamedQuery("kaikki_treenisessiot", Treenisessio.class).getResultList();
+   }
+
+   public void lis‰‰Treenik‰ynti()
    {
       treenik‰ynti = new Treenik‰ynti();
       info("Uusi treenik‰ynti alustettu");
       treenik‰yntiRSM.setAllSelected(false);
+   }
+
+   public void lis‰‰Treenisessio()
+   {
+      treenisessio = new Treenisessio();
+      info("Uusi treenisessio alustettu");
+      treenisessioRSM.setAllSelected(false);
    }
 
    private Treenisessio haeTreenisessio(Treeni treeni)
@@ -133,23 +172,34 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
    {
       entityManager.remove(treenik‰ynti);
       entityManager.flush();
-      treenik‰ynti = null;
       treenik‰ynnit = null;
       info("Treenik‰ynti poistettu");
+   }
+
+   public void poistaTreenisessio()
+   {
+      entityManager.remove(treenisessio);
+      entityManager.flush();
+      treenisessio = null;
+      treenisessiot = null;
+      treenik‰ynnit = null;
+      info("Treenisessio poistettu");
    }
 
    public void piilotaTreenik‰ynti()
    {
       treenik‰ynti = null;
+      entityManager.createNamedQuery("poista_tyhj‰t_treenisessiot").executeUpdate();
+      entityManager.flush();
+   }
+
+   public void piilotaTreenisessio()
+   {
+      treenisessio = null;
    }
 
    public void tallennaTreenik‰ynti()
    {
-      if (treenik‰ynti.getTreenisessio().isTallentamaton())
-      {
-         Treenisessio sessio = haeTreenisessio(treenik‰ynti.getTreenisessio().getTreeni());
-         treenik‰ynti.setTreenisessio(sessio);
-      }
       entityManager.persist(treenik‰ynti);
       entityManager.flush();
       treenik‰yntiRSM.get(treenik‰ynti).setSelected(true);
@@ -157,12 +207,16 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       info("Treenik‰ynti tallennettu");
    }
 
-   public void treeniK‰yntiValittu(SelectEvent e)
+   public void tallennaTreenisessio()
    {
-      treenik‰ynti = (Treenik‰ynti) e.getObject();
+      entityManager.persist(treenisessio);
+      entityManager.flush();
+      treenisessioRSM.get(treenisessio).setSelected(true);
+      haeTreenisessiot();
+      info("Treenisessio tallennettu");
    }
 
-   public void peruutaMuutos()
+   public void peruutaTreenik‰yntimuutos()
    {
       if (treenik‰ynti.isPoistettavissa())
       {
@@ -170,6 +224,18 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       } else
       {
          treenik‰ynti = null;
+      }
+      virhe("Muutokset peruttu");
+   }
+
+   public void peruutaTreenisessiomuutos()
+   {
+      if (treenisessio.isPoistettavissa())
+      {
+         entityManager.refresh(treenisessio);
+      } else
+      {
+         treenisessio = null;
       }
       virhe("Muutokset peruttu");
    }
@@ -182,6 +248,16 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
    public void setTreenik‰yntiRSM(RowStateMap treenik‰yntiRSM)
    {
       this.treenik‰yntiRSM = treenik‰yntiRSM;
+   }
+
+   public RowStateMap getTreenisessioRSM()
+   {
+      return treenisessioRSM;
+   }
+
+   public void setTreenisessioRSM(RowStateMap treenisessioRSM)
+   {
+      this.treenisessioRSM = treenisessioRSM;
    }
 
 }

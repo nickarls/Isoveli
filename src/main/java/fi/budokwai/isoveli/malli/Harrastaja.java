@@ -81,6 +81,9 @@ public class Harrastaja extends Henkilö
    @Convert(converter = SukupuoliConverter.class)
    private Sukupuoli sukupuoli;
 
+   @Size(max=50)
+   private String ice;
+   
    @Transient
    public boolean osoiteMuuttunut;
 
@@ -359,6 +362,16 @@ public class Harrastaja extends Henkilö
       }
       Harrastaja toinenHarrastaja = (Harrastaja) toinen;
       return id == toinenHarrastaja.getId();
+   }
+
+   public String getIce()
+   {
+      return ice;
+   }
+
+   public void setIce(String ice)
+   {
+      this.ice = ice;
    }
 
 }

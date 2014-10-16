@@ -1,9 +1,12 @@
 package fi.budokwai.isoveli;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
@@ -37,6 +40,9 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
    private Treenikäynti treenikäynti;
    private Treenisessio treenisessio;
    private List<Treenisessio> treenisessiot;
+   private List<Harrastaja> kaikkivetäjät;
+   private List<Harrastaja> sessiovetäjät;
+   
 
    private RowStateMap treenikäyntiRSM = new RowStateMap();
    private RowStateMap treenisessioRSM = new RowStateMap();
@@ -62,9 +68,32 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       // PushRenderer.addCurrentSession("ilmoittautuminen");
    }
 
+   @Produces
+   @Named
+   public List<Harrastaja> getSessiovetäjät()
+   {
+      if (treenisessio == null)
+      {
+         return Collections.emptyList();
+      }
+      if (kaikkivetäjät == null)
+      {
+         kaikkivetäjät = entityManager.createNamedQuery("treenivetäjät", Harrastaja.class).getResultList();
+         kaikkivetäjät = kaikkivetäjät.stream().filter(h -> h.isTreenienVetäjä()).collect(Collectors.toList());
+      }
+      if (sessiovetäjät == null)
+      {
+         sessiovetäjät = new ArrayList<Harrastaja>();
+         sessiovetäjät.addAll(kaikkivetäjät);
+         sessiovetäjät.removeAll(treenisessio.getVetäjät());
+      }
+      return sessiovetäjät;
+   }   
+   
    public void treenisessioValittu(SelectEvent e)
    {
       treenisessio = (Treenisessio) e.getObject();
+      sessiovetäjät = null;
    }
 
    public void treenikäyntiValittu(SelectEvent e)

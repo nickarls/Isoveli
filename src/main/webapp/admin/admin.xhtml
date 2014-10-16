@@ -35,25 +35,23 @@
 </h:head>
 <h:body>
 	<f:view>
-		<icecore:focusManager>
-			<h:form id="form">		
-				<ace:tabSet>
-					<ace:tabPane label="Harrastajat">
-						<ui:include src="harrastajat/harrastajat.xhtml" />
-					</ace:tabPane>
-					<ace:tabPane label="Imoittautumiset">
-						<ui:include src="ilmoittautumiset/ilmoittautumiset.xhtml" />
-					</ace:tabPane>
-					<ace:tabPane label="Perustiedot">
-						<ui:include src="perustiedot/perustiedot.xhtml" />
-					</ace:tabPane>
-					<ace:tabPane label="Raportit">
-						<ui:include src="raportit.xhtml" />
-					</ace:tabPane>
-				</ace:tabSet>
+		<h:form id="form">
+			<ace:tabSet>
+				<ace:tabPane label="Harrastajat">
+					<ui:include src="harrastajat/harrastajat.xhtml" />
+				</ace:tabPane>
+				<ace:tabPane label="Imoittautumiset">
+					<ui:include src="ilmoittautumiset/ilmoittautumiset.xhtml" />
+				</ace:tabPane>
+				<ace:tabPane label="Perustiedot">
+					<ui:include src="perustiedot/perustiedot.xhtml" />
+				</ace:tabPane>
+				<ace:tabPane label="Raportit">
+					<ui:include src="raportit.xhtml" />
+				</ace:tabPane>
+			</ace:tabSet>
 
-			</h:form>
-		</icecore:focusManager>
+		</h:form>
 	</f:view>
 </h:body>
 

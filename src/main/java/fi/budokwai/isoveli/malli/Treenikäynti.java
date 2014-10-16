@@ -1,5 +1,6 @@
 package fi.budokwai.isoveli.malli;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -31,7 +32,7 @@ public class Treenikäynti
    @Valid
    private Harrastaja harrastaja;
 
-   @ManyToOne(cascade=CascadeType.PERSIST, optional = false)
+   @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
    @JoinColumn(name = "treenisessio")
    @NotNull
    @Valid
@@ -74,6 +75,12 @@ public class Treenikäynti
    public Date getAikaleima()
    {
       return aikaleima;
+   }
+
+   public String getAikaleimaString()
+   {
+      SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+      return sdf.format(aikaleima);
    }
 
    public void setAikaleima(Date aikaleima)

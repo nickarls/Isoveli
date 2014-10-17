@@ -12,7 +12,7 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
 
-@Path("käyttäjä")
+@Path("kayttaja")
 @Stateless
 public class Käyttäjärajapinta
 {

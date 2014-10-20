@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli;
+package fi.budokwai.isoveli.admin;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,8 +1,8 @@
 package fi.budokwai.isoveli;
 
-public class Isovelipoikkeus extends RuntimeException
+public class IsoveliPoikkeus extends RuntimeException
 {
-   public Isovelipoikkeus(String message, Exception e)
+   public IsoveliPoikkeus(String message, Exception e)
    {
       super(message, e);
    }

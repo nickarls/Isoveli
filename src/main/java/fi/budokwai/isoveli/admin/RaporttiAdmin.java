@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli;
+package fi.budokwai.isoveli.admin;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;

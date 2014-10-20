@@ -31,7 +31,7 @@ import javax.validation.constraints.Size;
 
 import com.google.common.base.MoreObjects;
 
-import fi.budokwai.isoveli.SukupuoliConverter;
+import fi.budokwai.isoveli.util.SukupuoliConverter;
 
 @Entity
 @NamedQueries(

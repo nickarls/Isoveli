@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-import fi.budokwai.isoveli.Kyll‰EiTyyppi;
+import fi.budokwai.isoveli.util.Kyll‰EiTyyppi;
 
 @Entity
 @TypeDef(name = "Kyll‰Ei", typeClass = Kyll‰EiTyyppi.class)

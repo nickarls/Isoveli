@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli;
+package fi.budokwai.isoveli.admin;
 
 import java.time.LocalDate;
 import java.time.Period;

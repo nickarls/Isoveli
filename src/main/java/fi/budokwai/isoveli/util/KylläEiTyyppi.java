@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli;
+package fi.budokwai.isoveli.util;
 
 import org.hibernate.type.BooleanType;
 import org.hibernate.type.descriptor.java.BooleanTypeDescriptor;

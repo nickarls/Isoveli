@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli;
+package fi.budokwai.isoveli.admin;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;

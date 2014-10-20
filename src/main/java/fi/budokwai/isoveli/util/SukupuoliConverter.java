@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli;
+package fi.budokwai.isoveli.util;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

@@ -19,6 +19,7 @@ import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 import org.icefaces.application.PushRenderer;
 
+import fi.budokwai.isoveli.admin.Perustoiminnallisuus;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Treeni;
 import fi.budokwai.isoveli.malli.Treenikäynti;

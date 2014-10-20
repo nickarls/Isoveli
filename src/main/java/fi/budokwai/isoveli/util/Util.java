@@ -1,9 +1,17 @@
 package fi.budokwai.isoveli.util;
 
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class Util
 {
+   public static Date t‰n‰‰n()
+   {
+      return Date.from(LocalDateTime.now().toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+   }
+
    public static String period2String(Period aikav‰li)
    {
       if (aikav‰li == Period.ZERO)

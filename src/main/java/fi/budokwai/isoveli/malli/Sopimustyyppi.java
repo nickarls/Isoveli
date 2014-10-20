@@ -255,7 +255,7 @@ public class Sopimustyyppi
 
    public double getVerollinenHinta()
    {
-      double result = getM‰‰r‰() * getHinta() * (1 + (getVerokanta() / 100f));
+      double result = getM‰‰r‰() * getHinta() * (1 + getVerokanta() / 100f);
       return result;
    }
 

@@ -1,6 +1,7 @@
 package fi.budokwai.isoveli.malli;
 
-import javax.persistence.Column;
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,7 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.Size;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Laskurivi
@@ -27,26 +29,8 @@ public class Laskurivi
    @JoinColumn(name = "sopimus")
    private Sopimus sopimus;
 
-   @Size(max = 10)
-   private String tuotekoodi;
-
-   @Size(max = 500)
-   private String tuotenimi;
-
-   @Column(name = "maara")
-   private int määrä;
-
-   @Column(name = "yksikko")
-   @Size(max = 20)
-   private String yksikkö;
-
-   private int verokanta;
-
-   @Column(name = "verotonyksikkohinta")
-   private int verotonYksikköhinta;
-
-   @Size(max = 2000)
-   private String huomautus;
+   @Temporal(TemporalType.TIMESTAMP)
+   private Date luotu = new Date();
 
    public Laskurivi()
    {
@@ -54,25 +38,18 @@ public class Laskurivi
 
    public Laskurivi(Sopimus sopimus)
    {
-      tuotekoodi = sopimus.getTyyppi().getTuotekoodi();
-      tuotenimi = sopimus.getTuotenimi();
-      määrä = sopimus.getTyyppi().getMäärä();
-      yksikkö = sopimus.getTyyppi().getYksikkö();
-      verokanta = sopimus.getTyyppi().getVerokanta();
-      verotonYksikköhinta = sopimus.getTyyppi().getHinta();
-      huomautus = "!";
       this.sopimus = sopimus;
       sopimus.setLaskurivi(this);
    }
 
    public double getRivihinta()
    {
-      return määrä * verotonYksikköhinta * (1 + verokanta / 100);
+      return sopimus.getTyyppi().getVerollinenHinta();
    }
 
    public double getAlv()
    {
-      return määrä * verotonYksikköhinta * (verokanta / 100);
+      return sopimus.getTyyppi().getVerotonHinta();
    }
 
    public int getId()
@@ -95,76 +72,6 @@ public class Laskurivi
       this.lasku = lasku;
    }
 
-   public String getTuotekoodi()
-   {
-      return tuotekoodi;
-   }
-
-   public void setTuotekoodi(String tuotekoodi)
-   {
-      this.tuotekoodi = tuotekoodi;
-   }
-
-   public String getTuotenimi()
-   {
-      return tuotenimi;
-   }
-
-   public void setTuotenimi(String tuotenimi)
-   {
-      this.tuotenimi = tuotenimi;
-   }
-
-   public int getMäärä()
-   {
-      return määrä;
-   }
-
-   public void setMäärä(int määrä)
-   {
-      this.määrä = määrä;
-   }
-
-   public int getVerokanta()
-   {
-      return verokanta;
-   }
-
-   public void setVerokanta(int verokanta)
-   {
-      this.verokanta = verokanta;
-   }
-
-   public int getVerotonYksikköhinta()
-   {
-      return verotonYksikköhinta;
-   }
-
-   public void setVerotonYksikköhinta(int verotonYksikköhinta)
-   {
-      this.verotonYksikköhinta = verotonYksikköhinta;
-   }
-
-   public String getHuomautus()
-   {
-      return huomautus;
-   }
-
-   public void setHuomautus(String huomautus)
-   {
-      this.huomautus = huomautus;
-   }
-
-   public String getYksikkö()
-   {
-      return yksikkö;
-   }
-
-   public void setYksikkö(String yksikkö)
-   {
-      this.yksikkö = yksikkö;
-   }
-
    public int getRivinumero()
    {
       return rivinumero;
@@ -173,5 +80,15 @@ public class Laskurivi
    public void setRivinumero(int rivinumero)
    {
       this.rivinumero = rivinumero;
+   }
+
+   public Date getLuotu()
+   {
+      return luotu;
+   }
+
+   public void setLuotu(Date luotu)
+   {
+      this.luotu = luotu;
    }
 }

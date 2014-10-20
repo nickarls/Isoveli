@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Lasku
@@ -29,6 +31,9 @@ public class Lasku
    @JoinColumn(name = "harrastaja")
    private Harrastaja harrastaja;
 
+   @Temporal(TemporalType.TIMESTAMP)
+   private Date luotu = new Date();   
+   
    public Lasku()
    {
    }
@@ -97,6 +102,16 @@ public class Lasku
    public void setHarrastaja(Harrastaja harrastaja)
    {
       this.harrastaja = harrastaja;
+   }
+
+   public Date getLuotu()
+   {
+      return luotu;
+   }
+
+   public void setLuotu(Date luotu)
+   {
+      this.luotu = luotu;
    }
 
 }

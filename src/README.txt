@@ -63,6 +63,7 @@ create table harrastaja(
 	lisenssinumero varchar(10),
 	syntynyt date not null,
 	sukupuoli varchar(1) not null,
+	ice varchar(50),
 	constraint pk_harrastaja primary key(id),
 	constraint uniikki_kortti unique(korttinumero),
 	constraint uniikki_jasennumero unique(jasennumero),
@@ -156,7 +157,7 @@ create table kisatulos(
 	sarja varchar(50),
 	tulos varchar(10) not null,
 	constraint pk_kisatulos primary key(id),
-	constraint kisatulos_harrastaja_viittaus foreign key(harrastaja) references harrastaja(id),
+	constraint kisatulos_harrastaja_viittaus foreign key(harrastaja) references harrastaja(id)
 );
 insert into kisatulos(id, harrastaja, tyyppi, paiva, kisa, sarja, tulos) values (1, 1, 1, parsedatetime('12.12.2006', 'dd.MM.yyyy'), 'Masters Cup', 'Seniorit', '1');
 
@@ -173,14 +174,15 @@ create table sopimustyyppi(
 	vapautus varchar(1) not null default 'E',
 	power varchar(1) not null default 'E',
 	perhealennus varchar(1) not null default 'E',
+	laskutettava varchar(1) not null default 'E',
 	oletuskuukaudetvoimassa int default 0,
 	oletusmaksuvali int default 0,
 	oletustreenikerrat int default 0,
 	constraint pk_sopimustyyppi primary key(id),
 	constraint uniikki_sopimusnimi unique(nimi)
 );
-insert into sopimustyyppi(id, nimi, jasenmaksu) values (1, 'Jäsenmaksu', 'K');
-insert into sopimustyyppi(id, nimi, jatkuva, oletusmaksuvali) values (2, 'Jatkuva', 'K', 12);
+insert into sopimustyyppi(id, nimi, jasenmaksu, laskutettava) values (1, 'Jäsenmaksu', 'K', 'K');
+insert into sopimustyyppi(id, nimi, jatkuva, oletusmaksuvali, laskutettava) values (2, 'Jatkuva', 'K', 12, 'K');
 insert into sopimustyyppi(id, nimi, treenikertoja, oletustreenikerrat) values (3, 'Kymppikerta', 'K', 10);
 insert into sopimustyyppi(id, nimi, alkeiskurssi, oletuskuukaudetvoimassa) values (4, 'Alkeiskurssi', 'K', 3);
 insert into sopimustyyppi(id, nimi, koeaika) values (5, 'Koeaika', 'K');
@@ -188,21 +190,54 @@ insert into sopimustyyppi(id, nimi, vapautus) values (6, 'Vapautus', 'K');
 insert into sopimustyyppi(id, nimi, power) values (7, 'Power', 'K');
 insert into sopimustyyppi(id, nimi, perhealennus) values (8, 'Perhealennus', 'K');
 
+// LASKU
+drop table if exists lasku;
+create table lasku(
+	id int not null auto_increment,
+	harrastaja int not null,
+	maksettu date,
+	luotu datetime not null default current_timestamp,
+	constraint pk_lasku primary key(id),
+	constraint lasku_harrastaja_viittaus foreign key(harrastaja) references harrastaja(id)
+);
+insert into lasku(id, harrastaja, maksettu) values (1, 2, parsedatetime('1.6.2014', 'dd.MM.yyyy'));
+
+drop table if exists laskurivi;
+create table laskurivi(
+	id int not null auto_increment,
+	lasku int not null,
+	rivinumero int not null,
+	sopimus int,
+	luotu datetime not null default current_timestamp,	
+	constraint pk_laskurivi primary key(id),
+	constraint uniikki_laskurivinumero unique(lasku, rivinumero),
+	constraint uniikki_sopimuslasku unique(sopimus),
+	constraint laskurivi_lasku_viittaus foreign key(lasku) references lasku(id)
+);
+insert into laskurivi(id, lasku, rivinumero, sopimus) values (1, 1, 1, 3);
+
 // SOPIMUS
 drop table if exists sopimus;
 create table sopimus(
 	id int not null auto_increment,
 	harrastaja int not null,
 	tyyppi int not null,
+	laskurivi int,
 	umpeutuu date,
 	treenikertoja int default 0,
 	maksuvali int default 6,
 	constraint pk_sopimus primary key(id),
 	constraint sopimus_harrastaja_viittaus foreign key(harrastaja) references harrastaja(id),
 	constraint sopimus_tyyppi_viittaus foreign key(tyyppi) references sopimustyyppi(id),
+	constraint sopimus_laskurivi_viittaus foreign key(laskurivi) references laskurivi(id)
 );
+
+alter table laskurivi add constraint laskurivi_sopimus_viittaus foreign key(sopimus) references sopimus(id);
+
 insert into sopimus(id, harrastaja, tyyppi, umpeutuu, maksuvali) values (1, 1, 1, parsedatetime('31.12.2014', 'dd.MM.yyyy'), 6); 
 insert into sopimus(id, harrastaja, tyyppi) values (2, 1, 6); 
+insert into sopimus(id, harrastaja, tyyppi, umpeutuu, maksuvali, laskurivi) values (3, 2, 2, parsedatetime('31.12.2014', 'dd.MM.yyyy'), 12, 1); 
+
 
 // TREENITYYPPI
 drop table if exists treenityyppi;
@@ -224,6 +259,8 @@ create table treeni(
 	paattyy time not null,
 	tyyppi int not null,
 	power varchar(1) default 'E' not null,
+	voimassaalkaa date,
+	voimassapaattyy date,
 	constraint pk_treeni primary key(id),
 	constraint uniikki_treeni unique (nimi, paiva),
 	constraint treeni_tyyppi_viittaus foreign key(tyyppi) references treenityyppi(id),
@@ -281,6 +318,7 @@ create table treenisessiovetaja(
 	constraint treenisessiovetaja_treenisessio_viittaus foreign key(treenisessio) references treenisessio(id),
 );
 insert into treenisessiovetaja(id, harrastaja, treenisessio) values (1, 1, 1);
+
 
 
 === MAVEN REPOS ===

@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -61,9 +60,6 @@ public class Sopimustyyppi
    private boolean laskutettava;
 
    private int oletusKuukaudetVoimassa;
-
-   @Transient
-   private int hinta = 1;
 
    @Column(name = "oletusmaksuvali")
    private int oletusMaksuv‰li;
@@ -232,14 +228,9 @@ public class Sopimustyyppi
       this.laskutettava = laskutettava;
    }
 
-   public int getHinta()
+   public double getHinta()
    {
-      return hinta;
-   }
-
-   public void setHinta(int hinta)
-   {
-      this.hinta = hinta;
+      return 666;
    }
 
    public String getTuotekoodi()
@@ -260,6 +251,16 @@ public class Sopimustyyppi
    public int getVerokanta()
    {
       return 22;
+   }
+
+   public double getVerollinenHinta()
+   {
+      return getM‰‰r‰() * getHinta() * (1 + getVerokanta() / 100);
+   }
+
+   public double getVerotonHinta()
+   {
+      return getM‰‰r‰() * getHinta() * (getVerokanta() / 100);
    }
 
 }

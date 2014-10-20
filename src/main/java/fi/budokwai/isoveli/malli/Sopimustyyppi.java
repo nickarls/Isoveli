@@ -255,12 +255,20 @@ public class Sopimustyyppi
 
    public double getVerollinenHinta()
    {
-      return getM‰‰r‰() * getHinta() * (1 + getVerokanta() / 100);
+      double result = getM‰‰r‰() * getHinta() * (1 + (getVerokanta() / 100f));
+      return result;
    }
 
    public double getVerotonHinta()
    {
-      return getM‰‰r‰() * getHinta() * (getVerokanta() / 100);
+      double result = getM‰‰r‰() * getHinta();
+      return result;
+   }
+
+   public double getALVnOsuus()
+   {
+      double result = getVerollinenHinta() - getVerotonHinta();
+      return result;
    }
 
 }

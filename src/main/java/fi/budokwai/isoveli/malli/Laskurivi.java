@@ -91,4 +91,14 @@ public class Laskurivi
    {
       this.luotu = luotu;
    }
+
+   public Sopimus getSopimus()
+   {
+      return sopimus;
+   }
+
+   public void setSopimus(Sopimus sopimus)
+   {
+      this.sopimus = sopimus;
+   }
 }

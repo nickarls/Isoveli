@@ -1,11 +1,79 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:ace="http://www.icefaces.org/icefaces/components">
-	<ace:dataTable value="#{maksetut}" var="_lasku" selectionMode="single"
-		stateMap="#{laskutusAdmin.maksetutRSM}" rows="10" rowSelectListener="#{laskutusAdmin.laskuValittu}">
+	<ace:dataTable value="#{maksetut}" var="_lasku" selectionMode="single" stateMap="#{laskutusAdmin.maksetutRSM}"
+		rows="10" rowSelectListener="#{laskutusAdmin.laskuValittu}">
+		<ace:column>
+			<ace:expansionToggler />
+		</ace:column>
 		<ace:column headerText="Harrastaja">
 			<h:outputText value="#{_lasku.harrastaja.nimi}" />
 		</ace:column>
+		<ace:column headerText="Luotu">
+			<h:outputText value="#{_lasku.luotu}">
+				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Eräpäivä">
+			<h:outputText value="#{_lasku.eräpäivä}">
+				<f:convertDateTime pattern="dd.MM.yyyy" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Maksettu">
+			<h:outputText value="#{_lasku.maksettu}">
+				<f:convertDateTime pattern="dd.MM.yyyy" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Tila">
+			<h:outputText value="#{_lasku.tila.nimi}" />
+		</ace:column>
+		<ace:column headerText="Laskurivejä">
+			<h:outputText value="#{_lasku.laskurivejä}" />
+		</ace:column>
+		<ace:column headerText="Summa">
+			<h:outputText value="#{_lasku.yhteishinta}">
+				<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
+			</h:outputText>
+		</ace:column>
+		<ace:panelExpansion>
+			<ace:dataTable rows="10" value="#{_lasku.laskurivit}" var="_laskurivi">
+				<ace:column headerText="#">
+					<h:outputText value="#{_laskurivi.rivinumero}" />
+				</ace:column>
+				<ace:column headerText="Tuotekoodi">
+					<h:outputText value="#{_laskurivi.sopimus.tyyppi.tuotekoodi}" />
+				</ace:column>
+				<ace:column headerText="Tuotenimi">
+					<h:outputText value="#{_laskurivi.sopimus.tuotenimi}" />
+				</ace:column>
+				<ace:column headerText="Määrä">
+					<h:outputText value="#{_laskurivi.sopimus.tyyppi.määrä}" />
+				</ace:column>
+				<ace:column headerText="Yksikkö">
+					<h:outputText value="#{_laskurivi.sopimus.tyyppi.yksikkö}" />
+				</ace:column>
+				<ace:column headerText="Verokanta">
+					<h:outputText value="ALV#{_laskurivi.sopimus.tyyppi.verokanta}" />
+				</ace:column>
+				<ace:column headerText="Verollinen hinta">
+					<h:outputText value="#{_laskurivi.sopimus.tyyppi.verollinenHinta}">
+						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
+					</h:outputText>
+				</ace:column>
+				<ace:column headerText="Veroton hinta">
+					<h:outputText value="#{_laskurivi.sopimus.tyyppi.verotonHinta}">
+						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
+					</h:outputText>
+				</ace:column>
+				<ace:column headerText="ALVn osuus">
+					<h:outputText value="#{_laskurivi.sopimus.tyyppi.ALVnOsuus}">
+						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
+					</h:outputText>
+				</ace:column>
+
+			</ace:dataTable>
+		</ace:panelExpansion>
+
 	</ace:dataTable>
 
 </ui:composition>

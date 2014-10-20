@@ -1,6 +1,8 @@
 package fi.budokwai.isoveli.admin;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
@@ -15,6 +17,7 @@ import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
 import fi.budokwai.isoveli.malli.Lasku;
+import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.util.Util;
 
@@ -35,6 +38,24 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    private List<Lasku> maksamattomat;
    private List<Lasku> myöhästyneet;
    private List<Lasku> maksetut;
+
+   public void laskutaSopimukset()
+   {
+      List<Sopimus> laskuttamattomatSopimukset = entityManager.createNamedQuery("laskuttamattomat_sopimukset",
+         Sopimus.class).getResultList();
+      Map<Osoite, List<Sopimus>> sopimuksetPerOsoite = laskuttamattomatSopimukset.stream().collect(
+         Collectors.groupingBy(sopimus -> sopimus.getHarrastaja().isAlaikäinen() ? sopimus.getHarrastaja().getOsoite()
+            : sopimus.getHarrastaja().getPerhe().getOsoite()));
+      sopimuksetPerOsoite.keySet().forEach(osoite -> {
+         List<Sopimus> sopimukset = sopimuksetPerOsoite.get(osoite);
+         Lasku lasku = new Lasku(sopimukset);
+         entityManager.persist(lasku);
+         sopimukset.forEach(sopimus -> {
+            entityManager.persist(sopimus);
+         });
+         entityManager.flush();
+      });
+   }
 
    @Produces
    @Named

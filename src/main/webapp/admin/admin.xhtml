@@ -37,12 +37,17 @@
 .capitalized {
 	text-transform: capitalize;
 }
+
+.ui-datatable-odd {
+	background-color: #e0e0e0 !important;
+	background-position-y: -1400px; /* IE7 hack */
+}
 </style>
 </h:head>
 <h:body>
 	<f:view>
 		<h:form id="form">
-			<h:commandButton value="X" action="#{harrastajaAdmin.laskutaSopimukset}"/>
+			<h:commandButton value="X" action="#{laskutusAdmin.laskutaSopimukset}" />
 			<ace:tabSet>
 				<ace:tabPane label="Harrastajat">
 					<ui:include src="harrastajat/harrastajat.xhtml" />

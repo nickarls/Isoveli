@@ -11,6 +11,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,9 +24,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import fi.budokwai.isoveli.util.Util;
+
 @Entity
 @NamedQueries(
-{ @NamedQuery(name = "maksamattomat_laskut", query = "select l from Lasku l where l.maksettu is null and l.eräpäivä > :tänään order by l.eräpäivä desc"),
+{
+      @NamedQuery(name = "maksamattomat_laskut", query = "select l from Lasku l where l.maksettu is null and l.eräpäivä >= :tänään order by l.eräpäivä desc"),
       @NamedQuery(name = "maksetut_laskut", query = "select l from Lasku l where l.maksettu is not null order by l.maksettu desc"),
       @NamedQuery(name = "myöhästyneet_laskut", query = "select l from Lasku l where l.maksettu is null and l.eräpäivä < :tänään order by l.eräpäivä desc") })
 public class Lasku
@@ -35,6 +40,9 @@ public class Lasku
 
    @OneToMany(mappedBy = "lasku", cascade = CascadeType.ALL, orphanRemoval = true)
    private List<Laskurivi> laskurivit = new ArrayList<Laskurivi>();
+
+   @Enumerated(EnumType.STRING)
+   private TilausTila tila = TilausTila.A;
 
    @Temporal(TemporalType.DATE)
    @Column(name = "erapaiva")
@@ -66,10 +74,15 @@ public class Lasku
       });
    }
 
+   public int getLaskurivejä()
+   {
+      return laskurivit.size();
+   }
+
    private Date haeEräpäivä(int päiviä)
    {
       LocalDate nyt = LocalDateTime.now().toLocalDate();
-      nyt.plus(päiviä, ChronoUnit.DAYS);
+      nyt = nyt.plus(päiviä, ChronoUnit.DAYS);
       return Date.from(nyt.atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant());
    }
 
@@ -113,7 +126,7 @@ public class Lasku
       this.maksettu = maksettu;
    }
 
-   public boolean isMaksettu()
+   public boolean isLaskuMaksettu()
    {
       return maksettu != null;
    }
@@ -148,4 +161,40 @@ public class Lasku
       this.eräpäivä = eräpäivä;
    }
 
+   public TilausTila getTila()
+   {
+      return tila;
+   }
+
+   public void setTila(TilausTila tila)
+   {
+      this.tila = tila;
+   }
+
+   public void merkkaaMitätöidyksi()
+   {
+      tila = TilausTila.X;
+   }
+
+   public void merkkaaMaksetuksi()
+   {
+      maksettu = new Date();
+      tila = TilausTila.M;
+   }
+
+   public void merkkaaAvoimeksi()
+   {
+      maksettu = null;
+      tila = TilausTila.A;
+   }
+
+   public long getPäiviäMyöhässä()
+   {
+      return Util.getPäiviäVälissä(eräpäivä);
+   }
+
+   public long getPäiviäEräpäivään()
+   {
+      return Util.getPäiviäVälissä(eräpäivä);
+   }
 }

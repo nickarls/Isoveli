@@ -6,6 +6,35 @@
 		<ace:column headerText="Harrastaja">
 			<h:outputText value="#{_lasku.harrastaja.nimi}" />
 		</ace:column>
+		<ace:column headerText="Luotu">
+			<h:outputText value="#{_lasku.luotu}">
+				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Eräpäivä">
+			<h:outputText value="#{_lasku.eräpäivä}">
+				<f:convertDateTime pattern="dd.MM.yyyy" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Jäljellä">
+			<h:outputText value="#{_lasku.päiviäEräpäivään}" />
+		</ace:column>		
+		<ace:column headerText="Maksettu">
+			<h:outputText value="#{_lasku.maksettu}">
+				<f:convertDateTime pattern="dd.MM.yyyy" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Tila">
+			<h:outputText value="#{_lasku.tila.nimi}" />
+		</ace:column>
+		<ace:column headerText="Laskurivejä">
+			<h:outputText value="#{_lasku.laskurivejä}" />
+		</ace:column>
+		<ace:column headerText="Summa">
+			<h:outputText value="#{_lasku.yhteishinta}">
+				<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
+			</h:outputText>
+		</ace:column>
 	</ace:dataTable>
 
 </ui:composition>

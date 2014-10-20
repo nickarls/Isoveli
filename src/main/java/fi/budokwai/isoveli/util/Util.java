@@ -1,8 +1,11 @@
 package fi.budokwai.isoveli.util;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 public class Util
@@ -44,4 +47,13 @@ public class Util
       }
       return tulos.toString();
    }
+
+   public static long getP‰ivi‰V‰liss‰(Date er‰p‰iv‰)
+   {
+      LocalDate nyt = LocalDateTime.now().toLocalDate().atStartOfDay().toLocalDate();
+      LocalDate sitten = LocalDateTime.ofInstant(Instant.ofEpochMilli(er‰p‰iv‰.getTime()), ZoneId.systemDefault())
+         .toLocalDate().atStartOfDay().toLocalDate();
+      return ChronoUnit.DAYS.between(nyt, sitten);
+   }
+
 }

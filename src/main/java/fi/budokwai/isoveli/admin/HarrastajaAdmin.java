@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
@@ -33,7 +31,6 @@ import org.icefaces.ace.model.table.RowStateMap;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.JäljelläVyökokeeseen;
-import fi.budokwai.isoveli.malli.Lasku;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Rooli;
@@ -459,21 +456,4 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       this.harrastajaRSM = harrastajaRSM;
    }
 
-   public void laskutaSopimukset()
-   {
-      List<Sopimus> laskuttamattomatSopimukset = entityManager.createNamedQuery("laskuttamattomat_sopimukset",
-         Sopimus.class).getResultList();
-      Map<Osoite, List<Sopimus>> sopimuksetPerOsoite = laskuttamattomatSopimukset.stream().collect(
-         Collectors.groupingBy(sopimus -> sopimus.getHarrastaja().isAlaikäinen() ? sopimus.getHarrastaja().getOsoite()
-            : sopimus.getHarrastaja().getPerhe().getOsoite()));
-      sopimuksetPerOsoite.keySet().forEach(osoite -> {
-         List<Sopimus> sopimukset = sopimuksetPerOsoite.get(osoite);
-         Lasku lasku = new Lasku(sopimukset);
-         entityManager.persist(lasku);
-         sopimukset.forEach(sopimus -> {
-            entityManager.persist(sopimus);
-         });
-         entityManager.flush();
-      });
-   }
 }

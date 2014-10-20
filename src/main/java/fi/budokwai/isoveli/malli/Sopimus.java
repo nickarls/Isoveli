@@ -9,12 +9,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@NamedQuery(name = "laskuttamattomat_sopimukset", query = "select s from Sopimus s where s.tyyppi.laskutettava='K' and s.laskurivi is null")
 public class Sopimus
 {
    @Id
@@ -29,6 +31,10 @@ public class Sopimus
    @JoinColumn(name = "tyyppi")
    @NotNull
    private Sopimustyyppi tyyppi;
+
+   @OneToOne(optional = true)
+   @JoinColumn(name = "laskurivi")
+   private Laskurivi laskurivi;
 
    @Temporal(TemporalType.DATE)
    private Date umpeutuu;
@@ -127,6 +133,21 @@ public class Sopimus
          return true;
       }
       return umpeutuu.after(new Date());
+   }
+
+   public String getTuotenimi()
+   {
+      return String.format("%s (%s)", tyyppi.getNimi(), harrastaja.getEtunimi());
+   }
+
+   public Laskurivi getLaskurivi()
+   {
+      return laskurivi;
+   }
+
+   public void setLaskurivi(Laskurivi laskurivi)
+   {
+      this.laskurivi = laskurivi;
    }
 
 }

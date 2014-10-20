@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
@@ -14,6 +15,7 @@ import fi.budokwai.isoveli.KylläEiTyyppi;
 
 @Entity
 @TypeDef(name = "KylläEi", typeClass = KylläEiTyyppi.class)
+@NamedQuery(name = "sähköpostilistalla", query = "select h from Henkilö h where h.yhteystiedot.sähköpostilistalla='K'")
 public class Yhteystieto
 {
    @Id

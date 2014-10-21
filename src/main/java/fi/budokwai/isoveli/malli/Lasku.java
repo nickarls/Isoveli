@@ -58,6 +58,10 @@ public class Lasku
    @Temporal(TemporalType.TIMESTAMP)
    private Date luotu = new Date();
 
+   @OneToOne(optional = true)
+   @JoinColumn(name = "pdf")
+   private BlobData pdf;
+   
    public Lasku()
    {
    }
@@ -196,5 +200,15 @@ public class Lasku
    public long getP‰ivi‰Er‰p‰iv‰‰n()
    {
       return Util.getP‰ivi‰V‰liss‰(er‰p‰iv‰);
+   }
+
+   public BlobData getPdf()
+   {
+      return pdf;
+   }
+
+   public void setPdf(BlobData pdf)
+   {
+      this.pdf = pdf;
    }
 }

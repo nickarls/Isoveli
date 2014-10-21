@@ -2,10 +2,16 @@ package fi.budokwai.isoveli;
 
 public class IsoveliPoikkeus extends RuntimeException
 {
-   public IsoveliPoikkeus(String message, Exception e)
+   private static final long serialVersionUID = 1L;
+
+   public IsoveliPoikkeus(String viesti, Exception e)
    {
-      super(message, e);
+      super(viesti, e);
    }
 
-   private static final long serialVersionUID = 1L;
+   public IsoveliPoikkeus(String viesti)
+   {
+      super(viesti);
+   }
+
 }

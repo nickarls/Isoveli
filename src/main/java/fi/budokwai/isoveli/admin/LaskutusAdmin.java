@@ -1,6 +1,5 @@
 package fi.budokwai.isoveli.admin;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -20,14 +19,13 @@ import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
 import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfStamper;
 
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.BlobData;
 import fi.budokwai.isoveli.malli.Lasku;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Sopimus;
+import fi.budokwai.isoveli.util.Lasku2PDF;
 import fi.budokwai.isoveli.util.Util;
 
 @Stateful
@@ -85,12 +83,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
          throw new IsoveliPoikkeus("Laskumallia ei löytynyt");
       }
       byte[] malli = mallit.get().getTieto();
-      PdfReader lukija = new PdfReader(malli);
-      ByteArrayOutputStream tulos = new ByteArrayOutputStream();
-      PdfStamper kirjoittaja = new PdfStamper(lukija, tulos);
-      kirjoittaja.close();
-      lukija.close();
-      return tulos.toByteArray();
+      return Lasku2PDF.muodosta(malli, lasku);
    }
 
    @Produces

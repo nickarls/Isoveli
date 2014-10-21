@@ -3,13 +3,9 @@ package fi.budokwai.isoveli.util;
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
+import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import java.util.Locale;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Font;
@@ -32,9 +28,11 @@ public class Lasku2PDF
       ByteArrayOutputStream tulos = new ByteArrayOutputStream();
       PdfStamper kirjoittaja = new PdfStamper(lukija, tulos);
       PdfContentByte kangas = kirjoittaja.getOverContent(1);
-      teeLaskurivit(lasku.getLaskurivit()).writeSelectedRows(0, 0, 100, 100, kangas);
-      kirjoittaja.close();
+      PdfPTable taulu = teeLaskurivit(lasku.getLaskurivit());
+      taulu.writeSelectedRows(0, -1, 20, 500 + taulu.getTotalHeight(), kangas);
+      kirjoittaja.getWriter().add(teeLaskurivit(lasku.getLaskurivit()));
       lukija.close();
+      kirjoittaja.close();
       return tulos.toByteArray();
    }
 
@@ -43,8 +41,10 @@ public class Lasku2PDF
       String[] otsikot = new String[]
       { "#", "Tuotenimi", "Tuotekoodi", "Määrä", "Yksikkö", "Verokanta", "Veroton hinta", "ALVn osuus",
             "Verollinen hinta" };
-      PdfPTable taulukko = new PdfPTable(otsikot.length);
-      taulukko.setTotalWidth(500f);
+      PdfPTable taulukko = new PdfPTable(new float[]
+      { 1, 3, 2, 2, 2, 2, 2, 2, 2 });
+      taulukko.setWidthPercentage(100f);
+      taulukko.setTotalWidth(550f);
       kirjoitaOtsikot(taulukko, otsikot);
       taulukko.setHeaderRows(1);
       kirjoitaLaskurivit(taulukko, laskurivit);
@@ -54,8 +54,8 @@ public class Lasku2PDF
 
    private static void kirjoitaOtsikot(PdfPTable taulukko, String[] otsikot)
    {
-      taulukko.getDefaultCell().setBackgroundColor(Color.RED);
-      Font fontti = FontFactory.getFont("Arial", 16, Font.BOLD);
+      taulukko.getDefaultCell().setBackgroundColor(Color.LIGHT_GRAY);
+      Font fontti = FontFactory.getFont("Arial", 10, Font.BOLD);
       for (String otsikko : otsikot)
       {
          taulukko.addCell(new Phrase(otsikko, fontti));
@@ -72,7 +72,8 @@ public class Lasku2PDF
 
    private static void kirjoitaLaskurivi(PdfPTable taulukko, Laskurivi laskurivi)
    {
-      Font fontti = FontFactory.getFont("Arial", 12);
+      taulukko.getDefaultCell().setBackgroundColor(Color.WHITE);
+      Font fontti = FontFactory.getFont("Arial", 10);
       Sopimustyyppi tyyppi = laskurivi.getSopimus().getTyyppi();
       taulukko.addCell(new Phrase(laskurivi.getRivinumero() + "", fontti));
       taulukko.addCell(new Phrase(tyyppi.getNimi(), fontti));
@@ -80,9 +81,14 @@ public class Lasku2PDF
       taulukko.addCell(new Phrase(tyyppi.getMäärä() + "", fontti));
       taulukko.addCell(new Phrase(tyyppi.getYksikkö(), fontti));
       taulukko.addCell(new Phrase("ALV" + tyyppi.getVerokanta(), fontti));
-      taulukko.addCell(new Phrase(tyyppi.getVerotonHinta() + "e", fontti));
-      taulukko.addCell(new Phrase(tyyppi.getALVnOsuus() + "e", fontti));
-      taulukko.addCell(new Phrase(tyyppi.getVerollinenHinta() + "e", fontti));
+      taulukko.addCell(new Phrase(hinta(tyyppi.getVerotonHinta()), fontti));
+      taulukko.addCell(new Phrase(hinta(tyyppi.getALVnOsuus()), fontti));
+      taulukko.addCell(new Phrase(hinta(tyyppi.getVerollinenHinta()), fontti));
+   }
+
+   private static String hinta(double hinta)
+   {
+      return DecimalFormat.getCurrencyInstance(Locale.GERMANY).format(hinta);
    }
 
 }

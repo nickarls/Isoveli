@@ -58,13 +58,14 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       sopimuksetPerOsoite.keySet().forEach(osoite -> {
          List<Sopimus> sopimukset = sopimuksetPerOsoite.get(osoite);
          Lasku lasku = new Lasku(sopimukset);
+         entityManager.persist(lasku);
          byte[] pdf = null;
          try
          {
             pdf = teePdfLasku(lasku);
          } catch (Exception e)
          {
-            throw new IsoveliPoikkeus("Laskun luonti epäonnistui");
+            throw new IsoveliPoikkeus("Laskun luonti epäonnistui", e);
          }
          lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), pdf));
          entityManager.persist(lasku);
@@ -78,7 +79,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    private byte[] teePdfLasku(Lasku lasku) throws IOException, DocumentException
    {
       Optional<BlobData> mallit = entityManager.createNamedQuery("blobdata", BlobData.class)
-         .setParameter("nimi", "laskumali").getResultList().stream().findFirst();
+         .setParameter("nimi", "laskupohja").getResultList().stream().findFirst();
       if (!mallit.isPresent())
       {
          throw new IsoveliPoikkeus("Laskumallia ei löytynyt");

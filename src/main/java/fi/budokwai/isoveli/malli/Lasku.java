@@ -58,10 +58,10 @@ public class Lasku
    @Temporal(TemporalType.TIMESTAMP)
    private Date luotu = new Date();
 
-   @OneToOne(optional = true)
+   @OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
    @JoinColumn(name = "pdf")
    private BlobData pdf;
-   
+
    public Lasku()
    {
    }

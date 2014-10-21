@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 import fi.budokwai.isoveli.api.BlobLataus;
 
 @Entity
-@NamedQuery(name = "blob", query = "select b from BlobData b where b.nimi=:nimi")
+@NamedQuery(name = "blobdata", query = "select b from BlobData b where b.nimi=:nimi")
 public class BlobData
 {
    public static BlobData PDF(String nimi, byte[] data)

@@ -18,7 +18,7 @@
 		</ace:column>
 		<ace:column headerText="Jäljellä">
 			<h:outputText value="#{_lasku.päiviäEräpäivään}" />
-		</ace:column>		
+		</ace:column>
 		<ace:column headerText="Maksettu">
 			<h:outputText value="#{_lasku.maksettu}">
 				<f:convertDateTime pattern="dd.MM.yyyy" />
@@ -34,6 +34,11 @@
 			<h:outputText value="#{_lasku.yhteishinta}">
 				<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 			</h:outputText>
+		</ace:column>
+		<ace:column>
+			<h:outputLink target="_blank" value="#{request.contextPath}/API/blob/lataa/#{_lasku.pdf.id}">
+				<h:graphicImage value="/kuvat/pdf.png" style="width:32px" />
+			</h:outputLink>
 		</ace:column>
 	</ace:dataTable>
 

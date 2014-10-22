@@ -90,14 +90,19 @@ public class Lasku
       return Date.from(nyt.atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant());
    }
 
-   public double getYhteishinta()
+   public double getVerotonHinta()
    {
-      return laskurivit.stream().mapToDouble((lr) -> lr.getRivihinta()).sum();
+      return laskurivit.stream().mapToDouble((lr) -> lr.getVerotonHinta()).sum();
    }
 
-   public double getYhteisAlv()
+   public double getALVnOsuus()
    {
-      return laskurivit.stream().mapToDouble((lr) -> lr.getAlv()).sum();
+      return laskurivit.stream().mapToDouble((lr) -> lr.getALVnOsuus()).sum();
+   }
+
+   public double getVerollinenHinta()
+   {
+      return laskurivit.stream().mapToDouble((lr) -> lr.getVerollinenHinta()).sum();
    }
 
    public int getId()

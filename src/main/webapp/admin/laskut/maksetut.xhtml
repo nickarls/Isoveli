@@ -31,7 +31,7 @@
 			<h:outputText value="#{_lasku.laskurivejä}" />
 		</ace:column>
 		<ace:column headerText="Summa">
-			<h:outputText value="#{_lasku.yhteishinta}">
+			<h:outputText value="#{_lasku.verollinenHinta}">
 				<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 			</h:outputText>
 		</ace:column>
@@ -55,11 +55,6 @@
 				<ace:column headerText="Verokanta">
 					<h:outputText value="ALV#{_laskurivi.sopimus.tyyppi.verokanta}" />
 				</ace:column>
-				<ace:column headerText="Verollinen hinta">
-					<h:outputText value="#{_laskurivi.sopimus.tyyppi.verollinenHinta}">
-						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
-					</h:outputText>
-				</ace:column>
 				<ace:column headerText="Veroton hinta">
 					<h:outputText value="#{_laskurivi.sopimus.tyyppi.verotonHinta}">
 						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
@@ -70,7 +65,11 @@
 						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 					</h:outputText>
 				</ace:column>
-
+				<ace:column headerText="Verollinen hinta">
+					<h:outputText value="#{_laskurivi.sopimus.tyyppi.verollinenHinta}">
+						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
+					</h:outputText>
+				</ace:column>
 			</ace:dataTable>
 		</ace:panelExpansion>
 

@@ -42,14 +42,19 @@ public class Laskurivi
       sopimus.setLaskurivi(this);
    }
 
-   public double getRivihinta()
-   {
-      return sopimus.getTyyppi().getVerollinenHinta();
-   }
-
-   public double getAlv()
+   public double getVerotonHinta()
    {
       return sopimus.getTyyppi().getVerotonHinta();
+   }
+
+   public double getALVnOsuus()
+   {
+      return sopimus.getTyyppi().getALVnOsuus();
+   }
+
+   public double getVerollinenHinta()
+   {
+      return sopimus.getTyyppi().getVerollinenHinta();
    }
 
    public int getId()

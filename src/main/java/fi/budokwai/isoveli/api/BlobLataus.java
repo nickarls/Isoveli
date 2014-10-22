@@ -15,8 +15,8 @@ public class BlobLataus
    @PartType("application/octet-stream")
    private byte[] tieto;
 
-//   @FormParam("id")
-   private int id;
+   @FormParam("id")
+   private String id;
 
    @FormParam("tyyppi")
    private String tyyppi;
@@ -44,12 +44,12 @@ public class BlobLataus
       this.tyyppi = tyyppi;
    }
 
-   public int getId()
+   public String getId()
    {
       return id;
    }
 
-   public void setId(int id)
+   public void setId(String id)
    {
       this.id = id;
    }

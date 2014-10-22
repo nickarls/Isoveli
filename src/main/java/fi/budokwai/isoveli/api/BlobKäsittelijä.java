@@ -29,6 +29,13 @@ public class BlobKäsittelijä
    public Response tallennaKuva(@MultipartForm BlobLataus blobLataus)
    {
       BlobData blobData = new BlobData(blobLataus);
+      if (blobLataus.getId() != null)
+      {
+         blobData = entityManager.find(BlobData.class, Integer.valueOf(blobLataus.getId()));
+         blobData.setNimi(blobData.getNimi());
+         blobData.setTyyppi(blobData.getTyyppi());
+         blobData.setTieto(blobLataus.getTieto());
+      }
       entityManager.persist(blobData);
       return Response.status(200).entity("OK").build();
    }

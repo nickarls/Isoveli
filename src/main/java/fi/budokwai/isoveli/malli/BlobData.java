@@ -50,7 +50,7 @@ public class BlobData
 
    public BlobData(BlobLataus blobLataus)
    {
-      id = blobLataus.getId();
+      id = Integer.valueOf(blobLataus.getId());
       nimi = blobLataus.getNimi();
       tyyppi = Tiedostotyyppi.valueOf(blobLataus.getTyyppi());
       tieto = blobLataus.getTieto();

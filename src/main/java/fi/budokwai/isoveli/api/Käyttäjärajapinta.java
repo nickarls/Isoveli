@@ -1,6 +1,5 @@
 package fi.budokwai.isoveli.api;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -9,8 +8,6 @@ import javax.persistence.PersistenceContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-
-import com.lowagie.text.DocumentException;
 
 import fi.budokwai.isoveli.malli.BlobData;
 import fi.budokwai.isoveli.malli.Henkilö;
@@ -39,11 +36,11 @@ public class Käyttäjärajapinta
    @GET
    @Path("/l")
    @Produces("application/pdf")
-   public byte[] l() throws DocumentException, IOException
+   public byte[] l() throws Exception
    {
       Lasku l = entityManager.find(Lasku.class, 1);
       byte[] m = entityManager.find(BlobData.class, 1).getTieto();
-      return Lasku2PDF.muodosta(m, l);
+      return new Lasku2PDF(m, l).muodosta();
    }
 
 }

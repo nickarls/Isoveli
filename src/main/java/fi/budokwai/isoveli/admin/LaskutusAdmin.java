@@ -1,6 +1,5 @@
 package fi.budokwai.isoveli.admin;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,8 +16,6 @@ import javax.persistence.PersistenceContextType;
 
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
-
-import com.lowagie.text.DocumentException;
 
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.BlobData;
@@ -74,7 +71,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       });
    }
 
-   private byte[] teePdfLasku(Lasku lasku) throws IOException, DocumentException
+   private byte[] teePdfLasku(Lasku lasku) throws Exception
    {
       Optional<BlobData> mallit = entityManager.createNamedQuery("blobdata", BlobData.class)
          .setParameter("nimi", "laskupohja").getResultList().stream().findFirst();
@@ -83,7 +80,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
          throw new IsoveliPoikkeus("Laskumallia ei löytynyt");
       }
       byte[] malli = mallit.get().getTieto();
-      return Lasku2PDF.muodosta(malli, lasku);
+      return new Lasku2PDF(malli, lasku).muodosta();
    }
 
    @Produces

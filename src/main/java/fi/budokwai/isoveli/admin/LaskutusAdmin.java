@@ -93,6 +93,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
          entityManager.flush();
       });
       haeLaskuttamattomat();
+      info("Muodosti %d sopimuksesta %d laskua", laskuttamattomatSopimukset.size(), sopimuksetPerOsoite.keySet().size());
    }
 
    private byte[] teePdfLasku(Lasku lasku) throws Exception

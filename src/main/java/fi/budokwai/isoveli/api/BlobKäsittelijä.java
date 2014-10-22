@@ -29,7 +29,7 @@ public class BlobKäsittelijä
    public Response tallennaKuva(@MultipartForm BlobLataus blobLataus)
    {
       BlobData blobData = new BlobData(blobLataus);
-      if (blobLataus.getId() != null)
+      if (blobLataus.isIdKäytössä())
       {
          blobData = entityManager.find(BlobData.class, Integer.valueOf(blobLataus.getId()));
          blobData.setNimi(blobData.getNimi());

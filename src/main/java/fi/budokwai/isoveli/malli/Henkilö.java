@@ -66,7 +66,9 @@ public class Henkilö
    @Size(max = 50)
    protected String salasana;
 
-   protected byte[] kuva;
+   @OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
+   @JoinColumn(name = "kuva")
+   protected BlobData kuva;
 
    @Type(type = "KylläEi")
    protected boolean arkistoitu;
@@ -144,16 +146,6 @@ public class Henkilö
       this.salasana = salasana;
    }
 
-   public byte[] getKuva()
-   {
-      return kuva;
-   }
-
-   public void setKuva(byte[] kuva)
-   {
-      this.kuva = kuva;
-   }
-
    public List<Rooli> getRoolit()
    {
       return roolit;
@@ -204,7 +196,7 @@ public class Henkilö
 
    public boolean isKuvallinen()
    {
-      return kuva != null && kuva.length > 0;
+      return kuva != null;
    }
 
    public boolean isTallentamaton()
@@ -215,6 +207,16 @@ public class Henkilö
    public boolean isPoistettavissa()
    {
       return id > 0;
+   }
+
+   public void setKuva(BlobData kuva)
+   {
+      this.kuva = kuva;
+   }
+
+   public BlobData getKuva()
+   {
+      return kuva;
    }
 
 }

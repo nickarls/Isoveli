@@ -20,6 +20,11 @@ public class BlobData
       return new BlobData(nimi, data, Tiedostotyyppi.PDF);
    }
 
+   public static BlobData ZIP(String nimi, byte[] data)
+   {
+      return new BlobData(nimi, data, Tiedostotyyppi.ZIP);
+   }
+
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
@@ -50,7 +55,10 @@ public class BlobData
 
    public BlobData(BlobLataus blobLataus)
    {
-      id = Integer.valueOf(blobLataus.getId());
+      if (blobLataus.isIdKäytössä())
+      {
+         id = Integer.valueOf(blobLataus.getId());
+      }
       nimi = blobLataus.getNimi();
       tyyppi = Tiedostotyyppi.valueOf(blobLataus.getTyyppi());
       tieto = blobLataus.getTieto();

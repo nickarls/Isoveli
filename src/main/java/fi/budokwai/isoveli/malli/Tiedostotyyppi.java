@@ -2,7 +2,7 @@ package fi.budokwai.isoveli.malli;
 
 public enum Tiedostotyyppi
 {
-   PDF("PDF", "application/pdf"), PNG("PNG", "image/png");
+   PDF("PDF", "application/pdf"), JPG("JPG", "image/jpg"), PNG("PNG", "image/png"), ZIP("ZIP", "application/zip");
 
    private String tyyppi;
    private String mimetyyppi;

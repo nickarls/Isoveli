@@ -64,4 +64,9 @@ public class BlobLataus
       this.nimi = nimi;
    }
 
+   public boolean isIdKäytössä()
+   {
+      return id != null && !"".equals(id);
+   }
+
 }

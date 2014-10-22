@@ -1,39 +1,59 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:ace="http://www.icefaces.org/icefaces/components">
-	<ace:dataTable value="#{maksetut}" var="_lasku" selectionMode="single" stateMap="#{laskutusAdmin.maksetutRSM}"
-		rows="10" rowSelectListener="#{laskutusAdmin.laskuValittu}">
+	<ace:confirmationDialog id="vahvistaLaskunPoisto" message="Oletko varma?" header="Vahvista" width="350"
+		height="200" closable="true" position="center">
+		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
+			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaLaskunPoisto').hide()"
+				action="#{laskutusAdmin.piilotaLasku}" actionListener="#{laskutusAdmin.poistaLasku}" />
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaLaskunPoisto').hide()" />
+		</h:panelGrid>
+	</ace:confirmationDialog>	<ace:dataTable value="#{laskut}" var="_lasku" selectionMode="single" stateMap="#{laskutusAdmin.laskuRSM}" rows="10"
+		rowSelectListener="#{laskutusAdmin.laskuValittu}">
 		<ace:column>
 			<ace:expansionToggler />
 		</ace:column>
-		<ace:column headerText="Harrastaja">
+		<ace:column headerText="Harrastaja" filterBy="#{_lasku.harrastaja.nimi}" filterMatchMode="contains"
+			sortBy="#{_lasku.harrastaja.nimi}">
 			<h:outputText value="#{_lasku.harrastaja.nimi}" />
 		</ace:column>
-		<ace:column headerText="Luotu">
+		<ace:column headerText="Luotu" filterBy="#{_lasku.luotu}" filterMatchMode="contains" sortBy="#{_lasku.luotu}">
 			<h:outputText value="#{_lasku.luotu}">
 				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Eräpäivä">
+		<ace:column headerText="Eräpäivä" filterBy="#{_lasku.eräpäivä}" filterMatchMode="contains" sortBy="#{_lasku.eräpäivä}">
 			<h:outputText value="#{_lasku.eräpäivä}">
 				<f:convertDateTime pattern="dd.MM.yyyy" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Maksettu">
+		<ace:column headerText="Maksettu" filterBy="#{_lasku.maksettu}" filterMatchMode="contains" sortBy="#{_lasku.maksettu}">
 			<h:outputText value="#{_lasku.maksettu}">
 				<f:convertDateTime pattern="dd.MM.yyyy" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Tila">
+		<ace:column headerText="Maksuaikaa" filterBy="#{_lasku.maksuaikaa}" filterMatchMode="contains"
+			sortBy="#{_lasku.maksuaikaa}">
+			<h:outputText value="#{_lasku.maksuaikaa}" style="color:#{_lasku.maksuaikaa &lt; 0 ? 'red' : 'green'}" />
+		</ace:column>
+
+		<ace:column headerText="Tila" filterBy="#{_lasku.tila}" filterOptions="#{tilasuodatukset}">
 			<h:outputText value="#{_lasku.tila.nimi}" />
 		</ace:column>
-		<ace:column headerText="Laskurivejä">
+		<ace:column headerText="Laskurivejä" filterBy="#{_lasku.laskurivejä}" filterMatchMode="contains"
+			sortBy="#{_lasku.laskurivejä}">
 			<h:outputText value="#{_lasku.laskurivejä}" />
 		</ace:column>
-		<ace:column headerText="Summa">
+		<ace:column headerText="Summa" filterBy="#{_lasku.verollinenHinta}" filterMatchMode="contains"
+			sortBy="#{_lasku.verollinenHinta}">
 			<h:outputText value="#{_lasku.verollinenHinta}">
 				<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 			</h:outputText>
+		</ace:column>
+		<ace:column>
+			<h:outputLink target="_blank" value="#{request.contextPath}/API/blob/lataa/#{_lasku.pdf.id}" rendered="#{_lasku.pdf != null}">
+				<h:graphicImage value="/kuvat/pdf.png" style="width:24px"/>
+			</h:outputLink>
 		</ace:column>
 		<ace:panelExpansion>
 			<ace:dataTable rows="10" value="#{_lasku.laskurivit}" var="_laskurivi">
@@ -72,7 +92,7 @@
 				</ace:column>
 			</ace:dataTable>
 		</ace:panelExpansion>
-
 	</ace:dataTable>
-
+	<h:commandButton rendered="#{lasku != null}" value="x" styleClass="ikoni" onclick="ice.ace.instance('form:vahvistaLaskunPoisto').show();"
+		image="/kuvat/poista.png" immediate="true" />
 </ui:composition>

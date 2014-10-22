@@ -1,14 +1,17 @@
 package fi.budokwai.isoveli.admin;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,7 +26,6 @@ import fi.budokwai.isoveli.malli.Lasku;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.util.Lasku2PDF;
-import fi.budokwai.isoveli.util.Util;
 
 @Stateful
 @SessionScoped
@@ -33,15 +35,36 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    @PersistenceContext(type = PersistenceContextType.EXTENDED)
    private EntityManager entityManager;
 
+   private RowStateMap laskuRSM = new RowStateMap();
    private RowStateMap laskuttamattomatRSM = new RowStateMap();
-   private RowStateMap maksamattomatRSM = new RowStateMap();
-   private RowStateMap myöhästyneetRSM = new RowStateMap();
-   private RowStateMap maksetutRSM = new RowStateMap();
-
    private List<Sopimus> laskuttamattomat;
-   private List<Lasku> maksamattomat;
-   private List<Lasku> myöhästyneet;
-   private List<Lasku> maksetut;
+   private List<Lasku> laskut;
+   private Lasku lasku;
+   private List<SelectItem> tilasuodatukset;
+
+   @PostConstruct
+   public void init()
+   {
+      tilasuodatukset = new ArrayList<SelectItem>();
+      tilasuodatukset.add(new SelectItem("", "Kaikki", "Kaikki", false, false, true));
+      tilasuodatukset.add(new SelectItem("A", "Avoin", "Avoin", false, false, false));
+      tilasuodatukset.add(new SelectItem("M", "Maksettu", "Maksettu", false, false, false));
+      tilasuodatukset.add(new SelectItem("X", "Mitätöity", "Mitätöity", false, false, false));
+   }
+
+   @Produces
+   @Named
+   public Lasku getLasku()
+   {
+      return lasku;
+   }
+
+   @Produces
+   @Named
+   public List<SelectItem> getTilasuodatukset()
+   {
+      return tilasuodatukset;
+   }
 
    public void laskutaSopimukset()
    {
@@ -69,6 +92,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
          });
          entityManager.flush();
       });
+      haeLaskuttamattomat();
    }
 
    private byte[] teePdfLasku(Lasku lasku) throws Exception
@@ -96,35 +120,18 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 
    @Produces
    @Named
-   public List<Lasku> getMyöhästyneet()
+   public List<Lasku> getLaskut()
    {
-      if (myöhästyneet == null)
+      if (laskut == null)
       {
-         haeMyöhästyneet();
+         haeLaskut();
       }
-      return myöhästyneet;
+      return laskut;
    }
 
-   @Produces
-   @Named
-   public List<Lasku> getMaksamattomat()
+   private void haeLaskut()
    {
-      if (maksamattomat == null)
-      {
-         haeMaksamattomat();
-      }
-      return maksamattomat;
-   }
-
-   @Produces
-   @Named
-   public List<Lasku> getMaksetut()
-   {
-      if (maksetut == null)
-      {
-         haeMaksetut();
-      }
-      return maksetut;
+      laskut = entityManager.createNamedQuery("laskut", Lasku.class).getResultList();
    }
 
    private void haeLaskuttamattomat()
@@ -132,21 +139,50 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       laskuttamattomat = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class).getResultList();
    }
 
-   private void haeMyöhästyneet()
+   public void tabiMuuttui(ValueChangeEvent e)
    {
-      myöhästyneet = entityManager.createNamedQuery("myöhästyneet_laskut", Lasku.class)
-         .setParameter("tänään", Util.tänään()).getResultList();
+      int uusiTabi = (int) e.getNewValue();
+      switch (uusiTabi)
+      {
+      case 0:
+         laskut = null;
+      case 1:
+         laskuttamattomat = null;
+      }
+      entityManager.clear();
    }
 
-   private void haeMaksamattomat()
+   public void laskuValittu(SelectEvent e)
    {
-      maksamattomat = entityManager.createNamedQuery("maksamattomat_laskut", Lasku.class)
-         .setParameter("tänään", Util.tänään()).getResultList();
+      lasku = (Lasku) e.getObject();
    }
 
-   private void haeMaksetut()
+   public void piilotaLasku()
    {
-      maksetut = entityManager.createNamedQuery("maksetut_laskut", Lasku.class).getResultList();
+      lasku = null;
+   }
+
+   public void poistaLasku()
+   {
+      lasku.getLaskurivit().forEach(l -> {
+         l.getSopimus().setLaskurivi(null);
+         l.setSopimus(null);
+         entityManager.persist(l);
+      });
+      entityManager.remove(lasku);
+      info("Lasku poistettu");
+      laskut = null;
+      haeLaskut();
+   }
+
+   public RowStateMap getLaskuRSM()
+   {
+      return laskuRSM;
+   }
+
+   public void setLaskuRSM(RowStateMap laskuRSM)
+   {
+      this.laskuRSM = laskuRSM;
    }
 
    public RowStateMap getLaskuttamattomatRSM()
@@ -157,55 +193,5 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public void setLaskuttamattomatRSM(RowStateMap laskuttamattomatRSM)
    {
       this.laskuttamattomatRSM = laskuttamattomatRSM;
-   }
-
-   public RowStateMap getMaksamattomatRSM()
-   {
-      return maksamattomatRSM;
-   }
-
-   public void setMaksamattomatRSM(RowStateMap maksamattomatRSM)
-   {
-      this.maksamattomatRSM = maksamattomatRSM;
-   }
-
-   public RowStateMap getMyöhästyneetRSM()
-   {
-      return myöhästyneetRSM;
-   }
-
-   public void setMyöhästyneetRSM(RowStateMap myöhästyneetRSM)
-   {
-      this.myöhästyneetRSM = myöhästyneetRSM;
-   }
-
-   public RowStateMap getMaksetutRSM()
-   {
-      return maksetutRSM;
-   }
-
-   public void setMaksetutRSM(RowStateMap maksetutRSM)
-   {
-      this.maksetutRSM = maksetutRSM;
-   }
-
-   public void tabiMuuttui(ValueChangeEvent e)
-   {
-      int uusiTabi = (int) e.getNewValue();
-      switch (uusiTabi)
-      {
-      case 0:
-         myöhästyneet = null;
-      case 1:
-         maksamattomat = null;
-      case 2:
-         laskuttamattomat = null;
-      case 3:
-         maksetut = null;
-      }
-   }
-
-   public void laskuValittu(SelectEvent e)
-   {
    }
 }

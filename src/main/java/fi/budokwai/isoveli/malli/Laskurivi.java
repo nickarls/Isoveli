@@ -2,6 +2,7 @@ package fi.budokwai.isoveli.malli;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,7 +26,7 @@ public class Laskurivi
 
    private int rivinumero;
 
-   @OneToOne(optional = false)
+   @OneToOne(cascade=CascadeType.PERSIST, optional = false)
    @JoinColumn(name = "sopimus")
    private Sopimus sopimus;
 

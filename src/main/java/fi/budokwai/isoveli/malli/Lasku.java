@@ -17,7 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -27,11 +26,7 @@ import javax.persistence.TemporalType;
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
-@NamedQueries(
-{
-      @NamedQuery(name = "maksamattomat_laskut", query = "select l from Lasku l where l.maksettu is null and l.eräpäivä >= :tänään order by l.eräpäivä desc"),
-      @NamedQuery(name = "maksetut_laskut", query = "select l from Lasku l where l.maksettu is not null order by l.maksettu desc"),
-      @NamedQuery(name = "myöhästyneet_laskut", query = "select l from Lasku l where l.maksettu is null and l.eräpäivä < :tänään order by l.eräpäivä desc") })
+@NamedQuery(name = "laskut", query = "select l from Lasku l order by l.luotu asc")
 public class Lasku
 {
    @Id
@@ -197,13 +192,12 @@ public class Lasku
       tila = TilausTila.A;
    }
 
-   public long getPäiviäMyöhässä()
+   public long getMaksuaikaa()
    {
-      return Util.getPäiviäVälissä(eräpäivä);
-   }
-
-   public long getPäiviäEräpäivään()
-   {
+      if (maksettu != null)
+      {
+         return 0;
+      }
       return Util.getPäiviäVälissä(eräpäivä);
    }
 

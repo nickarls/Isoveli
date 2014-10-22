@@ -269,11 +269,11 @@ public class Lasku2PDF
    {
       lis‰‰Solu(taulukko, "#", Formatointi.OTSIKKO);
       lis‰‰Solu(taulukko, "Tuotenimi", Formatointi.V_OTSIKKO);
-      lis‰‰Solu(taulukko, "Tuote#", Formatointi.OTSIKKO);
+      lis‰‰Solu(taulukko, "Tuote", Formatointi.OTSIKKO);
       lis‰‰Solu(taulukko, "M‰‰r‰", Formatointi.OTSIKKO);
       lis‰‰Solu(taulukko, "Yksikkˆ", Formatointi.OTSIKKO);
-      lis‰‰Solu(taulukko, "ALV", Formatointi.OTSIKKO);
-      lis‰‰Solu(taulukko, "Veroton hinta", Formatointi.OTSIKKO);
+      lis‰‰Solu(taulukko, "ALV%", Formatointi.OTSIKKO);
+      lis‰‰Solu(taulukko, "ALV0", Formatointi.OTSIKKO);
       lis‰‰Solu(taulukko, "ALV-osuus", Formatointi.OTSIKKO);
       lis‰‰Solu(taulukko, "Hinta", Formatointi.OTSIKKO);
    }
@@ -294,7 +294,7 @@ public class Lasku2PDF
       lis‰‰Solu(taulukko, tyyppi.getTuotekoodi(), Formatointi.DATA);
       lis‰‰Solu(taulukko, tyyppi.getM‰‰r‰() + "", Formatointi.DATA);
       lis‰‰Solu(taulukko, tyyppi.getYksikkˆ(), Formatointi.DATA);
-      lis‰‰Solu(taulukko, "ALV" + tyyppi.getVerokanta(), Formatointi.DATA);
+      lis‰‰Solu(taulukko, tyyppi.getVerokanta() + "", Formatointi.DATA);
       lis‰‰Solu(taulukko, hinta(tyyppi.getVerotonHinta()), Formatointi.DATA);
       lis‰‰Solu(taulukko, hinta(tyyppi.getALVnOsuus()), Formatointi.DATA);
       lis‰‰Solu(taulukko, hinta(tyyppi.getVerollinenHinta()), Formatointi.DATA);

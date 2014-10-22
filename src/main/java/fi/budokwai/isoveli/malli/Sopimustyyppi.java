@@ -66,6 +66,20 @@ public class Sopimustyyppi
 
    private int oletusTreenikerrat;
 
+   private double hinta;
+
+   @Size(max = 20)
+   private String tuotekoodi;
+
+   @Column(name = "maara")
+   private int määrä;
+
+   @Column(name = "yksikko")
+   @Size(max = 20)
+   private String yksikkö;
+
+   private int verokanta;
+
    public int getId()
    {
       return id;
@@ -228,40 +242,15 @@ public class Sopimustyyppi
       this.laskutettava = laskutettava;
    }
 
-   public double getHinta()
-   {
-      return 666;
-   }
-
-   public String getTuotekoodi()
-   {
-      return "666";
-   }
-
-   public int getMäärä()
-   {
-      return 1;
-   }
-
-   public String getYksikkö()
-   {
-      return "kpl";
-   }
-
-   public int getVerokanta()
-   {
-      return 22;
-   }
-
    public double getVerollinenHinta()
    {
-      double result = getMäärä() * getHinta() * (1 + getVerokanta() / 100f);
+      double result = määrä * hinta * (1 + verokanta / 100f);
       return result;
    }
 
    public double getVerotonHinta()
    {
-      double result = getMäärä() * getHinta();
+      double result = määrä * hinta;
       return result;
    }
 
@@ -269,6 +258,56 @@ public class Sopimustyyppi
    {
       double result = getVerollinenHinta() - getVerotonHinta();
       return result;
+   }
+
+   public double getHinta()
+   {
+      return hinta;
+   }
+
+   public void setHinta(double hinta)
+   {
+      this.hinta = hinta;
+   }
+
+   public String getTuotekoodi()
+   {
+      return tuotekoodi;
+   }
+
+   public void setTuotekoodi(String tuotekoodi)
+   {
+      this.tuotekoodi = tuotekoodi;
+   }
+
+   public int getMäärä()
+   {
+      return määrä;
+   }
+
+   public void setMäärä(int määrä)
+   {
+      this.määrä = määrä;
+   }
+
+   public String getYksikkö()
+   {
+      return yksikkö;
+   }
+
+   public void setYksikkö(String yksikkö)
+   {
+      this.yksikkö = yksikkö;
+   }
+
+   public int getVerokanta()
+   {
+      return verokanta;
+   }
+
+   public void setVerokanta(int verokanta)
+   {
+      this.verokanta = verokanta;
    }
 
 }

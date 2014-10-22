@@ -290,7 +290,7 @@ public class Lasku2PDF
    {
       Sopimustyyppi tyyppi = laskurivi.getSopimus().getTyyppi();
       lis‰‰Solu(taulukko, laskurivi.getRivinumero() + "", Formatointi.DATA);
-      lis‰‰Solu(taulukko, tyyppi.getNimi(), Formatointi.V_DATA);
+      lis‰‰Solu(taulukko, laskurivi.getSopimus().getTuotenimi(), Formatointi.V_DATA);
       lis‰‰Solu(taulukko, tyyppi.getTuotekoodi(), Formatointi.DATA);
       lis‰‰Solu(taulukko, tyyppi.getM‰‰r‰() + "", Formatointi.DATA);
       lis‰‰Solu(taulukko, tyyppi.getYksikkˆ(), Formatointi.DATA);

@@ -7,7 +7,7 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -49,19 +49,19 @@ public class Harrastaja extends Henkilö
 
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
    @OrderBy("päivä asc")
-   private List<Vyökoe> vyökokeet = Collections.emptyList();
+   private List<Vyökoe> vyökokeet = new ArrayList<Vyökoe>();
 
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
    @OrderBy("paiva desc")
-   private List<Kisatulos> kisatulokset = Collections.emptyList();
+   private List<Kisatulos> kisatulokset = new ArrayList<Kisatulos>();
 
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
    @OrderBy("umpeutuu desc")
-   private List<Sopimus> sopimukset = Collections.emptyList();
+   private List<Sopimus> sopimukset = new ArrayList<Sopimus>();
 
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
    @OrderBy("aikaleima desc")
-   private List<Treenikäynti> treenikäynnit = Collections.emptyList();
+   private List<Treenikäynti> treenikäynnit = new ArrayList<Treenikäynti>();
 
    @Size(max = 10)
    @Column(name = "jasennumero")
@@ -81,9 +81,9 @@ public class Harrastaja extends Henkilö
    @Convert(converter = SukupuoliConverter.class)
    private Sukupuoli sukupuoli;
 
-   @Size(max=50)
+   @Size(max = 50)
    private String ice;
-   
+
    @Transient
    public boolean osoiteMuuttunut;
 

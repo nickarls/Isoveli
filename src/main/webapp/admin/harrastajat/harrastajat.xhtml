@@ -29,7 +29,7 @@
 		</ace:column>
 	</ace:dataTable>
 	<p />
-	<ace:tabSet rendered="#{harrastaja != null}">
+	<ace:tabSet rendered="#{harrastaja != null}" binding="#{harrastajaAdmin.tabi}">
 		<ace:tabPane label="Perustiedot">
 			<ui:include src="perustiedot.xhtml" />
 		</ace:tabPane>

@@ -20,7 +20,6 @@ import javax.validation.constraints.Size;
 @NamedQueries(
 {
       @NamedQuery(name = "vyöarvot", query = "select v from Vyöarvo v order by v.järjestys"),
-      @NamedQuery(name = "vyöarvo", query = "select v from Vyöarvo v where v.järjestys=:järjestys"),
       @NamedQuery(name = "vyöarvokäyttö", query = "select h from Harrastaja h join h.vyökokeet k join k.vyöarvo v where v = :vyöarvo") })
 @Table(name = "vyoarvo")
 public class Vyöarvo

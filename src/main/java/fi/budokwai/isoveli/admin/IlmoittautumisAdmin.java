@@ -2,7 +2,6 @@ package fi.budokwai.isoveli.admin;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -74,7 +73,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
    {
       if (treenisessio == null)
       {
-         return Collections.emptyList();
+         return new ArrayList<Harrastaja>();
       }
       if (kaikkivetäjät == null)
       {

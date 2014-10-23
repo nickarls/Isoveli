@@ -2,7 +2,6 @@ package fi.budokwai.isoveli.admin;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -86,7 +85,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       if (treeni == null)
       {
-         return Collections.emptyList();
+         return new ArrayList<Harrastaja>();
       }
       if (kaikkivetäjät == null)
       {
@@ -420,7 +419,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       if (rooli == null || !rooli.isPoistettavissa())
       {
-         return Collections.emptyList();
+         return new ArrayList<Henkilö>();
       }
       if (rooliKäyttö == null)
       {
@@ -436,7 +435,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       if (treeni == null || !treeni.isPoistettavissa())
       {
-         return Collections.emptyList();
+         return new ArrayList<Treenisessio>();
       }
       if (treeniKäyttö == null)
       {
@@ -452,7 +451,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       if (vyöarvo == null || !vyöarvo.isPoistettavissa())
       {
-         return Collections.emptyList();
+         return new ArrayList<Harrastaja>();
       }
       if (vyöarvoKäyttö == null)
       {
@@ -468,7 +467,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       if (sopimustyyppi == null || !sopimustyyppi.isPoistettavissa())
       {
-         return Collections.emptyList();
+         return new ArrayList<Sopimus>();
       }
       if (sopimustyyppiKäyttö == null)
       {
@@ -484,7 +483,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       if (treenityyppi == null || !treenityyppi.isPoistettavissa())
       {
-         return Collections.emptyList();
+         return new ArrayList<Treeni>();
       }
       if (treenityyppiKäyttö == null)
       {

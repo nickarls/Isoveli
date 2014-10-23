@@ -47,7 +47,7 @@
 <h:body>
 	<f:view>
 		<h:form id="form">
-			<ace:tabSet>
+			<ace:tabSet tabChangeListener="#{harrastajaAdmin.päätabiMuuttui}">
 				<ace:tabPane label="Harrastajat">
 					<ui:include src="harrastajat/harrastajat.xhtml" />
 				</ace:tabPane>

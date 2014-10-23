@@ -106,7 +106,7 @@ public class Sopimus
 
    public boolean isPoistettavissa()
    {
-      return id > 0;
+      return id > 0 && laskurivi == null;
    }
 
    @Override

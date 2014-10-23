@@ -3,6 +3,8 @@ package fi.budokwai.isoveli.util;
 import java.io.Serializable;
 
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.event.Observes;
+import javax.persistence.EntityManager;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -14,6 +16,11 @@ public class ObjectStore implements Serializable
 
    private BiMap<String, Object> map = HashBiMap.create();
    private int key;
+
+   public void resetoi(@Observes @Muuttui EntityManager em)
+   {
+      map.clear();
+   }
 
    public Object string2Object(String key)
    {

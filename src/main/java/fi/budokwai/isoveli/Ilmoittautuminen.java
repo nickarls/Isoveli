@@ -1,7 +1,7 @@
 package fi.budokwai.isoveli;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -65,7 +65,7 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
    @PostConstruct
    public void init()
    {
-//      PushRenderer.addCurrentSession("ilmoittautuminen");
+      // PushRenderer.addCurrentSession("ilmoittautuminen");
    }
 
    public boolean isMies()
@@ -96,7 +96,7 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
    {
       if (harrastaja == null)
       {
-         return Collections.emptyList();
+         return new ArrayList<Treeni>();
       }
       if (tulevatTreenit == null)
       {

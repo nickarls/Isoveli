@@ -6,17 +6,19 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.event.Event;
 import javax.enterprise.inject.Produces;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,6 +27,7 @@ import javax.persistence.PersistenceContextType;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.icefaces.ace.component.datetimeentry.DateTimeEntry;
+import org.icefaces.ace.component.tabset.TabSet;
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
@@ -38,6 +41,7 @@ import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sukupuoli;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Vyökoe;
+import fi.budokwai.isoveli.util.Muuttui;
 
 @Named
 @SessionScoped
@@ -52,6 +56,8 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    @PersistenceContext(type = PersistenceContextType.EXTENDED)
    private EntityManager entityManager;
 
+   private TabSet tabi;
+
    private Harrastaja harrastaja;
    private Sopimus sopimus;
    private Vyökoe vyökoe;
@@ -59,6 +65,36 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    private RowStateMap harrastajaRSM = new RowStateMap();
    private RowStateMap vyökoeRSM = new RowStateMap();
    private RowStateMap sopimusRSM = new RowStateMap();
+
+   @Inject
+   @Muuttui
+   private Event<EntityManager> emMuuttui;
+
+   public void päätabiMuuttui(ValueChangeEvent e)
+   {
+      int uusiTabi = (int) e.getNewValue();
+      switch (uusiTabi)
+      {
+      case 0:
+         resetoi();
+      }
+   }
+
+   private void resetoi()
+   {
+      entityManager.clear();
+      harrastajat = null;
+      roolit = null;
+      vyöarvot = null;
+      perheet = null;
+      harrastaja = null;
+      sopimus = null;
+      vyökoe = null;
+      harrastajaRSM = new RowStateMap();
+      vyökoeRSM = new RowStateMap();
+      sopimusRSM = new RowStateMap();
+      emMuuttui.fire(entityManager);
+   }
 
    public void perheMuuttui(ValueChangeEvent e)
    {
@@ -95,7 +131,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void init()
    {
       ((Session) entityManager.getDelegate()).setFlushMode(FlushMode.MANUAL);
-      vyöarvot = entityManager.createNamedQuery("vyöarvot", Vyöarvo.class).getResultList();
+      haeVyöarvot();
       haePerheet();
       haeHarrastajat();
    }
@@ -104,6 +140,10 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    @Named
    public List<Perhe> getPerheet()
    {
+      if (perheet == null)
+      {
+         haePerheet();
+      }
       return perheet;
    }
 
@@ -118,6 +158,10 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    @Named
    public List<Harrastaja> getHarrastajat()
    {
+      if (harrastajat == null)
+      {
+         haeHarrastajat();
+      }
       return harrastajat;
    }
 
@@ -125,6 +169,10 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    @Named
    public List<Vyöarvo> getVyöarvot()
    {
+      if (vyöarvot == null)
+      {
+         haeVyöarvot();
+      }
       return vyöarvot;
    }
 
@@ -141,7 +189,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    {
       if (harrastaja == null)
       {
-         return Collections.emptyList();
+         return new ArrayList<Rooli>();
       }
       if (roolit == null)
       {
@@ -178,6 +226,11 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    private void haePerheet()
    {
       perheet = entityManager.createNamedQuery("perheet", Perhe.class).getResultList();
+   }
+
+   private void haeVyöarvot()
+   {
+      vyöarvot = entityManager.createNamedQuery("vyöarvot", Vyöarvo.class).getResultList();
    }
 
    private void virkistäPerheet()
@@ -342,9 +395,9 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void lisääHarrastaja()
    {
+      resetoi();
+      tabi.setSelectedIndex(0);
       harrastaja = new Harrastaja();
-      roolit = null;
-      harrastajaRSM.setAllSelected(false);
       info("Uusi harrastaja alustettu");
       fokusoi("form:etunimi");
    }
@@ -359,10 +412,10 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void lisääVyökoe()
    {
       vyökoe = new Vyökoe();
-      Vyöarvo seuraavaVyöarvo = vyöarvot.iterator().next();
+      Vyöarvo seuraavaVyöarvo = getVyöarvot().iterator().next();
       if (!harrastaja.getVyökokeet().isEmpty())
       {
-         seuraavaVyöarvo = vyöarvot.get(vyöarvot.indexOf(harrastaja.getTuoreinVyöarvo()) + 1);
+         seuraavaVyöarvo = getVyöarvot().get(vyöarvot.indexOf(harrastaja.getTuoreinVyöarvo()) + 1);
       }
       vyökoe.setVyöarvo(seuraavaVyöarvo);
       vyökoe.setPäivä(new Date());
@@ -395,15 +448,14 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public JäljelläVyökokeeseen laskeJäljelläVyökokeeseen(Vyöarvo vyöarvo)
    {
-      List<Vyöarvo> seuraavatArvot = entityManager.createNamedQuery("vyöarvo", Vyöarvo.class)
-         .setParameter("järjestys", vyöarvo.getJärjestys() + 1).getResultList();
-      if (seuraavatArvot.size() == 0)
+      Optional<Vyöarvo> seuraavaVyöarvo = vyöarvot.stream()
+         .filter(va -> va.getJärjestys() == vyöarvo.getJärjestys() + 1).findFirst();
+      if (!seuraavaVyöarvo.isPresent())
       {
          return JäljelläVyökokeeseen.EI_OOTA;
       }
-      Vyöarvo seuraavaVyöarvo = seuraavatArvot.iterator().next();
-      long treenit = seuraavaVyöarvo.getMinimitreenit() - harrastaja.getTreenejäViimeVyökokeesta();
-      Period aika = harrastaja.getAikaaViimeVyökokeesta();
+      long treenit = seuraavaVyöarvo.get().getMinimitreenit() - harrastaja.getTreenejäViimeVyökokeesta();
+      Period aika = harrastaja.zgetAikaaViimeVyökokeesta();
       return new JäljelläVyökokeeseen(aika, treenit);
    }
 
@@ -454,6 +506,16 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void setHarrastajaRSM(RowStateMap harrastajaRSM)
    {
       this.harrastajaRSM = harrastajaRSM;
+   }
+
+   public TabSet getTabi()
+   {
+      return tabi;
+   }
+
+   public void setTabi(TabSet tabi)
+   {
+      this.tabi = tabi;
    }
 
 }

@@ -31,6 +31,8 @@ import fi.budokwai.isoveli.util.KylläEiTyyppi;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Henkilö
 {
+   public static final Henkilö EI_KIRJAUTUNUT = new Henkilö();
+
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    protected int id;

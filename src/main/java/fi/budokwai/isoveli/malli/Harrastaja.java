@@ -84,6 +84,9 @@ public class Harrastaja extends Henkilö
    @Size(max = 50)
    private String ice;
 
+   @Size(max = 1000)
+   private String huomautus;
+
    @Transient
    public boolean osoiteMuuttunut;
 
@@ -372,6 +375,16 @@ public class Harrastaja extends Henkilö
    public void setIce(String ice)
    {
       this.ice = ice;
+   }
+
+   public String getHuomautus()
+   {
+      return huomautus;
+   }
+
+   public void setHuomautus(String huomautus)
+   {
+      this.huomautus = huomautus;
    }
 
 }

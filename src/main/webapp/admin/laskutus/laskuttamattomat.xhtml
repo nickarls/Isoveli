@@ -4,10 +4,24 @@
 	<h:commandButton value="X" image="/kuvat/laskuta.png" action="#{laskutusAdmin.laskutaSopimukset}" styleClass="ikoni"
 		rendered="#{fn:length(laskuttamattomat) != 0}" />
 	<ace:dataTable value="#{laskuttamattomat}" var="_sopimus" selectionMode="single"
-		stateMap="#{laskutusAdmin.laskuttamattomatRSM}" rows="10" rowSelectListener="#{laskutusAdmin.laskuValittu}">
+		stateMap="#{laskutusAdmin.laskuttamattomatRSM}" rows="10" rowSelectListener="#{laskutusAdmin.sopimusValittu}">
 		<ace:column headerText="Harrastaja">
 			<h:outputText value="#{_sopimus.harrastaja.nimi}" />
 		</ace:column>
+		<ace:column headerText="Tyyppi">
+			<h:outputText value="#{_sopimus.tyyppi.nimi}" />
+		</ace:column>
+		<ace:column headerText="Maksuväli">
+			<h:outputText value="#{_sopimus.maksuväli}" />
+		</ace:column>
+		<ace:column headerText="Umpeutuu">
+			<h:outputText value="#{_sopimus.umpeutuu}">
+				<f:convertDateTime pattern="dd.MM.yyyy" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Treenikertoja">
+			<h:outputText value="#{_sopimus.treenikertoja}" />
+		</ace:column>		
 	</ace:dataTable>
 
 </ui:composition>

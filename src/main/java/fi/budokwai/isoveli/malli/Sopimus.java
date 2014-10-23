@@ -16,7 +16,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@NamedQuery(name = "laskuttamattomat_sopimukset", query = "select s from Sopimus s where s.tyyppi.laskutettava='K' and s.laskurivi is null")
+@NamedQuery(name = "laskuttamattomat_sopimukset", query = "select s from Sopimus s where s.tyyppi.laskutettava='K' and s.laskurivi is null order by s.umpeutuu desc")
 public class Sopimus
 {
    @Id

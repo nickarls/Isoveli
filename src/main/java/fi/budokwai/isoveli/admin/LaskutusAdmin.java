@@ -40,6 +40,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    private List<Sopimus> laskuttamattomat;
    private List<Lasku> laskut;
    private Lasku lasku;
+   private Sopimus sopimus;
    private List<SelectItem> tilasuodatukset;
 
    @PostConstruct
@@ -57,6 +58,13 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public Lasku getLasku()
    {
       return lasku;
+   }
+
+   @Produces
+   @Named
+   public Sopimus getLaskuttamatonSopimus()
+   {
+      return sopimus;
    }
 
    @Produces
@@ -156,6 +164,16 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public void laskuValittu(SelectEvent e)
    {
       lasku = (Lasku) e.getObject();
+   }
+
+   public void sopimusValittu(SelectEvent e)
+   {
+      sopimus = (Sopimus) e.getObject();
+   }
+
+   public void piilotaSopimus()
+   {
+      sopimus = null;
    }
 
    public void piilotaLasku()

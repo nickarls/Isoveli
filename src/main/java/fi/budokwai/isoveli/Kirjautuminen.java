@@ -30,11 +30,11 @@ public class Kirjautuminen
    public void tarkistaKirjautuminen(@Observes @AfterPhase(JsfPhaseId.RESTORE_VIEW) PhaseEvent e)
    {
       String näkymä = e.getFacesContext().getViewRoot().getViewId();
-      if (!näkymä.endsWith("kirjatuminen.xhtml") && kirjautunutHenkilö == Henkilö.EI_KIRJAUTUNUT)
-      {
-         e.getFacesContext().getApplication().getNavigationHandler()
-            .handleNavigation(e.getFacesContext(), null, "kirjautuminen.xhtml");
-         e.getFacesContext().renderResponse();
-      }
+//      if (!näkymä.endsWith("kirjatuminen.xhtml") && kirjautunutHenkilö == Henkilö.EI_KIRJAUTUNUT)
+//      {
+//         e.getFacesContext().getApplication().getNavigationHandler()
+//            .handleNavigation(e.getFacesContext(), null, "kirjautuminen.xhtml");
+//         e.getFacesContext().renderResponse();
+//      }
    }
 }

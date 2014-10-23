@@ -15,9 +15,9 @@
 			<ace:ajax render="@form" />
 		</h:commandButton>
 		<h:panelGrid columns="3" columnClasses="tabletop, tabletop, tabletop">
-			<ace:dataTable value="#{kaikkiVyöarvot}" var="_vyöarvo" selectionMode="single" rows="15" paginator="true"
-				paginatorPosition="bottom" rowSelectListener="#{perustietoAdmin.vyöarvoValittu}"
-				stateMap="#{perustietoAdmin.vyöarvoRSM}">
+			<ace:dataTable value="#{kaikkiVyöarvot}" var="_vyöarvo" selectionMode="single" rows="15"
+				rowSelectListener="#{perustietoAdmin.vyöarvoValittu}" paginator="true" paginatorPosition="bottom"
+				paginatorAlwaysVisible="false" stateMap="#{perustietoAdmin.vyöarvoRSM}">
 				<ace:column headerText="Vyöarvo">
 					<h:outputText value="#{_vyöarvo.nimi}" />
 				</ace:column>
@@ -72,7 +72,8 @@
 			</h:panelGrid>
 			<ace:panel header="Käyttö (#{fn:length(vyöarvoKäyttö)})" style="width:300px"
 				rendered="#{vyöarvo != null and vyöarvo.poistettavissa}">
-				<ace:dataTable value="#{vyöarvoKäyttö}" var="_harrastaja" rows="10" rendered="#{fn:length(vyöarvoKäyttö) > 0}">
+				<ace:dataTable value="#{vyöarvoKäyttö}" var="_harrastaja" rows="10" rendered="#{fn:length(vyöarvoKäyttö) > 0}"
+					paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false">
 					<ace:column>
 						<h:outputText value="#{_harrastaja.nimi}" />
 					</ace:column>

@@ -16,7 +16,8 @@
 		</h:commandButton>
 		<h:panelGrid columns="3" columnClasses="tabletop, tabletop, tabletop">
 			<ace:dataTable value="#{kaikkiTreenityypit}" var="_treenityyppi" selectionMode="single" rows="10" style="width:300px"
-				rowSelectListener="#{perustietoAdmin.treenityyppiValittu}" stateMap="#{perustietoAdmin.treenityyppiRSM}">
+				rowSelectListener="#{perustietoAdmin.treenityyppiValittu}" stateMap="#{perustietoAdmin.treenityyppiRSM}"
+				paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false">
 				<ace:column headerText="Treenityyppi">
 					<h:outputText value="#{_treenityyppi.nimi}" />
 				</ace:column>
@@ -47,7 +48,8 @@
 			</h:panelGrid>
 			<ace:panel header="Käyttö (#{fn:length(treenityyppiKäyttö)})" style="width:300px"
 				rendered="#{treenityyppi != null and treenityyppi.poistettavissa}">
-				<ace:dataTable value="#{treenityyppiKäyttö}" var="_treeni" rows="10" rendered="#{fn:length(treenityyppiKäyttö) > 0}">
+				<ace:dataTable value="#{treenityyppiKäyttö}" var="_treeni" rows="10" rendered="#{fn:length(treenityyppiKäyttö) > 0}"
+					paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false">
 					<ace:column>
 						<h:outputText value="#{_treeni.nimi}" />
 					</ace:column>

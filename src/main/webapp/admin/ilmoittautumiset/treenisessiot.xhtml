@@ -14,8 +14,8 @@
 		<ace:ajax render="@form" />
 	</h:commandButton>
 	<ace:dataTable value="#{kaikkiTreenisessiot}" var="_treenisessio" selectionMode="single"
-		stateMap="#{ilmoittautumisAdmin.treenisessioRSM}" rows="10"
-		rowSelectListener="#{ilmoittautumisAdmin.treenisessioValittu}">
+		stateMap="#{ilmoittautumisAdmin.treenisessioRSM}" rows="10" paginator="true" paginatorPosition="bottom"
+		paginatorAlwaysVisible="false" rowSelectListener="#{ilmoittautumisAdmin.treenisessioValittu}">
 		<ace:column headerText="Treeni">
 			<h:outputText value="#{_treenisessio.treeni.nimi}" class="teksti" />
 		</ace:column>

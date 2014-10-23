@@ -3,8 +3,9 @@
 	xmlns:ace="http://www.icefaces.org/icefaces/components" xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	<h:commandButton value="X" image="/kuvat/laskuta.png" action="#{laskutusAdmin.laskutaSopimukset}" styleClass="ikoni"
 		rendered="#{fn:length(laskuttamattomat) != 0}" />
-	<ace:dataTable value="#{laskuttamattomat}" var="_sopimus" selectionMode="single"
-		stateMap="#{laskutusAdmin.laskuttamattomatRSM}" rows="10" rowSelectListener="#{laskutusAdmin.sopimusValittu}">
+	<ace:dataTable value="#{laskuttamattomat}" var="_sopimus" selectionMode="single" paginator="true"
+		paginatorPosition="bottom" paginatorAlwaysVisible="false" stateMap="#{laskutusAdmin.laskuttamattomatRSM}" rows="10"
+		rowSelectListener="#{laskutusAdmin.sopimusValittu}">
 		<ace:column headerText="Harrastaja">
 			<h:outputText value="#{_sopimus.harrastaja.nimi}" />
 		</ace:column>
@@ -21,7 +22,7 @@
 		</ace:column>
 		<ace:column headerText="Treenikertoja">
 			<h:outputText value="#{_sopimus.treenikertoja}" />
-		</ace:column>		
+		</ace:column>
 	</ace:dataTable>
 
 </ui:composition>

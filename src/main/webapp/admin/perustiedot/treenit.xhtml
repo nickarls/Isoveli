@@ -8,13 +8,14 @@
 				action="#{perustietoAdmin.piilotaTreeni}" actionListener="#{perustietoAdmin.poistaTreeni}" />
 			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreeninPoisto').hide()" />
 		</h:panelGrid>
-	</ace:confirmationDialog>	
+	</ace:confirmationDialog>
 	<h:commandButton action="#{perustietoAdmin.lisääTreeni}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
 		immediate="true">
 		<ace:ajax render="@form" />
 	</h:commandButton>
 	<ace:dataTable value="#{treenit}" var="_treeni" selectionMode="single" stateMap="#{perustietoAdmin.treeniRSM}"
-		rows="10" rowSelectListener="#{perustietoAdmin.treeniValittu}">
+		rows="10" rowSelectListener="#{perustietoAdmin.treeniValittu}" paginator="true" paginatorPosition="bottom"
+		paginatorAlwaysVisible="false">
 		<ace:column headerText="Nimi">
 			<h:outputText value="#{_treeni.nimi}" />
 		</ace:column>
@@ -26,7 +27,7 @@
 		</ace:column>
 		<ace:column headerText="Alkaa">
 			<h:outputText value="#{_treeni.alkaa}">
-				<f:convertDateTime pattern="HH:mm" timeZone="EET"/>
+				<f:convertDateTime pattern="HH:mm" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
 		<ace:column headerText="Päättyy">
@@ -81,22 +82,24 @@
 				<h:outputText value="Alkaa" />
 				<h:panelGrid>
 					<ace:message for="form:treenialkaa" />
-					<ace:dateTimeEntry value="#{treeni.alkaa}" renderAsPopup="true" pattern="HH:mm" id="treenialkaa" timeZone="EET"/>
+					<ace:dateTimeEntry value="#{treeni.alkaa}" renderAsPopup="true" pattern="HH:mm" id="treenialkaa" timeZone="EET" />
 				</h:panelGrid>
 				<h:outputText value="Päättyy" />
 				<h:panelGrid>
 					<ace:message for="form:treenipäättyy" />
-					<ace:dateTimeEntry value="#{treeni.päättyy}" renderAsPopup="true" pattern="HH:mm" id="treenipäättyy" timeZone="EET"/>
+					<ace:dateTimeEntry value="#{treeni.päättyy}" renderAsPopup="true" pattern="HH:mm" id="treenipäättyy" timeZone="EET" />
 				</h:panelGrid>
 				<h:outputText value="Voimassa alk" />
 				<h:panelGrid>
 					<ace:message for="form:voimassaAlkaa" />
-					<ace:dateTimeEntry value="#{treeni.voimassaAlkaa}" renderAsPopup="true" pattern="dd.MM.yyyy" id="voimassaAlkaa" timeZone="EET"/>
+					<ace:dateTimeEntry value="#{treeni.voimassaAlkaa}" renderAsPopup="true" pattern="dd.MM.yyyy" id="voimassaAlkaa"
+						timeZone="EET" />
 				</h:panelGrid>
 				<h:outputText value="Voimassa lop" />
 				<h:panelGrid>
 					<ace:message for="form:voimassaPäättyy" />
-					<ace:dateTimeEntry value="#{treeni.voimassaPäättyy}" renderAsPopup="true" pattern="dd.MM.yyyy" id="voimassaPäättyy" timeZone="EET"/>
+					<ace:dateTimeEntry value="#{treeni.voimassaPäättyy}" renderAsPopup="true" pattern="dd.MM.yyyy" id="voimassaPäättyy"
+						timeZone="EET" />
 				</h:panelGrid>
 				<h:outputText value="Power" />
 				<h:panelGrid>
@@ -126,8 +129,7 @@
 			<f:ajax render="@form" />
 		</h:commandButton>
 		<h:commandButton rendered="#{treeni.poistettavissa and fn:length(treeniKäyttö) == 0}" value="x" styleClass="ikoni"
-			onclick="ice.ace.instance('form:vahvistaTreeninPoisto').show();" image="/kuvat/poista.png"
-			immediate="true" />
+			onclick="ice.ace.instance('form:vahvistaTreeninPoisto').show();" image="/kuvat/poista.png" immediate="true" />
 	</h:panelGrid>
 
 </ui:composition>

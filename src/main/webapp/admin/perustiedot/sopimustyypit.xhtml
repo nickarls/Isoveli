@@ -15,7 +15,8 @@
 			<ace:ajax render="@form" />
 		</h:commandButton>
 		<h:panelGrid columns="2" columnClasses="tabletop, tabletop">
-			<ace:dataTable value="#{kaikkiSopimustyypit}" var="_sopimustyyppi" selectionMode="single" rows="10"
+			<ace:dataTable value="#{kaikkiSopimustyypit}" var="_sopimustyyppi" selectionMode="single" rows="10" paginator="true"
+				paginatorPosition="bottom" paginatorAlwaysVisible="false"
 				rowSelectListener="#{perustietoAdmin.sopimustyyppiValittu}" stateMap="#{perustietoAdmin.sopimustyyppiRSM}">
 				<ace:column headerText="Nimi">
 					<h:outputText value="#{_sopimustyyppi.nimi}" />
@@ -74,8 +75,8 @@
 			</ace:dataTable>
 			<ace:panel header="Käyttö (#{fn:length(sopimustyyppiKäyttö)})" style="width:200px"
 				rendered="#{sopimustyyppi != null and sopimustyyppi.poistettavissa}">
-				<ace:dataTable value="#{sopimustyyppiKäyttö}" var="_sopimus" rows="10"
-					rendered="#{fn:length(sopimustyyppiKäyttö) > 0}">
+				<ace:dataTable value="#{sopimustyyppiKäyttö}" var="_sopimus" rows="10" paginator="true" paginatorPosition="bottom"
+					paginatorAlwaysVisible="false" rendered="#{fn:length(sopimustyyppiKäyttö) > 0}">
 					<ace:column>
 						<h:outputText value="#{_sopimus.tyyppi.nimi}" />
 					</ace:column>

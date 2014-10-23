@@ -14,8 +14,8 @@
 		<ace:ajax render="@form" />
 	</h:commandButton>
 	<ace:dataTable value="#{treenikäynnit}" var="_treenikäynti" selectionMode="single"
-		stateMap="#{ilmoittautumisAdmin.treenikäyntiRSM}" rows="10"
-		rowSelectListener="#{ilmoittautumisAdmin.treenikäyntiValittu}">
+		stateMap="#{ilmoittautumisAdmin.treenikäyntiRSM}" rows="10" paginator="true" paginatorPosition="bottom"
+		paginatorAlwaysVisible="false" rowSelectListener="#{ilmoittautumisAdmin.treenikäyntiValittu}">
 		<ace:column headerText="Aikaleima" filterBy="#{_treenikäynti.aikaleimaString}" filterMatchMode="contains">
 			<h:outputText value="#{_treenikäynti.aikaleima}">
 				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET" />

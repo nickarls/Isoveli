@@ -5,8 +5,9 @@
 		immediate="true">
 		<f:ajax render="@form" />
 	</h:commandButton>
-	<ace:dataTable value="#{harrastajat}" var="_harrastaja" selectionMode="single"
-		stateMap="#{harrastajaAdmin.harrastajaRSM}" rows="10" rowSelectListener="#{harrastajaAdmin.harrastajaValittu}">
+	<ace:dataTable value="#{harrastajat}" var="_harrastaja" selectionMode="single" paginator="true"
+		paginatorPosition="bottom" paginatorAlwaysVisible="false" stateMap="#{harrastajaAdmin.harrastajaRSM}" rows="10"
+		rowSelectListener="#{harrastajaAdmin.harrastajaValittu}">
 		<ace:column headerText="Etunimi" sortBy="#{_harrastaja.etunimi}" filterBy="#{_harrastaja.etunimi}"
 			filterMatchMode="contains">
 			<h:outputText value="#{_harrastaja.etunimi}" />

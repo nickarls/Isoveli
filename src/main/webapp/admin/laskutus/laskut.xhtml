@@ -10,6 +10,7 @@
 		</h:panelGrid>
 	</ace:confirmationDialog>
 	<ace:dataTable value="#{laskut}" var="_lasku" selectionMode="single" stateMap="#{laskutusAdmin.laskuRSM}" rows="10"
+		paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false"
 		rowSelectListener="#{laskutusAdmin.laskuValittu}">
 		<ace:column>
 			<ace:expansionToggler />
@@ -58,7 +59,8 @@
 			</h:outputLink>
 		</ace:column>
 		<ace:panelExpansion>
-			<ace:dataTable rows="10" value="#{_lasku.laskurivit}" var="_laskurivi">
+			<ace:dataTable rows="10" value="#{_lasku.laskurivit}" var="_laskurivi" paginator="true" paginatorPosition="bottom"
+				paginatorAlwaysVisible="false">
 				<ace:column headerText="#">
 					<h:outputText value="#{_laskurivi.rivinumero}" />
 				</ace:column>

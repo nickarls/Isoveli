@@ -16,6 +16,7 @@
 		</h:commandButton>
 		<h:panelGrid columns="3" columnClasses="tabletop, tabletop, tabletop">
 			<ace:dataTable value="#{kaikkiRoolit}" var="_rooli" selectionMode="single" rows="10" style="width:300px"
+				paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false"
 				rowSelectListener="#{perustietoAdmin.rooliValittu}" stateMap="#{perustietoAdmin.rooliRSM}">
 				<ace:column headerText="Rooli">
 					<h:outputText value="#{_rooli.nimi}" />
@@ -46,7 +47,8 @@
 			</h:panelGrid>
 			<ace:panel header="Käyttö (#{fn:length(rooliKäyttö)})" style="width:300px"
 				rendered="#{rooli != null and rooli.poistettavissa}">
-				<ace:dataTable value="#{rooliKäyttö}" var="_henkilö" rows="10" rendered="#{fn:length(rooliKäyttö) > 0}">
+				<ace:dataTable value="#{rooliKäyttö}" var="_henkilö" rows="10" rendered="#{fn:length(rooliKäyttö) > 0}"
+					paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false">
 					<ace:column>
 						<h:outputText value="#{_henkilö.nimi}" />
 					</ace:column>

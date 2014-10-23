@@ -95,10 +95,14 @@ public class Vyökoe
       return id > 0;
    }
 
+   public LocalDate getKoska()
+   {
+      return LocalDateTime.ofInstant(Instant.ofEpochMilli(päivä.getTime()), ZoneId.systemDefault())
+         .toLocalDate().atStartOfDay().toLocalDate();
+   }
+
    private Period getAikaEdellisestäKokeesta()
    {
-      LocalDate tämä = LocalDateTime.ofInstant(Instant.ofEpochMilli(päivä.getTime()), ZoneId.systemDefault())
-         .toLocalDate();
       Optional<Vyökoe> edellinenVyökoe = harrastaja
          .getVyökokeet()
          .stream()
@@ -110,9 +114,9 @@ public class Vyökoe
       {
          return Period.ZERO;
       }
-      LocalDate edellinen = LocalDateTime.ofInstant(Instant.ofEpochMilli(edellinenVyökoe.get().getPäivä().getTime()),
-         ZoneId.systemDefault()).toLocalDate();
-      return Period.between(edellinen, tämä);
+      LocalDate edellinenKoe = LocalDateTime.ofInstant(
+         Instant.ofEpochMilli(edellinenVyökoe.get().getPäivä().getTime()), ZoneId.systemDefault()).toLocalDate();
+      return Period.between(edellinenKoe, getKoska());
    }
 
    public String getAikaaVälissä()

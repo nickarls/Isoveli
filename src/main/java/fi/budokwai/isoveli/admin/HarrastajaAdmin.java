@@ -1,6 +1,7 @@
 package fi.budokwai.isoveli.admin;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -448,14 +449,17 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public JäljelläVyökokeeseen laskeJäljelläVyökokeeseen(Vyöarvo vyöarvo)
    {
-      Optional<Vyöarvo> seuraavaVyöarvo = vyöarvot.stream()
+      Optional<Vyöarvo> seuraavaVyöarvo = getVyöarvot().stream()
          .filter(va -> va.getJärjestys() == vyöarvo.getJärjestys() + 1).findFirst();
       if (!seuraavaVyöarvo.isPresent())
       {
          return JäljelläVyökokeeseen.EI_OOTA;
       }
       long treenit = seuraavaVyöarvo.get().getMinimitreenit() - harrastaja.getTreenejäViimeVyökokeesta();
-      Period aika = harrastaja.zgetAikaaViimeVyökokeesta();
+      LocalDate tuoreinVyökoe = harrastaja.getTuoreinVyökoe().getKoska();
+      LocalDate nyt = LocalDateTime.now().toLocalDate().atStartOfDay().toLocalDate();
+      Period aika = Period.between(nyt,
+         tuoreinVyökoe.plus(seuraavaVyöarvo.get().getMinimikuukaudet(), ChronoUnit.MONTHS));
       return new JäljelläVyökokeeseen(aika, treenit);
    }
 

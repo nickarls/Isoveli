@@ -168,7 +168,7 @@ public class Harrastaja extends Henkilö
       return vyökokeet;
    }
 
-   private Vyökoe getTuoreinVyökoe()
+   public Vyökoe getTuoreinVyökoe()
    {
       Optional<Vyökoe> vyökoe = vyökokeet
          .stream()

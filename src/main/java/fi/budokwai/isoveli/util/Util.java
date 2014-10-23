@@ -22,12 +22,12 @@ public class Util
          return "";
       }
       StringBuilder tulos = new StringBuilder();
-      if (aikaväli.getYears() > 0)
+      if (aikaväli.getYears() != 0)
       {
          String monikko = aikaväli.getYears() == 1 ? "vuosi" : "vuotta";
          tulos.append(String.format("%d %s", aikaväli.getYears(), monikko));
       }
-      if (aikaväli.getMonths() > 0)
+      if (aikaväli.getMonths() != 0)
       {
          if (tulos.toString().length() > 0)
          {
@@ -36,7 +36,7 @@ public class Util
          String monikko = aikaväli.getMonths() == 1 ? "kuukausi" : "kuukautta";
          tulos.append(String.format("%d %s", aikaväli.getMonths(), monikko));
       }
-      if (aikaväli.getDays() > 0)
+      if (aikaväli.getDays() != 0)
       {
          if (tulos.toString().length() > 0)
          {

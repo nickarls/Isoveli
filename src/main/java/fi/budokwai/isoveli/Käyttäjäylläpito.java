@@ -15,6 +15,7 @@ import javax.persistence.PersistenceContextType;
 
 import org.icefaces.ace.model.chart.GaugeSeries;
 
+import fi.budokwai.isoveli.admin.Perustoiminnallisuus;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.JäljelläVyökokeeseen;
 import fi.budokwai.isoveli.malli.Vyöarvo;
@@ -22,7 +23,7 @@ import fi.budokwai.isoveli.malli.Vyöarvo;
 @Stateful
 @SessionScoped
 @Named
-public class Käyttäjäylläpito
+public class Käyttäjäylläpito extends Perustoiminnallisuus
 {
    @PersistenceContext(type = PersistenceContextType.EXTENDED)
    private EntityManager entityManager;
@@ -42,6 +43,12 @@ public class Käyttäjäylläpito
    public Harrastaja getItse()
    {
       return itse;
+   }
+
+   public void tallennaItse()
+   {
+      entityManager.persist(itse);
+      info("Tiedot tallennettu");
    }
 
    public List<GaugeSeries> getAikaaVyökokeeseen()

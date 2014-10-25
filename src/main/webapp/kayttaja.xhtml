@@ -21,6 +21,11 @@
 	margin-right: auto
 }
 
+.ikoni {
+	height: 64px;
+	width: 64px;
+}
+
 .nimi {
 	font-size: 26px;
 	font-weight: bold;
@@ -42,28 +47,53 @@
 						</h:panelGroup>
 						<h:panelGrid columns="2">
 							<h:outputText value="Puhelin" />
-							<h:inputText value="#{itse.yhteystiedot.puhelinnumero}" />
+							<h:panelGrid>
+								<ace:message for="formi:puhelin" />
+								<h:inputText value="#{itse.yhteystiedot.puhelinnumero}" id="puhelin" />
+							</h:panelGrid>
 							<h:outputText value="Sähköpoisti" />
-							<h:inputText value="#{itse.yhteystiedot.sähköposti}" />
+							<h:panelGrid>
+								<ace:message for="formi:sähköposti" />
+								<h:inputText value="#{itse.yhteystiedot.sähköposti}" id="sähköposti" />
+							</h:panelGrid>
 							<h:outputText value="Sähköpostilistalla" />
-							<h:selectBooleanCheckbox value="#{itse.yhteystiedot.sähköpostilistalla}" />
+							<h:panelGrid>
+								<ace:message for="formi:sähköpostilistalla" />
+								<h:selectBooleanCheckbox value="#{itse.yhteystiedot.sähköpostilistalla}" id="sähköpostilistalla" />
+							</h:panelGrid>
 							<h:outputText value=" " />
 							<h:outputText value=" " />
 							<h:outputText value="Osoite" />
-							<h:inputText value="#{itse.osoite.osoite}" rendered="#{!itse.alaikäinen}" />
+							<h:panelGrid>
+								<ace:message for="formi:osoite" />
+								<h:inputText value="#{itse.osoite.osoite}" rendered="#{!itse.alaikäinen}" id="osoite" />
+							</h:panelGrid>
 							<h:outputText value="#{itse.osoite.osoite}" rendered="#{itse.alaikäinen}" />
 							<h:outputText value="Postinumero" />
-							<h:inputText value="#{itse.osoite.postinumero}" rendered="#{!itse.alaikäinen}" />
+							<h:panelGrid>
+								<ace:message for="postinumero" />
+								<h:inputText value="#{itse.osoite.postinumero}" rendered="#{!itse.alaikäinen}" id="postinumero" />
+							</h:panelGrid>
 							<h:outputText value="#{itse.osoite.postinumero}" rendered="#{itse.alaikäinen}" />
 							<h:outputText value="Kaupunki" />
-							<h:inputText value="#{itse.osoite.kaupunki}" rendered="#{!itse.alaikäinen}" />
+							<h:panelGrid>
+								<ace:message for="formi:kaupunki" />
+								<h:inputText value="#{itse.osoite.kaupunki}" rendered="#{!itse.alaikäinen}" id="kaupunki" />
+							</h:panelGrid>
 							<h:outputText value="#{itse.osoite.kaupunki}" rendered="#{itse.alaikäinen}" />
 							<h:outputText value=" " />
 							<h:outputText value=" " />
 							<h:outputText value="Salasana" />
-							<h:inputSecret value="#{itse.salasana}" redisplay="true" />
+							<h:panelGrid>
+								<ace:message for="formi:salasana" />
+								<h:inputSecret value="#{itse.salasana}" redisplay="true" id="salasana" />
+							</h:panelGrid>
+							<h:outputText value=""/>
+							<h:commandButton value="x" styleClass="ikoni" action="#{käyttäjäylläpito.tallennaItse}"
+								image="/kuvat/tallenna.jpg" style="float:right"/>
 						</h:panelGrid>
 					</h:panelGrid>
+
 				</ace:tabPane>
 				<ace:tabPane label="Treenikäynnit">
 					<ace:dataTable value="#{itse.treenikäynnit}" var="_treenikäynti" rows="10" paginator="true"

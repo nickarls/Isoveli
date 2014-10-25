@@ -1,15 +1,12 @@
 package fi.budokwai.isoveli.admin;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
@@ -34,7 +31,6 @@ import org.icefaces.ace.model.table.RowStateMap;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
-import fi.budokwai.isoveli.malli.JäljelläVyökokeeseen;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Rooli;
@@ -164,17 +160,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          haeHarrastajat();
       }
       return harrastajat;
-   }
-
-   @Produces
-   @Named
-   public List<Vyöarvo> getVyöarvot()
-   {
-      if (vyöarvot == null)
-      {
-         haeVyöarvot();
-      }
-      return vyöarvot;
    }
 
    @Produces
@@ -413,10 +398,10 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void lisääVyökoe()
    {
       vyökoe = new Vyökoe();
-      Vyöarvo seuraavaVyöarvo = getVyöarvot().iterator().next();
+      Vyöarvo seuraavaVyöarvo = vyöarvot.iterator().next();
       if (!harrastaja.getVyökokeet().isEmpty())
       {
-         seuraavaVyöarvo = getVyöarvot().get(vyöarvot.indexOf(harrastaja.getTuoreinVyöarvo()) + 1);
+         seuraavaVyöarvo = vyöarvot.get(vyöarvot.indexOf(harrastaja.getTuoreinVyöarvo()) + 1);
       }
       vyökoe.setVyöarvo(seuraavaVyöarvo);
       vyökoe.setPäivä(new Date());
@@ -445,22 +430,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          päivä = päivä.withMonth(1).with(TemporalAdjusters.lastDayOfMonth());
          sopimus.setUmpeutuu(Date.from(päivä.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
       }
-   }
-
-   public JäljelläVyökokeeseen laskeJäljelläVyökokeeseen(Vyöarvo vyöarvo)
-   {
-      Optional<Vyöarvo> seuraavaVyöarvo = getVyöarvot().stream()
-         .filter(va -> va.getJärjestys() == vyöarvo.getJärjestys() + 1).findFirst();
-      if (!seuraavaVyöarvo.isPresent())
-      {
-         return JäljelläVyökokeeseen.EI_OOTA;
-      }
-      long treenit = seuraavaVyöarvo.get().getMinimitreenit() - harrastaja.getTreenejäViimeVyökokeesta();
-      LocalDate tuoreinVyökoe = harrastaja.getTuoreinVyökoe().getKoska();
-      LocalDate nyt = LocalDateTime.now().toLocalDate().atStartOfDay().toLocalDate();
-      Period aika = Period.between(nyt,
-         tuoreinVyökoe.plus(seuraavaVyöarvo.get().getMinimikuukaudet(), ChronoUnit.MONTHS));
-      return new JäljelläVyökokeeseen(aika, treenit);
    }
 
    public void harrastajaValittu(SelectEvent e)

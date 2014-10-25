@@ -323,6 +323,27 @@ public class Harrastaja extends Henkilö
       return Period.between(edellinen, LocalDate.now());
    }
 
+   public JäljelläVyökokeeseen getJäljelläVyökokeeseen(List<Vyöarvo> vyöarvot)
+   {
+      Vyöarvo vyöarvo = getTuoreinVyöarvo();
+      if (vyöarvo == Vyöarvo.EI_OOTA)
+      {
+         return JäljelläVyökokeeseen.EI_OOTA;
+      }
+      Optional<Vyöarvo> seuraavaVyöarvo = vyöarvot.stream()
+         .filter(va -> va.getJärjestys() == vyöarvo.getJärjestys() + 1).findFirst();
+      if (!seuraavaVyöarvo.isPresent())
+      {
+         return JäljelläVyökokeeseen.EI_OOTA;
+      }
+      long treenit = seuraavaVyöarvo.get().getMinimitreenit() - getTreenejäViimeVyökokeesta();
+      LocalDate tuoreinVyökoe = getTuoreinVyökoe().getKoska();
+      LocalDate nyt = LocalDateTime.now().toLocalDate().atStartOfDay().toLocalDate();
+      Period aika = Period.between(nyt,
+         tuoreinVyökoe.plus(seuraavaVyöarvo.get().getMinimikuukaudet(), ChronoUnit.MONTHS));
+      return new JäljelläVyökokeeseen(aika, treenit, seuraavaVyöarvo.get());
+   }
+
    public boolean isOsoiteMuuttunut()
    {
       return osoiteMuuttunut;

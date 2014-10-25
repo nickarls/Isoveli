@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+	<h:outputStylesheet library="css" name="jquery.growl.css" target="head" />
+	<h:outputScript library="skriptit" name="jquery.min.js" target="head" />
+	<h:outputScript library="skriptit" name="jquery.growl.js" target="head" />
+	<style>
+.kuva {
+	width: 130px;
+	height: 150px
+}
+
+.taulu {
+	border: 1px solid #e0e0e0;
+	width: 300px;
+	margin-left: auto;
+	margin-right: auto
+}
+
+.nimi {
+	font-size: 26px;
+	font-weight: bold;
+	padding-bottom: 10px
+}
+</style>
+</h:head>
+<h:body>
+	<f:view>
+		<h:form id="formi">
+			<ace:tabSet>
+				<ace:tabPane label="Etusivu">
+					<h:outputText value="#{itse.nimi}" styleClass="nimi" />
+					<h:panelGrid columns="4">
+						<h:panelGroup>
+							<ace:graphicImage value="kuvat/mies.jpg" class="kuva" rendered="#{!itse.kuvallinen and itse.mies}" />
+							<ace:graphicImage value="kuvat/nainen.jpg" class="kuva" rendered="#{!itse.kuvallinen and itse.nainen}" />
+							<ace:graphicImage value="#{itse.kuva.tieto}" class="kuva" rendered="#{itse.kuvallinen}" />
+						</h:panelGroup>
+						<h:panelGrid columns="2">
+							<h:outputText value="Puhelin" />
+							<h:inputText value="#{itse.yhteystiedot.puhelinnumero}" />
+							<h:outputText value="Sähköpoisti" />
+							<h:inputText value="#{itse.yhteystiedot.sähköposti}" />
+							<h:outputText value="Sähköpostilistalla" />
+							<h:selectBooleanCheckbox value="#{itse.yhteystiedot.sähköpostilistalla}" />
+							<h:outputText value=" " />
+							<h:outputText value=" " />
+							<h:outputText value="Osoite" />
+							<h:inputText value="#{itse.osoite.osoite}" rendered="#{!itse.alaikäinen}" />
+							<h:outputText value="#{itse.osoite.osoite}" rendered="#{itse.alaikäinen}" />
+							<h:outputText value="Postinumero" />
+							<h:inputText value="#{itse.osoite.postinumero}" rendered="#{!itse.alaikäinen}" />
+							<h:outputText value="#{itse.osoite.postinumero}" rendered="#{itse.alaikäinen}" />
+							<h:outputText value="Kaupunki" />
+							<h:inputText value="#{itse.osoite.kaupunki}" rendered="#{!itse.alaikäinen}" />
+							<h:outputText value="#{itse.osoite.kaupunki}" rendered="#{itse.alaikäinen}" />
+							<h:outputText value=" " />
+							<h:outputText value=" " />
+							<h:outputText value="Salasana" />
+							<h:inputSecret value="#{itse.salasana}" redisplay="true" />
+						</h:panelGrid>
+					</h:panelGrid>
+				</ace:tabPane>
+				<ace:tabPane label="Treenikäynnit">
+					<ace:dataTable value="#{itse.treenikäynnit}" var="_treenikäynti" rows="10" paginator="true"
+						paginatorPosition="bottom" paginatorAlwaysVisible="false">
+						<ace:column headerText="Aikaleima">
+							<h:outputText value="#{_treenikäynti.aikaleima}">
+								<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET" />
+							</h:outputText>
+						</ace:column>
+						<ace:column headerText="Päivä">
+							<h:outputText value="#{_treenikäynti.treenisessio.treeni.päivä}" />
+						</ace:column>
+						<ace:column headerText="Treeni">
+							<h:outputText value="#{_treenikäynti.treenisessio.treeni.nimi}" />
+						</ace:column>
+						<ace:column headerText="Tyyppi">
+							<h:outputText value="#{_treenikäynti.treenisessio.treeni.tyyppi.nimi}" />
+						</ace:column>
+						<ace:column headerText="Aika">
+							<h:panelGrid columns="3">
+								<h:outputText value="#{_treenikäynti.treenisessio.treeni.alkaa}">
+									<f:convertDateTime pattern="HH:mm" />
+								</h:outputText>
+								<h:outputText value="-" />
+								<h:outputText value="#{_treenikäynti.treenisessio.treeni.päättyy}">
+									<f:convertDateTime pattern="HH:mm" />
+								</h:outputText>
+							</h:panelGrid>
+						</ace:column>
+						<ace:column headerText="Vetäjä">
+							<ui:repeat value="#{_treenikäynti.treenisessio.vetäjät}" var="_vetäjä">
+								<h:outputText value="#{_vetäjä.nimi}" />
+								<br />
+							</ui:repeat>
+						</ace:column>
+					</ace:dataTable>
+				</ace:tabPane>
+				<ace:tabPane label="Vyökokeet">
+					<h:panelGrid columns="2">
+						<ace:chart animated="true" value="#{käyttäjäylläpito.aikaaVyökokeeseen}" />
+						<ace:chart animated="true" value="#{käyttäjäylläpito.treenejäVyökokeeseen}" />
+					</h:panelGrid>
+					<ace:dataTable value="#{itse.vyökokeet}" var="_vyökoe" rows="10" paginator="true" paginatorPosition="bottom"
+						paginatorAlwaysVisible="false">
+						<ace:column>
+							<h:graphicImage value="/kuvat/vyöt/#{_vyökoe.vyöarvo.id}.png" />
+						</ace:column>
+						<ace:column headerText="Vyöarvo">
+							<h:outputText value="#{_vyökoe.vyöarvo.nimi}" />
+						</ace:column>
+						<ace:column headerText="Päivä">
+							<h:outputText value="#{_vyökoe.päivä}">
+								<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
+							</h:outputText>
+						</ace:column>
+						<ace:column headerText="Aikaa välissä">
+							<h:outputText value="#{_vyökoe.aikaaVälissä}" />
+						</ace:column>
+						<ace:column headerText="Seuraavaan kokeeseen">
+							<h:panelGrid columns="2" rendered="#{_vyökoe.tuoreinVyökoe}">
+								<h:outputText value="Päiviä" />
+								<h:outputText value="#{_itse.jäljelläVyökokeeseen(kaikkiVyöarvot).aikaString}" />
+								<h:outputText value="Treenikertoja" />
+								<h:outputText value="#{_itse.jäljelläVyökokeeseen(kaikkiVyöarvot).treenikertoja} kertaa" />
+							</h:panelGrid>
+						</ace:column>
+					</ace:dataTable>
+				</ace:tabPane>
+				<ace:tabPane label="Sopimukset">
+					<ace:dataTable value="#{itse.sopimukset}" var="_sopimus" rows="10" paginator="true" paginatorPosition="bottom"
+						paginatorAlwaysVisible="false">
+						<ace:column headerText="Tyyppi">
+							<h:outputText value="#{_sopimus.tyyppi.nimi}" />
+						</ace:column>
+						<ace:column headerText="Maksuväli">
+							<h:outputText value="#{_sopimus.maksuväli}" />
+						</ace:column>
+						<ace:column headerText="Umpeutuu">
+							<h:outputText value="#{_sopimus.umpeutuu}">
+								<f:convertDateTime pattern="dd.MM.yyyy" />
+							</h:outputText>
+						</ace:column>
+						<ace:column headerText="Treenikertoja">
+							<h:outputText value="#{_sopimus.treenikertoja}" />
+						</ace:column>
+					</ace:dataTable>
+				</ace:tabPane>
+				<ace:tabPane label="Tulokset">
+				</ace:tabPane>
+			</ace:tabSet>
+		</h:form>
+	</f:view>
+</h:body>
+
+</html>

@@ -9,11 +9,13 @@ public class JäljelläVyökokeeseen
    public static JäljelläVyökokeeseen EI_OOTA = new JäljelläVyökokeeseen();
    private Period aika = Period.ZERO;
    private long treenikertoja;
+   private Vyöarvo seuraavaVyöarvo;
 
-   public JäljelläVyökokeeseen(Period aika, long treenikertoja)
+   public JäljelläVyökokeeseen(Period aika, long treenikertoja, Vyöarvo seuraavaVyöarvo)
    {
       this.aika = aika;
       this.treenikertoja = treenikertoja;
+      this.seuraavaVyöarvo = seuraavaVyöarvo;
    }
 
    public JäljelläVyökokeeseen()
@@ -33,6 +35,16 @@ public class JäljelläVyökokeeseen
    public String getAikaString()
    {
       return Util.period2String(aika);
+   }
+
+   public Vyöarvo getSeuraavaVyöarvo()
+   {
+      return seuraavaVyöarvo;
+   }
+
+   public void setTreenikertoja(long treenikertoja)
+   {
+      this.treenikertoja = treenikertoja;
    }
 
 }

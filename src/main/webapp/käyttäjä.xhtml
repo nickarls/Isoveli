@@ -10,8 +10,8 @@
 	<h:outputScript library="skriptit" name="jquery.growl.js" target="head" />
 	<style>
 .kuva {
-	width: 130px;
-	height: 150px
+	width: 200px;
+	height: 250px
 }
 
 .taulu {
@@ -41,9 +41,10 @@
 					<h:outputText value="#{itse.nimi}" styleClass="nimi" />
 					<h:panelGrid columns="4">
 						<h:panelGroup>
-							<ace:graphicImage value="kuvat/mies.jpg" class="kuva" rendered="#{!itse.kuvallinen and itse.mies}" />
-							<ace:graphicImage value="kuvat/nainen.jpg" class="kuva" rendered="#{!itse.kuvallinen and itse.nainen}" />
-							<ace:graphicImage value="#{itse.kuva.tieto}" class="kuva" rendered="#{itse.kuvallinen}" />
+							<ace:graphicImage value="kuvat/mies.jpg" styleClass="kuva" rendered="#{!itse.kuvallinen and itse.mies}" />
+							<ace:graphicImage value="kuvat/nainen.jpg" styleClass="kuva" rendered="#{!itse.kuvallinen and itse.nainen}" />
+							<ace:graphicImage value="#{itse.kuva.tieto}" styleClass="kuva" rendered="#{itse.kuvallinen}" />
+							<ace:fileEntry fileEntryListener="#{käyttäjäylläpito.kuvatallennus}" immediate="true" />
 						</h:panelGroup>
 						<h:panelGrid columns="2">
 							<h:outputText value="Puhelin" />
@@ -88,9 +89,10 @@
 								<ace:message for="formi:salasana" />
 								<h:inputSecret value="#{itse.salasana}" redisplay="true" id="salasana" />
 							</h:panelGrid>
-							<h:outputText value=""/>
+							<h:outputText value="" />
 							<h:commandButton value="x" styleClass="ikoni" action="#{käyttäjäylläpito.tallennaItse}"
-								image="/kuvat/tallenna.jpg" style="float:right"/>
+								image="/kuvat/tallenna.jpg" style="float:right">
+							</h:commandButton>
 						</h:panelGrid>
 					</h:panelGrid>
 

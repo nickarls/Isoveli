@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -18,7 +19,9 @@ import javax.persistence.PersistenceContextType;
 import org.icefaces.ace.component.fileentry.FileEntry;
 import org.icefaces.ace.component.fileentry.FileEntryEvent;
 import org.icefaces.ace.component.fileentry.FileEntryResults;
+import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.chart.GaugeSeries;
+import org.icefaces.ace.model.table.RowStateMap;
 
 import fi.budokwai.isoveli.admin.Perustoiminnallisuus;
 import fi.budokwai.isoveli.malli.BlobData;
@@ -26,6 +29,7 @@ import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.JäljelläVyökokeeseen;
 import fi.budokwai.isoveli.malli.Tiedostotyyppi;
 import fi.budokwai.isoveli.malli.Vyöarvo;
+import fi.budokwai.isoveli.malli.Vyökoe;
 
 @Stateful
 @SessionScoped
@@ -38,11 +42,85 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    private Harrastaja itse;
    private List<Vyöarvo> vyöarvot;
 
+   private RowStateMap vyökoeRSM = new RowStateMap();
+   private Vyökoe vyökoe;
+
    @PostConstruct
    public void init()
    {
       itse = entityManager.find(Harrastaja.class, 1);
       vyöarvot = entityManager.createNamedQuery("vyöarvot", Vyöarvo.class).getResultList();
+   }
+
+   @Produces
+   @Named
+   public Vyökoe getOmaVyökoe()
+   {
+      return vyökoe;
+   }
+
+   @Produces
+   @Named
+   public List<Vyöarvo> getVyöarvot()
+   {
+      return vyöarvot;
+   }
+
+   public void peruutaVyökoemuutos()
+   {
+      if (vyökoe.isPoistettavissa())
+      {
+         entityManager.refresh(vyökoe);
+      } else
+      {
+         vyökoe = null;
+      }
+      virhe("Muutokset peruttu");
+   }
+
+   public void tallennaVyökoe()
+   {
+      if (!itse.getVyökokeet().contains(vyökoe))
+      {
+         vyökoe.setHarrastaja(itse);
+         itse.getVyökokeet().add(vyökoe);
+      }
+      entityManager.persist(itse);
+      vyökoeRSM.get(vyökoe).setSelected(true);
+      info("Vyökoe tallennettu");
+   }
+
+   public void poistaVyökoe()
+   {
+      itse.getVyökokeet().remove(vyökoe);
+      itse = entityManager.merge(itse);
+      entityManager.flush();
+      info("Vyökoe poistettu");
+   }
+
+   public void lisääVyökoe()
+   {
+      vyökoe = new Vyökoe();
+      Vyöarvo seuraavaVyöarvo = vyöarvot.iterator().next();
+      if (!itse.getVyökokeet().isEmpty())
+      {
+         seuraavaVyöarvo = vyöarvot.get(vyöarvot.indexOf(itse.getTuoreinVyöarvo()) + 1);
+      }
+      vyökoe.setVyöarvo(seuraavaVyöarvo);
+      vyökoe.setPäivä(new Date());
+      vyökoe.setHarrastaja(itse);
+      vyökoeRSM.setAllSelected(false);
+      info("Uusi vyökoe alustettu");
+   }
+
+   public void piilotaVyökoe()
+   {
+      vyökoe = null;
+   }
+
+   public void vyökoeValittu(SelectEvent e)
+   {
+      vyökoe = (Vyökoe) e.getObject();
    }
 
    public void kuvatallennus(FileEntryEvent event) throws IOException
@@ -112,6 +190,16 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
       data.add(sarja);
       return Arrays.asList(new GaugeSeries[]
       { sarja });
+   }
+
+   public RowStateMap getVyökoeRSM()
+   {
+      return vyökoeRSM;
+   }
+
+   public void setVyökoeRSM(RowStateMap vyökoeRSM)
+   {
+      this.vyökoeRSM = vyökoeRSM;
    }
 
 }

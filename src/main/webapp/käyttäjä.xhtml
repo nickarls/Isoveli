@@ -35,11 +35,11 @@
 </h:head>
 <h:body>
 	<f:view>
-		<h:form id="formi">
+		<h:form id="form">
 			<ace:tabSet>
 				<ace:tabPane label="Etusivu">
 					<h:outputText value="#{itse.nimi}" styleClass="nimi" />
-					<h:panelGrid columns="4">
+					<h:panelGrid columns="2">
 						<h:panelGroup>
 							<ace:graphicImage value="kuvat/mies.jpg" styleClass="kuva" rendered="#{!itse.kuvallinen and itse.mies}" />
 							<ace:graphicImage value="kuvat/nainen.jpg" styleClass="kuva" rendered="#{!itse.kuvallinen and itse.nainen}" />
@@ -49,24 +49,24 @@
 						<h:panelGrid columns="2">
 							<h:outputText value="Puhelin" />
 							<h:panelGrid>
-								<ace:message for="formi:puhelin" />
+								<ace:message for="form:puhelin" />
 								<h:inputText value="#{itse.yhteystiedot.puhelinnumero}" id="puhelin" />
 							</h:panelGrid>
 							<h:outputText value="Sähköpoisti" />
 							<h:panelGrid>
-								<ace:message for="formi:sähköposti" />
+								<ace:message for="form:sähköposti" />
 								<h:inputText value="#{itse.yhteystiedot.sähköposti}" id="sähköposti" />
 							</h:panelGrid>
 							<h:outputText value="Sähköpostilistalla" />
 							<h:panelGrid>
-								<ace:message for="formi:sähköpostilistalla" />
+								<ace:message for="form:sähköpostilistalla" />
 								<h:selectBooleanCheckbox value="#{itse.yhteystiedot.sähköpostilistalla}" id="sähköpostilistalla" />
 							</h:panelGrid>
 							<h:outputText value=" " />
 							<h:outputText value=" " />
 							<h:outputText value="Osoite" />
 							<h:panelGrid>
-								<ace:message for="formi:osoite" />
+								<ace:message for="form:osoite" />
 								<h:inputText value="#{itse.osoite.osoite}" rendered="#{!itse.alaikäinen}" id="osoite" />
 							</h:panelGrid>
 							<h:outputText value="#{itse.osoite.osoite}" rendered="#{itse.alaikäinen}" />
@@ -78,7 +78,7 @@
 							<h:outputText value="#{itse.osoite.postinumero}" rendered="#{itse.alaikäinen}" />
 							<h:outputText value="Kaupunki" />
 							<h:panelGrid>
-								<ace:message for="formi:kaupunki" />
+								<ace:message for="form:kaupunki" />
 								<h:inputText value="#{itse.osoite.kaupunki}" rendered="#{!itse.alaikäinen}" id="kaupunki" />
 							</h:panelGrid>
 							<h:outputText value="#{itse.osoite.kaupunki}" rendered="#{itse.alaikäinen}" />
@@ -86,7 +86,7 @@
 							<h:outputText value=" " />
 							<h:outputText value="Salasana" />
 							<h:panelGrid>
-								<ace:message for="formi:salasana" />
+								<ace:message for="form:salasana" />
 								<h:inputSecret value="#{itse.salasana}" redisplay="true" id="salasana" />
 							</h:panelGrid>
 							<h:outputText value="" />
@@ -95,7 +95,6 @@
 							</h:commandButton>
 						</h:panelGrid>
 					</h:panelGrid>
-
 				</ace:tabPane>
 				<ace:tabPane label="Treenikäynnit">
 					<ace:dataTable value="#{itse.treenikäynnit}" var="_treenikäynti" rows="10" paginator="true"
@@ -138,8 +137,21 @@
 						<ace:chart animated="true" value="#{käyttäjäylläpito.aikaaVyökokeeseen}" />
 						<ace:chart animated="true" value="#{käyttäjäylläpito.treenejäVyökokeeseen}" />
 					</h:panelGrid>
+					<ace:confirmationDialog id="vahvistaVyökokeenPoisto" message="Oletko varma?" header="Vahvista" width="350"
+						height="200" closable="true" position="center">
+						<h:panelGrid columns="2" styleClass="centeredPanelGrid">
+							<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaVyökokeenPoisto').hide()"
+								action="#{käyttäjäylläpito.piilotaVyökoe}" actionListener="#{käyttäjäylläpito.poistaVyökoe}" />
+							<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaVyökokeenPoisto').hide()" />
+						</h:panelGrid>
+					</ace:confirmationDialog>
+					<h:commandButton action="#{käyttäjäylläpito.lisääVyökoe}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
+						immediate="true">
+						<ace:ajax render="@form" />
+					</h:commandButton>
 					<ace:dataTable value="#{itse.vyökokeet}" var="_vyökoe" rows="10" paginator="true" paginatorPosition="bottom"
-						paginatorAlwaysVisible="false">
+						paginatorAlwaysVisible="false" selectionMode="single" rowSelectListener="#{käyttäjäylläpito.vyökoeValittu}"
+						stateMap="#{käyttäjäylläpito.vyökoeRSM}">
 						<ace:column>
 							<h:graphicImage value="/kuvat/vyöt/#{_vyökoe.vyöarvo.id}.png" />
 						</ace:column>
@@ -163,6 +175,37 @@
 							</h:panelGrid>
 						</ace:column>
 					</ace:dataTable>
+					<p />
+					<ace:panel header="Vyökoetiedot" rendered="#{omaVyökoe != null}" style="width:300px">
+						<h:panelGrid>
+							<h:outputText value="Vyöarvo" />
+							<h:panelGrid>
+								<ace:message for="form:vyöarvo" />
+								<h:selectOneMenu value="#{omaVyökoe.vyöarvo}" id="vyöarvo">
+									<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}" />
+									<f:converter converterId="objectConverter" />
+								</h:selectOneMenu>
+							</h:panelGrid>
+							<h:outputText value="Päivä" />
+							<h:panelGrid>
+								<ace:message for="form:vyökoepäivä" />
+								<ace:dateTimeEntry value="#{omaVyökoe.päivä}" renderAsPopup="true" pattern="dd.MM.yyyy" id="vyökoepäivä"
+									timeZone="EET" />
+							</h:panelGrid>
+						</h:panelGrid>
+					</ace:panel>
+					<h:commandButton rendered="#{omaVyökoe != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
+						action="#{käyttäjäylläpito.tallennaVyökoe}">
+						<f:ajax execute="@form" render="@form" />
+					</h:commandButton>
+					<h:commandButton rendered="#{omaVyökoe != null}" value="x" styleClass="ikoni" immediate="true"
+						action="#{käyttäjäylläpito.peruutaVyökoemuutos}" image="/kuvat/peruuta_muutos.png">
+						<f:ajax render="@form" />
+					</h:commandButton>
+					<h:commandButton rendered="#{omaVyökoe.poistettavissa}" value="x" styleClass="ikoni"
+						onclick="ice.ace.instance('form:vahvistaVyökokeenPoisto').show();" image="/kuvat/poista.png" immediate="true">
+						<ace:ajax render="@form" />
+					</h:commandButton>
 				</ace:tabPane>
 				<ace:tabPane label="Sopimukset">
 					<ace:dataTable value="#{itse.sopimukset}" var="_sopimus" rows="10" paginator="true" paginatorPosition="bottom"

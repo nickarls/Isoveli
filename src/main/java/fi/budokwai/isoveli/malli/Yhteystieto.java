@@ -31,7 +31,7 @@ public class Yhteystieto
 
    @Column(name = "sahkopostilistalla")
    @Type(type = "KylläEi")
-   private boolean sähköpostilistalla;
+   private boolean sähköpostilistalla = true;
 
    public int getId()
    {

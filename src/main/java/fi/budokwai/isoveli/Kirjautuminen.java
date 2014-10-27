@@ -69,7 +69,7 @@ public class Kirjautuminen extends Perustoiminnallisuus
          return "admin/admin.xhtml?faces-redirect=true";
       } else
       {
-         return "käyttäjä.xhtml?faces-redirect=true";
+         return "käyttäjä/käyttäjä.xhtml?faces-redirect=true";
       }
    }
 

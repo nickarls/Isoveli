@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+	<h:outputStylesheet library="css" name="jquery.growl.css" target="head" />
+	<h:outputScript library="skriptit" name="jquery.min.js" target="head" />
+	<h:outputScript library="skriptit" name="jquery.growl.js" target="head" />
+	<style>
+.kuva {
+	width: 200px;
+	height: 250px
+}
+
+.taulu {
+	border: 1px solid #e0e0e0;
+	width: 300px;
+	margin-left: auto;
+	margin-right: auto
+}
+
+.ikoni {
+	height: 64px;
+	width: 64px;
+}
+
+.nimi {
+	font-size: 26px;
+	font-weight: bold;
+	padding-bottom: 10px
+}
+</style>
+</h:head>
+<h:body>
+	<f:view>
+		<h:form id="form">
+			<h:commandLink action="#{exceptionHandler.tapaSessio()}" value="Kirjaudu ulos" />
+			<ace:tabSet>
+				<ui:include src="perustiedot.xhtml" />
+				<c:if test="#{itse.harrastaja}">
+					<ui:include src="treenikäynnit.xhtml" />
+				</c:if>
+				<c:if test="#{itse.harrastaja}">
+					<ui:include src="vyökokeet.xhtml" />
+				</c:if>
+				<c:if test="#{!itse.harrastaja}">
+					<ui:include src="sopimukset.xhtml" />
+				</c:if>
+				<c:if test="#{itse.harrastaja}">
+					<ace:tabPane label="Tulokset">
+					</ace:tabPane>
+				</c:if>
+			</ace:tabSet>
+		</h:form>
+	</f:view>
+</h:body>
+
+</html>

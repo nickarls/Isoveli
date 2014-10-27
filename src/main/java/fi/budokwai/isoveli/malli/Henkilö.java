@@ -3,6 +3,8 @@ package fi.budokwai.isoveli.malli;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -249,6 +251,17 @@ public class Henkilö implements Serializable
    public boolean isHarrastaja()
    {
       return false;
+   }
+
+   public boolean isAlaikäinen()
+   {
+      return false;
+   }
+
+   public List<Sopimus> getSopimukset()
+   {
+      return perhe.getPerheenjäsenet().stream().filter(h -> h.isHarrastaja()).map(h -> h.getSopimukset())
+         .flatMap(s -> s.stream()).collect(Collectors.toList());
    }
 
 }

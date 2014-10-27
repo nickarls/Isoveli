@@ -402,5 +402,11 @@ public class Harrastaja extends Henkilö
    {
       this.huomautus = huomautus;
    }
+   
+   public boolean isHarrastaja()
+   {
+      return true;
+   }
+   
 
 }

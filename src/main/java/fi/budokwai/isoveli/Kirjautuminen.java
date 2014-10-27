@@ -18,7 +18,6 @@ import org.apache.deltaspike.jsf.api.listener.phase.AfterPhase;
 import org.apache.deltaspike.jsf.api.listener.phase.JsfPhaseId;
 
 import fi.budokwai.isoveli.admin.Perustoiminnallisuus;
-import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Tunnukset;
 import fi.budokwai.isoveli.util.DSExceptionHandler;
@@ -36,21 +35,13 @@ public class Kirjautuminen extends Perustoiminnallisuus
 
    @Inject
    private DSExceptionHandler poikkeukset;
-   
-   @Produces
-   @Kirjautunut
-   @Named
-   public Henkilö getItseHenkilö()
-   {
-      return kirjautunutHenkilö;
-   }
 
    @Produces
    @Kirjautunut
    @Named
-   public Harrastaja getItseHarrastaja()
+   public Henkilö getKirjautunutHenkilö()
    {
-      return (Harrastaja) kirjautunutHenkilö;
+      return kirjautunutHenkilö;
    }
 
    @Inject
@@ -58,7 +49,6 @@ public class Kirjautuminen extends Perustoiminnallisuus
 
    public String kirjaudu()
    {
-      String x = tunnukset.get().getMD5Salasana();
       String[] nimiosat = tunnukset.get().getNimi().split(" ");
       if (nimiosat.length != 2)
       {

@@ -27,6 +27,7 @@ import org.icefaces.ace.model.table.RowStateMap;
 import fi.budokwai.isoveli.admin.Perustoiminnallisuus;
 import fi.budokwai.isoveli.malli.BlobData;
 import fi.budokwai.isoveli.malli.Harrastaja;
+import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.JäljelläVyökokeeseen;
 import fi.budokwai.isoveli.malli.Tiedostotyyppi;
 import fi.budokwai.isoveli.malli.Vyöarvo;
@@ -43,7 +44,7 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
 
    @Inject
    @Kirjautunut
-   private Harrastaja itse;
+   private Henkilö itse;
 
    private List<Vyöarvo> vyöarvot;
 
@@ -85,11 +86,12 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
 
    public void tallennaVyökoe()
    {
-      if (!itse.getVyökokeet().contains(vyökoe))
+      Harrastaja harrastaja = (Harrastaja) itse;
+      if (!harrastaja.getVyökokeet().contains(vyökoe))
       {
-         vyökoe.setHarrastaja(itse);
-         itse.getVyökokeet().add(vyökoe);
-         itse.getVyökokeet().sort(
+         vyökoe.setHarrastaja(harrastaja);
+         harrastaja.getVyökokeet().add(vyökoe);
+         harrastaja.getVyökokeet().sort(
             (v1, v2) -> Integer.valueOf(v1.getVyöarvo().getJärjestys()).compareTo(
                Integer.valueOf(v2.getVyöarvo().getJärjestys())));
       }
@@ -101,23 +103,25 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
 
    public void poistaVyökoe()
    {
-      itse.getVyökokeet().remove(vyökoe);
-      itse = entityManager.merge(itse);
+      Harrastaja harrastaja = (Harrastaja) itse;
+      harrastaja.getVyökokeet().remove(vyökoe);
+      harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       info("Vyökoe poistettu");
    }
 
    public void lisääVyökoe()
    {
+      Harrastaja harrastaja = (Harrastaja) itse;
       vyökoe = new Vyökoe();
       Vyöarvo seuraavaVyöarvo = vyöarvot.iterator().next();
-      if (!itse.getVyökokeet().isEmpty())
+      if (!harrastaja.getVyökokeet().isEmpty())
       {
-         seuraavaVyöarvo = vyöarvot.get(vyöarvot.indexOf(itse.getTuoreinVyöarvo()) + 1);
+         seuraavaVyöarvo = vyöarvot.get(vyöarvot.indexOf(harrastaja.getTuoreinVyöarvo()) + 1);
       }
       vyökoe.setVyöarvo(seuraavaVyöarvo);
       vyökoe.setPäivä(new Date());
-      vyökoe.setHarrastaja(itse);
+      vyökoe.setHarrastaja(harrastaja);
       vyökoeRSM.setAllSelected(false);
       info("Uusi vyökoe alustettu");
    }
@@ -157,7 +161,7 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
 
    @Produces
    @Named
-   public Harrastaja getItse()
+   public Henkilö getItse()
    {
       return itse;
    }
@@ -171,9 +175,10 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
 
    public List<GaugeSeries> getAikaaVyökokeeseen()
    {
+      Harrastaja harrastaja = (Harrastaja) itse;
       List<GaugeSeries> data = new ArrayList<GaugeSeries>();
       GaugeSeries sarja = new GaugeSeries();
-      JäljelläVyökokeeseen jäljelläVyökokeeseen = itse.getJäljelläVyökokeeseen(vyöarvot);
+      JäljelläVyökokeeseen jäljelläVyökokeeseen = harrastaja.getJäljelläVyökokeeseen(vyöarvot);
       int max = jäljelläVyökokeeseen.getSeuraavaVyöarvo().getMinimikuukaudet() * 30;
       sarja.setMax(max);
       sarja.setMin(0);
@@ -187,13 +192,14 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
 
    public List<GaugeSeries> getTreenejäVyökokeeseen()
    {
+      Harrastaja harrastaja = (Harrastaja) itse;
       List<GaugeSeries> data = new ArrayList<GaugeSeries>();
       GaugeSeries sarja = new GaugeSeries();
-      JäljelläVyökokeeseen jäljelläVyökokeeseen = itse.getJäljelläVyökokeeseen(vyöarvot);
+      JäljelläVyökokeeseen jäljelläVyökokeeseen = harrastaja.getJäljelläVyökokeeseen(vyöarvot);
       int max = jäljelläVyökokeeseen.getSeuraavaVyöarvo().getMinimitreenit();
       sarja.setMax(max);
       sarja.setMin(0);
-      int arvo = (int) itse.getTreenejäViimeVyökokeesta();
+      int arvo = (int) harrastaja.getTreenejäViimeVyökokeesta();
       sarja.setValue(arvo);
       sarja.setLabel("Treenirajoitus");
       data.add(sarja);

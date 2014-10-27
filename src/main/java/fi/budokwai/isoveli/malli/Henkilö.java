@@ -246,4 +246,9 @@ public class Henkilö implements Serializable
       return kuva;
    }
 
+   public boolean isHarrastaja()
+   {
+      return false;
+   }
+
 }

@@ -28,6 +28,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import fi.budokwai.isoveli.util.Kyll‰EiTyyppi;
+import fi.budokwai.isoveli.util.Util;
 
 @Entity
 @TypeDef(name = "Kyll‰Ei", typeClass = Kyll‰EiTyyppi.class)
@@ -152,7 +153,13 @@ public class Henkilˆ implements Serializable
 
    public void setSalasana(String salasana)
    {
-      this.salasana = salasana;
+      if (!salasana.equals(this.salasana))
+      {
+         this.salasana = Util.MD5(salasana);
+      } else
+      {
+         this.salasana = salasana;
+      }
    }
 
    public List<Rooli> getRoolit()

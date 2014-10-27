@@ -7,6 +7,8 @@ import javax.enterprise.inject.Model;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
+import fi.budokwai.isoveli.util.Util;
+
 @Model
 public class Tunnukset
 {
@@ -42,15 +44,7 @@ public class Tunnukset
       {
          return null;
       }
-      try
-      {
-         MessageDigest md = MessageDigest.getInstance("MD5");
-         return (new HexBinaryAdapter()).marshal(md.digest(salasana.getBytes()));
-      } catch (NoSuchAlgorithmException e)
-      {
-         e.printStackTrace();
-      }
-      return null;
+      return Util.MD5(salasana);
    }
 
 }

@@ -56,7 +56,7 @@
 				<h:outputText value="Salasana" />
 				<h:panelGrid>
 					<ace:message for="form:salasana" />
-					<h:inputSecret value="#{itse.salasana}" id="salasana" />
+					<h:inputSecret value="#{itse.salasana}" redisplay="true" id="salasana" />
 				</h:panelGrid>
 				<h:outputText value="" />
 				<h:commandButton value="x" styleClass="ikoni" action="#{käyttäjäylläpito.tallennaItse}" image="/kuvat/tallenna.jpg"

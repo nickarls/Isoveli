@@ -1,5 +1,7 @@
 package fi.budokwai.isoveli.util;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,6 +9,8 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 public class Util
 {
@@ -54,6 +58,19 @@ public class Util
       LocalDate sitten = LocalDateTime.ofInstant(Instant.ofEpochMilli(eräpäivä.getTime()), ZoneId.systemDefault())
          .toLocalDate().atStartOfDay().toLocalDate();
       return ChronoUnit.DAYS.between(nyt, sitten);
+   }
+
+   public static String MD5(String salasana)
+   {
+      try
+      {
+         MessageDigest md = MessageDigest.getInstance("MD5");
+         return (new HexBinaryAdapter()).marshal(md.digest(salasana.getBytes()));
+      } catch (NoSuchAlgorithmException e)
+      {
+         e.printStackTrace();
+      }
+      return null;
    }
 
 }

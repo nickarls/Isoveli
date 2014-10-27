@@ -152,6 +152,7 @@
 					<ace:dataTable value="#{itse.vyökokeet}" var="_vyökoe" rows="10" paginator="true" paginatorPosition="bottom"
 						paginatorAlwaysVisible="false" selectionMode="single" rowSelectListener="#{käyttäjäylläpito.vyökoeValittu}"
 						stateMap="#{käyttäjäylläpito.vyökoeRSM}">
+						<ace:ajax event="select" render="@form" />
 						<ace:column>
 							<h:graphicImage value="/kuvat/vyöt/#{_vyökoe.vyöarvo.id}.png" />
 						</ace:column>

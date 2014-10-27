@@ -34,7 +34,7 @@ public class DSExceptionHandler implements Serializable
       sessio.invalidate();
       try
       {
-         FacesContext.getCurrentInstance().getExternalContext().redirect("/Isoveli/admin/admin.xhtml");
+         FacesContext.getCurrentInstance().getExternalContext().redirect("/Isoveli");
       } catch (IOException e)
       {
          e.printStackTrace();

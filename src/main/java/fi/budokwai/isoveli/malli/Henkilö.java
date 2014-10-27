@@ -1,5 +1,6 @@
 package fi.budokwai.isoveli.malli;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
@@ -28,9 +30,12 @@ import fi.budokwai.isoveli.util.KylläEiTyyppi;
 @Entity
 @TypeDef(name = "KylläEi", typeClass = KylläEiTyyppi.class)
 @Table(name = "henkilo")
+@NamedQuery(name = "henkilö", query = "select h from Henkilö h where h.salasana = :salasana and h.etunimi = :etunimi and h.sukunimi = :sukunimi")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Henkilö
+public class Henkilö implements Serializable
 {
+   private static final long serialVersionUID = 1L;
+
    public static final Henkilö EI_KIRJAUTUNUT = new Henkilö();
 
    @Id
@@ -156,6 +161,26 @@ public class Henkilö
    public void setRoolit(List<Rooli> roolit)
    {
       this.roolit = roolit;
+   }
+
+   public boolean isTreenienVetäjä()
+   {
+      return onRoolissa("Treenien vetäjä");
+   }
+
+   public boolean isPäivystäjä()
+   {
+      return onRoolissa("Päivystäjä");
+   }
+
+   public boolean isPääkäyttäjä()
+   {
+      return onRoolissa("Pääkäyttäjä");
+   }
+
+   public boolean isPääsyHallintaan()
+   {
+      return isPäivystäjä() || isPääkäyttäjä();
    }
 
    public boolean onRoolissa(String roolinimi)

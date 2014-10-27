@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -30,6 +31,7 @@ import fi.budokwai.isoveli.malli.JäljelläVyökokeeseen;
 import fi.budokwai.isoveli.malli.Tiedostotyyppi;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Vyökoe;
+import fi.budokwai.isoveli.util.Kirjautunut;
 
 @Stateful
 @SessionScoped
@@ -39,7 +41,10 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    @PersistenceContext(type = PersistenceContextType.EXTENDED)
    private EntityManager entityManager;
 
+   @Inject
+   @Kirjautunut
    private Harrastaja itse;
+
    private List<Vyöarvo> vyöarvot;
 
    private RowStateMap vyökoeRSM = new RowStateMap();
@@ -48,7 +53,6 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    @PostConstruct
    public void init()
    {
-      itse = entityManager.find(Harrastaja.class, 1);
       vyöarvot = entityManager.createNamedQuery("vyöarvot", Vyöarvo.class).getResultList();
    }
 
@@ -84,9 +88,13 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
       {
          vyökoe.setHarrastaja(itse);
          itse.getVyökokeet().add(vyökoe);
+         itse.getVyökokeet().sort(
+            (v1, v2) -> Integer.valueOf(v1.getVyöarvo().getJärjestys()).compareTo(
+               Integer.valueOf(v2.getVyöarvo().getJärjestys())));
       }
       entityManager.persist(itse);
       vyökoeRSM.get(vyökoe).setSelected(true);
+      vyökoe = null;
       info("Vyökoe tallennettu");
    }
 

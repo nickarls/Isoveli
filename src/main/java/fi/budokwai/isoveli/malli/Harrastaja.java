@@ -366,11 +366,6 @@ public class Harrastaja extends Henkilö
       }
    }
 
-   public boolean isTreenienVetäjä()
-   {
-      return onRoolissa("Treenien vetäjä");
-   }
-
    @Override
    public int hashCode()
    {

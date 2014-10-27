@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+	<h:outputStylesheet library="css" name="jquery.growl.css" target="head" />
+	<h:outputScript library="skriptit" name="jquery.min.js" target="head" />
+	<h:outputScript library="skriptit" name="jquery.growl.js" target="head" />
+	<style>
+.logo {
+	height: 128px;
+	width: 128px;
+}
+
+.nappi {
+	height: 64px;
+	width: 64px;
+}
+
+.taulu {
+	width:300px; 
+	margin-left:auto; 
+	margin-right:auto; 
+	margin-top:100px; 
+	border:1px solid #e0e0e0;	
+}
+</style>
+</h:head>
+<h:body>
+	<f:view>
+		<h:form id="form">
+			<h:panelGrid columns="2" styleClass="taulu">
+				<h:graphicImage value="/kuvat/logo.png" styleClass="logo" />
+				<h:panelGrid columns="2">
+					<h:outputText value="Käyttäjänimi" />
+					<h:panelGrid>
+						<ace:message for="form:käyttäjänimi" />
+						<h:inputText value="#{tunnukset.nimi}" id="käyttäjänimi" />
+					</h:panelGrid>
+					<h:outputText value="Salasana" />
+					<h:panelGrid>
+						<ace:message for="form:salasana" />
+						<h:inputSecret value="#{tunnukset.salasana}" id="salasana" />
+					</h:panelGrid>
+					<h:outputText value="" />
+					<h:commandButton image="/kuvat/kirjaudu.png" action="#{kirjautuminen.kirjaudu}" styleClass="nappi" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</f:view>
+</h:body>
+
+</html>

@@ -38,7 +38,6 @@
 			sortBy="#{_lasku.maksuaikaa}">
 			<h:outputText value="#{_lasku.maksuaikaa}" style="color:#{_lasku.maksuaikaa &lt; 0 ? 'red' : 'green'}" />
 		</ace:column>
-
 		<ace:column headerText="Tila" filterBy="#{_lasku.tila}" filterOptions="#{tilasuodatukset}">
 			<h:outputText value="#{_lasku.tila.nimi}" />
 		</ace:column>
@@ -65,32 +64,32 @@
 					<h:outputText value="#{_laskurivi.rivinumero}" />
 				</ace:column>
 				<ace:column headerText="Tuotenimi">
-					<h:outputText value="#{_laskurivi.sopimus.tuotenimi}" />
+					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tuotenimi}" />
 				</ace:column>
-				<ace:column headerText="Tuotekoodi">
-					<h:outputText value="#{_laskurivi.sopimus.tyyppi.tuotekoodi}" />
+				<ace:column headerText="Jakso">
+					<h:outputText value="#{_laskurivi.sopimuslasku.jakso}" />
 				</ace:column>
 				<ace:column headerText="Määrä">
-					<h:outputText value="#{_laskurivi.sopimus.tyyppi.määrä}" />
+					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tyyppi.määrä}" />
 				</ace:column>
 				<ace:column headerText="Yksikkö">
-					<h:outputText value="#{_laskurivi.sopimus.tyyppi.yksikkö}" />
+					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tyyppi.yksikkö}" />
 				</ace:column>
 				<ace:column headerText="Verokanta">
-					<h:outputText value="ALV#{_laskurivi.sopimus.tyyppi.verokanta}" />
+					<h:outputText value="ALV#{_laskurivi.sopimuslasku.sopimus.tyyppi.verokanta}" />
 				</ace:column>
 				<ace:column headerText="Veroton hinta">
-					<h:outputText value="#{_laskurivi.sopimus.tyyppi.verotonHinta}">
+					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tyyppi.verotonHinta}">
 						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 					</h:outputText>
 				</ace:column>
 				<ace:column headerText="ALVn osuus">
-					<h:outputText value="#{_laskurivi.sopimus.tyyppi.ALVnOsuus}">
+					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tyyppi.ALVnOsuus}">
 						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 					</h:outputText>
 				</ace:column>
 				<ace:column headerText="Verollinen hinta">
-					<h:outputText value="#{_laskurivi.sopimus.tyyppi.verollinenHinta}">
+					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tyyppi.verollinenHinta}">
 						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 					</h:outputText>
 				</ace:column>

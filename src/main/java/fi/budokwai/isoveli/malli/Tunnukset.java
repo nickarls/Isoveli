@@ -1,11 +1,7 @@
 package fi.budokwai.isoveli.malli;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import javax.enterprise.inject.Model;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 import fi.budokwai.isoveli.util.Util;
 

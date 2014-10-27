@@ -18,6 +18,45 @@
 			<ace:column headerText="Treenikertoja">
 				<h:outputText value="#{_sopimus.treenikertoja}" />
 			</ace:column>
+			<ace:panelExpansion>
+				<h:outputText value="!" />
+				<!-- 				
+				<ace:dataTable rows="10" value="#{_sopimus.sopimuslaskut}" var="_sopimuslasku" paginator="true"
+					paginatorPosition="bottom" paginatorAlwaysVisible="false">
+					<ace:column headerText="Eräpäivä">
+						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.eräpäivä}">
+							<f:convertDateTime pattern="dd.MM.yyyy" />
+						</h:outputText>
+					</ace:column>
+					<ace:column headerText="Maksettu">
+						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.maksettu}">
+							<f:convertDateTime pattern="dd.MM.yyyy" />
+						</h:outputText>
+					</ace:column>
+					<ace:column headerText="Maksuaikaa">
+						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.maksuaikaa}"
+							style="color:#{_sopimuslasku.laskurivi.lasku.maksuaikaa &lt; 0 ? 'red' : 'green'}" />
+					</ace:column>
+					<ace:column headerText="Tila">
+						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.tila.nimi}" />
+					</ace:column>
+					<ace:column headerText="Laskurivejä">
+						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.laskurivejä}" />
+					</ace:column>
+					<ace:column headerText="Summa">
+						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.verollinenHinta}">
+							<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
+						</h:outputText>
+					</ace:column>
+					<ace:column>
+						<h:outputLink target="_blank" value="#{request.contextPath}/API/blob/lataa/#{_lasku.pdf.id}"
+							rendered="#{_sopimuslasku.laskurivi.lasku.pdf != null}">
+							<h:graphicImage value="/kuvat/pdf.png" style="width:24px" />
+						</h:outputLink>
+					</ace:column>
+				</ace:dataTable>
+				-->
+			</ace:panelExpansion>
 		</ace:dataTable>
 	</ace:tabPane>
 </ui:composition>

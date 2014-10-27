@@ -23,6 +23,7 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
 
+import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilˆ;
 import fi.budokwai.isoveli.malli.Lasku;
@@ -90,6 +91,7 @@ public class Lasku2PDF
       }
    }
 
+   @SuppressWarnings("unused")
    private class Otsikkotiedot
    {
       private Date p‰iv‰ys;
@@ -124,22 +126,34 @@ public class Lasku2PDF
    private PdfContentByte kangas;
    private Lasku lasku;
 
-   public Lasku2PDF(byte[] pohja, Lasku lasku) throws Exception
+   public Lasku2PDF(byte[] pohja, Lasku lasku)
    {
-      lukija = new PdfReader(pohja);
-      tulos = new ByteArrayOutputStream();
-      kirjoittaja = new PdfStamper(lukija, tulos);
-      kangas = kirjoittaja.getOverContent(1);
+      try
+      {
+         lukija = new PdfReader(pohja);
+         tulos = new ByteArrayOutputStream();
+         kirjoittaja = new PdfStamper(lukija, tulos);
+         kangas = kirjoittaja.getOverContent(1);
+      } catch (IOException | DocumentException e)
+      {
+         throw new IsoveliPoikkeus(String.format("Laskun %d muodostus ep‰onnistui", lasku.getId()), e);
+      }
       this.lasku = lasku;
    }
 
-   public byte[] muodosta() throws DocumentException, IOException
+   public byte[] muodosta()
    {
       k‰sitteleRivit();
       k‰sitteleVastaanottaja();
       k‰sitteleOtsikko();
-      t‰yt‰Kent‰t();
-      return loppuk‰sittely();
+      try
+      {
+         t‰yt‰Kent‰t();
+         return loppuk‰sittely();
+      } catch (IOException | DocumentException e)
+      {
+         throw new IsoveliPoikkeus(String.format("Laskun %d muodostus ep‰onnistui", lasku.getId()), e);
+      }
    }
 
    private void t‰yt‰Kent‰t() throws IOException, DocumentException
@@ -269,7 +283,7 @@ public class Lasku2PDF
    {
       lis‰‰Solu(taulukko, "#", Formatointi.OTSIKKO);
       lis‰‰Solu(taulukko, "Tuotenimi", Formatointi.V_OTSIKKO);
-      lis‰‰Solu(taulukko, "Tuote", Formatointi.OTSIKKO);
+      lis‰‰Solu(taulukko, "Jakso", Formatointi.OTSIKKO);
       lis‰‰Solu(taulukko, "M‰‰r‰", Formatointi.OTSIKKO);
       lis‰‰Solu(taulukko, "Yksikkˆ", Formatointi.OTSIKKO);
       lis‰‰Solu(taulukko, "ALV%", Formatointi.OTSIKKO);
@@ -288,10 +302,10 @@ public class Lasku2PDF
 
    private void kirjoitaLaskurivi(PdfPTable taulukko, Laskurivi laskurivi)
    {
-      Sopimustyyppi tyyppi = laskurivi.getSopimus().getTyyppi();
+      Sopimustyyppi tyyppi = laskurivi.getSopimuslasku().getSopimus().getTyyppi();
       lis‰‰Solu(taulukko, laskurivi.getRivinumero() + "", Formatointi.DATA);
-      lis‰‰Solu(taulukko, laskurivi.getSopimus().getTuotenimi(), Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, tyyppi.getTuotekoodi(), Formatointi.DATA);
+      lis‰‰Solu(taulukko, laskurivi.getSopimuslasku().getSopimus().getTuotenimi(), Formatointi.V_DATA);
+      lis‰‰Solu(taulukko, laskurivi.getSopimuslasku().getJakso(), Formatointi.DATA);
       lis‰‰Solu(taulukko, tyyppi.getM‰‰r‰() + "", Formatointi.DATA);
       lis‰‰Solu(taulukko, tyyppi.getYksikkˆ(), Formatointi.DATA);
       lis‰‰Solu(taulukko, tyyppi.getVerokanta() + "", Formatointi.DATA);

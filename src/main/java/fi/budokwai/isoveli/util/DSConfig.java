@@ -9,6 +9,8 @@ import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig.ClientWindo
 @Specializes
 public class DSConfig extends JsfModuleConfig
 {
+   private static final long serialVersionUID = 1L;
+
    @Override
    public ClientWindowConfig.ClientWindowRenderMode getDefaultWindowMode()
    {

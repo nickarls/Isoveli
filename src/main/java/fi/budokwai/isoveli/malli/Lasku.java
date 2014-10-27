@@ -1,9 +1,5 @@
 package fi.budokwai.isoveli.malli;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +29,7 @@ public class Lasku
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
-   @OneToMany(mappedBy = "lasku", cascade = CascadeType.ALL, orphanRemoval = true)
+   @OneToMany(mappedBy = "lasku", cascade = CascadeType.PERSIST, orphanRemoval = true)
    private List<Laskurivi> laskurivit = new ArrayList<Laskurivi>();
 
    @Enumerated(EnumType.STRING)
@@ -61,16 +57,16 @@ public class Lasku
    {
    }
 
-   public Lasku(List<Sopimus> sopimukset)
+   public Lasku(Harrastaja harrastaja)
    {
-      harrastaja = sopimukset.stream().findFirst().get().getHarrastaja();
-      er‰p‰iv‰ = haeEr‰p‰iv‰(14);
-      sopimukset.forEach(sopimus -> {
-         Laskurivi laskurivi = new Laskurivi(sopimus);
-         laskurivi.setLasku(this);
-         laskurivit.add(laskurivi);
-         laskurivi.setRivinumero(laskurivit.size());
-      });
+      this.harrastaja = harrastaja;
+      er‰p‰iv‰ = Util.p‰ivienP‰‰st‰(14);
+   }
+   
+   public void lis‰‰Rivi(Laskurivi laskurivi) {
+      laskurivi.setLasku(this);
+      laskurivit.add(laskurivi);
+      laskurivi.setRivinumero(laskurivit.size());
    }
 
    public int getLaskurivej‰()
@@ -78,12 +74,6 @@ public class Lasku
       return laskurivit.size();
    }
 
-   private Date haeEr‰p‰iv‰(int p‰ivi‰)
-   {
-      LocalDate nyt = LocalDateTime.now().toLocalDate();
-      nyt = nyt.plus(p‰ivi‰, ChronoUnit.DAYS);
-      return Date.from(nyt.atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant());
-   }
 
    public double getVerotonHinta()
    {

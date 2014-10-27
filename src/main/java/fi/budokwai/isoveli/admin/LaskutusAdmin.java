@@ -23,8 +23,10 @@ import org.icefaces.ace.model.table.RowStateMap;
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.BlobData;
 import fi.budokwai.isoveli.malli.Lasku;
+import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Sopimus;
+import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.util.Lasku2PDF;
 
 @Stateful
@@ -81,30 +83,25 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       Map<Osoite, List<Sopimus>> sopimuksetPerOsoite = laskuttamattomatSopimukset.stream().collect(
          Collectors.groupingBy(sopimus -> sopimus.getHarrastaja().isAlaik‰inen() ? sopimus.getHarrastaja().getOsoite()
             : sopimus.getHarrastaja().getPerhe().getOsoite()));
-      sopimuksetPerOsoite.keySet().forEach(osoite -> {
-         List<Sopimus> sopimukset = sopimuksetPerOsoite.get(osoite);
-         Lasku lasku = new Lasku(sopimukset);
-         entityManager.persist(lasku);
-         byte[] pdf = null;
-         try
-         {
-            pdf = teePdfLasku(lasku);
-         } catch (Exception e)
-         {
-            throw new IsoveliPoikkeus("Laskun luonti ep‰onnistui", e);
-         }
-         lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), pdf));
-         entityManager.persist(lasku);
-         sopimukset.forEach(sopimus -> {
-            entityManager.persist(sopimus);
-         });
-         entityManager.flush();
-      });
+      sopimuksetPerOsoite.keySet().forEach(osoite -> teeLaskuOsoitteelle(osoite, sopimuksetPerOsoite.get(osoite)));
       haeLaskuttamattomat();
       info("Muodosti %d sopimuksesta %d laskua", laskuttamattomatSopimukset.size(), sopimuksetPerOsoite.keySet().size());
    }
 
-   private byte[] teePdfLasku(Lasku lasku) throws Exception
+   private void teeLaskuOsoitteelle(Osoite osoite, List<Sopimus> sopimukset)
+   {
+      Lasku lasku = new Lasku(sopimukset.iterator().next().getHarrastaja());
+      sopimukset.forEach(sopimus -> {
+         Sopimuslasku sopimuslasku = new Sopimuslasku(sopimus);
+         Laskurivi laskurivi = new Laskurivi(sopimuslasku);
+         lasku.lis‰‰Rivi(laskurivi);
+      });
+//      byte[] pdf = teePdfLasku(lasku);
+//      lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), pdf));
+      entityManager.persist(lasku);
+   }
+
+   private byte[] teePdfLasku(Lasku lasku)
    {
       Optional<BlobData> mallit = entityManager.createNamedQuery("blobdata", BlobData.class)
          .setParameter("nimi", "laskupohja").getResultList().stream().findFirst();
@@ -183,15 +180,15 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 
    public void poistaLasku()
    {
-      lasku.getLaskurivit().forEach(l -> {
-         l.getSopimus().setLaskurivi(null);
-         l.setSopimus(null);
-         entityManager.persist(l);
-      });
-      entityManager.remove(lasku);
-      info("Lasku poistettu");
-      laskut = null;
-      haeLaskut();
+      // lasku.getLaskurivit().forEach(l -> {
+      // l.getSopimus().setLaskurivi(null);
+      // l.setSopimus(null);
+      // entityManager.persist(l);
+      // });
+      // entityManager.remove(lasku);
+      // info("Lasku poistettu");
+      // laskut = null;
+      // haeLaskut();
    }
 
    public RowStateMap getLaskuRSM()

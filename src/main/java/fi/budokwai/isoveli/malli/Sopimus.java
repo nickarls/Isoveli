@@ -1,6 +1,8 @@
 package fi.budokwai.isoveli.malli;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,13 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@NamedQuery(name = "laskuttamattomat_sopimukset", query = "select s from Sopimus s where s.tyyppi.laskutettava='K' and s.laskurivi is null order by s.umpeutuu desc")
+@NamedQuery(name = "laskuttamattomat_sopimukset", query = "select s from Sopimus s, Harrastaja h where s.harrastaja.id=h.id and h.arkistoitu='E' and s.tyyppi.laskutettava='K' order by s.umpeutuu desc")
 public class Sopimus
 {
    @Id
@@ -32,9 +35,8 @@ public class Sopimus
    @NotNull
    private Sopimustyyppi tyyppi;
 
-   @OneToOne(optional = true)
-   @JoinColumn(name = "laskurivi")
-   private Laskurivi laskurivi;
+   @OneToMany(mappedBy="sopimus")
+   private List<Sopimuslasku> sopimuslaskut = new ArrayList<Sopimuslasku>();
 
    @Temporal(TemporalType.DATE)
    private Date umpeutuu;
@@ -106,7 +108,7 @@ public class Sopimus
 
    public boolean isPoistettavissa()
    {
-      return id > 0 && laskurivi == null;
+      return id > 0 && sopimuslaskut.isEmpty();
    }
 
    @Override
@@ -140,14 +142,14 @@ public class Sopimus
       return String.format("%s (%s)", tyyppi.getNimi(), harrastaja.getEtunimi());
    }
 
-   public Laskurivi getLaskurivi()
+   public List<Sopimuslasku> getSopimuslaskut()
    {
-      return laskurivi;
+      return sopimuslaskut;
    }
 
-   public void setLaskurivi(Laskurivi laskurivi)
+   public void setSopimuslaskut(List<Sopimuslasku> sopimuslaskut)
    {
-      this.laskurivi = laskurivi;
+      this.sopimuslaskut = sopimuslaskut;
    }
 
 }

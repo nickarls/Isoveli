@@ -42,6 +42,7 @@ import fi.budokwai.isoveli.util.SukupuoliConverter;
 {})
 public class Harrastaja extends Henkilö
 {
+   private static final long serialVersionUID = 1L;
 
    @OneToOne(cascade = CascadeType.PERSIST)
    @JoinColumn(name = "huoltaja")

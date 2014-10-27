@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
@@ -71,6 +72,25 @@ public class Util
          e.printStackTrace();
       }
       return null;
+   }
+
+   public static LocalDate getT‰n‰‰n()
+   {
+      return LocalDateTime.now().toLocalDate().atStartOfDay().toLocalDate();
+   }
+
+   public static Date p‰ivienP‰‰st‰(int p‰ivi‰)
+   {
+
+      LocalDate nyt = LocalDateTime.now().toLocalDate();
+      nyt = nyt.plus(p‰ivi‰, ChronoUnit.DAYS);
+      return Date.from(nyt.atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant());
+   }
+
+   public static LocalDate date2LocalDateTime(Date umpeutuu)
+   {
+      return LocalDateTime.ofInstant(new Date(umpeutuu.getTime()).toInstant(), ZoneId.systemDefault()).toLocalDate()
+         .atStartOfDay().toLocalDate();
    }
 
 }

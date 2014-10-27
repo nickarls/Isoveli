@@ -27,8 +27,8 @@ public class Laskurivi
    private int rivinumero;
 
    @OneToOne(cascade=CascadeType.PERSIST, optional = false)
-   @JoinColumn(name = "sopimus")
-   private Sopimus sopimus;
+   @JoinColumn(name="sopimuslasku")
+   private Sopimuslasku sopimuslasku;
 
    @Temporal(TemporalType.TIMESTAMP)
    private Date luotu = new Date();
@@ -37,25 +37,30 @@ public class Laskurivi
    {
    }
 
-   public Laskurivi(Sopimus sopimus)
+   public Laskurivi(Sopimuslasku sopimuslasku)
    {
-      this.sopimus = sopimus;
-      sopimus.setLaskurivi(this);
+      this.sopimuslasku = sopimuslasku;
+      sopimuslasku.setLaskurivi(this);
+   }
+
+   private Sopimustyyppi getSopimustyyppi()
+   {
+      return sopimuslasku.getSopimus().getTyyppi();
    }
 
    public double getVerotonHinta()
    {
-      return sopimus.getTyyppi().getVerotonHinta();
+      return getSopimustyyppi().getVerotonHinta();
    }
 
    public double getALVnOsuus()
    {
-      return sopimus.getTyyppi().getALVnOsuus();
+      return getSopimustyyppi().getALVnOsuus();
    }
 
    public double getVerollinenHinta()
    {
-      return sopimus.getTyyppi().getVerollinenHinta();
+      return getSopimustyyppi().getVerollinenHinta();
    }
 
    public int getId()
@@ -98,13 +103,14 @@ public class Laskurivi
       this.luotu = luotu;
    }
 
-   public Sopimus getSopimus()
+   public Sopimuslasku getSopimuslasku()
    {
-      return sopimus;
+      return sopimuslasku;
    }
 
-   public void setSopimus(Sopimus sopimus)
+   public void setSopimuslasku(Sopimuslasku sopimuslasku)
    {
-      this.sopimus = sopimus;
+      this.sopimuslasku = sopimuslasku;
    }
+
 }

@@ -46,7 +46,7 @@
 				<c:if test="#{itse.harrastaja}">
 					<ui:include src="vyökokeet.xhtml" />
 				</c:if>
-				<c:if test="#{!itse.harrastaja}">
+				<c:if test="#{!itse.harrastaja or !itse.alaikäinen}">
 					<ui:include src="sopimukset.xhtml" />
 				</c:if>
 				<c:if test="#{itse.harrastaja}">

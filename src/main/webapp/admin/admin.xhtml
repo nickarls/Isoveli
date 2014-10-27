@@ -47,6 +47,7 @@
 <h:body>
 	<f:view>
 		<h:form id="form">
+			<h:commandLink action="#{exceptionHandler.tapaSessio()}" value="Kirjaudu ulos" />
 			<ace:tabSet tabChangeListener="#{harrastajaAdmin.päätabiMuuttui}">
 				<ace:tabPane label="Harrastajat">
 					<ui:include src="harrastajat/harrastajat.xhtml" />

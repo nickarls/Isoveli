@@ -173,14 +173,14 @@ public class Henkilˆ implements Serializable
       return onRoolissa("P‰ivyst‰j‰");
    }
 
-   public boolean isP‰‰k‰ytt‰j‰()
+   public boolean isYll‰pit‰j‰()
    {
-      return onRoolissa("P‰‰k‰ytt‰j‰");
+      return onRoolissa("Yll‰pit‰j‰");
    }
 
    public boolean isP‰‰syHallintaan()
    {
-      return isP‰ivyst‰j‰() || isP‰‰k‰ytt‰j‰();
+      return isP‰ivyst‰j‰() || isYll‰pit‰j‰();
    }
 
    public boolean onRoolissa(String roolinimi)

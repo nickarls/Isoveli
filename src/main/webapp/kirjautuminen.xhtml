@@ -17,6 +17,7 @@
 .nappi {
 	height: 64px;
 	width: 64px;
+	float: right;
 }
 
 .taulu {
@@ -28,7 +29,7 @@
 }
 </style>
 </h:head>
-<h:body>
+<h:body onload="document.getElementById('form:käyttäjänimi').focus();">
 	<f:view>
 		<h:form id="form">
 			<h:panelGrid columns="2" styleClass="taulu">
@@ -37,15 +38,15 @@
 					<h:outputText value="Käyttäjänimi" />
 					<h:panelGrid>
 						<ace:message for="form:käyttäjänimi" />
-						<h:inputText value="#{tunnukset.nimi}" id="käyttäjänimi" />
+						<h:inputText value="#{tunnukset.nimi}" id="käyttäjänimi" onkeypress="if (event.keyCode == 13) document.getElementById('form:salasana').focus();"/>
 					</h:panelGrid>
 					<h:outputText value="Salasana" />
 					<h:panelGrid>
 						<ace:message for="form:salasana" />
-						<h:inputSecret value="#{tunnukset.salasana}" id="salasana" />
+						<h:inputSecret value="#{tunnukset.salasana}" id="salasana" onkeypress="if (event.keyCode == 13) document.getElementById('form:kirjaudu').click();" />
 					</h:panelGrid>
 					<h:outputText value="" />
-					<h:commandButton image="/kuvat/kirjaudu.png" action="#{kirjautuminen.kirjaudu}" styleClass="nappi" />
+					<h:commandButton image="/kuvat/kirjaudu.png" action="#{kirjautuminen.kirjaudu}" styleClass="nappi" id="kirjaudu"/>
 				</h:panelGrid>
 			</h:panelGrid>
 		</h:form>

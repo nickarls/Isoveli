@@ -54,6 +54,7 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    public void init()
    {
       vyöarvot = entityManager.createNamedQuery("vyöarvot", Vyöarvo.class).getResultList();
+      itse = entityManager.merge(itse);
    }
 
    @Produces

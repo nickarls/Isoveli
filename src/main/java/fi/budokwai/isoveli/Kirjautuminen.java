@@ -7,6 +7,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
+import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,6 +21,7 @@ import fi.budokwai.isoveli.admin.Perustoiminnallisuus;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Tunnukset;
+import fi.budokwai.isoveli.util.DSExceptionHandler;
 import fi.budokwai.isoveli.util.Kirjautunut;
 
 @Stateful
@@ -32,6 +34,9 @@ public class Kirjautuminen extends Perustoiminnallisuus
    @PersistenceContext
    private EntityManager entityManager;
 
+   @Inject
+   private DSExceptionHandler poikkeukset;
+   
    @Produces
    @Kirjautunut
    @Named
@@ -84,9 +89,18 @@ public class Kirjautuminen extends Perustoiminnallisuus
       if (!(näkymä.endsWith("kirjautuminen.xhtml") || näkymä.endsWith("virhe.xhtml"))
          && kirjautunutHenkilö == Henkilö.EI_KIRJAUTUNUT)
       {
-         e.getFacesContext().getApplication().getNavigationHandler()
-            .handleNavigation(e.getFacesContext(), null, "kirjautuminen.xhtml");
-         e.getFacesContext().renderResponse();
+         loginSivulle(e.getFacesContext());
       }
+      if (näkymä.contains("admin/") && !kirjautunutHenkilö.isPääsyHallintaan())
+      {
+         poikkeukset.tapaSessio();
+      }
+   }
+
+   private void loginSivulle(FacesContext facesContext)
+   {
+      facesContext.getApplication().getNavigationHandler().handleNavigation(facesContext, null, "kirjautuminen.xhtml");
+      facesContext.renderResponse();
+
    }
 }

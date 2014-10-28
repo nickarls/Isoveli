@@ -1,5 +1,7 @@
 package fi.budokwai.isoveli.api;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -41,14 +43,16 @@ public class BlobKäsittelijä
    }
 
    @GET
-   @Path("/lataa/{id}")
-   public Response lataa(@PathParam("id") int id)
+   @Path("/lataa/{avain}")
+   public Response lataa(@PathParam("avain") String avain)
    {
-      BlobData blobData = entityManager.find(BlobData.class, id);
-      if (blobData == null)
+      List<BlobData> tulokset = entityManager.createNamedQuery("blobdata", BlobData.class).setParameter("avain", avain)
+         .getResultList();
+      if (tulokset.isEmpty())
       {
          return Response.serverError().build();
       }
+      BlobData blobData = tulokset.iterator().next();
       ResponseBuilder response = Response.ok(blobData.getTieto(),
          MediaType.valueOf(blobData.getTyyppi().getMimetyyppi()));
       String tiedostonimi = String.format("%s.%s", blobData.getNimi(), blobData.getTyyppi().getTyyppi()).toLowerCase();

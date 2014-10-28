@@ -61,12 +61,12 @@ public class Util
       return ChronoUnit.DAYS.between(nyt, sitten);
    }
 
-   public static String MD5(String salasana)
+   public static String MD5(String teksti)
    {
       try
       {
          MessageDigest md = MessageDigest.getInstance("MD5");
-         return (new HexBinaryAdapter()).marshal(md.digest(salasana.getBytes()));
+         return (new HexBinaryAdapter()).marshal(md.digest(teksti.getBytes()));
       } catch (NoSuchAlgorithmException e)
       {
          e.printStackTrace();

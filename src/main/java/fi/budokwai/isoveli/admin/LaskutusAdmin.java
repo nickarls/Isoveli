@@ -130,7 +130,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    private byte[] teePdfLasku(Lasku lasku)
    {
       byte[] malli = null;
-      Optional<BlobData> mallit = entityManager.createNamedQuery("blobdata", BlobData.class)
+      Optional<BlobData> mallit = entityManager.createNamedQuery("nimetty_blobdata", BlobData.class)
          .setParameter("nimi", "laskupohja").getResultList().stream().findFirst();
       if (mallit.isPresent())
       {

@@ -31,9 +31,15 @@ public class BlobKäsittelijä
    public Response tallennaKuva(@MultipartForm BlobLataus blobLataus)
    {
       BlobData blobData = new BlobData(blobLataus);
-      if (blobLataus.isIdKäytössä())
+      if (blobLataus.isAvainKäytössä())
       {
-         blobData = entityManager.find(BlobData.class, Integer.valueOf(blobLataus.getId()));
+         List<BlobData> tulokset = entityManager.createNamedQuery("blobdata", BlobData.class)
+            .setParameter("avain", blobLataus.getAvain()).getResultList();
+         if (tulokset.isEmpty())
+         {
+            return Response.serverError().build();
+         }
+         blobData = tulokset.iterator().next();
          blobData.setNimi(blobData.getNimi());
          blobData.setTyyppi(blobData.getTyyppi());
          blobData.setTieto(blobLataus.getTieto());

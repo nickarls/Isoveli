@@ -15,8 +15,8 @@ public class BlobLataus
    @PartType("application/octet-stream")
    private byte[] tieto;
 
-   @FormParam("id")
-   private String id;
+   @FormParam("avain")
+   private String avain;
 
    @FormParam("tyyppi")
    private String tyyppi;
@@ -44,16 +44,6 @@ public class BlobLataus
       this.tyyppi = tyyppi;
    }
 
-   public String getId()
-   {
-      return id;
-   }
-
-   public void setId(String id)
-   {
-      this.id = id;
-   }
-
    public String getNimi()
    {
       return nimi;
@@ -64,9 +54,19 @@ public class BlobLataus
       this.nimi = nimi;
    }
 
-   public boolean isIdKäytössä()
+   public boolean isAvainKäytössä()
    {
-      return id != null && !"".equals(id);
+      return avain != null && !"".equals(avain);
+   }
+
+   public String getAvain()
+   {
+      return avain;
+   }
+
+   public void setAvain(String avain)
+   {
+      this.avain = avain;
    }
 
 }

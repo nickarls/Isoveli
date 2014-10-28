@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
-@NamedQuery(name = "laskuttamattomat_sopimukset", query = "select s from Sopimus s, Harrastaja h where s.harrastaja.id=h.id and h.arkistoitu='E' and s.tyyppi.laskutettava='K' order by s.umpeutuu desc")
+@NamedQuery(name = "laskuttamattomat_sopimukset", query = "select s from Sopimus s, Harrastaja h where s.harrastaja.id=h.id and h.arkistoitu='E' and s.tyyppi.laskutettava='K' and s.sopimuslaskut is empty order by s.umpeutuu desc")
 public class Sopimus
 {
    @Id

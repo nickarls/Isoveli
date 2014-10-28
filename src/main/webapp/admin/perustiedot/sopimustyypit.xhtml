@@ -24,8 +24,8 @@
 				<ace:column headerText="Jäsen">
 					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.jäsenmaksu}" />
 				</ace:column>
-				<ace:column headerText="Jatkuva">
-					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.jatkuva}" />
+				<ace:column headerText="Harjoittelumaksu">
+					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.harjoittelumaksu}" />
 				</ace:column>
 				<ace:column headerText="Kertoja">
 					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.treenikertoja}" />
@@ -98,10 +98,10 @@
 							<ace:message for="form:jäsenmaksu" />
 							<h:selectBooleanCheckbox value="#{sopimustyyppi.jäsenmaksu}" id="jäsenmaksu" />
 						</h:panelGrid>
-						<h:outputText value="Jatkuva" />
+						<h:outputText value="Harjoittelumaksu" />
 						<h:panelGrid>
-							<ace:message for="form:jatkuva" />
-							<h:selectBooleanCheckbox value="#{sopimustyyppi.jatkuva}" id="jatkuva" />
+							<ace:message for="form:harjoittelumaksu" />
+							<h:selectBooleanCheckbox value="#{sopimustyyppi.harjoittelumaksu}" id="harjoittelumaksu" />
 						</h:panelGrid>
 						<h:outputText value="Treenikertoja" />
 						<h:panelGrid>

@@ -36,7 +36,7 @@ public class Sopimustyyppi
    private boolean j‰senmaksu;
 
    @Type(type = "Kyll‰Ei")
-   private boolean jatkuva;
+   private boolean harjoittelumaksu;
 
    @Type(type = "Kyll‰Ei")
    private boolean treenikertoja;
@@ -115,14 +115,14 @@ public class Sopimustyyppi
       this.j‰senmaksu = j‰senmaksu;
    }
 
-   public boolean isJatkuva()
+   public boolean isHarjoittelumaksu()
    {
-      return jatkuva;
+      return harjoittelumaksu;
    }
 
-   public void setJatkuva(boolean jatkuva)
+   public void setHarjoittelumaksu(boolean harjoittelumaksu)
    {
-      this.jatkuva = jatkuva;
+      this.harjoittelumaksu = harjoittelumaksu;
    }
 
    public boolean isTreenikertoja()

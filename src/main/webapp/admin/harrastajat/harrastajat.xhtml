@@ -23,7 +23,10 @@
 			<h:outputText value="#{_harrastaja.tuoreinVyöarvo.nimi}" />
 		</ace:column>
 		<ace:column headerText="Maksut">
-			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_harrastaja.maksutOK}" />
+			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_harrastaja.sopimuksetOK}" />
+			<ui:repeat var="_viesti" value="#{_harrastaja.sopimusTarkistukset.viestit}">
+				<h:outputText value="#{_viesti}"/>
+			</ui:repeat>
 		</ace:column>
 		<ace:column headerText="Arkistoitu">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_harrastaja.arkistoitu}" />

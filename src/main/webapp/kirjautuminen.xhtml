@@ -22,35 +22,39 @@
 }
 
 .taulu {
-	width:300px; 
+	width: 530px;
 	padding: 20px;
-	margin-left:auto; 
-	margin-right:auto; 
-	margin-top:100px; 
-	border:1px solid #e0e0e0;	
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 100px;
+	border: 1px solid #e0e0e0;
 }
 </style>
 </h:head>
 <h:body onload="document.getElementById('form:käyttäjänimi').focus();">
 	<f:view>
 		<h:form id="form">
-			<h:panelGrid columns="2" styleClass="taulu">
-				<h:graphicImage value="/kuvat/logo.png" styleClass="logo" />
+			<ace:panel header="Kirjaudu" styleClass="taulu">
 				<h:panelGrid columns="2">
-					<h:outputText value="Käyttäjänimi" />
-					<h:panelGrid>
-						<ace:message for="form:käyttäjänimi" />
-						<h:inputText value="#{tunnukset.nimi}" id="käyttäjänimi" onkeypress="if (event.keyCode == 13) document.getElementById('form:salasana').focus();"/>
+					<h:graphicImage value="/kuvat/logo.png" styleClass="logo" />
+					<h:panelGrid columns="2">
+						<h:outputText value="Käyttäjänimi" />
+						<h:panelGrid>
+							<ace:message for="form:käyttäjänimi" />
+							<h:inputText value="#{tunnukset.nimi}" id="käyttäjänimi"
+								onkeypress="if (event.keyCode == 13) document.getElementById('form:salasana').focus();" />
+						</h:panelGrid>
+						<h:outputText value="Salasana" />
+						<h:panelGrid>
+							<ace:message for="form:salasana" />
+							<h:inputSecret value="#{tunnukset.salasana}" id="salasana"
+								onkeypress="if (event.keyCode == 13) document.getElementById('form:kirjaudu').click();" />
+						</h:panelGrid>
+						<h:outputText value="" />
+						<h:commandButton image="/kuvat/kirjaudu.png" action="#{kirjautuminen.kirjaudu}" styleClass="nappi" id="kirjaudu" />
 					</h:panelGrid>
-					<h:outputText value="Salasana" />
-					<h:panelGrid>
-						<ace:message for="form:salasana" />
-						<h:inputSecret value="#{tunnukset.salasana}" id="salasana" onkeypress="if (event.keyCode == 13) document.getElementById('form:kirjaudu').click();" />
-					</h:panelGrid>
-					<h:outputText value="" />
-					<h:commandButton image="/kuvat/kirjaudu.png" action="#{kirjautuminen.kirjaudu}" styleClass="nappi" id="kirjaudu"/>
 				</h:panelGrid>
-			</h:panelGrid>
+			</ace:panel>
 		</h:form>
 	</f:view>
 </h:body>

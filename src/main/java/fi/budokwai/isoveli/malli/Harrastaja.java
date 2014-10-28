@@ -246,6 +246,10 @@ public class Harrastaja extends Henkilö
    public Sopimustarkistukset getSopimusTarkistukset()
    {
       Sopimustarkistukset sopimustarkistuset = new Sopimustarkistukset();
+      if (löytyyköVapautusMaksuista())
+      {
+         return sopimustarkistuset;
+      }
       if (!löytyyköJäsenmaksu())
       {
          sopimustarkistuset.lisää(new Sopimustarkistus("Jäsenmaksu puuttuu", false));
@@ -260,14 +264,20 @@ public class Harrastaja extends Henkilö
       return sopimustarkistuset;
    }
 
+   private boolean löytyyköVapautusMaksuista()
+   {
+      Optional<Sopimus> sopimus = sopimukset.stream().filter(s -> s.getTyyppi().isVapautus()).findFirst();
+      return sopimus.isPresent() && sopimus.get().isVoimassa();
+   }
+
    private boolean löytyyköHarjoittelumaksu()
    {
-      return sopimukset.stream().filter(s -> s.getTyyppi().isJäsenmaksu()).findFirst().isPresent();
+      return sopimukset.stream().filter(s -> s.getTyyppi().isHarjoittelumaksu()).findFirst().isPresent();
    }
 
    private boolean löytyyköJäsenmaksu()
    {
-      return sopimukset.stream().filter(s -> s.getTyyppi().isJatkuva()).findFirst().isPresent();
+      return sopimukset.stream().filter(s -> s.getTyyppi().isJäsenmaksu()).findFirst().isPresent();
    }
 
    public boolean isMies()

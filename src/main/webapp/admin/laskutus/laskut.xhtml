@@ -15,9 +15,9 @@
 		<ace:column>
 			<ace:expansionToggler />
 		</ace:column>
-		<ace:column headerText="Harrastaja" filterBy="#{_lasku.harrastaja.nimi}" filterMatchMode="contains"
-			sortBy="#{_lasku.harrastaja.nimi}">
-			<h:outputText value="#{_lasku.harrastaja.nimi}" />
+		<ace:column headerText="Harrastaja" filterBy="#{_lasku.henkilö.nimi}" filterMatchMode="contains"
+			sortBy="#{_lasku.henkilö.nimi}">
+			<h:outputText value="#{_lasku.henkilö.nimi}" />
 		</ace:column>
 		<ace:column headerText="Luotu" filterBy="#{_lasku.luotu}" filterMatchMode="contains" sortBy="#{_lasku.luotu}">
 			<h:outputText value="#{_lasku.luotu}">
@@ -36,7 +36,7 @@
 		</ace:column>
 		<ace:column headerText="Maksuaikaa" filterBy="#{_lasku.maksuaikaa}" filterMatchMode="contains"
 			sortBy="#{_lasku.maksuaikaa}">
-			<h:outputText value="#{_lasku.maksuaikaa}" style="color:#{_lasku.maksuaikaa &lt; 0 ? 'red' : 'green'}" />
+			<h:outputText value="#{_lasku.maksuaikaa}"  rendered="#{_lasku.maksettu == null}" style="color:#{_lasku.maksuaikaa &lt; 0 ? 'red' : 'green'}" />
 		</ace:column>
 		<ace:column headerText="Tila" filterBy="#{_lasku.tila}" filterOptions="#{tilasuodatukset}">
 			<h:outputText value="#{_lasku.tila.nimi}" />

@@ -24,12 +24,11 @@ import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
 
 import fi.budokwai.isoveli.IsoveliPoikkeus;
-import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Lasku;
 import fi.budokwai.isoveli.malli.Laskurivi;
-import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Sopimustyyppi;
+import fi.budokwai.isoveli.malli.Vastaanottaja;
 
 public class Lasku2PDF
 {
@@ -70,27 +69,6 @@ public class Lasku2PDF
 
    }
 
-   private class Vastaanottaja
-   {
-      private Henkilö henkilö;
-      private Osoite osoite;
-
-      public Vastaanottaja(Harrastaja harrastaja)
-      {
-         if (harrastaja.getHuoltaja() != null)
-         {
-            henkilö = harrastaja.getHuoltaja();
-            osoite = harrastaja.getHuoltaja().getPerhe() != null ? harrastaja.getHuoltaja().getPerhe().getOsoite()
-               : harrastaja.getHuoltaja().getOsoite();
-         } else
-         {
-            henkilö = harrastaja;
-            osoite = harrastaja.getPerhe() != null ? harrastaja.getPerhe().getOsoite() : harrastaja.getOsoite();
-         }
-         osoite = osoite == null ? new Osoite() : osoite;
-      }
-   }
-
    @SuppressWarnings("unused")
    private class Otsikkotiedot
    {
@@ -111,11 +89,11 @@ public class Lasku2PDF
       public Otsikkotiedot(Lasku lasku)
       {
          päiväys = lasku.getLuotu();
-         asiakasnumero = lasku.getHarrastaja().getId();
+         asiakasnumero = lasku.getHenkilö().getId();
          laskunumero = lasku.getId();
          viitenumero = lasku.getId();
          eräpäivä = lasku.getEräpäivä();
-         yhteyshenkilö = lasku.getHarrastaja().getHuoltaja() != null ? "Huoltaja" : "Harrastaja";
+         yhteyshenkilö = (lasku.getHenkilö() instanceof Henkilö) ? "Huoltaja" : "Harrastaja";
          toimituspvm = "jatkuva";
       }
    }
@@ -185,7 +163,7 @@ public class Lasku2PDF
 
    private void käsitteleVastaanottaja()
    {
-      Vastaanottaja vastaanottaja = new Vastaanottaja(lasku.getHarrastaja());
+      Vastaanottaja vastaanottaja = new Vastaanottaja(lasku.getHenkilö());
       PdfPTable osoitetaulu = teeOsoite(vastaanottaja);
       osoitetaulu.writeSelectedRows(0, -1, 40, 700 + osoitetaulu.getTotalHeight(), kangas);
       osoitetaulu.writeSelectedRows(0, -1, 65, 140 + osoitetaulu.getTotalHeight(), kangas);
@@ -238,10 +216,10 @@ public class Lasku2PDF
       PdfPTable taulukko = new PdfPTable(1);
       taulukko.getDefaultCell().setBorder(Rectangle.NO_BORDER);
       taulukko.setTotalWidth(230f);
-      lisääSolu(taulukko, vastaanottaja.henkilö.getNimi(), Formatointi.V_DATA);
-      lisääSolu(taulukko, vastaanottaja.osoite.getOsoite(), Formatointi.V_DATA);
+      lisääSolu(taulukko, vastaanottaja.getHenkilö().getNimi(), Formatointi.V_DATA);
+      lisääSolu(taulukko, vastaanottaja.getOsoite().getOsoite(), Formatointi.V_DATA);
       lisääSolu(taulukko,
-         String.format("%s %s", vastaanottaja.osoite.getPostinumero(), vastaanottaja.osoite.getKaupunki()),
+         String.format("%s %s", vastaanottaja.getOsoite().getPostinumero(), vastaanottaja.getOsoite().getKaupunki()),
          Formatointi.V_DATA);
       return taulukko;
    }

@@ -1,15 +1,23 @@
 package fi.budokwai.isoveli.admin;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Named;
@@ -22,6 +30,7 @@ import org.icefaces.ace.model.table.RowStateMap;
 
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.BlobData;
+import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Lasku;
 import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Osoite;
@@ -78,38 +87,66 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 
    public void laskutaSopimukset()
    {
-      List<Sopimus> laskuttamattomatSopimukset = entityManager.createNamedQuery("laskuttamattomat_sopimukset",
-         Sopimus.class).getResultList();
-      Map<Osoite, List<Sopimus>> sopimuksetPerOsoite = laskuttamattomatSopimukset.stream().collect(
-         Collectors.groupingBy(sopimus -> sopimus.getHarrastaja().isAlaikäinen() ? sopimus.getHarrastaja().getOsoite()
-            : sopimus.getHarrastaja().getPerhe().getOsoite()));
-      sopimuksetPerOsoite.keySet().forEach(osoite -> teeLaskuOsoitteelle(osoite, sopimuksetPerOsoite.get(osoite)));
+      List<Sopimus> sopimukset = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class)
+         .getResultList();
+      Map<Osoite, List<Sopimus>> sopimuksetPerOsoite = sopimukset.stream().collect(
+         Collectors.groupingBy(sopimus -> sopimus.getLaskutusosoite()));
+      sopimuksetPerOsoite.values().forEach(osoitteenSopimukset -> teeLaskuOsoitteelle(osoitteenSopimukset));
       haeLaskuttamattomat();
-      info("Muodosti %d sopimuksesta %d laskua", laskuttamattomatSopimukset.size(), sopimuksetPerOsoite.keySet().size());
+      info("Muodosti %d sopimuksesta %d laskua", sopimukset.size(), sopimuksetPerOsoite.keySet().size());
    }
 
-   private void teeLaskuOsoitteelle(Osoite osoite, List<Sopimus> sopimukset)
+   private void teeLaskuOsoitteelle(List<Sopimus> sopimukset)
    {
-      Lasku lasku = new Lasku(sopimukset.iterator().next().getHarrastaja());
+      Henkilö henkilö = haeLaskunVastaanottaja(sopimukset);
+      Lasku lasku = new Lasku(henkilö);
       sopimukset.forEach(sopimus -> {
          Sopimuslasku sopimuslasku = new Sopimuslasku(sopimus);
          Laskurivi laskurivi = new Laskurivi(sopimuslasku);
          lasku.lisääRivi(laskurivi);
       });
-//      byte[] pdf = teePdfLasku(lasku);
-//      lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), pdf));
+      byte[] pdf = teePdfLasku(lasku);
+      lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), pdf));
       entityManager.persist(lasku);
+   }
+
+   private Henkilö haeLaskunVastaanottaja(List<Sopimus> sopimukset)
+   {
+      List<Henkilö> huoltajat = sopimukset.stream().filter(sopimus -> sopimus.getHarrastaja().getHuoltaja() != null)
+         .map(sopimus -> sopimus.getHarrastaja().getHuoltaja()).collect(Collectors.toList());
+      if (!huoltajat.isEmpty())
+      {
+         return huoltajat.stream().findFirst().get();
+      }
+      List<Henkilö> täysiikäiset = sopimukset.stream().map(sopimus -> sopimus.getHarrastaja())
+         .filter(harrastaja -> !harrastaja.isAlaikäinen()).collect(Collectors.toList());
+      if (!täysiikäiset.isEmpty())
+      {
+         return täysiikäiset.stream().findFirst().get();
+      }
+      return sopimukset.stream().findFirst().get().getHarrastaja();
    }
 
    private byte[] teePdfLasku(Lasku lasku)
    {
+      byte[] malli = null;
       Optional<BlobData> mallit = entityManager.createNamedQuery("blobdata", BlobData.class)
          .setParameter("nimi", "laskupohja").getResultList().stream().findFirst();
-      if (!mallit.isPresent())
+      if (mallit.isPresent())
       {
-         throw new IsoveliPoikkeus("Laskumallia ei löytynyt");
+         malli = mallit.get().getTieto();
+      } else
+      {
+         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+         try
+         {
+            Path path = Paths.get(ec.getResource("/WEB-INF/classes/laskupohja.pdf").toURI());
+            malli = Files.readAllBytes(path);
+         } catch (IOException | URISyntaxException e)
+         {
+            throw new IsoveliPoikkeus("Mallin lukeminen epäonnistui", e);
+         }
       }
-      byte[] malli = mallit.get().getTieto();
       return new Lasku2PDF(malli, lasku).muodosta();
    }
 

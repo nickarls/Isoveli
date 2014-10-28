@@ -35,7 +35,7 @@ public class Sopimus
    @NotNull
    private Sopimustyyppi tyyppi;
 
-   @OneToMany(mappedBy="sopimus")
+   @OneToMany(mappedBy = "sopimus")
    private List<Sopimuslasku> sopimuslaskut = new ArrayList<Sopimuslasku>();
 
    @Temporal(TemporalType.DATE)
@@ -152,4 +152,25 @@ public class Sopimus
       this.sopimuslaskut = sopimuslaskut;
    }
 
+   public Osoite getLaskutusosoite()
+   {
+      if (harrastaja.isAlaikäinen())
+      {
+         return harrastaja.getPerhe().getOsoite();
+      } else
+      {
+         return harrastaja.getOsoite();
+      }
+   }
+
+   public Henkilö getLaskutushenkilö()
+   {
+      if (harrastaja.isAlaikäinen())
+      {
+         return harrastaja.getHuoltaja();
+      } else
+      {
+         return harrastaja;
+      }
+   }
 }

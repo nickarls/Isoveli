@@ -43,8 +43,8 @@ public class Lasku
    private Date maksettu;
 
    @OneToOne(optional = true)
-   @JoinColumn(name = "harrastaja")
-   private Harrastaja harrastaja;
+   @JoinColumn(name = "henkilo")
+   private Henkilö henkilö;
 
    @Temporal(TemporalType.TIMESTAMP)
    private Date luotu = new Date();
@@ -57,13 +57,14 @@ public class Lasku
    {
    }
 
-   public Lasku(Harrastaja harrastaja)
+   public Lasku(Henkilö henkilö)
    {
-      this.harrastaja = harrastaja;
+      this.henkilö = henkilö;
       eräpäivä = Util.päivienPäästä(14);
    }
-   
-   public void lisääRivi(Laskurivi laskurivi) {
+
+   public void lisääRivi(Laskurivi laskurivi)
+   {
       laskurivi.setLasku(this);
       laskurivit.add(laskurivi);
       laskurivi.setRivinumero(laskurivit.size());
@@ -73,7 +74,6 @@ public class Lasku
    {
       return laskurivit.size();
    }
-
 
    public double getVerotonHinta()
    {
@@ -123,16 +123,6 @@ public class Lasku
    public boolean isLaskuMaksettu()
    {
       return maksettu != null;
-   }
-
-   public Harrastaja getHarrastaja()
-   {
-      return harrastaja;
-   }
-
-   public void setHarrastaja(Harrastaja harrastaja)
-   {
-      this.harrastaja = harrastaja;
    }
 
    public Date getLuotu()
@@ -199,5 +189,15 @@ public class Lasku
    public void setPdf(BlobData pdf)
    {
       this.pdf = pdf;
+   }
+
+   public Henkilö getHenkilö()
+   {
+      return henkilö;
+   }
+
+   public void setHenkilö(Henkilö henkilö)
+   {
+      this.henkilö = henkilö;
    }
 }

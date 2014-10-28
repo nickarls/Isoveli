@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
@@ -239,57 +238,36 @@ public class Harrastaja extends Henkilö
       return MoreObjects.toStringHelper(Harrastaja.class).add("Nimi", getNimi()).toString();
    }
 
-   public Maksutarkistus tarkistaMaksut()
+   public boolean isSopimuksetOK()
    {
-      Maksutarkistus jäsenmaksu = tarkistaJäsenmaksu();
-      if (!jäsenmaksu.isOK())
-      {
-         return jäsenmaksu;
-      }
-      return tarkistaMaksu();
+      return getSopimusTarkistukset().isOK();
    }
 
-   public boolean isMaksutOK()
+   public Sopimustarkistukset getSopimusTarkistukset()
    {
-      return tarkistaMaksut().isOK();
+      Sopimustarkistukset sopimustarkistuset = new Sopimustarkistukset();
+      if (!löytyyköJäsenmaksu())
+      {
+         sopimustarkistuset.lisää(new Sopimustarkistus("Jäsenmaksu puuttuu", false));
+      }
+      if (!löytyyköHarjoittelumaksu())
+      {
+         sopimustarkistuset.lisää(new Sopimustarkistus("Harjoittelumaksu puuttuu", false));
+      }
+      sopimukset.forEach(s -> {
+         sopimustarkistuset.lisää(s.tarkista());
+      });
+      return sopimustarkistuset;
    }
 
-   private Maksutarkistus tarkistaMaksu()
+   private boolean löytyyköHarjoittelumaksu()
    {
-      Optional<Sopimus> maksut = sopimukset.stream()
-         .filter(p -> !(p.getTyyppi().isJäsenmaksu() || p.getTyyppi().isPerhealennus()))
-         .sorted((s1, s2) -> s1.getUmpeutuu().compareTo(s2.getUmpeutuu())).findFirst();
-      if (!maksut.isPresent())
-      {
-         return new Maksutarkistus("Ei sopimuksia");
-      }
-      Sopimus maksu = maksut.get();
-      if (!maksu.isVoimassa())
-      {
-         LocalDate pvm = maksu.getUmpeutuu().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-         String viesti = String.format("Sopimus '%s' umpeutui %s", maksu.getTyyppi().getNimi(),
-            pvm.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-         return new Maksutarkistus(viesti);
-      }
-      return new Maksutarkistus();
+      return sopimukset.stream().filter(s -> s.getTyyppi().isJäsenmaksu()).findFirst().isPresent();
    }
 
-   private Maksutarkistus tarkistaJäsenmaksu()
+   private boolean löytyyköJäsenmaksu()
    {
-      Optional<Sopimus> jäsenmaksut = sopimukset.stream().filter(p -> p.getTyyppi().isJäsenmaksu())
-         .sorted((s1, s2) -> s1.getUmpeutuu().compareTo(s2.getUmpeutuu())).findFirst();
-      if (!jäsenmaksut.isPresent())
-      {
-         return new Maksutarkistus("Jäsenmaksuja ei löytynyt");
-      }
-      Sopimus jäsenmaksu = jäsenmaksut.get();
-      if (!jäsenmaksu.isVoimassa())
-      {
-         LocalDate pvm = jäsenmaksu.getUmpeutuu().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-         String viesti = String.format("Jäsenmaksu umpeutui %s", pvm.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-         return new Maksutarkistus(viesti);
-      }
-      return new Maksutarkistus();
+      return sopimukset.stream().filter(s -> s.getTyyppi().isJatkuva()).findFirst().isPresent();
    }
 
    public boolean isMies()
@@ -403,11 +381,10 @@ public class Harrastaja extends Henkilö
    {
       this.huomautus = huomautus;
    }
-   
+
    public boolean isHarrastaja()
    {
       return true;
    }
-   
 
 }

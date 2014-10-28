@@ -66,9 +66,9 @@ public class BlobData
 
    public BlobData(BlobLataus blobLataus)
    {
-      if (blobLataus.isIdKäytössä())
+      if (blobLataus.isAvainKäytössä())
       {
-         id = Integer.valueOf(blobLataus.getId());
+         avain = blobLataus.getAvain();
       }
       nimi = blobLataus.getNimi();
       tyyppi = Tiedostotyyppi.valueOf(blobLataus.getTyyppi());

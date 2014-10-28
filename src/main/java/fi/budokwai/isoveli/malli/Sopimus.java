@@ -1,5 +1,7 @@
 package fi.budokwai.isoveli.malli;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +19,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+
+import fi.budokwai.isoveli.util.Util;
 
 @Entity
 @NamedQuery(name = "laskuttamattomat_sopimukset", query = "select s from Sopimus s, Harrastaja h where s.harrastaja.id=h.id and h.arkistoitu='E' and s.tyyppi.laskutettava='K' order by s.umpeutuu desc")
@@ -172,5 +176,27 @@ public class Sopimus
       {
          return harrastaja;
       }
+   }
+
+   public List<Sopimustarkistus> tarkista()
+   {
+      List<Sopimustarkistus> tulos = new ArrayList<Sopimustarkistus>();
+      if (!isVoimassa())
+      {
+         LocalDate pvm = Util.date2LocalDateTime(umpeutuu);
+         String viesti = String.format("%s: sopimus umpeutui %s", tyyppi.getNimi(),
+            pvm.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+         tulos.add(new Sopimustarkistus(viesti, false));
+      }
+      for (Sopimuslasku sopimuslasku : sopimuslaskut)
+      {
+         if (sopimuslasku.getLaskurivi().getLasku().isLaskuMyöhässä())
+         {
+            String viesti = String.format("%s: lasku myöhässä %d päivää", tyyppi.getNimi(), sopimuslasku.getLaskurivi()
+               .getLasku().getMaksuaikaa());
+            tulos.add(new Sopimustarkistus(viesti, false));
+         }
+      }
+      return tulos;
    }
 }

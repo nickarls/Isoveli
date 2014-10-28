@@ -200,4 +200,9 @@ public class Lasku
    {
       this.henkilö = henkilö;
    }
+
+   public boolean isLaskuMyöhässä()
+   {
+      return getMaksuaikaa() < 0;
+   }
 }

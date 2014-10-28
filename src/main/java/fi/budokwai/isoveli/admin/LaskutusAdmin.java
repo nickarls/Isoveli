@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -178,7 +179,8 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 
    private void haeLaskuttamattomat()
    {
-      laskuttamattomat = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class).getResultList();
+      laskuttamattomat = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class)
+         .setParameter("nyt", new Date()).getResultList();
    }
 
    public void tabiMuuttui(ValueChangeEvent e)

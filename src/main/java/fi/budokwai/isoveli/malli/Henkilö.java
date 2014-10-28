@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -32,7 +33,10 @@ import fi.budokwai.isoveli.util.Util;
 @Entity
 @TypeDef(name = "KylläEi", typeClass = KylläEiTyyppi.class)
 @Table(name = "henkilo")
-@NamedQuery(name = "henkilö", query = "select h from Henkilö h where h.salasana = :salasana and h.etunimi = :etunimi and h.sukunimi = :sukunimi")
+@NamedQueries(
+{
+      @NamedQuery(name = "henkilö", query = "select h from Henkilö h where h.salasana = :salasana and h.etunimi = :etunimi and h.sukunimi = :sukunimi"),
+      @NamedQuery(name = "nimetty_henkilö", query = "select h from Henkilö h where h.etunimi = :etunimi and h.sukunimi = :sukunimi") })
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Henkilö implements Serializable
 {
@@ -268,6 +272,11 @@ public class Henkilö implements Serializable
    {
       return perhe.getPerheenjäsenet().stream().filter(h -> h.isHarrastaja()).map(h -> h.getSopimukset())
          .flatMap(s -> s.stream()).collect(Collectors.toList());
+   }
+
+   public boolean isLöytyySähköposti()
+   {
+      return yhteystiedot != null && yhteystiedot.getSähköposti() != null && !"".equals(yhteystiedot.getSähköposti());
    }
 
 }

@@ -43,4 +43,14 @@ public class Tunnukset
       return Util.MD5(salasana);
    }
 
+   public String[] getNimiosat()
+   {
+      if (nimi == null)
+      {
+         return new String[]
+         {};
+      }
+      return nimi.split(" ");
+   }
+
 }

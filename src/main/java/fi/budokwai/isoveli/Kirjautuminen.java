@@ -47,9 +47,42 @@ public class Kirjautuminen extends Perustoiminnallisuus
    @Inject
    private Instance<Tunnukset> tunnukset;
 
+   public void lähetäResetointipyyntö()
+   {
+      String[] nimiosat = tunnukset.get().getNimiosat();
+      if (nimiosat.length != 2)
+      {
+         virhe(String.format("Nimi '%s' ei ole oikeassa muodossa, käytä 'etunimi sukunimi'-muotoa", tunnukset.get()
+            .getNimi()));;
+         return;
+      }
+      List<Henkilö> henkilöt = entityManager.createNamedQuery("nimetty_henkilö", Henkilö.class)
+         .setParameter("etunimi", nimiosat[0]).setParameter("sukunimi", nimiosat[1]).getResultList();
+      if (henkilöt.isEmpty())
+      {
+         virhe(String.format("Käyttäjä '%s' ei löytynyt, ota yhteyttä salipäivystäjään", tunnukset.get().getNimi()));
+         return;
+      }
+      Henkilö henkilö = henkilöt.iterator().next();
+      if (henkilö.isLöytyySähköposti())
+      {
+         lähetäSalasananResetointivahvistus(henkilö);
+      } else
+      {
+         virhe("Käyttäjällä ei ole sähköpostiosoitetta, ota yhteyttä salipäivystäjään");
+         return;
+      }
+   }
+
+   private void lähetäSalasananResetointivahvistus(Henkilö henkilö)
+   {
+      info(String.format("Salasanan resetointipyyntö lähetetty osoitteeseen %s", henkilö.getYhteystiedot()
+         .getSähköposti()));
+   }
+
    public String kirjaudu()
    {
-      String[] nimiosat = tunnukset.get().getNimi().split(" ");
+      String[] nimiosat = tunnukset.get().getNimiosat();
       if (nimiosat.length != 2)
       {
          virhe("Käyttäjänimi on 'etunimi sukunimi'");

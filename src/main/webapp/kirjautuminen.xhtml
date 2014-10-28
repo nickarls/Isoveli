@@ -54,6 +54,10 @@
 						<h:commandButton image="/kuvat/kirjaudu.png" action="#{kirjautuminen.kirjaudu}" styleClass="nappi" id="kirjaudu" />
 					</h:panelGrid>
 				</h:panelGrid>
+				<h:commandLink action="#{kirjautuminen.lähetäResetointipyyntö}">
+					<h:outputText value="Salasana unohtunut?"/>
+					<ace:ajax execute="form:käyttäjänimi" render="@all"/>
+				</h:commandLink>
 			</ace:panel>
 		</h:form>
 	</f:view>

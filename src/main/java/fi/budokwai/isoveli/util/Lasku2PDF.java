@@ -227,7 +227,7 @@ public class Lasku2PDF
    private PdfPTable teeLaskurivit()
    {
       PdfPTable taulukko = new PdfPTable(new float[]
-      { 1, 7, 2, 2, 2, 2, 3, 3, 3 });
+      { 1, 7, 5, 2, 2, 2, 2, 2, 2 });
       taulukko.setWidthPercentage(100f);
       taulukko.setTotalWidth(550f);
       kirjoitaRiviotsikot(taulukko);
@@ -260,13 +260,13 @@ public class Lasku2PDF
    private void kirjoitaRiviotsikot(PdfPTable taulukko)
    {
       lis‰‰Solu(taulukko, "#", Formatointi.OTSIKKO);
-      lis‰‰Solu(taulukko, "Tuotenimi", Formatointi.V_OTSIKKO);
-      lis‰‰Solu(taulukko, "Jakso", Formatointi.OTSIKKO);
+      lis‰‰Solu(taulukko, "Tuote", Formatointi.V_OTSIKKO);
+      lis‰‰Solu(taulukko, "Jakso", Formatointi.V_OTSIKKO);
       lis‰‰Solu(taulukko, "M‰‰r‰", Formatointi.OTSIKKO);
-      lis‰‰Solu(taulukko, "Yksikkˆ", Formatointi.OTSIKKO);
+      lis‰‰Solu(taulukko, "Yks", Formatointi.OTSIKKO);
       lis‰‰Solu(taulukko, "ALV%", Formatointi.OTSIKKO);
       lis‰‰Solu(taulukko, "ALV0", Formatointi.OTSIKKO);
-      lis‰‰Solu(taulukko, "ALV-osuus", Formatointi.OTSIKKO);
+      lis‰‰Solu(taulukko, "ALV-osa", Formatointi.OTSIKKO);
       lis‰‰Solu(taulukko, "Hinta", Formatointi.OTSIKKO);
    }
 
@@ -283,7 +283,7 @@ public class Lasku2PDF
       Sopimustyyppi tyyppi = laskurivi.getSopimuslasku().getSopimus().getTyyppi();
       lis‰‰Solu(taulukko, laskurivi.getRivinumero() + "", Formatointi.DATA);
       lis‰‰Solu(taulukko, laskurivi.getSopimuslasku().getSopimus().getTuotenimi(), Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, laskurivi.getSopimuslasku().getJakso(), Formatointi.DATA);
+      lis‰‰Solu(taulukko, laskurivi.getSopimuslasku().getJakso(), Formatointi.V_DATA);
       lis‰‰Solu(taulukko, tyyppi.getM‰‰r‰() + "", Formatointi.DATA);
       lis‰‰Solu(taulukko, tyyppi.getYksikkˆ(), Formatointi.DATA);
       lis‰‰Solu(taulukko, tyyppi.getVerokanta() + "", Formatointi.DATA);

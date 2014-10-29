@@ -287,4 +287,10 @@ public class Henkilö implements Serializable
       return salasana;
    }
 
+   public String getInfo()
+   {
+      String roolinimet = roolit.stream().map(r -> r.getNimi()).collect(Collectors.joining(", "));
+      return String.format("%s [%s]", getNimi(), roolinimet);
+   }
+
 }

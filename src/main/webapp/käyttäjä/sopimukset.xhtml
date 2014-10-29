@@ -4,6 +4,9 @@
 	<ace:tabPane label="Sopimukset">
 		<ace:dataTable value="#{itse.sopimukset}" var="_sopimus" rows="10" paginator="true" paginatorPosition="bottom"
 			paginatorAlwaysVisible="false">
+			<ace:column>
+				<ace:expansionToggler />
+			</ace:column>
 			<ace:column headerText="Tyyppi">
 				<h:outputText value="#{_sopimus.tyyppi.nimi}" />
 			</ace:column>
@@ -32,7 +35,7 @@
 						</h:outputText>
 					</ace:column>
 					<ace:column headerText="Maksuaikaa">
-						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.maksuaikaa}"
+						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.maksuaikaa}" rendered="#{_lasku.maksettu == null}"
 							style="color:#{_sopimuslasku.laskurivi.lasku.maksuaikaa &lt; 0 ? 'red' : 'green'}" />
 					</ace:column>
 					<ace:column headerText="Tila">
@@ -47,7 +50,7 @@
 						</h:outputText>
 					</ace:column>
 					<ace:column>
-						<h:outputLink target="_blank" value="#{request.contextPath}/API/blob/lataa/#{_lasku.pdf.id}"
+						<h:outputLink target="_blank" value="#{request.contextPath}/API/blob/lataa/#{_lasku.pdf.avain}"
 							rendered="#{_sopimuslasku.laskurivi.lasku.pdf != null}">
 							<h:graphicImage value="/kuvat/pdf.png" style="width:24px" />
 						</h:outputLink>

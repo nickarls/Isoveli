@@ -339,7 +339,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void tallennaVyöarvo()
    {
-      entityManager.persist(vyöarvo);
+      entityManager.persist(vyöarvo);      
       vyöarvoRSM.get(vyöarvo).setSelected(true);
       haeVyöarvot();
       info("Vyöarvo tallennettu");

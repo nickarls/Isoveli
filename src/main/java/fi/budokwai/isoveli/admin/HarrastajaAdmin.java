@@ -305,6 +305,9 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       entityManager.persist(harrastaja);
       entityManager.flush();
       vyökoeRSM.get(vyökoe).setSelected(true);
+      harrastaja.getVyökokeet().sort(
+         (v1, v2) -> Integer.valueOf(v1.getVyöarvo().getJärjestys()).compareTo(
+            Integer.valueOf(v2.getVyöarvo().getJärjestys())));
       info("Vyökoe tallennettu");
    }
 

@@ -36,7 +36,8 @@
 		</ace:column>
 		<ace:column headerText="Maksuaikaa" filterBy="#{_lasku.maksuaikaa}" filterMatchMode="contains"
 			sortBy="#{_lasku.maksuaikaa}">
-			<h:outputText value="#{_lasku.maksuaikaa}"  rendered="#{_lasku.maksettu == null}" style="color:#{_lasku.maksuaikaa &lt; 0 ? 'red' : 'green'}" />
+			<h:outputText value="#{_lasku.maksuaikaa}" rendered="#{_lasku.maksettu == null}"
+				style="color:#{_lasku.maksuaikaa &lt; 0 ? 'red' : 'green'}" />
 		</ace:column>
 		<ace:column headerText="Tila" filterBy="#{_lasku.tila}" filterOptions="#{tilasuodatukset}">
 			<h:outputText value="#{_lasku.tila.nimi}" />

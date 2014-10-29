@@ -90,6 +90,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    {
       List<Sopimus> sopimukset = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class)
          .setParameter("nyt", Util.t‰n‰‰n()).getResultList();
+      sopimukset.addAll(entityManager.createNamedQuery("uudet_sopimukset", Sopimus.class).getResultList());
       Map<Osoite, List<Sopimus>> sopimuksetPerOsoite = sopimukset.stream().collect(
          Collectors.groupingBy(sopimus -> sopimus.getLaskutusosoite()));
       sopimuksetPerOsoite.values().forEach(osoitteenSopimukset -> teeLaskuOsoitteelle(osoitteenSopimukset));
@@ -106,6 +107,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
          Laskurivi laskurivi = new Laskurivi(sopimuslasku);
          lasku.lis‰‰Rivi(laskurivi);
       });
+      entityManager.persist(lasku);
       byte[] pdf = teePdfLasku(lasku);
       lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), pdf));
       entityManager.persist(lasku);
@@ -182,6 +184,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    {
       laskuttamattomat = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class)
          .setParameter("nyt", Util.t‰n‰‰n()).getResultList();
+      laskuttamattomat.addAll(entityManager.createNamedQuery("uudet_sopimukset", Sopimus.class).getResultList());
    }
 
    public void tabiMuuttui(ValueChangeEvent e)

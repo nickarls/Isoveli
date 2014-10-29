@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -23,12 +24,18 @@ import javax.validation.constraints.NotNull;
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
-@NamedQuery(name = "laskuttamattomat_sopimukset", query = "select s from Sopimus s, Harrastaja h, Sopimuslasku sl "
-   + "where s.harrastaja=h and sl.sopimus=s " 
-   + "and s.tyyppi.laskutettava='K' and h.arkistoitu='E' "
-   + "and not exists (select 1 from Sopimus s2 where s2.tyyppi.vapautus='K' and s2.harrastaja=h) "
-   + "and sl.p‰‰ttyy < :nyt " 
-   + "and sl.p‰‰ttyy = (select max(sl2.p‰‰ttyy) from Sopimuslasku sl2 where sl2.sopimus=s)")
+@NamedQueries(
+{
+   @NamedQuery(name = "uudet_sopimukset", query = "select s from Sopimus s, Harrastaja h "
+      + "where s.harrastaja=h and s.sopimuslaskut is empty "
+      + "and s.tyyppi.laskutettava='K' and h.arkistoitu='E' "
+      + "and not exists (select 1 from Sopimus s2 where s2.tyyppi.vapautus='K' and s2.harrastaja=h)"),
+   @NamedQuery(name = "laskuttamattomat_sopimukset", query = "select s from Sopimus s, Harrastaja h, Sopimuslasku sl "
+      + "where s.harrastaja=h and sl.sopimus=s "
+      + "and s.tyyppi.laskutettava='K' and h.arkistoitu='E' "
+      + "and not exists (select 1 from Sopimus s2 where s2.tyyppi.vapautus='K' and s2.harrastaja=h) "
+      + "and sl.p‰‰ttyy < :nyt "
+      + "and sl.p‰‰ttyy = (select max(sl2.p‰‰ttyy) from Sopimuslasku sl2 where sl2.sopimus=s)") })
 public class Sopimus
 {
    @Id

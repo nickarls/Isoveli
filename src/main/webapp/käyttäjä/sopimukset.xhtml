@@ -35,7 +35,7 @@
 						</h:outputText>
 					</ace:column>
 					<ace:column headerText="Maksuaikaa">
-						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.maksuaikaa}" rendered="#{_lasku.maksettu == null}"
+						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.maksuaikaa}" rendered="#{_sopimuslasku.maksettu == null}"
 							style="color:#{_sopimuslasku.laskurivi.lasku.maksuaikaa &lt; 0 ? 'red' : 'green'}" />
 					</ace:column>
 					<ace:column headerText="Tila">

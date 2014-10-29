@@ -9,6 +9,12 @@
 			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaLaskunPoisto').hide()" />
 		</h:panelGrid>
 	</ace:confirmationDialog>
+	<h:outputLink value="../API/laskut/zippaaLaskuttamattomat" target="_blank">
+		<h:graphicImage value="/kuvat/zip.jpg" styleClass="ikoni" />
+	</h:outputLink>
+	<h:commandLink action="#{laskutusAdmin.lähetäLaskut}">
+		<h:graphicImage value="/kuvat/lähetä.jpg" styleClass="ikoni" />
+	</h:commandLink>
 	<ace:dataTable value="#{laskut}" var="_lasku" selectionMode="single" stateMap="#{laskutusAdmin.laskuRSM}" rows="10"
 		paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false"
 		rowSelectListener="#{laskutusAdmin.laskuValittu}">

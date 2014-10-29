@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -24,7 +25,9 @@ import org.hibernate.annotations.Type;
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
-@NamedQuery(name = "laskut", query = "select l from Lasku l order by l.luotu asc")
+@NamedQueries(
+{ @NamedQuery(name = "laskut", query = "select l from Lasku l order by l.luotu asc"),
+      @NamedQuery(name = "laskuttamattomat_laskut", query = "select l from Lasku l where l.laskutettu='E'") })
 public class Lasku
 {
    @Id
@@ -57,7 +60,7 @@ public class Lasku
 
    @Type(type = "Kyll‰Ei")
    private boolean laskutettu;
-   
+
    public Lasku()
    {
    }

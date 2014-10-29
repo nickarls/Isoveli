@@ -19,6 +19,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -36,7 +37,9 @@ import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.util.Lasku2PDF;
+import fi.budokwai.isoveli.util.MailManager;
 import fi.budokwai.isoveli.util.Util;
+import fi.budokwai.isoveli.util.Zippaaja;
 
 @Stateful
 @SessionScoped
@@ -45,6 +48,9 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 {
    @PersistenceContext(type = PersistenceContextType.EXTENDED)
    private EntityManager entityManager;
+
+   @Inject
+   private MailManager mailManager;
 
    private RowStateMap laskuRSM = new RowStateMap();
    private RowStateMap laskuttamattomatRSM = new RowStateMap();
@@ -83,6 +89,24 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public List<SelectItem> getTilasuodatukset()
    {
       return tilasuodatukset;
+   }
+
+   public void lähetäLaskut()
+   {
+      List<Lasku> laskuttamattomat = entityManager.createNamedQuery("laskuttamattomat_laskut", Lasku.class)
+         .getResultList();
+      laskuttamattomat.forEach(lasku -> {
+         try
+         {
+            mailManager.lähetäSähköposti(lasku.getHenkilö().getYhteystiedot().getSähköposti(), "Lasku", "Liitteenä",
+               lasku.getPdf());
+            lasku.setLaskutettu(true);
+            entityManager.persist(lasku);
+         } catch (IsoveliPoikkeus e)
+         {
+
+         }
+      });
    }
 
    public void laskutaSopimukset()
@@ -250,5 +274,16 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public void setLaskuttamattomatRSM(RowStateMap laskuttamattomatRSM)
    {
       this.laskuttamattomatRSM = laskuttamattomatRSM;
+   }
+
+   public BlobData zippaaLaskuttamattomat()
+   {
+      List<Lasku> laskuttamattomat = entityManager.createNamedQuery("laskuttamattomat_laskut", Lasku.class)
+         .getResultList();
+      Zippaaja zippaaja = new Zippaaja();
+      laskuttamattomat.forEach(lasku -> {
+         zippaaja.lisääZipTiedostoon(String.format("%s.pdf", lasku.getHenkilö().getNimi()), lasku.getPdf().getTieto());
+      });
+      return zippaaja.haeZipTiedosto("laskuttamattomat");
    }
 }

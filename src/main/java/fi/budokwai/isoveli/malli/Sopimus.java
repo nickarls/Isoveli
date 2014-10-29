@@ -206,6 +206,11 @@ public class Sopimus
             pvm.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
          tulos.add(new Sopimustarkistus(viesti, false));
       }
+      if ((tyyppi.isKoeaika() || tyyppi.isTreenikertoja()) && treenikertoja <= 0)
+      {
+         String viesti = String.format("Treenikertoja jäljellä %d", treenikertoja);
+         tulos.add(new Sopimustarkistus(viesti, false));
+      }
       for (Sopimuslasku sopimuslasku : sopimuslaskut)
       {
          if (sopimuslasku.getLaskurivi().getLasku().isLaskuMyöhässä())

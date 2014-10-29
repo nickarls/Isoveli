@@ -22,12 +22,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-
-import fi.budokwai.isoveli.util.KylläEiTyyppi;
 
 @Entity
-@TypeDef(name = "KylläEi", typeClass = KylläEiTyyppi.class)
 @NamedQueries(
 {
       @NamedQuery(name = "tulevat_treenit", query = "select t from Treeni t where t.päivä=:päivä and t.päättyy >= :kello and not exists(select tk from Treenikäynti tk, Treenisessio ts where tk.harrastaja=:harrastaja and tk.treenisessio=ts and ts.treeni=t and ts.päivä = :tänään)"),

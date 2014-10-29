@@ -11,12 +11,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-
-import fi.budokwai.isoveli.util.Kyll‰EiTyyppi;
 
 @Entity
-@TypeDef(name = "Kyll‰Ei", typeClass = Kyll‰EiTyyppi.class)
 @NamedQueries(
 {
       @NamedQuery(name = "sopimustyypit", query = "select s from Sopimustyyppi s order by s.nimi"),

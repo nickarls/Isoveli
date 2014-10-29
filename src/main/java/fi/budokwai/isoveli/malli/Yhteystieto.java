@@ -9,12 +9,8 @@ import javax.persistence.NamedQuery;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-
-import fi.budokwai.isoveli.util.KylläEiTyyppi;
 
 @Entity
-@TypeDef(name = "KylläEi", typeClass = KylläEiTyyppi.class)
 @NamedQuery(name = "sähköpostilistalla", query = "select h from Henkilö h where h.yhteystiedot.sähköpostilistalla='K'")
 public class Yhteystieto
 {

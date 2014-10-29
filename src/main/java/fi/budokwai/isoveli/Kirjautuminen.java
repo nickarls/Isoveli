@@ -1,5 +1,6 @@
 package fi.budokwai.isoveli;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.ejb.Stateful;
@@ -149,7 +150,13 @@ public class Kirjautuminen extends Perustoiminnallisuus
 
    private void loginSivulle(FacesContext facesContext)
    {
-      facesContext.getApplication().getNavigationHandler().handleNavigation(facesContext, null, "kirjautuminen.xhtml");
+      try
+      {
+         facesContext.getExternalContext().redirect("/Isoveli");
+      } catch (IOException e)
+      {
+         e.printStackTrace();
+      }
       facesContext.renderResponse();
 
    }

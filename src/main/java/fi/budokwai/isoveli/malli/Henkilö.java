@@ -29,13 +29,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
-import fi.budokwai.isoveli.util.Kyll‰EiTyyppi;
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
-@TypeDef(name = "Kyll‰Ei", typeClass = Kyll‰EiTyyppi.class)
 @Table(name = "henkilo")
 @NamedQueries(
 {

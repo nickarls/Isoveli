@@ -19,6 +19,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Type;
+
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
@@ -53,6 +55,9 @@ public class Lasku
    @JoinColumn(name = "pdf")
    private BlobData pdf;
 
+   @Type(type = "KylläEi")
+   private boolean laskutettu;
+   
    public Lasku()
    {
    }
@@ -204,5 +209,15 @@ public class Lasku
    public boolean isLaskuMyöhässä()
    {
       return getMaksuaikaa() < 0;
+   }
+
+   public boolean isLaskutettu()
+   {
+      return laskutettu;
+   }
+
+   public void setLaskutettu(boolean laskutettu)
+   {
+      this.laskutettu = laskutettu;
    }
 }

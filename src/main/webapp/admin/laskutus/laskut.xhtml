@@ -58,6 +58,9 @@
 				<h:graphicImage value="/kuvat/pdf.png" style="width:24px" />
 			</h:outputLink>
 		</ace:column>
+		<ace:column headerText="Laskutettu">
+			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_lasku.laskutettu}" />
+		</ace:column>
 		<ace:panelExpansion>
 			<ace:dataTable rows="10" value="#{_lasku.laskurivit}" var="_laskurivi" paginator="true" paginatorPosition="bottom"
 				paginatorAlwaysVisible="false">

@@ -34,21 +34,21 @@
 				<h:outputText value=" " />
 				<h:outputText value=" " />
 				<h:outputText value="Osoite" />
-				<h:panelGrid>
+				<h:panelGrid rendered="#{!itse.alaikäinen}">
 					<ace:message for="form:osoite" />
-					<h:inputText value="#{itse.osoite.osoite}" rendered="#{!itse.alaikäinen}" id="osoite" />
+					<h:inputText value="#{itse.osoite.osoite}" id="osoite" />
 				</h:panelGrid>
 				<h:outputText value="#{itse.osoite.osoite}" rendered="#{itse.alaikäinen}" />
 				<h:outputText value="Postinumero" />
-				<h:panelGrid>
+				<h:panelGrid rendered="#{!itse.alaikäinen}">
 					<ace:message for="postinumero" />
-					<h:inputText value="#{itse.osoite.postinumero}" rendered="#{!itse.alaikäinen}" id="postinumero" />
+					<h:inputText value="#{itse.osoite.postinumero}" id="postinumero" />
 				</h:panelGrid>
 				<h:outputText value="#{itse.osoite.postinumero}" rendered="#{itse.alaikäinen}" />
 				<h:outputText value="Kaupunki" />
-				<h:panelGrid>
+				<h:panelGrid rendered="#{!itse.alaikäinen}">
 					<ace:message for="form:kaupunki" />
-					<h:inputText value="#{itse.osoite.kaupunki}" rendered="#{!itse.alaikäinen}" id="kaupunki" />
+					<h:inputText value="#{itse.osoite.kaupunki}" id="kaupunki" />
 				</h:panelGrid>
 				<h:outputText value="#{itse.osoite.kaupunki}" rendered="#{itse.alaikäinen}" />
 				<h:outputText value=" " />

@@ -27,7 +27,6 @@
 	width: 64px;
 }
 
-
 .erääntynyt {
 	background-color: #ffdd00;
 }
@@ -45,10 +44,13 @@
 </style>
 </h:head>
 <h:body>
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{käyttäjäylläpito.esifokus()}" />
+	</f:metadata>
 	<f:view>
 		<h:form id="form">
 			<h:commandLink action="#{exceptionHandler.tapaSessio()}" value="Kirjaudu ulos" />
-			<ace:tabSet>
+			<ace:tabSet binding="#{käyttäjäylläpito.tabi}">
 				<ui:include src="perustiedot.xhtml" />
 				<c:if test="#{itse.harrastaja}">
 					<ui:include src="treenikäynnit.xhtml" />

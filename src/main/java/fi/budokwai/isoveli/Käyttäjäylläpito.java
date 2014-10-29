@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -20,6 +21,7 @@ import javax.persistence.PersistenceContextType;
 import org.icefaces.ace.component.fileentry.FileEntry;
 import org.icefaces.ace.component.fileentry.FileEntryEvent;
 import org.icefaces.ace.component.fileentry.FileEntryResults;
+import org.icefaces.ace.component.tabset.TabSet;
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.chart.GaugeSeries;
 import org.icefaces.ace.model.table.RowStateMap;
@@ -47,9 +49,21 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    private Henkilö itse;
 
    private List<Vyöarvo> vyöarvot;
-
    private RowStateMap vyökoeRSM = new RowStateMap();
    private Vyökoe vyökoe;
+   private TabSet tabi;
+
+   public void esifokus()
+   {
+      if (FacesContext.getCurrentInstance().isPostback())
+      {
+         return;
+      }
+      if (itse.isHarrastaja() && !itse.isAlaikäinen() && !((Harrastaja) itse).isSopimuksetOK())
+      {
+         tabi.setSelectedIndex(3);
+      }
+   }
 
    @PostConstruct
    public void init()
@@ -215,6 +229,16 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    public void setVyökoeRSM(RowStateMap vyökoeRSM)
    {
       this.vyökoeRSM = vyökoeRSM;
+   }
+
+   public TabSet getTabi()
+   {
+      return tabi;
+   }
+
+   public void setTabi(TabSet tabi)
+   {
+      this.tabi = tabi;
    }
 
 }

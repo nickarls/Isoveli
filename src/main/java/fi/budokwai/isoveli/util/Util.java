@@ -20,6 +20,11 @@ public class Util
       return Date.from(LocalDateTime.now().toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
    }
 
+   public static LocalDate t‰n‰‰nLD()
+   {
+      return LocalDateTime.now().toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toLocalDate();
+   }
+
    public static String period2String(Period aikav‰li)
    {
       if (aikav‰li == Period.ZERO)
@@ -87,9 +92,9 @@ public class Util
       return Date.from(nyt.atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant());
    }
 
-   public static LocalDate date2LocalDateTime(Date umpeutuu)
+   public static LocalDate date2LocalDateTime(Date p‰iv‰m‰‰r‰)
    {
-      return LocalDateTime.ofInstant(new Date(umpeutuu.getTime()).toInstant(), ZoneId.systemDefault()).toLocalDate()
+      return LocalDateTime.ofInstant(new Date(p‰iv‰m‰‰r‰.getTime()).toInstant(), ZoneId.systemDefault()).toLocalDate()
          .atStartOfDay().toLocalDate();
    }
 

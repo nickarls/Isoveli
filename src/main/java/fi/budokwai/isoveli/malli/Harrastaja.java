@@ -31,6 +31,7 @@ import javax.validation.constraints.Size;
 import com.google.common.base.MoreObjects;
 
 import fi.budokwai.isoveli.util.SukupuoliConverter;
+import fi.budokwai.isoveli.util.Util;
 
 @Entity
 @NamedQueries(
@@ -314,23 +315,24 @@ public class Harrastaja extends Henkilö
 
    public JäljelläVyökokeeseen getJäljelläVyökokeeseen(List<Vyöarvo> vyöarvot)
    {
-      Vyöarvo vyöarvo = getTuoreinVyöarvo();
-      if (vyöarvo == Vyöarvo.EI_OOTA)
+      Vyöarvo nykyinenVyöarvo = getTuoreinVyöarvo();
+      Vyöarvo seuraavaVyöarvo = nykyinenVyöarvo == Vyöarvo.EI_OOTA ? vyöarvot.iterator().next() : null;
+      if (seuraavaVyöarvo == null)
       {
-         return JäljelläVyökokeeseen.EI_OOTA;
+         Optional<Vyöarvo> seuraavaVyöarvoehdokas = vyöarvot.stream()
+            .filter(va -> va.getJärjestys() == nykyinenVyöarvo.getJärjestys() + 1).findFirst();
+         if (!seuraavaVyöarvoehdokas.isPresent())
+         {
+            return JäljelläVyökokeeseen.EI_OOTA;
+         }
+         seuraavaVyöarvo = seuraavaVyöarvoehdokas.get();
       }
-      Optional<Vyöarvo> seuraavaVyöarvo = vyöarvot.stream()
-         .filter(va -> va.getJärjestys() == vyöarvo.getJärjestys() + 1).findFirst();
-      if (!seuraavaVyöarvo.isPresent())
-      {
-         return JäljelläVyökokeeseen.EI_OOTA;
-      }
-      long treenit = seuraavaVyöarvo.get().getMinimitreenit() - getTreenejäViimeVyökokeesta();
-      LocalDate tuoreinVyökoe = getTuoreinVyökoe().getKoska();
-      LocalDate nyt = LocalDateTime.now().toLocalDate().atStartOfDay().toLocalDate();
-      Period aika = Period.between(nyt,
-         tuoreinVyökoe.plus(seuraavaVyöarvo.get().getMinimikuukaudet(), ChronoUnit.MONTHS));
-      return new JäljelläVyökokeeseen(aika, treenit, seuraavaVyöarvo.get());
+      long treenit = seuraavaVyöarvo.getMinimitreenit() - getTreenejäViimeVyökokeesta();
+      // FIXME -> luotu
+      LocalDate tuoreinVyökoe = getTuoreinVyökoe() == Vyökoe.EI_OOTA ? Util.date2LocalDateTime(luotu) : getTuoreinVyökoe().getKoska();
+      LocalDate nyt = Util.tänäänLD();
+      Period aika = Period.between(nyt, tuoreinVyökoe.plus(seuraavaVyöarvo.getMinimikuukaudet(), ChronoUnit.MONTHS));
+      return new JäljelläVyökokeeseen(aika, treenit, seuraavaVyöarvo);
    }
 
    public boolean isOsoiteMuuttunut()

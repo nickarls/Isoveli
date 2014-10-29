@@ -2,6 +2,7 @@ package fi.budokwai.isoveli.malli;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -21,6 +22,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -87,6 +90,9 @@ public class Henkilö implements Serializable
    @Type(type = "KylläEi")
    protected boolean arkistoitu;
 
+   @Temporal(TemporalType.DATE)
+   protected Date luotu;
+   
    public int getId()
    {
       return id;
@@ -291,6 +297,16 @@ public class Henkilö implements Serializable
    {
       String roolinimet = roolit.stream().map(r -> r.getNimi()).collect(Collectors.joining(", "));
       return String.format("%s [%s]", getNimi(), roolinimet);
+   }
+
+   public Date getLuotu()
+   {
+      return luotu;
+   }
+
+   public void setLuotu(Date luotu)
+   {
+      this.luotu = luotu;
    }
 
 }

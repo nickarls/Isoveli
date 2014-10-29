@@ -28,7 +28,7 @@ public class MailManager
          viesti.setFrom(new InternetAddress(LÄHETTÄJÄ));
          viesti.setSubject("Isoveli - salasanan resetointipyyntö");
          viesti.setSentDate(new java.util.Date());
-//         Transport.send(viesti);
+         Transport.send(viesti);
       } catch (MessagingException e)
       {
          throw new IsoveliPoikkeus("Sähköpostin lähetys epäonnistui", e);

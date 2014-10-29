@@ -23,10 +23,11 @@ import javax.validation.constraints.NotNull;
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
-@NamedQuery(name = "laskuttamattomat_sopimukset", query = "select s from Sopimus s, Harrastaja h "
+@NamedQuery(name = "laskuttamattomat_sopimukset", query = "select s from Sopimus s, Harrastaja h, Sopimuslasku sl "
    + "where s.harrastaja=h and s.tyyppi.laskutettava='K' and h.arkistoitu='E' "
    + "and not exists (select 1 from Sopimus s2 where s2.tyyppi.vapautus='K' and s2.harrastaja=h) "
-   + "and s.sopimuslaskut is empty")
+   + "and sl.sopimus = s and sl.p‰‰ttyy < :nyt " 
+   + "and sl.p‰‰ttyy = (select max(sl2.p‰‰ttyy) from Sopimuslasku sl2 where sl2.sopimus=s)")
 public class Sopimus
 {
    @Id

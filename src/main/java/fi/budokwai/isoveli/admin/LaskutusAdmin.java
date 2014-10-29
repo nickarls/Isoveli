@@ -37,6 +37,7 @@ import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.util.Lasku2PDF;
+import fi.budokwai.isoveli.util.Util;
 
 @Stateful
 @SessionScoped
@@ -88,7 +89,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public void laskutaSopimukset()
    {
       List<Sopimus> sopimukset = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class)
-         .getResultList();
+         .setParameter("nyt", Util.t‰n‰‰n()).getResultList();
       Map<Osoite, List<Sopimus>> sopimuksetPerOsoite = sopimukset.stream().collect(
          Collectors.groupingBy(sopimus -> sopimus.getLaskutusosoite()));
       sopimuksetPerOsoite.values().forEach(osoitteenSopimukset -> teeLaskuOsoitteelle(osoitteenSopimukset));
@@ -180,7 +181,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    private void haeLaskuttamattomat()
    {
       laskuttamattomat = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class)
-         .setParameter("nyt", new Date()).getResultList();
+         .setParameter("nyt", Util.t‰n‰‰n()).getResultList();
    }
 
    public void tabiMuuttui(ValueChangeEvent e)

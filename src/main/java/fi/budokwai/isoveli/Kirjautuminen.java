@@ -139,6 +139,7 @@ public class Kirjautuminen extends Perustoiminnallisuus
          && kirjautunutHenkilö == Henkilö.EI_KIRJAUTUNUT)
       {
          loginSivulle(e.getFacesContext());
+         return;
       }
       if (näkymä.contains("admin/") && !kirjautunutHenkilö.isPääsyHallintaan())
       {

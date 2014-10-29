@@ -28,7 +28,7 @@ public class Sopimuslasku
    private int id;
 
    @NotNull
-   @OneToOne(cascade=CascadeType.PERSIST, mappedBy = "sopimuslasku", optional = false)
+   @OneToOne(cascade = CascadeType.PERSIST, mappedBy = "sopimuslasku", optional = false)
    private Laskurivi laskurivi;
 
    @ManyToOne(optional = false)
@@ -64,8 +64,15 @@ public class Sopimuslasku
 
    private Date haeP‰‰ttymisp‰iv‰(Date umpeutuu, Sopimustyyppi tyyppi)
    {
-      LocalDate sopimusLoppuu = Util.date2LocalDateTime(umpeutuu);
+      LocalDate sopimusLoppuu;
       LocalDate jaksoLoppuu = Util.getT‰n‰‰n().plus(tyyppi.getOletusMaksuv‰li(), ChronoUnit.MONTHS);
+      if (umpeutuu == null)
+      {
+         sopimusLoppuu = jaksoLoppuu;
+      } else
+      {
+         sopimusLoppuu = Util.date2LocalDateTime(umpeutuu);
+      }
       LocalDate loppuuEnsin = sopimusLoppuu.isBefore(jaksoLoppuu) ? sopimusLoppuu : jaksoLoppuu;
       return Date.from(loppuuEnsin.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
    }

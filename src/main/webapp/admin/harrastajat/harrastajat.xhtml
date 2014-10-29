@@ -24,9 +24,11 @@
 		</ace:column>
 		<ace:column headerText="Maksut">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_harrastaja.sopimuksetOK}" />
-			<ui:repeat var="_viesti" value="#{_harrastaja.sopimusTarkistukset.viestit}">
-				<h:outputText value="#{_viesti}" style="color:red"/>
-			</ui:repeat>
+			<h:dataTable var="_viesti" value="#{_harrastaja.sopimusTarkistukset.viestit}">
+				<h:column>
+					<h:outputText value="#{_viesti}" style="color:red" />
+				</h:column>
+			</h:dataTable>
 		</ace:column>
 		<ace:column headerText="Arkistoitu">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_harrastaja.arkistoitu}" />

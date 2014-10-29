@@ -380,6 +380,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       huoltaja.setPerhe(perhe);
       harrastaja.setHuoltaja(huoltaja);
       perheet.add(perhe);
+      fokusoi("form:huoltajan_etunimi");
    }
 
    public void lisääHarrastaja()
@@ -429,8 +430,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       if (sopimus.getTyyppi().isJäsenmaksu())
       {
          LocalDate päivä = LocalDate.now();
-         päivä = päivä.plus(1, ChronoUnit.YEARS);
-         päivä = päivä.withMonth(1).with(TemporalAdjusters.lastDayOfMonth());
+         päivä = päivä.with(TemporalAdjusters.lastDayOfYear());
          sopimus.setUmpeutuu(Date.from(päivä.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
       }
    }
@@ -440,6 +440,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastaja = (Harrastaja) e.getObject();
       roolit = null;
       vyökoe = null;
+      sopimus = null;
       vyökoeRSM = new RowStateMap();
       sopimusRSM = new RowStateMap();
    }

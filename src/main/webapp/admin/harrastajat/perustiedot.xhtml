@@ -88,10 +88,10 @@
 							style="height:50px; width:50px; margin-left:15px">
 							<f:ajax execute="form:sukunimi" render="form:huoltajapanel form:perhepanel" />
 						</h:commandButton>
-						<h:inputText value="#{harrastaja.huoltaja.etunimi}"
-							rendered="#{harrastaja.huoltaja != null and harrastaja.huoltaja.tallentamaton}" />
-						<h:inputText value="#{harrastaja.huoltaja.sukunimi}"
-							rendered="#{harrastaja.huoltaja != null and harrastaja.huoltaja.tallentamaton}" />
+						<h:panelGrid columns="2" rendered="#{harrastaja.huoltaja != null and harrastaja.huoltaja.tallentamaton}">
+							<h:inputText value="#{harrastaja.huoltaja.etunimi}" size="14" id="huoltajan_etunimi" />
+							<h:inputText value="#{harrastaja.huoltaja.sukunimi}" size="14" />
+						</h:panelGrid>
 					</h:panelGrid>
 				</ace:panel>
 			</h:panelGroup>
@@ -100,17 +100,17 @@
 					<h:outputText value="Osoite" />
 					<h:panelGrid>
 						<ace:message for="form:osoite" />
-						<h:inputText value="#{harrastaja.osoite.osoite}" id="osoite" styleClass="capitalized"/>
+						<h:inputText value="#{harrastaja.osoite.osoite}" id="osoite" styleClass="capitalized" />
 					</h:panelGrid>
 					<h:outputText value="Postinumero" />
 					<h:panelGrid>
 						<ace:message for="form:postinumero" />
-						<h:inputText value="#{harrastaja.osoite.postinumero}" id="postinumero"/>
+						<h:inputText value="#{harrastaja.osoite.postinumero}" id="postinumero" />
 					</h:panelGrid>
 					<h:outputText value="Kaupunki" />
 					<h:panelGrid>
 						<ace:message for="form:kaupunki" />
-						<h:inputText value="#{harrastaja.osoite.kaupunki}" id="kaupunki" styleClass="capitalized"/>
+						<h:inputText value="#{harrastaja.osoite.kaupunki}" id="kaupunki" styleClass="capitalized" />
 					</h:panelGrid>
 					<h:outputText value="Sähköposti-osoite" />
 					<h:panelGrid>
@@ -123,10 +123,10 @@
 						<h:selectBooleanCheckbox value="#{harrastaja.yhteystiedot.sähköpostilistalla}" id="sähköpostilistalla" />
 					</h:panelGrid>
 				</h:panelGrid>
-<!-- 				
+				<!-- 				
 				<ace:gMap style="width: 400px; height: 400px" zoomLevel="8" id="kartta"
 					locateAddress="true" address="#{harrastaja.osoite.osoiteString}" />
--->					
+-->
 			</ace:panel>
 		</h:panelGrid>
 		<ace:panel header="Korttitiedot" styleClass="panel">

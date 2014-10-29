@@ -91,7 +91,7 @@ public class Henkilö implements Serializable
    protected boolean arkistoitu;
 
    @Temporal(TemporalType.DATE)
-   protected Date luotu;
+   protected Date luotu = new Date();
    
    public int getId()
    {

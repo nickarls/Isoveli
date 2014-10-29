@@ -3,6 +3,7 @@ package fi.budokwai.isoveli.malli;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -277,6 +278,13 @@ public class Henkilö implements Serializable
    public boolean isLöytyySähköposti()
    {
       return yhteystiedot != null && yhteystiedot.getSähköposti() != null && !"".equals(yhteystiedot.getSähköposti());
+   }
+
+   public String luoUusiSalasana()
+   {
+      salasana = Util.MD5(UUID.randomUUID().toString()).substring(0, 6);
+      setSalasana(salasana);
+      return salasana;
    }
 
 }

@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -20,7 +21,9 @@ import fi.budokwai.isoveli.admin.RaporttiAdmin;
 import fi.budokwai.isoveli.malli.BlobData;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Lasku;
+import fi.budokwai.isoveli.util.AuditManager;
 import fi.budokwai.isoveli.util.Lasku2PDF;
+import fi.budokwai.isoveli.util.MailManager;
 
 @Path("kayttaja")
 @Stateless
@@ -28,9 +31,15 @@ public class Käyttäjärajapinta
 {
    @PersistenceContext
    private EntityManager entityManager;
-   
+
    @Inject
    private RaporttiAdmin raporttiAdmin;
+
+   @Inject
+   private AuditManager auditManager;
+
+   @Inject
+   private MailManager mailManager;
 
    @GET
    @Path("/sahkopostilistalla")
@@ -42,6 +51,28 @@ public class Käyttäjärajapinta
       henkilöt
          .forEach(h -> sb.append(String.format("%s%s", h.getYhteystiedot().getSähköposti(), System.lineSeparator())));
       return sb.toString();
+   }
+
+   @GET
+   @Path("/resetoiSalasana/{avain}")
+   @Produces("text/plain")
+   public String resetoiSalasana(@PathParam("avain") String avain)
+   {
+      Integer id = auditManager.haeResetoitava(avain);
+      if (id == null)
+      {
+         return "Resetoitavaa henkilöä ei löytynyt. Pyyntö on mahdollisesti vanhentunut, tee uusi yritys";
+      }
+      Henkilö henkilö = entityManager.find(Henkilö.class, id);
+      if (henkilö == null)
+      {
+         return "Resetoitavaa henkilöä ei löytynyt tietokannasta. Omituista. Ota yhteyttä salin päivystäjään";
+      }
+      String salasana = henkilö.luoUusiSalasana();
+      entityManager.persist(henkilö);
+      mailManager.lähetäSähköposti(henkilö.getYhteystiedot().getSähköposti(), "Isoveli - uusi salasana",
+         String.format("Uusi salasanasi on %s", salasana));
+      return String.format("Uusi salasana on lähetetty osoitteeseen %s", henkilö.getYhteystiedot().getSähköposti());
    }
 
    @GET

@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.deltaspike.jsf.api.listener.phase.AfterPhase;
 import org.apache.deltaspike.jsf.api.listener.phase.JsfPhaseId;
@@ -20,8 +21,10 @@ import org.apache.deltaspike.jsf.api.listener.phase.JsfPhaseId;
 import fi.budokwai.isoveli.admin.Perustoiminnallisuus;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Tunnukset;
+import fi.budokwai.isoveli.util.AuditManager;
 import fi.budokwai.isoveli.util.DSExceptionHandler;
 import fi.budokwai.isoveli.util.Kirjautunut;
+import fi.budokwai.isoveli.util.MailManager;
 
 @Stateful
 @SessionScoped
@@ -32,6 +35,9 @@ public class Kirjautuminen extends Perustoiminnallisuus
 
    @PersistenceContext
    private EntityManager entityManager;
+
+   @Inject
+   private MailManager mailManager;
 
    @Inject
    private DSExceptionHandler poikkeukset;
@@ -46,6 +52,9 @@ public class Kirjautuminen extends Perustoiminnallisuus
 
    @Inject
    private Instance<Tunnukset> tunnukset;
+
+   @Inject
+   private AuditManager auditManager;
 
    public void lähetäResetointipyyntö()
    {
@@ -76,8 +85,25 @@ public class Kirjautuminen extends Perustoiminnallisuus
 
    private void lähetäSalasananResetointivahvistus(Henkilö henkilö)
    {
+      String avain = auditManager.teeResetointiavain(henkilö);
+      String apiUrl = haeApiUrl(avain);
+      String teksti = String
+         .format(
+            "Olet ilmeisesti tehnyt salasanan resetointipyynnön? Jos klikkaat linkkiä <a href=\"%s\" target=\"_blank\">%s</a> niin sinulle lähetetään uusi salasana. Jos et ole tehnyt pyynntöä niin voit jättää tämän viestin huomiomatta",
+            apiUrl, apiUrl);
+      mailManager.lähetäSähköposti(henkilö.getYhteystiedot().getSähköposti(), "Isoveli - salasanan resetointipyyntö",
+         teksti);
       info(String.format("Salasanan resetointipyyntö lähetetty osoitteeseen %s", henkilö.getYhteystiedot()
          .getSähköposti()));
+   }
+
+   private String haeApiUrl(String avain)
+   {
+      HttpServletRequest pyyntö = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
+         .getRequest();
+      String URL = pyyntö.getRequestURL().toString();
+      String perusOsa = URL.substring(0, URL.lastIndexOf("/"));
+      return String.format("%s/API/kayttaja/resetoiSalasana/%s", perusOsa, avain);
    }
 
    public String kirjaudu()

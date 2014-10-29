@@ -3,7 +3,7 @@
 	xmlns:ace="http://www.icefaces.org/icefaces/components">
 	<ace:tabPane label="Sopimukset">
 		<ace:dataTable value="#{itse.sopimukset}" var="_sopimus" rows="10" paginator="true" paginatorPosition="bottom"
-			paginatorAlwaysVisible="false">
+			paginatorAlwaysVisible="false" rowStyleClass="#{!_sopimus.sopimusOK ? 'erääntynyt' : ''}">
 			<ace:column>
 				<ace:expansionToggler />
 			</ace:column>
@@ -23,7 +23,7 @@
 			</ace:column>
 			<ace:panelExpansion>
 				<ace:dataTable rows="10" value="#{_sopimus.sopimuslaskut}" var="_sopimuslasku" paginator="true"
-					paginatorPosition="bottom" paginatorAlwaysVisible="false">
+					paginatorPosition="bottom" paginatorAlwaysVisible="false" rowStyleClass="#{_sopimuslasku.laskurivi.lasku.laskuMyöhässä ? 'erääntynyt' : ''}">
 					<ace:column headerText="Eräpäivä">
 						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.eräpäivä}">
 							<f:convertDateTime pattern="dd.MM.yyyy" />
@@ -35,8 +35,8 @@
 						</h:outputText>
 					</ace:column>
 					<ace:column headerText="Maksuaikaa">
-						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.maksuaikaa}" rendered="#{_sopimuslasku.maksettu == null}"
-							style="color:#{_sopimuslasku.laskurivi.lasku.maksuaikaa &lt; 0 ? 'red' : 'green'}" />
+						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.maksuaikaa}" rendered="#{_sopimuslasku.laskurivi.lasku.maksettu == null}"
+							styleClass="#{_sopimuslasku.laskurivi.lasku.maksuaikaa &lt; 0 ? 'erääntynytTeksti' : ''}" />
 					</ace:column>
 					<ace:column headerText="Tila">
 						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.tila.nimi}" />

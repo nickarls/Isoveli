@@ -49,6 +49,15 @@ public class TuoVieAdmin extends Perustoiminnallisuus
       return tuodutHarrastajat;
    }
 
+   public void käsittele()
+   {
+      @SuppressWarnings("unchecked")
+      List<Harrastaja> valitut = harrastajaRSM.getSelected();
+      valitut.forEach(h -> entityManager.persist(h));
+      harrastajaRSM.setAllSelected(false);
+      info(String.format("%d harrastajaa tuotu", valitut.size()));
+   }
+   
    public void tuoExcel(FileEntryEvent event) throws IOException, BiffException
    {
       FileEntry fileEntry = (FileEntry) event.getSource();

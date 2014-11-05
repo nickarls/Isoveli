@@ -14,8 +14,9 @@ import java.util.Optional;
 import javax.enterprise.inject.Typed;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -30,7 +31,6 @@ import javax.validation.constraints.Size;
 
 import com.google.common.base.MoreObjects;
 
-import fi.budokwai.isoveli.util.SukupuoliConverter;
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
@@ -79,7 +79,7 @@ public class Harrastaja extends Henkilö
    private Date syntynyt;
 
    @NotNull
-   @Convert(converter = SukupuoliConverter.class)
+   @Enumerated(EnumType.STRING)
    private Sukupuoli sukupuoli;
 
    @Size(max = 50)
@@ -283,12 +283,12 @@ public class Harrastaja extends Henkilö
 
    public boolean isMies()
    {
-      return Sukupuoli.Mies == sukupuoli;
+      return Sukupuoli.M == sukupuoli;
    }
 
    public boolean isNainen()
    {
-      return Sukupuoli.Nainen == sukupuoli;
+      return Sukupuoli.N == sukupuoli;
    }
 
    public long getTreenejäViimeVyökokeesta()
@@ -329,7 +329,8 @@ public class Harrastaja extends Henkilö
       }
       long treenit = seuraavaVyöarvo.getMinimitreenit() - getTreenejäViimeVyökokeesta();
       // FIXME -> luotu
-      LocalDate tuoreinVyökoe = getTuoreinVyökoe() == Vyökoe.EI_OOTA ? Util.date2LocalDateTime(luotu) : getTuoreinVyökoe().getKoska();
+      LocalDate tuoreinVyökoe = getTuoreinVyökoe() == Vyökoe.EI_OOTA ? Util.date2LocalDateTime(luotu)
+         : getTuoreinVyökoe().getKoska();
       LocalDate nyt = Util.tänäänLD();
       Period aika = Period.between(nyt, tuoreinVyökoe.plus(seuraavaVyöarvo.getMinimikuukaudet(), ChronoUnit.MONTHS));
       return new JäljelläVyökokeeseen(aika, treenit, seuraavaVyöarvo);

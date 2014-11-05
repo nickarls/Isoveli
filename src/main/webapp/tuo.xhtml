@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+</h:head>
+<h:body>
+	<f:view>
+		<ace:growlMessages />
+		<h:form>
+			<ace:fileEntry fileEntryListener="#{tuoVieAdmin.tuoExcel}" immediate="true" autoUpload="true" />
+			<ace:dataTable value="#{tuodutHarrastajat}" var="_harrastaja" selectionMode="multiple" stateMap="#{tuoVieAdmin.harrastajaRSM}">
+				<ace:column headerText="Etunimi">
+					<h:outputText value="#{_harrastaja.etunimi}" />
+				</ace:column>
+				<ace:column headerText="Sukunimi">
+					<h:outputText value="#{_harrastaja.sukunimi}" />
+				</ace:column>
+				<ace:column headerText="Sukupuoli">
+					<h:outputText value="#{_harrastaja.mies ? 'Mies' : 'Nainen'}" />
+				</ace:column>
+				<ace:column headerText="Syntynyt">
+					<h:outputText value="#{_harrastaja.syntynyt}">
+						<f:convertDateTime pattern="dd.MM.yyyy" />
+					</h:outputText>
+				</ace:column>
+				<ace:column headerText="ICE">
+					<h:outputText value="#{_harrastaja.ice}" />
+				</ace:column>
+				<ace:column headerText="Huomautukset">
+					<h:outputText value="#{_harrastaja.huomautus}" />
+				</ace:column>
+				<ace:column headerText="Arkistoitu">
+					<h:outputText value="#{_harrastaja.arkistoitu ? 'Kyllä' : 'Ei'}" />
+				</ace:column>
+				<ace:column headerText="Osoite">
+					<h:outputText value="#{_harrastaja.osoite.osoite}" />
+				</ace:column>
+				<ace:column headerText="Postinumero">
+					<h:outputText value="#{_harrastaja.osoite.postinumero}" />
+				</ace:column>
+				<ace:column headerText="Kaupunki">
+					<h:outputText value="#{_harrastaja.osoite.kaupunki}" />
+				</ace:column>
+				<ace:column headerText="Sähköposti">
+					<h:outputText value="#{_harrastaja.yhteystiedot.sähköposti}" />
+				</ace:column>
+				<ace:column headerText="Spostilistalla">
+					<h:outputText value="#{_harrastaja.yhteystiedot.sähköpostilistalla ? 'Kyllä' : 'Ei'}" />
+				</ace:column>
+				<ace:column headerText="Jäsen#">
+					<h:outputText value="#{_harrastaja.jäsennumero}" />
+				</ace:column>
+				<ace:column headerText="Kortti#">
+					<h:outputText value="#{_harrastaja.korttinumero}" />
+				</ace:column>
+				<ace:column headerText="Lisenssi#">
+					<h:outputText value="#{_harrastaja.lisenssinumero}" />
+				</ace:column>
+			</ace:dataTable>
+		</h:form>
+	</f:view>
+</h:body>
+
+</html>

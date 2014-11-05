@@ -5,9 +5,6 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:icecore="http://www.icefaces.org/icefaces/core"
 	xmlns:ace="http://www.icefaces.org/icefaces/components" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
-	<h:outputStylesheet library="css" name="jquery.growl.css" target="head" />
-	<h:outputScript library="skriptit" name="jquery.min.js" target="head" />
-	<h:outputScript library="skriptit" name="jquery.growl.js" target="head" />
 	<style>
 .ikoni {
 	height: 40px;
@@ -47,6 +44,7 @@
 <h:body>
 	<f:view>
 		<h:form id="form">
+			<ace:growlMessages/>
 			<h:commandLink action="#{exceptionHandler.tapaSessio()}" value="Kirjaudu ulos" />
 			<ace:tabSet tabChangeListener="#{harrastajaAdmin.päätabiMuuttui}">
 				<ace:tabPane label="Harrastajat">

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@NamedQuery(name = "poista_tyhjät_osoitteet", query = "delete from Osoite o where not exists(select h from Henkilö h where h.osoite.id=o.id) and not exists(select p from Perhe p where p.osoite.id=o.id)")
+@NamedQuery(name = "poista_tyhjät_osoitteet", query = "delete from Osoite o where not exists(select h from Henkilö h where h.osoite=o) and not exists(select p from Perhe p where p.osoite=o)")
 public class Osoite
 {
    @Id

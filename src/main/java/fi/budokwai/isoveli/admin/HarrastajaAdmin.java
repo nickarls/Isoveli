@@ -243,6 +243,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    private void poistaTyhjätPerheetJaOsoitteet()
    {
+      // entityManager.createNamedQuery("poista_turhat_huoltajat").executeUpdate();
       entityManager.createNamedQuery("poista_tyhjät_perheet").executeUpdate();
       entityManager.createNamedQuery("poista_tyhjät_osoitteet").executeUpdate();
    }

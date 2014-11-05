@@ -14,6 +14,10 @@
 	width: 128px;
 }
 
+.kenttä {
+	padding:3px;
+}
+
 .nappi {
 	height: 64px;
 	width: 64px;
@@ -41,13 +45,13 @@
 						<h:outputText value="Käyttäjänimi" />
 						<h:panelGrid>
 							<ace:message for="form:käyttäjänimi" />
-							<h:inputText value="#{tunnukset.nimi}" id="käyttäjänimi"
+							<h:inputText value="#{tunnukset.nimi}" id="käyttäjänimi" styleClass="kenttä"
 								onkeypress="if (event.keyCode == 13) document.getElementById('form:salasana').focus();" />
 						</h:panelGrid>
 						<h:outputText value="Salasana" />
 						<h:panelGrid>
 							<ace:message for="form:salasana" />
-							<h:inputSecret value="#{tunnukset.salasana}" id="salasana"
+							<h:inputSecret value="#{tunnukset.salasana}" id="salasana" styleClass="kenttä"
 								onkeypress="if (event.keyCode == 13) document.getElementById('form:kirjaudu').click();" />
 						</h:panelGrid>
 						<h:outputText value="" />

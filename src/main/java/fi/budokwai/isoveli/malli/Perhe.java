@@ -19,7 +19,8 @@ import javax.persistence.OneToOne;
 @NamedQueries(
 {
       @NamedQuery(name = "perheet", query = "select p from Perhe p order by p.nimi"),
-      @NamedQuery(name = "poista_tyhjät_perheet", query = "delete from Perhe p where not exists(select h from Henkilö h where h.perhe.id=p.id)") })
+      @NamedQuery(name = "poista_turhat_huoltajat", query = "delete from Henkilö h where not exists (select ha from Harrastaja ha where ha.huoltaja=h)"),
+      @NamedQuery(name = "poista_tyhjät_perheet", query = "delete from Perhe p where not exists (select h from Henkilö h where h.perhe.id=p.id)") })
 public class Perhe
 {
    @Id

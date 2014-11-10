@@ -29,6 +29,8 @@ import org.icefaces.ace.component.fileentry.FileEntryResults;
 import org.icefaces.ace.model.table.RowStateMap;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
+import fi.budokwai.isoveli.malli.Henkilö;
+import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Sukupuoli;
 
 @Named
@@ -36,7 +38,7 @@ import fi.budokwai.isoveli.malli.Sukupuoli;
 @Stateful
 public class TuoVieAdmin extends Perustoiminnallisuus
 {
-   private List<Harrastaja> tuodutHarrastajat = new ArrayList<Harrastaja>();
+   private List<Henkilö> tuodutHenkilöt = new ArrayList<Henkilö>();
    private RowStateMap harrastajaRSM = new RowStateMap();
 
    @PersistenceContext
@@ -44,9 +46,9 @@ public class TuoVieAdmin extends Perustoiminnallisuus
 
    @Produces
    @Named
-   public List<Harrastaja> getTuodutHarrastajat()
+   public List<Henkilö> getTuodutHenkilöt()
    {
-      return tuodutHarrastajat;
+      return tuodutHenkilöt;
    }
 
    public void käsittele()
@@ -57,7 +59,7 @@ public class TuoVieAdmin extends Perustoiminnallisuus
       harrastajaRSM.setAllSelected(false);
       info(String.format("%d harrastajaa tuotu", valitut.size()));
    }
-   
+
    public void tuoExcel(FileEntryEvent event) throws IOException, BiffException
    {
       FileEntry fileEntry = (FileEntry) event.getSource();
@@ -67,7 +69,7 @@ public class TuoVieAdmin extends Perustoiminnallisuus
          if (fileInfo.isSaved())
          {
             byte[] tieto = Files.readAllBytes(fileInfo.getFile().toPath());
-            tuodutHarrastajat = tuoExcel(tieto);
+            tuodutHenkilöt = tuoExcel(tieto);
             valitseUudetHarrastajat();
             info("Excel tuotu");
             fileInfo.getFile().delete();
@@ -80,7 +82,7 @@ public class TuoVieAdmin extends Perustoiminnallisuus
       List<Harrastaja> vanhatHarrastajat = entityManager.createNamedQuery("harrastajat", Harrastaja.class)
          .getResultList();
       List<String> jäsennumerot = vanhatHarrastajat.stream().map(h -> h.getJäsennumero()).collect(Collectors.toList());
-      List<Harrastaja> uudet = tuodutHarrastajat.stream().filter(h -> !jäsennumerot.contains(h.getJäsennumero()))
+      List<Harrastaja> uudet = tuodutHenkilöt.stream().filter(h -> !jäsennumerot.contains(h.getJäsennumero()))
          .collect(Collectors.toList());
       uudet.forEach(h -> harrastajaRSM.get(h).setSelected(true));
    }
@@ -100,31 +102,67 @@ public class TuoVieAdmin extends Perustoiminnallisuus
             .collect(Collectors.toMap(Cell::getContents, Cell::getColumn));
       }
 
-      public List<Harrastaja> tuoHarrastajat()
+      public List<Henkilö> tuoHenkilöt()
       {
-         List<Harrastaja> harrastajat = new ArrayList<Harrastaja>();
+         List<Henkilö> henkilöt = new ArrayList<Henkilö>();
+         Perhe perhe = null;
+         int perheluku = 0;
          for (rivi = 1; rivi < välilehti.getRows(); rivi++)
          {
-            Harrastaja harrastaja = new Harrastaja();
-            harrastaja.setEtunimi(haeString("Etunimi"));
-            harrastaja.setSukunimi(haeString("Sukunimi"));
-            harrastaja.setSukupuoli(haeEnum(Sukupuoli.class, "Sukupuoli"));
-            harrastaja.setSyntynyt(haeDate("Syntynyt"));
-            harrastaja.setIce(haeString("ICE"));
-            harrastaja.setHuomautus(haeString("Huomautus"));
-            harrastaja.setArkistoitu(haeBoolean("Arkistoitu"));
-            harrastaja.getOsoite().setOsoite(haeString("Osoite"));
-            harrastaja.getOsoite().setKaupunki(haeString("Kaupunki"));
-            harrastaja.getOsoite().setPostinumero(haeString("Postinumero"));
-            harrastaja.getYhteystiedot().setSähköposti(haeString("Sposti"));
-            harrastaja.getYhteystiedot().setSähköpostilistalla(haeBoolean("Spostilistalla"));
-            harrastaja.setJäsennumero(haeString("Jäsennumero"));
-            harrastaja.setKorttinumero(haeString("Korttinumero"));
-            harrastaja.setLisenssinumero(haeString("Lisenssinumero"));
-            harrastaja.siivoa();
-            harrastajat.add(harrastaja);
+            perheluku = haeInt("Perhe");
+            if (perhe == null && perheluku > 0)
+            {
+               perhe = new Perhe();
+            }
+            boolean huoltaja = haeBoolean("Huoltaja");
+            if (huoltaja)
+            {
+               Henkilö henkilö = new Henkilö();
+               henkilö.setEtunimi(haeString("Etunimi"));
+               henkilö.setSukunimi(haeString("Sukunimi"));
+               henkilö.setArkistoitu(haeBoolean("Arkistoitu"));
+               henkilö.getOsoite().setOsoite(haeString("Osoite"));
+               henkilö.getOsoite().setKaupunki(haeString("Kaupunki"));
+               henkilö.getOsoite().setPostinumero(haeString("Postinumero"));
+               henkilö.getYhteystiedot().setSähköposti(haeString("Sposti"));
+               henkilö.getYhteystiedot().setSähköpostilistalla(haeBoolean("Spostilistalla"));
+               henkilö.siivoa();
+               henkilöt.add(henkilö);
+            } else
+            {
+               Harrastaja harrastaja = new Harrastaja();
+               harrastaja.setEtunimi(haeString("Etunimi"));
+               harrastaja.setSukunimi(haeString("Sukunimi"));
+               harrastaja.setSukupuoli(haeEnum(Sukupuoli.class, "Sukupuoli"));
+               harrastaja.setSyntynyt(haeDate("Syntynyt"));
+               harrastaja.setIce(haeString("ICE"));
+               harrastaja.setHuomautus(haeString("Huomautus"));
+               harrastaja.setArkistoitu(haeBoolean("Arkistoitu"));
+               harrastaja.getOsoite().setOsoite(haeString("Osoite"));
+               harrastaja.getOsoite().setKaupunki(haeString("Kaupunki"));
+               harrastaja.getOsoite().setPostinumero(haeString("Postinumero"));
+               harrastaja.getYhteystiedot().setSähköposti(haeString("Sposti"));
+               harrastaja.getYhteystiedot().setSähköpostilistalla(haeBoolean("Spostilistalla"));
+               harrastaja.setJäsennumero(haeString("Jäsennumero"));
+               harrastaja.setKorttinumero(haeString("Korttinumero"));
+               harrastaja.setLisenssinumero(haeString("Lisenssinumero"));
+               harrastaja.siivoa();
+               henkilöt.add(harrastaja);
+            }
+            perheluku--;
          }
-         return harrastajat;
+         return henkilöt;
+      }
+
+      private int haeInt(String sarake)
+      {
+         try
+         {
+            return Integer.parseInt(haeString(sarake));
+         } catch (NumberFormatException e)
+         {
+            return 0;
+         }
       }
 
       private boolean haeBoolean(String sarake)
@@ -158,12 +196,12 @@ public class TuoVieAdmin extends Perustoiminnallisuus
       }
    }
 
-   private List<Harrastaja> tuoExcel(byte[] tieto) throws BiffException, IOException
+   private List<Henkilö> tuoExcel(byte[] tieto) throws BiffException, IOException
    {
       ExcelTuoja excelTuoja = new ExcelTuoja(tieto);
       try
       {
-         return excelTuoja.tuoHarrastajat();
+         return excelTuoja.tuoHenkilöt();
       } finally
       {
          excelTuoja.valmis();

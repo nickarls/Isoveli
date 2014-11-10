@@ -25,7 +25,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -87,9 +86,6 @@ public class Harrastaja extends Henkilö
 
    @Size(max = 1000)
    private String huomautus;
-
-   @Transient
-   public boolean osoiteMuuttunut;
 
    public Harrastaja()
    {
@@ -344,18 +340,6 @@ public class Harrastaja extends Henkilö
    public void setOsoiteMuuttunut(boolean osoiteMuuttunut)
    {
       this.osoiteMuuttunut = osoiteMuuttunut;
-   }
-
-   public void siivoa()
-   {
-      if (osoiteMuuttunut || (osoite != null && osoite.isKäyttämätön()))
-      {
-         osoite = null;
-      }
-      if (yhteystiedot != null && yhteystiedot.isKäyttämätön())
-      {
-         yhteystiedot = null;
-      }
    }
 
    @Override

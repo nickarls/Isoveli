@@ -76,7 +76,7 @@ public class Osoite
    public boolean isKäyttämätön()
    {
       return id == 0 && (kaupunki == null || "".equals(kaupunki)) && (osoite == null || "".equals(osoite))
-         && (postinumero == null && "".equals(postinumero));
+         && (postinumero == null || "".equals(postinumero));
    }
 
 }

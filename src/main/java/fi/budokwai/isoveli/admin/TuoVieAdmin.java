@@ -79,12 +79,15 @@ public class TuoVieAdmin extends Perustoiminnallisuus
 
    private void valitseUudetHarrastajat()
    {
-      List<Harrastaja> vanhatHarrastajat = entityManager.createNamedQuery("harrastajat", Harrastaja.class)
-         .getResultList();
-      List<String> jäsennumerot = vanhatHarrastajat.stream().map(h -> h.getJäsennumero()).collect(Collectors.toList());
-      List<Harrastaja> uudet = tuodutHenkilöt.stream().filter(h -> !jäsennumerot.contains(h.getJäsennumero()))
-         .collect(Collectors.toList());
-      uudet.forEach(h -> harrastajaRSM.get(h).setSelected(true));
+      // List<Harrastaja> vanhatHarrastajat =
+      // entityManager.createNamedQuery("harrastajat", Harrastaja.class)
+      // .getResultList();
+      // List<String> jäsennumerot = vanhatHarrastajat.stream().map(h ->
+      // h.getJäsennumero()).collect(Collectors.toList());
+      // List<Harrastaja> uudet = tuodutHenkilöt.stream().filter(h ->
+      // !jäsennumerot.contains(h.getJäsennumero()))
+      // .collect(Collectors.toList());
+      // uudet.forEach(h -> harrastajaRSM.get(h).setSelected(true));
    }
 
    private class ExcelTuoja
@@ -109,7 +112,7 @@ public class TuoVieAdmin extends Perustoiminnallisuus
          int perheluku = 0;
          for (rivi = 1; rivi < välilehti.getRows(); rivi++)
          {
-            perheluku = haeInt("Perhe");
+            perheluku = perheluku > 0 ? perheluku : haeInt("Perhe");
             if (perhe == null && perheluku > 0)
             {
                perhe = new Perhe();
@@ -128,6 +131,10 @@ public class TuoVieAdmin extends Perustoiminnallisuus
                henkilö.getYhteystiedot().setSähköpostilistalla(haeBoolean("Spostilistalla"));
                henkilö.siivoa();
                henkilöt.add(henkilö);
+               if (perhe != null)
+               {
+                  perhe.lisääPerheenjäsen(henkilö);
+               }
             } else
             {
                Harrastaja harrastaja = new Harrastaja();
@@ -148,6 +155,16 @@ public class TuoVieAdmin extends Perustoiminnallisuus
                harrastaja.setLisenssinumero(haeString("Lisenssinumero"));
                harrastaja.siivoa();
                henkilöt.add(harrastaja);
+               if (perhe != null)
+               {
+                  perhe.lisääPerheenjäsen(harrastaja);
+               }
+            }
+            if (perheluku == 0 && perhe != null)
+            {
+               perhe.muodosta();
+               entityManager.persist(perhe);
+               perhe = null;
             }
             perheluku--;
          }

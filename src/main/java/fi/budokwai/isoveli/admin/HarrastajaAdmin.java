@@ -244,7 +244,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    private void poistaTyhjätPerheetJaOsoitteet()
    {
       // entityManager.createNamedQuery("poista_turhat_huoltajat").executeUpdate();
-      entityManager.createNativeQuery("delete from henkilo h where not exist(select 1 from harrastaja ha where ha.huoltaja=h.id)").executeUpdate();
+//      entityManager.createNativeQuery("delete from henkilo h where not exist(select 1 from harrastaja ha where ha.huoltaja=h.id)").executeUpdate();
       entityManager.createNamedQuery("poista_tyhjät_perheet").executeUpdate();
       entityManager.createNamedQuery("poista_tyhjät_osoitteet").executeUpdate();
    }

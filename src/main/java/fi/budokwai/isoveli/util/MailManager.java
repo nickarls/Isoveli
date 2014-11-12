@@ -1,7 +1,5 @@
 package fi.budokwai.isoveli.util;
 
-import java.io.IOException;
-
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.annotation.Resource;

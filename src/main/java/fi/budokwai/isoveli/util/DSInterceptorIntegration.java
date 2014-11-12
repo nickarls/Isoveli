@@ -6,6 +6,7 @@ import javax.interceptor.InvocationContext;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
+
 public class DSInterceptorIntegration
 {
    @AroundInvoke

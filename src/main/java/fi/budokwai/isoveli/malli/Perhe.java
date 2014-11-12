@@ -29,7 +29,7 @@ public class Perhe
 
    private String nimi;
 
-   @OneToMany(mappedBy = "perhe")
+   @OneToMany(mappedBy = "perhe", cascade = CascadeType.PERSIST)
    private List<Henkilö> perheenjäsenet = new ArrayList<Henkilö>();
 
    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
@@ -106,6 +106,63 @@ public class Perhe
       }
       Perhe toinenPerhe = (Perhe) toinen;
       return id == toinenPerhe.getId();
+   }
+
+   public void lisääPerheenjäsen(Henkilö henkilö)
+   {
+      perheenjäsenet.add(henkilö);
+      henkilö.setPerhe(this);
+   }
+
+   public void muodosta()
+   {
+      päätteleNimi();
+      omaksuOsoite();
+      asetaHuoltajuudet();
+   }
+
+   private void asetaHuoltajuudet()
+   {
+      List<Henkilö> huoltajat = perheenjäsenet.stream().filter(h -> !h.isHarrastaja()).collect(Collectors.toList());
+      if (!huoltajat.isEmpty())
+      {
+         Henkilö huoltaja = huoltajat.iterator().next();
+         perheenjäsenet.stream().filter(h -> h.isAlaikäinen()).forEach(h -> ((Harrastaja) h).setHuoltaja(huoltaja));
+      }
+   }
+
+   private void omaksuOsoite()
+   {
+      List<Henkilö> osoitteelliset = perheenjäsenet.stream().filter(h -> h.getOsoite() != null)
+         .collect(Collectors.toList());
+      if (!osoitteelliset.isEmpty())
+      {
+         osoite = osoitteelliset.iterator().next().getOsoite();
+      }
+      osoitteelliset.forEach(h -> h.setOsoite(null));
+   }
+
+   private void päätteleNimi()
+   {
+      List<Henkilö> huoltajat = perheenjäsenet.stream().filter(h -> !h.isHarrastaja()).collect(Collectors.toList());
+      if (!huoltajat.isEmpty())
+      {
+         nimi = huoltajat.iterator().next().getSukunimi();
+      }
+      if (nimi != null)
+      {
+         return;
+      }
+      List<Henkilö> täysiIkäiset = perheenjäsenet.stream().filter(h -> !h.isAlaikäinen()).collect(Collectors.toList());
+      if (!täysiIkäiset.isEmpty())
+      {
+         nimi = täysiIkäiset.iterator().next().getSukunimi();
+      }
+      if (nimi != null)
+      {
+         return;
+      }
+      nimi = perheenjäsenet.iterator().next().getSukunimi();
    }
 
 }

@@ -53,7 +53,7 @@ public class Sopimuslasku
       this.sopimus = sopimus;
       sopimus.getSopimuslaskut().add(this);
       alkaa = new Date();
-      p‰‰ttyy = haeP‰‰ttymisp‰iv‰(sopimus.getUmpeutuu(), sopimus.getTyyppi());
+      p‰‰ttyy = haeP‰‰ttymisp‰iv‰(sopimus.getUmpeutuu(), sopimus.getMaksuv‰li());
    }
 
    public String getJakso()
@@ -62,10 +62,10 @@ public class Sopimuslasku
       return String.format("%s-%s", sdf.format(alkaa), sdf.format(p‰‰ttyy));
    }
 
-   private Date haeP‰‰ttymisp‰iv‰(Date umpeutuu, Sopimustyyppi tyyppi)
+   private Date haeP‰‰ttymisp‰iv‰(Date umpeutuu, int maksuv‰li)
    {
       LocalDate sopimusLoppuu;
-      LocalDate jaksoLoppuu = Util.getT‰n‰‰n().plus(tyyppi.getOletusMaksuv‰li(), ChronoUnit.MONTHS);
+      LocalDate jaksoLoppuu = Util.getT‰n‰‰n().plus(maksuv‰li, ChronoUnit.MONTHS);
       if (umpeutuu == null)
       {
          sopimusLoppuu = jaksoLoppuu;

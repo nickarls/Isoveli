@@ -192,7 +192,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       List<SelectItem> tulos = new ArrayList<SelectItem>();
       for (Sukupuoli sukupuoli : Sukupuoli.values())
       {
-         tulos.add(new SelectItem(sukupuoli, sukupuoli.toString()));
+         tulos.add(new SelectItem(sukupuoli, sukupuoli.getNimi()));
       }
       return tulos;
    }

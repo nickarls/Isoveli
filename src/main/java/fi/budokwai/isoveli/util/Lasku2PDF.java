@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import com.google.common.base.Strings;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -119,6 +120,17 @@ public class Lasku2PDF
       this.lasku = lasku;
    }
 
+   private String getPankkiviivakoodi(Otsikkotiedot otsikkotiedot)
+   {
+      int versio = 4;
+      String tilinumero = otsikkotiedot.tilinumero.substring(2);
+      double sentit = lasku.getVerollinenHinta() % 1;
+      double eurot = lasku.getVerollinenHinta() - sentit;
+      String eräpäivä = new SimpleDateFormat("yyMMdd").format(lasku.getEräpäivä());
+      return String.format("%d%s%s%s000%s%s", versio, tilinumero, String.format("%06d", eurot),
+         String.format("%02d", sentit), Strings.padStart(otsikkotiedot.viitenumero + "", 20, '0'), eräpäivä);
+   }
+
    public byte[] muodosta()
    {
       käsitteleRivit();
@@ -157,6 +169,7 @@ public class Lasku2PDF
    private void käsitteleOtsikko()
    {
       Otsikkotiedot otsikkotiedot = new Otsikkotiedot(lasku);
+      String pankkiviivakoodi = getPankkiviivakoodi(otsikkotiedot);
       PdfPTable otsikkotaulu = teeOtsikko(otsikkotiedot);
       otsikkotaulu.writeSelectedRows(0, -1, 305, 600 + otsikkotaulu.getTotalHeight(), kangas);
    }

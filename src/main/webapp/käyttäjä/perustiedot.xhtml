@@ -2,53 +2,53 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:ace="http://www.icefaces.org/icefaces/components">
 	<ace:tabPane label="Etusivu">
-		<h:outputText value="#{itse.nimi}" styleClass="nimi" />
+		<h:outputText value="#{kohde.nimi}" styleClass="nimi" />
 		<h:panelGrid columns="2">
 			<h:panelGroup>
-				<c:if test="#{itse.harrastaja}">
-					<ace:graphicImage value="/kuvat/mies.jpg" styleClass="kuva" rendered="#{!itse.kuvallinen and itse.mies}" />
-					<ace:graphicImage value="/kuvat/nainen.jpg" styleClass="kuva" rendered="#{!itse.kuvallinen and itse.nainen}" />
+				<c:if test="#{kohde.harrastaja}">
+					<ace:graphicImage value="/kuvat/mies.jpg" styleClass="kuva" rendered="#{!kohde.kuvallinen and kohde.mies}" />
+					<ace:graphicImage value="/kuvat/nainen.jpg" styleClass="kuva" rendered="#{!kohde.kuvallinen and kohde.nainen}" />
 				</c:if>
-				<c:if test="#{!itse.harrastaja}">
-					<ace:graphicImage value="/kuvat/mies.jpg" styleClass="kuva" rendered="#{!itse.kuvallinen}" />
+				<c:if test="#{!kohde.harrastaja}">
+					<ace:graphicImage value="/kuvat/mies.jpg" styleClass="kuva" rendered="#{!kohde.kuvallinen}" />
 				</c:if>
-				<ace:graphicImage value="#{itse.kuva.tieto}" styleClass="kuva" rendered="#{itse.kuvallinen}" />
+				<ace:graphicImage value="#{kohde.kuva.tieto}" styleClass="kuva" rendered="#{kohde.kuvallinen}" />
 				<ace:fileEntry fileEntryListener="#{käyttäjäylläpito.kuvatallennus}" immediate="true" />
 			</h:panelGroup>
 			<h:panelGrid columns="2">
 				<h:outputText value="Puhelin" />
 				<h:panelGrid>
 					<ace:message for="form:puhelin" />
-					<h:inputText value="#{itse.yhteystiedot.puhelinnumero}" id="puhelin" />
+					<h:inputText value="#{kohde.yhteystiedot.puhelinnumero}" id="puhelin" />
 				</h:panelGrid>
 				<h:outputText value="Sähköpoisti" />
 				<h:panelGrid>
 					<ace:message for="form:sähköposti" />
-					<h:inputText value="#{itse.yhteystiedot.sähköposti}" id="sähköposti" />
+					<h:inputText value="#{kohde.yhteystiedot.sähköposti}" id="sähköposti" />
 				</h:panelGrid>
 				<h:outputText value="Sähköpostilistalla" />
 				<h:panelGrid>
 					<ace:message for="form:sähköpostilistalla" />
-					<h:selectBooleanCheckbox value="#{itse.yhteystiedot.sähköpostilistalla}" id="sähköpostilistalla" />
+					<h:selectBooleanCheckbox value="#{kohde.yhteystiedot.sähköpostilistalla}" id="sähköpostilistalla" />
 				</h:panelGrid>
 				<h:outputText value=" " />
 				<h:outputText value=" " />
 				<h:outputText value="Osoite" />
 				<h:panelGrid rendered="#{!itse.alaikäinen}">
 					<ace:message for="form:osoite" />
-					<h:inputText value="#{itse.osoite.osoite}" id="osoite" />
+					<h:inputText value="#{kohde.osoite.osoite}" id="osoite" />
 				</h:panelGrid>
 				<h:outputText value="#{itse.osoite.osoite}" rendered="#{itse.alaikäinen}" />
 				<h:outputText value="Postinumero" />
 				<h:panelGrid rendered="#{!itse.alaikäinen}">
 					<ace:message for="postinumero" />
-					<h:inputText value="#{itse.osoite.postinumero}" id="postinumero" />
+					<h:inputText value="#{kohde.osoite.postinumero}" id="postinumero" />
 				</h:panelGrid>
 				<h:outputText value="#{itse.osoite.postinumero}" rendered="#{itse.alaikäinen}" />
 				<h:outputText value="Kaupunki" />
 				<h:panelGrid rendered="#{!itse.alaikäinen}">
 					<ace:message for="form:kaupunki" />
-					<h:inputText value="#{itse.osoite.kaupunki}" id="kaupunki" />
+					<h:inputText value="#{kohde.osoite.kaupunki}" id="kaupunki" />
 				</h:panelGrid>
 				<h:outputText value="#{itse.osoite.kaupunki}" rendered="#{itse.alaikäinen}" />
 				<h:outputText value=" " />
@@ -56,10 +56,10 @@
 				<h:outputText value="Salasana" />
 				<h:panelGrid>
 					<ace:message for="form:salasana" />
-					<h:inputSecret value="#{itse.salasana}" redisplay="true" id="salasana" />
+					<h:inputSecret value="#{kohde.salasana}" redisplay="true" id="salasana" />
 				</h:panelGrid>
 				<h:outputText value="" />
-				<h:commandButton value="x" styleClass="ikoni" action="#{käyttäjäylläpito.tallennaItse}" image="/kuvat/tallenna.jpg"
+				<h:commandButton value="x" styleClass="ikoni" action="#{käyttäjäylläpito.tallennaKohde}" image="/kuvat/tallenna.jpg"
 					style="float:right">
 				</h:commandButton>
 			</h:panelGrid>

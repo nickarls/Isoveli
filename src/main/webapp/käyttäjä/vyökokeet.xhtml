@@ -15,11 +15,11 @@
 				<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaVyökokeenPoisto').hide()" />
 			</h:panelGrid>
 		</ace:confirmationDialog>
-		<h:commandButton action="#{käyttäjäylläpito.lisääVyökoe}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
+		<h:commandButton action="#{käyttäjäylläpito.lisääVyökoe}"  rendered="#{!itse.alaikäinen}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
 			immediate="true">
 			<ace:ajax render="@form" />
 		</h:commandButton>
-		<ace:dataTable value="#{itse.vyökokeet}" var="_vyökoe" rows="10" paginator="true" paginatorPosition="bottom"
+		<ace:dataTable value="#{kohde.vyökokeet}" var="_vyökoe" rows="10" paginator="true" paginatorPosition="bottom"
 			paginatorAlwaysVisible="false" selectionMode="single" rowSelectListener="#{käyttäjäylläpito.vyökoeValittu}"
 			stateMap="#{käyttäjäylläpito.vyökoeRSM}">
 			<ace:column>
@@ -39,9 +39,9 @@
 			<ace:column headerText="Seuraavaan kokeeseen">
 				<h:panelGrid columns="2" rendered="#{_vyökoe.tuoreinVyökoe}">
 					<h:outputText value="Päiviä" />
-					<h:outputText value="#{_itse.jäljelläVyökokeeseen(kaikkiVyöarvot).aikaString}" />
+					<h:outputText value="#{_kohde.jäljelläVyökokeeseen(kaikkiVyöarvot).aikaString}" />
 					<h:outputText value="Treenikertoja" />
-					<h:outputText value="#{_itse.jäljelläVyökokeeseen(kaikkiVyöarvot).treenikertoja} kertaa" />
+					<h:outputText value="#{_kohde.jäljelläVyökokeeseen(kaikkiVyöarvot).treenikertoja} kertaa" />
 				</h:panelGrid>
 			</ace:column>
 		</ace:dataTable>

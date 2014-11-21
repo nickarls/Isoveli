@@ -48,10 +48,20 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    @Kirjautunut
    private Henkilö itse;
 
+   private Henkilö ylläpidettävä;
+
    private List<Vyöarvo> vyöarvot;
    private RowStateMap vyökoeRSM = new RowStateMap();
    private Vyökoe vyökoe;
    private TabSet tabi;
+
+   @PostConstruct
+   public void init()
+   {
+      vyöarvot = entityManager.createNamedQuery("vyöarvot", Vyöarvo.class).getResultList();
+      itse = entityManager.merge(itse);
+      ylläpidettävä = itse;
+   }
 
    public void esifokus()
    {
@@ -65,11 +75,20 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
       }
    }
 
-   @PostConstruct
-   public void init()
+   @Produces
+   @Named
+   public Henkilö getKohde()
    {
-      vyöarvot = entityManager.createNamedQuery("vyöarvot", Vyöarvo.class).getResultList();
-      itse = entityManager.merge(itse);
+      return ylläpidettävä;
+   }
+
+   @Produces
+   @Named
+   public List<Henkilö> getYlläpidettävät()
+   {
+      List<Henkilö> huollettavat = itse.getHuollettavat();
+      huollettavat.add(0, itse);
+      return huollettavat;
    }
 
    @Produces
@@ -159,12 +178,13 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
          if (fileInfo.isSaved())
          {
             byte[] tieto = Files.readAllBytes(fileInfo.getFile().toPath());
-            if (itse.isKuvallinen())
+            if (ylläpidettävä.isKuvallinen())
             {
-               itse.getKuva().setTieto(tieto);
+               ylläpidettävä.getKuva().setTieto(tieto);
             } else
             {
-               itse.setKuva(new BlobData(String.format("kuva-%d", itse.getId()), tieto, Tiedostotyyppi.JPG));
+               ylläpidettävä.setKuva(new BlobData(String.format("kuva-%d", ylläpidettävä.getId()), tieto,
+                  Tiedostotyyppi.JPG));
             }
             info("Kuva päivitetty");
             entityManager.persist(itse);
@@ -180,16 +200,16 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
       return itse;
    }
 
-   public String tallennaItse()
+   public String tallennaKohde()
    {
-      entityManager.persist(itse);
+      entityManager.persist(ylläpidettävä);
       info("Tiedot tallennettu");
       return "käyttäjä.xhtml?faces-redirect=true";
    }
 
    public List<GaugeSeries> getAikaaVyökokeeseen()
    {
-      Harrastaja harrastaja = (Harrastaja) itse;
+      Harrastaja harrastaja = (Harrastaja) ylläpidettävä;
       List<GaugeSeries> data = new ArrayList<GaugeSeries>();
       GaugeSeries sarja = new GaugeSeries();
       JäljelläVyökokeeseen jäljelläVyökokeeseen = harrastaja.getJäljelläVyökokeeseen(vyöarvot);
@@ -206,7 +226,7 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
 
    public List<GaugeSeries> getTreenejäVyökokeeseen()
    {
-      Harrastaja harrastaja = (Harrastaja) itse;
+      Harrastaja harrastaja = (Harrastaja) ylläpidettävä;
       List<GaugeSeries> data = new ArrayList<GaugeSeries>();
       GaugeSeries sarja = new GaugeSeries();
       JäljelläVyökokeeseen jäljelläVyökokeeseen = harrastaja.getJäljelläVyökokeeseen(vyöarvot);
@@ -239,6 +259,16 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    public void setTabi(TabSet tabi)
    {
       this.tabi = tabi;
+   }
+
+   public Henkilö getYlläpidettävä()
+   {
+      return ylläpidettävä;
+   }
+
+   public void setYlläpidettävä(Henkilö ylläpidettävä)
+   {
+      this.ylläpidettävä = ylläpidettävä;
    }
 
 }

@@ -49,20 +49,26 @@
 			<h:commandLink action="#{exceptionHandler.tapaSessio()}" value="Kirjaudu ulos" />
 			<ace:tabSet binding="#{käyttäjäylläpito.tabi}">
 				<ui:include src="perustiedot.xhtml" />
-				<c:if test="#{itse.harrastaja}">
+				<c:if test="#{kohde.harrastaja}">
 					<ui:include src="treenikäynnit.xhtml" />
 				</c:if>
-				<c:if test="#{itse.harrastaja}">
+				<c:if test="#{kohde.harrastaja}">
 					<ui:include src="vyökokeet.xhtml" />
 				</c:if>
-				<c:if test="#{!itse.harrastaja or !itse.alaikäinen}">
+				<c:if test="#{!kohde.harrastaja or !itse.alaikäinen}">
 					<ui:include src="sopimukset.xhtml" />
 				</c:if>
-				<c:if test="#{itse.harrastaja}">
+				<c:if test="#{kohde.harrastaja}">
 					<ace:tabPane label="Tulokset">
 					</ace:tabPane>
 				</c:if>
 			</ace:tabSet>
+			<h:selectOneMenu rendered="#{itse.huoltaja}" value="#{käyttäjäylläpito.ylläpidettävä}">
+				<f:selectItems value="#{ylläpidettävät}" var="_ylläpidettävä" itemValue="#{_ylläpidettävä}"
+					itemLabel="#{_ylläpidettävä.nimi}" />
+				<f:converter converterId="objectConverter" />
+				<f:ajax execute="@this" render="@form" />
+			</h:selectOneMenu>
 		</h:form>
 	</f:view>
 </h:body>

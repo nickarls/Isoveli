@@ -90,10 +90,10 @@ public class Henkilö implements Serializable
 
    @Temporal(TemporalType.DATE)
    protected Date luotu = new Date();
-   
+
    @Transient
    public boolean osoiteMuuttunut;
-   
+
    public void siivoa()
    {
       if (osoiteMuuttunut || (osoite != null && osoite.isKäyttämätön()))
@@ -105,7 +105,7 @@ public class Henkilö implements Serializable
          yhteystiedot = null;
       }
    }
-   
+
    public int getId()
    {
       return id;
@@ -330,6 +330,26 @@ public class Henkilö implements Serializable
    public void setOsoiteMuuttunut(boolean osoiteMuuttunut)
    {
       this.osoiteMuuttunut = osoiteMuuttunut;
+   }
+
+   public boolean isHuoltaja()
+   {
+      return perhe != null
+         && perhe.getPerheenjäsenet().stream().filter(h -> h.isHarrastaja())
+            .filter(h -> ((Harrastaja) h).getHuoltaja().getId() == id).collect(Collectors.counting()) > 0;
+   }
+
+   public List<Henkilö> getHuollettavat()
+   {
+      return perhe == null ? new ArrayList<Henkilö>() : perhe.getPerheenjäsenet().stream()
+         .filter(h -> h.isHarrastaja()).filter(h -> ((Harrastaja) h).getHuoltaja().id == id)
+         .collect(Collectors.toList());
+   }
+
+   @Override
+   public String toString()
+   {
+      return getNimi();
    }
 
 }

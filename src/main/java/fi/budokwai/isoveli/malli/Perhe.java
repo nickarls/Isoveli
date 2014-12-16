@@ -14,8 +14,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "perhe")
 @NamedQueries(
 {
       @NamedQuery(name = "perheet", query = "select p from Perhe p order by p.nimi"),

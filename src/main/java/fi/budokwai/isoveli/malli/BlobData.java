@@ -10,12 +10,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import fi.budokwai.isoveli.api.BlobLataus;
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
+@Table(name = "blobdata")
 @NamedQueries(
 { @NamedQuery(name = "blobdata", query = "select b from BlobData b where b.avain=:avain"),
       @NamedQuery(name = "nimetty_blobdata", query = "select b from BlobData b where b.nimi=:nimi") })

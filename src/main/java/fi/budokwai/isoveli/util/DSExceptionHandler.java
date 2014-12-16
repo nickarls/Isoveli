@@ -34,7 +34,7 @@ public class DSExceptionHandler implements Serializable
       sessio.invalidate();
       try
       {
-         FacesContext.getCurrentInstance().getExternalContext().redirect("/Isoveli");
+         FacesContext.getCurrentInstance().getExternalContext().redirect("/");
       } catch (IOException e)
       {
          e.printStackTrace();
@@ -48,7 +48,7 @@ public class DSExceptionHandler implements Serializable
       session.setAttribute("exception", e.getException());
       try
       {
-         FacesContext.getCurrentInstance().getExternalContext().redirect("/Isoveli/virhe.xhtml");
+         FacesContext.getCurrentInstance().getExternalContext().redirect("/virhe.xhtml");
       } catch (IOException e1)
       {
          e1.printStackTrace();

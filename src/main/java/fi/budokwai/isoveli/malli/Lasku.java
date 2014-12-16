@@ -17,6 +17,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -25,6 +26,7 @@ import org.hibernate.annotations.Type;
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
+@Table(name = "lasku")
 @NamedQueries(
 { @NamedQuery(name = "laskut", query = "select l from Lasku l order by l.luotu asc"),
       @NamedQuery(name = "laskuttamattomat_laskut", query = "select l from Lasku l where l.laskutettu='E'") })

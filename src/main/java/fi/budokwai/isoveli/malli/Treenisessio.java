@@ -18,9 +18,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(name = "treenisessio")
 @NamedQueries(
 {
       @NamedQuery(name = "treenisessio", query = "select t from Treenisessio t where t.treeni = :treeni and t.päivä=:päivä"),

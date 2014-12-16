@@ -6,10 +6,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
+@Table(name = "rooli")
 @NamedQueries(
 { @NamedQuery(name = "roolit", query = "select r from Rooli r order by r.nimi"),
       @NamedQuery(name = "roolikäyttö", query = "select h from Henkilö h join h.roolit r where r = :rooli") })

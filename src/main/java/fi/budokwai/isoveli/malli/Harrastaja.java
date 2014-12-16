@@ -23,6 +23,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -33,6 +34,7 @@ import com.google.common.base.MoreObjects;
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
+@Table(name = "harrastaja")
 @NamedQueries(
 { @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.korttinumero=:kortti"),
       @NamedQuery(name = "treenivetäjät", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi"),

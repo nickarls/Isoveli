@@ -38,6 +38,7 @@ import fi.budokwai.isoveli.util.Util;
 @NamedQueries(
 { @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.korttinumero=:kortti"),
       @NamedQuery(name = "treenivetäjät", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi"),
+      @NamedQuery(name = "sama_syntymäpäivä", query = "select h from Harrastaja h where syntynyt = :päivä"),
       @NamedQuery(name = "harrastajat", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi") })
 @Typed(
 {})

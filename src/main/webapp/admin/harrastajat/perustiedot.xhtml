@@ -33,9 +33,9 @@
 				<h:panelGrid>
 					<ace:message for="form:syntymäaika" />
 					<ace:dateTimeEntry value="#{harrastaja.syntynyt}" renderAsPopup="true" pattern="dd.MM.yyyy" id="syntymäaika">
-						<ace:ajax event="dateSelect" execute="@this" render="form:huoltajapanel"
+						<ace:ajax event="dateSelect" execute="@this" render="form:huoltajapanel form:numeropanel"
 							listener="#{harrastajaAdmin.syntymäaikaMuuttui}" />
-						<ace:ajax event="dateTextChange" execute="@this" render="form:huoltajapanel"
+						<ace:ajax event="dateTextChange" execute="@this" render="form:huoltajapanel form:numeropanel"
 							listener="#{harrastajaAdmin.syntymäaikaMuuttui}" />
 					</ace:dateTimeEntry>
 				</h:panelGrid>
@@ -134,7 +134,7 @@
 -->
 			</ace:panel>
 		</h:panelGrid>
-		<ace:panel header="Korttitiedot" styleClass="panel">
+		<ace:panel header="Korttitiedot" styleClass="panel" id="numeropanel">
 			<h:panelGrid columns="2" style="margin-left: 20px;">
 				<h:outputText value="Jäsennumero" />
 				<h:panelGrid>

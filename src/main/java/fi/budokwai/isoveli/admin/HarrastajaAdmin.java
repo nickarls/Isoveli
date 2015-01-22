@@ -1,5 +1,6 @@
 package fi.budokwai.isoveli.admin;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -245,7 +246,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    private void poistaTyhj‰tPerheetJaOsoitteet()
    {
       // entityManager.createNamedQuery("poista_turhat_huoltajat").executeUpdate();
-//      entityManager.createNativeQuery("delete from henkilo h where not exist(select 1 from harrastaja ha where ha.huoltaja=h.id)").executeUpdate();
+      // entityManager.createNativeQuery("delete from henkilo h where not exist(select 1 from harrastaja ha where ha.huoltaja=h.id)").executeUpdate();
       entityManager.createNamedQuery("poista_tyhj‰t_perheet").executeUpdate();
       entityManager.createNamedQuery("poista_tyhj‰t_osoitteet").executeUpdate();
    }
@@ -365,6 +366,14 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       if (!Harrastaja.alaik‰inen(val))
       {
          harrastaja.setHuoltaja(null);
+      }
+      if (harrastaja.getJ‰sennumero() == null)
+      {
+         List<Harrastaja> samaSyntym‰p‰iv‰ = entityManager.createNamedQuery("sama_syntym‰p‰iv‰", Harrastaja.class).setParameter("p‰iv‰", val).getResultList();
+         String p‰iv‰m‰‰r‰ = new SimpleDateFormat("YYYYMMdd").format(val);
+         String lukum‰‰r‰ = String.format("%03d", samaSyntym‰p‰iv‰.size() + 1);
+         String korttinumero = String.format("%s%s", p‰iv‰m‰‰r‰, lukum‰‰r‰);
+         harrastaja.setKorttinumero(korttinumero);
       }
    }
 

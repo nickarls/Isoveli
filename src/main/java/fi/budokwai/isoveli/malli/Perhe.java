@@ -87,10 +87,7 @@ public class Perhe
 
    public List<Henkilö> getHuoltajat()
    {
-      return perheenjäsenet
-         .stream()
-         .filter(h -> (!(h instanceof Harrastaja)) || ((h instanceof Harrastaja) && (!((Harrastaja) h).isAlaikäinen())))
-         .collect(Collectors.toList());
+      return perheenjäsenet.stream().filter(h -> !h.isAlaikäinen()).collect(Collectors.toList());
    }
 
    @Override
@@ -165,6 +162,13 @@ public class Perhe
          return;
       }
       nimi = perheenjäsenet.iterator().next().getSukunimi();
+   }
+
+   public List<Henkilö> getHuollettavat(Henkilö henkilö)
+   {
+      return perheenjäsenet.stream().filter(h -> h.isHarrastaja()).map(h -> Harrastaja.class.cast(h))
+         .filter(h -> h.getHuoltaja() != null && h.getHuoltaja().getId() == henkilö.getId())
+         .collect(Collectors.toList());
    }
 
 }

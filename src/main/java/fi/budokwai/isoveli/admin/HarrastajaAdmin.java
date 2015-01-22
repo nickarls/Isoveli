@@ -227,6 +227,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void tallennaHarrastaja()
    {
+      System.out.println(entityManager.contains(harrastaja));
       harrastaja.siivoa();
       entityManager.persist(harrastaja);
       entityManager.flush();

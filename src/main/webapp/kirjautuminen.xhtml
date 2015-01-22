@@ -43,13 +43,13 @@
 						<h:panelGrid>
 							<ace:message for="form:käyttäjänimi" />
 							<h:inputText value="#{tunnukset.nimi}" id="käyttäjänimi" styleClass="kenttä"
-								onkeypress="if (event.keyCode == 13) document.getElementById('form:salasana').focus();" />
+								onkeydown="if (event.keyCode == 13) document.getElementById('form:salasana').focus()" />
 						</h:panelGrid>
 						<h:outputText value="Salasana" />
 						<h:panelGrid>
 							<ace:message for="form:salasana" />
 							<h:inputSecret value="#{tunnukset.salasana}" id="salasana" styleClass="kenttä"
-								onkeypress="if (event.keyCode == 13) document.getElementById('form:kirjaudu').click();" />
+								onkeydown="if (event.keyCode == 13) document.getElementById('form:kirjaudu').click()" />
 						</h:panelGrid>
 						<h:outputText value="" />
 						<h:commandButton image="/kuvat/kirjaudu.png" action="#{kirjautuminen.kirjaudu}" styleClass="nappi" id="kirjaudu" />

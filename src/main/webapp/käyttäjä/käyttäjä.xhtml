@@ -63,7 +63,7 @@
 					</ace:tabPane>
 				</c:if>
 			</ace:tabSet>
-			<h:selectOneMenu rendered="#{itse.huoltaja}" value="#{käyttäjäylläpito.ylläpidettävä}">
+			<h:selectOneMenu rendered="#{itse.huollettavia}" value="#{käyttäjäylläpito.ylläpidettävä}">
 				<f:selectItems value="#{ylläpidettävät}" var="_ylläpidettävä" itemValue="#{_ylläpidettävä}"
 					itemLabel="#{_ylläpidettävä.nimi}" />
 				<f:converter converterId="objectConverter" />

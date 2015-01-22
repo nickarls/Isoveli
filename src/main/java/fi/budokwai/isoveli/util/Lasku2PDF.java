@@ -127,8 +127,8 @@ public class Lasku2PDF
       double sentit = lasku.getVerollinenHinta() % 1;
       double eurot = lasku.getVerollinenHinta() - sentit;
       String eräpäivä = new SimpleDateFormat("yyMMdd").format(lasku.getEräpäivä());
-      return String.format("%d%s%s%s000%s%s", versio, tilinumero, String.format("%06d", eurot),
-         String.format("%02d", sentit), Strings.padStart(otsikkotiedot.viitenumero + "", 20, '0'), eräpäivä);
+      return String.format("%d%s%s%s000%s%s", versio, tilinumero, String.format("%06f", eurot),
+         String.format("%02f", sentit), Strings.padStart(otsikkotiedot.viitenumero + "", 20, '0'), eräpäivä);
    }
 
    public byte[] muodosta()

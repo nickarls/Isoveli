@@ -332,18 +332,14 @@ public class Henkilö implements Serializable
       this.osoiteMuuttunut = osoiteMuuttunut;
    }
 
-   public boolean isHuoltaja()
+   public boolean isHuollettavia()
    {
-      return perhe != null
-         && perhe.getPerheenjäsenet().stream().filter(h -> h.isHarrastaja())
-            .filter(h -> ((Harrastaja) h).getHuoltaja().getId() == id).collect(Collectors.counting()) > 0;
+      return getHuollettavat().size() > 0;
    }
 
    public List<Henkilö> getHuollettavat()
    {
-      return perhe == null ? new ArrayList<Henkilö>() : perhe.getPerheenjäsenet().stream()
-         .filter(h -> h.isHarrastaja()).filter(h -> ((Harrastaja) h).getHuoltaja().id == id)
-         .collect(Collectors.toList());
+      return perhe == null ? new ArrayList<Henkilö>() : perhe.getHuollettavat(this);
    }
 
    @Override

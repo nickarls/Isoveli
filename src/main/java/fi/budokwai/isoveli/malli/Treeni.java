@@ -60,6 +60,14 @@ public class Treeni
    @Type(type = "KylläEi")
    private boolean power;
 
+   @OneToOne
+   @JoinColumn(name = "vyoalaraja")
+   private Vyöarvo vyöAlaraja;
+
+   @OneToOne
+   @JoinColumn(name = "vyoylaraja")
+   private Vyöarvo vyöYläraja;
+
    @Temporal(TemporalType.DATE)
    private Date voimassaAlkaa;
 
@@ -206,5 +214,25 @@ public class Treeni
    public void setVoimassaPäättyy(Date voimassaPäättyy)
    {
       this.voimassaPäättyy = voimassaPäättyy;
+   }
+
+   public Vyöarvo getVyöAlaraja()
+   {
+      return vyöAlaraja;
+   }
+
+   public void setVyöAlaraja(Vyöarvo vyöAlaraja)
+   {
+      this.vyöAlaraja = vyöAlaraja;
+   }
+
+   public Vyöarvo getVyöYläraja()
+   {
+      return vyöYläraja;
+   }
+
+   public void setVyöYläraja(Vyöarvo vyöYläraja)
+   {
+      this.vyöYläraja = vyöYläraja;
    }
 }

@@ -44,6 +44,12 @@
 		<ace:column headerText="Power">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_treeni.power}" />
 		</ace:column>
+		<ace:column headerText="Vyöalaraja" styleClass="lefttext">
+			<h:outputText value="#{_treeni.vyöAlaraja.nimi}"/>
+		</ace:column>
+		<ace:column headerText="Vyöyläraja" styleClass="lefttext">
+			<h:outputText value="#{_treeni.vyöYläraja.nimi}"/>
+		</ace:column>
 		<ace:column headerText="Voimassa alk" styleClass="lefttext">
 			<h:outputText value="#{_treeni.voimassaAlkaa}">
 				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
@@ -83,6 +89,24 @@
 				<h:panelGrid>
 					<ace:message for="form:treenialkaa" />
 					<ace:dateTimeEntry value="#{treeni.alkaa}" renderAsPopup="true" pattern="HH:mm" id="treenialkaa" timeZone="EET" />
+				</h:panelGrid>
+				<h:outputText value="Vyöalaraja" />
+				<h:panelGrid>
+					<ace:message for="form:vyöalaraja" />
+					<h:selectOneMenu value="#{treeni.vyöAlaraja}" id="vyöalaraja">
+						<f:selectItem noSelectionOption="true" itemValue="" itemLabel=""/>
+						<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}" />
+						<f:converter converterId="objectConverter" />
+					</h:selectOneMenu>					
+				</h:panelGrid>
+				<h:outputText value="Vyöyläraja" />
+				<h:panelGrid>
+					<ace:message for="form:vyöyläraja" />
+					<h:selectOneMenu value="#{treeni.vyöYläraja}" id="vyöyläraja">
+						<f:selectItem noSelectionOption="true" itemValue="" itemLabel=""/>
+						<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}" />
+						<f:converter converterId="objectConverter" />
+					</h:selectOneMenu>					
 				</h:panelGrid>
 				<h:outputText value="Päättyy" />
 				<h:panelGrid>

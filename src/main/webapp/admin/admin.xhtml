@@ -46,7 +46,7 @@
 		<h:form id="form">
 			<ace:growlMessages/>
 			<h:commandLink action="#{exceptionHandler.tapaSessio()}" value="Kirjaudu ulos" style="margin-right:20px"/>
-			<h:commandLink action="/käyttäjä/käyttäjä.xhtml" value="Oma ylläpito" />
+			<h:commandLink action="/käyttäjä/käyttäjä.xhtml?faces-redirect=true" value="Oma ylläpito" />
 			<ace:tabSet tabChangeListener="#{harrastajaAdmin.päätabiMuuttui}">
 				<ace:tabPane label="Harrastajat">
 					<ui:include src="harrastajat/harrastajat.xhtml" />

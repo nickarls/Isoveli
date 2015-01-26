@@ -12,8 +12,8 @@
 	<h:panelGrid columns="3" columnClasses="tabletop, tabletop, tabletop">
 		<ace:panel header="Henkilötiedot" styleClass="panel" id="henkilötietopanel">
 			<h:panelGrid columns="2">
-				<h:outputText value="Tilapäinen" />
-				<h:selectBooleanCheckbox value="#{harrastaja.tilapäinen}">
+				<h:outputText value="Tilapäinen" rendered="#{harrastaja.tallentamaton or harrastaja.tilapäinen}" />
+				<h:selectBooleanCheckbox value="#{harrastaja.tilapäinen}" rendered="#{harrastaja.tallentamaton or harrastaja.tilapäinen}">
 					<f:ajax execute="@this" render="@all" listener="#{harrastajaAdmin.tilapäisyysMuuttui}" />
 				</h:selectBooleanCheckbox>
 				<h:outputText value="Etunimi" />

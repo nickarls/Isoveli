@@ -212,11 +212,11 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
       Harrastaja harrastaja = (Harrastaja) ylläpidettävä;
       List<GaugeSeries> data = new ArrayList<GaugeSeries>();
       GaugeSeries sarja = new GaugeSeries();
-      JäljelläVyökokeeseen jäljelläVyökokeeseen = harrastaja.getJäljelläVyökokeeseen(vyöarvot);
+      JäljelläVyökokeeseen jäljelläVyökokeeseen = harrastaja.jäljelläVyökokeeseen(vyöarvot);
       int max = jäljelläVyökokeeseen.getSeuraavaVyöarvo().getMinimikuukaudet() * 30;
       sarja.setMax(max);
       sarja.setMin(0);
-      int arvo = max - jäljelläVyökokeeseen.getAika().getDays();
+      long arvo = max - jäljelläVyökokeeseen.getPäiviä();
       sarja.setValue(arvo);
       sarja.setLabel("Aikarajoitus");
       data.add(sarja);
@@ -229,7 +229,7 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
       Harrastaja harrastaja = (Harrastaja) ylläpidettävä;
       List<GaugeSeries> data = new ArrayList<GaugeSeries>();
       GaugeSeries sarja = new GaugeSeries();
-      JäljelläVyökokeeseen jäljelläVyökokeeseen = harrastaja.getJäljelläVyökokeeseen(vyöarvot);
+      JäljelläVyökokeeseen jäljelläVyökokeeseen = harrastaja.jäljelläVyökokeeseen(vyöarvot);
       int max = jäljelläVyökokeeseen.getSeuraavaVyöarvo().getMinimitreenit();
       sarja.setMax(max);
       sarja.setMin(0);

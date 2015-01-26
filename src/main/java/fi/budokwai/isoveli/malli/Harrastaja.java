@@ -312,7 +312,7 @@ public class Harrastaja extends Henkilö
       return Period.between(edellinen, LocalDate.now());
    }
 
-   public JäljelläVyökokeeseen getJäljelläVyökokeeseen(List<Vyöarvo> vyöarvot)
+   public JäljelläVyökokeeseen jäljelläVyökokeeseen(List<Vyöarvo> vyöarvot)
    {
       Vyöarvo nykyinenVyöarvo = getTuoreinVyöarvo();
       Vyöarvo seuraavaVyöarvo = nykyinenVyöarvo == Vyöarvo.EI_OOTA ? vyöarvot.iterator().next() : null;
@@ -332,7 +332,8 @@ public class Harrastaja extends Henkilö
          : getTuoreinVyökoe().getKoska();
       LocalDate nyt = Util.tänäänLD();
       Period aika = Period.between(nyt, tuoreinVyökoe.plus(seuraavaVyöarvo.getMinimikuukaudet(), ChronoUnit.MONTHS));
-      return new JäljelläVyökokeeseen(aika, treenit, seuraavaVyöarvo);
+      long päiviä = ChronoUnit.DAYS.between(nyt, tuoreinVyökoe.plus(seuraavaVyöarvo.getMinimikuukaudet(), ChronoUnit.MONTHS));
+      return new JäljelläVyökokeeseen(aika, treenit, päiviä, seuraavaVyöarvo);
    }
 
    public boolean isOsoiteMuuttunut()

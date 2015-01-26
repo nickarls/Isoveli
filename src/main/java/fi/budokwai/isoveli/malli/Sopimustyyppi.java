@@ -17,6 +17,7 @@ import org.hibernate.annotations.Type;
 @Table(name = "sopimustyyppi")
 @NamedQueries(
 {
+      @NamedQuery(name = "koeaikasopimus", query = "select s from Sopimustyyppi s where s.koeaika='K'"),
       @NamedQuery(name = "sopimustyypit", query = "select s from Sopimustyyppi s order by s.nimi"),
       @NamedQuery(name = "sopimustyyppikäyttö", query = "select s from Harrastaja h join h.sopimukset s join s.tyyppi st where st = :sopimustyyppi") })
 public class Sopimustyyppi

@@ -1,10 +1,14 @@
 package fi.budokwai.isoveli.admin;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +40,7 @@ import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Rooli;
 import fi.budokwai.isoveli.malli.Sopimus;
+import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.malli.Sukupuoli;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Vyökoe;
@@ -92,6 +97,32 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       vyökoeRSM = new RowStateMap();
       sopimusRSM = new RowStateMap();
       emMuuttui.fire(entityManager);
+   }
+
+   public void tilapäisyysMuuttui(AjaxBehaviorEvent e)
+   {
+      if (harrastaja.isTilapäinen())
+      {
+         harrastaja.muutaVakioksi();
+         harrastaja.getSopimukset().add(teeKoeaikaSopimus());
+      } else
+      {
+         harrastaja.muutaTilapäiseksi();
+      }
+   }
+
+   private Sopimus teeKoeaikaSopimus()
+   {
+      Sopimus koeaika = new Sopimus();
+      koeaika.setHarrastaja(harrastaja);
+      Sopimustyyppi koeaikaSopimustyyppi = (Sopimustyyppi) entityManager.createNamedQuery("koeaikasopimus")
+         .getSingleResult();
+      koeaika.setTyyppi(koeaikaSopimustyyppi);
+      koeaika.setTreenikertoja(koeaikaSopimustyyppi.getOletusTreenikerrat());
+      LocalDate umpeutuu = LocalDate.now();
+      umpeutuu = umpeutuu.plus(koeaikaSopimustyyppi.getOletusKuukaudetVoimassa(), ChronoUnit.MONTHS);
+      koeaika.setUmpeutuu(Date.from(umpeutuu.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+      return koeaika;
    }
 
    public void perheMuuttui(ValueChangeEvent e)
@@ -369,7 +400,8 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       }
       if (harrastaja.getJäsennumero() == null)
       {
-         List<Harrastaja> samaSyntymäpäivä = entityManager.createNamedQuery("sama_syntymäpäivä", Harrastaja.class).setParameter("päivä", val).getResultList();
+         List<Harrastaja> samaSyntymäpäivä = entityManager.createNamedQuery("sama_syntymäpäivä", Harrastaja.class)
+            .setParameter("päivä", val).getResultList();
          String päivämäärä = new SimpleDateFormat("YYYYMMdd").format(val);
          String lukumäärä = String.format("%03d", samaSyntymäpäivä.size() + 1);
          String korttinumero = String.format("%s%s", päivämäärä, lukumäärä);

@@ -156,9 +156,15 @@ public class Harrastaja extends Henkilö
 
    private static long ikä(Date päivämäärä)
    {
-      Date d = new Date(päivämäärä.getTime());
-      LocalDate päivä = LocalDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault()).toLocalDate();
-      return päivä.until(LocalDate.now(), ChronoUnit.YEARS);
+      try
+      {
+         Date d = new Date(päivämäärä.getTime());
+         LocalDate päivä = LocalDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault()).toLocalDate();
+         return päivä.until(LocalDate.now(), ChronoUnit.YEARS);
+      } catch (Exception e)
+      {
+         return 0;
+      }
    }
 
    public boolean isAlaikäinen()
@@ -332,7 +338,8 @@ public class Harrastaja extends Henkilö
          : getTuoreinVyökoe().getKoska();
       LocalDate nyt = Util.tänäänLD();
       Period aika = Period.between(nyt, tuoreinVyökoe.plus(seuraavaVyöarvo.getMinimikuukaudet(), ChronoUnit.MONTHS));
-      long päiviä = ChronoUnit.DAYS.between(nyt, tuoreinVyökoe.plus(seuraavaVyöarvo.getMinimikuukaudet(), ChronoUnit.MONTHS));
+      long päiviä = ChronoUnit.DAYS.between(nyt,
+         tuoreinVyökoe.plus(seuraavaVyöarvo.getMinimikuukaudet(), ChronoUnit.MONTHS));
       return new JäljelläVyökokeeseen(aika, treenit, päiviä, seuraavaVyöarvo);
    }
 
@@ -386,6 +393,30 @@ public class Harrastaja extends Henkilö
    public boolean isHarrastaja()
    {
       return true;
+   }
+
+   public boolean isTilapäinen()
+   {
+      return ".".equals(huomautus);
+   }
+
+   public void setTilapäinen(boolean tilapäinen)
+   {
+   }
+
+   public void muutaTilapäiseksi()
+   {
+      huomautus = ".";
+      sukupuoli = Sukupuoli.M;
+      syntynyt = new Date();
+   }
+
+   public void muutaVakioksi()
+   {
+      huomautus = null;
+      sukupuoli = null;
+      syntynyt = null;
+      sopimukset.clear();
    }
 
 }

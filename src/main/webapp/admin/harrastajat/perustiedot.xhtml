@@ -26,8 +26,8 @@
 					<ace:message for="form:sukunimi" />
 					<h:inputText value="#{harrastaja.sukunimi}" id="sukunimi" styleClass="capitalized" />
 				</h:panelGrid>
-				<h:outputText value="Sukupuoli" rendered="#{!harrastaja.tilapäinen}"/>
-				<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
+				<h:outputText value="Sukupuoli"/>
+				<h:panelGrid>
 					<ace:message for="form:sukupuoli" />
 					<h:selectOneRadio value="#{harrastaja.sukupuoli}" id="sukupuoli">
 						<f:selectItems value="#{sukupuolet}" />

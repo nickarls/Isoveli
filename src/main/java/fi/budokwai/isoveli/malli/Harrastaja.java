@@ -407,14 +407,12 @@ public class Harrastaja extends Henkilö
    public void muutaTilapäiseksi()
    {
       huomautus = ".";
-      sukupuoli = Sukupuoli.M;
       syntynyt = new Date();
    }
 
    public void muutaVakioksi()
    {
       huomautus = null;
-      sukupuoli = null;
       syntynyt = null;
       sopimukset.clear();
    }

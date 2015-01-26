@@ -44,6 +44,7 @@ import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.malli.Sukupuoli;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Vyökoe;
+import fi.budokwai.isoveli.util.Loggaaja;
 import fi.budokwai.isoveli.util.Muuttui;
 
 @Named
@@ -68,6 +69,9 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    private RowStateMap harrastajaRSM = new RowStateMap();
    private RowStateMap vyökoeRSM = new RowStateMap();
    private RowStateMap sopimusRSM = new RowStateMap();
+
+   @Inject
+   private Loggaaja loggaaja;
 
    @Inject
    @Muuttui
@@ -264,6 +268,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          virhe("Samanniminen harrastaja löytyy jo");
          return;
       }
+      loggaaja.loggaa(String.format("Tallensi harrastajan %s", harrastaja));
       harrastaja.siivoa();
       entityManager.persist(harrastaja);
       entityManager.flush();

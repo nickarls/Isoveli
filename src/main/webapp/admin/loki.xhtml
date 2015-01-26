@@ -1,7 +1,8 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:ace="http://www.icefaces.org/icefaces/components">
-	<ace:dataTable value="#{lokirivit}" var="_loki" styleClass="lefttext">
+	<ace:dataTable value="#{lokirivit}" var="_loki" styleClass="lefttext" rows="10" paginator="true"
+		paginatorPosition="bottom">
 		<ace:column headerText="Koska" styleClass="lefttext">
 			<h:outputText value="#{_loki.koska}">
 				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET" />

@@ -53,9 +53,6 @@ public class Sopimustyyppi
    private boolean power;
 
    @Type(type = "Kyll‰Ei")
-   private boolean perhealennus;
-
-   @Type(type = "Kyll‰Ei")
    private boolean laskutettava;
 
    private int oletusKuukaudetVoimassa;
@@ -172,16 +169,6 @@ public class Sopimustyyppi
    public void setPower(boolean power)
    {
       this.power = power;
-   }
-
-   public boolean isPerhealennus()
-   {
-      return perhealennus;
-   }
-
-   public void setPerhealennus(boolean perhealennus)
-   {
-      this.perhealennus = perhealennus;
    }
 
    @Override

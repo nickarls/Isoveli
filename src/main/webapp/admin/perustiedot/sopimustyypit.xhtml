@@ -24,7 +24,7 @@
 				<ace:column headerText="Jäsen">
 					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.jäsenmaksu}" />
 				</ace:column>
-				<ace:column headerText="Harjoittelumaksu">
+				<ace:column headerText="Harj.maksu">
 					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.harjoittelumaksu}" />
 				</ace:column>
 				<ace:column headerText="Kertoja">
@@ -36,16 +36,13 @@
 				<ace:column headerText="Koe">
 					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.koeaika}" />
 				</ace:column>
-				<ace:column headerText="Vapautus">
+				<ace:column headerText="Vap.">
 					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.vapautus}" />
 				</ace:column>
 				<ace:column headerText="Power">
 					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.power}" />
 				</ace:column>
-				<ace:column headerText="Perheale">
-					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.perhealennus}" />
-				</ace:column>
-				<ace:column headerText="Voimassa">
+				<ace:column headerText="Voim.">
 					<h:outputText value="#{_sopimustyyppi.oletusKuukaudetVoimassa}" />
 				</ace:column>
 				<ace:column headerText="Kertoja" styleClass="lefttext">
@@ -54,10 +51,10 @@
 				<ace:column headerText="Maksuväli" styleClass="lefttext">
 					<h:outputText value="#{_sopimustyyppi.oletusMaksuväli}" />
 				</ace:column>
-				<ace:column headerText="Laskutettava">
+				<ace:column headerText="Laskut.">
 					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.laskutettava}" />
 				</ace:column>
-				<ace:column headerText="Tuotekoodi" styleClass="lefttext">
+				<ace:column headerText="Tkoodi" styleClass="lefttext">
 					<h:outputText value="#{_sopimustyyppi.tuotekoodi}" />
 				</ace:column>
 				<ace:column headerText="Hinta" styleClass="lefttext">
@@ -66,10 +63,10 @@
 				<ace:column headerText="Määrä" styleClass="lefttext">
 					<h:outputText value="#{_sopimustyyppi.määrä}" />
 				</ace:column>
-				<ace:column headerText="Yksikkö" styleClass="lefttext">
+				<ace:column headerText="Yks." styleClass="lefttext">
 					<h:outputText value="#{_sopimustyyppi.yksikkö}" />
 				</ace:column>
-				<ace:column headerText="Verokanta" styleClass="lefttext">
+				<ace:column headerText="Verok." styleClass="lefttext">
 					<h:outputText value="#{_sopimustyyppi.verokanta}" />
 				</ace:column>
 			</ace:dataTable>
@@ -127,11 +124,6 @@
 						<h:panelGrid>
 							<ace:message for="form:power" />
 							<h:selectBooleanCheckbox value="#{sopimustyyppi.power}" id="power" />
-						</h:panelGrid>
-						<h:outputText value="Perhealennus" />
-						<h:panelGrid>
-							<ace:message for="form:perhealennus" />
-							<h:selectBooleanCheckbox value="#{sopimustyyppi.perhealennus}" id="perhealennus" />
 						</h:panelGrid>
 						<h:outputText value="Oletus-kk voim" />
 						<h:panelGrid>

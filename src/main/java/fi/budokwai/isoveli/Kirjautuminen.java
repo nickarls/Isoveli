@@ -129,6 +129,7 @@ public class Kirjautuminen extends Perustoiminnallisuus
       }
       kirjautunutHenkilö = henkilöt.iterator().next();
       loggaaja.loggaa("Sisäänkirjautuminen");
+      info("Tervetuloa, %s", kirjautunutHenkilö.getNimi());
       if (kirjautunutHenkilö.isPääsyHallintaan())
       {
          return "admin/admin.xhtml?faces-redirect=true";

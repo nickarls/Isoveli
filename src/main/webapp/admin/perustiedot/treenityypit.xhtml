@@ -18,7 +18,7 @@
 			<ace:dataTable value="#{kaikkiTreenityypit}" var="_treenityyppi" selectionMode="single" rows="10" style="width:300px"
 				rowSelectListener="#{perustietoAdmin.treenityyppiValittu}" stateMap="#{perustietoAdmin.treenityyppiRSM}"
 				paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false">
-				<ace:column headerText="Treenityyppi">
+				<ace:column headerText="Treenityyppi" styleClass="lefttext">
 					<h:outputText value="#{_treenityyppi.nimi}" />
 				</ace:column>
 			</ace:dataTable>
@@ -50,7 +50,7 @@
 				rendered="#{treenityyppi != null and treenityyppi.poistettavissa}">
 				<ace:dataTable value="#{treenityyppiKäyttö}" var="_treeni" rows="10" rendered="#{fn:length(treenityyppiKäyttö) > 0}"
 					paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false">
-					<ace:column>
+					<ace:column styleClass="lefttext">
 						<h:outputText value="#{_treeni.nimi}" />
 					</ace:column>
 				</ace:dataTable>

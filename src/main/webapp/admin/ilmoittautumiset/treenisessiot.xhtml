@@ -16,18 +16,18 @@
 	<ace:dataTable value="#{kaikkiTreenisessiot}" var="_treenisessio" selectionMode="single"
 		stateMap="#{ilmoittautumisAdmin.treenisessioRSM}" rows="10" paginator="true" paginatorPosition="bottom"
 		paginatorAlwaysVisible="false" rowSelectListener="#{ilmoittautumisAdmin.treenisessioValittu}">
-		<ace:column headerText="Treeni">
+		<ace:column headerText="Treeni" styleClass="lefttext">
 			<h:outputText value="#{_treenisessio.treeni.nimi}" class="teksti" />
 		</ace:column>
-		<ace:column headerText="Päivä">
+		<ace:column headerText="Päivä" styleClass="lefttext">
 			<h:outputText value="#{_treenisessio.päivä}">
 				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Kävijöitä">
+		<ace:column headerText="Kävijöitä" styleClass="lefttext">
 			<h:outputText value="#{fn:length(_treenisessio.treenikäynnit)}" class="teksti" />
 		</ace:column>
-		<ace:column headerText="Vetäjät">
+		<ace:column headerText="Vetäjät" styleClass="lefttext">
 			<ui:repeat value="#{_treenisessio.vetäjät}" var="_vetäjä">
 				<h:outputText value="#{_vetäjä.nimi}" />
 				<br />

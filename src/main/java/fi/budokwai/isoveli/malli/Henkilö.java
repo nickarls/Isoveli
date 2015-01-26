@@ -38,6 +38,7 @@ import fi.budokwai.isoveli.util.Util;
 @NamedQueries(
 {
       @NamedQuery(name = "henkilö", query = "select h from Henkilö h where h.salasana = :salasana and h.etunimi = :etunimi and h.sukunimi = :sukunimi"),
+      @NamedQuery(name = "samanniminen_käyttäjä", query = "select h from Henkilö h where h.etunimi = :etunimi and h.sukunimi = :sukunimi and h.id <> :id"),
       @NamedQuery(name = "nimetty_henkilö", query = "select h from Henkilö h where h.etunimi = :etunimi and h.sukunimi = :sukunimi") })
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Henkilö implements Serializable

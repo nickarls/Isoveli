@@ -19,18 +19,18 @@
 		<ace:column>
 			<h:graphicImage value="/kuvat/vyöt/#{_vyökoe.vyöarvo.id}.png" />
 		</ace:column>
-		<ace:column headerText="Vyöarvo">
+		<ace:column headerText="Vyöarvo" styleClass="lefttext">
 			<h:outputText value="#{_vyökoe.vyöarvo.nimi}" />
 		</ace:column>
-		<ace:column headerText="Päivä">
+		<ace:column headerText="Päivä" styleClass="lefttext">
 			<h:outputText value="#{_vyökoe.päivä}">
 				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Aikaa välissä">
+		<ace:column headerText="Aikaa välissä" styleClass="lefttext">
 			<h:outputText value="#{_vyökoe.aikaaVälissä}" />
 		</ace:column>
-		<ace:column headerText="Seuraavaan kokeeseen">
+		<ace:column headerText="Seuraavaan kokeeseen" styleClass="lefttext">
 			<h:panelGrid columns="2" rendered="#{_vyökoe.tuoreinVyökoe}">
 				<h:outputText value="Päiviä" />
 				<h:outputText value="#{harrastaja.jäljelläVyökokeeseen(kaikkiVyöarvot).aikaString}" />

@@ -24,7 +24,7 @@
 }
 
 .lefttext {
-	text-align: left;
+	text-align: left !important;
 }
 
 .panel {
@@ -64,6 +64,7 @@
 					<ui:include src="raportit.xhtml" />
 				</ace:tabPane>
 				<ace:tabPane label="Loki">
+					<ui:include src="loki.xhtml" />
 				</ace:tabPane>
 			</ace:tabSet>
 			<h:outputText value="#{kirjautunutHenkilö.info}"/>

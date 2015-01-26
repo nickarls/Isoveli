@@ -16,26 +16,26 @@
 	<ace:dataTable value="#{treenit}" var="_treeni" selectionMode="single" stateMap="#{perustietoAdmin.treeniRSM}"
 		rows="10" rowSelectListener="#{perustietoAdmin.treeniValittu}" paginator="true" paginatorPosition="bottom"
 		paginatorAlwaysVisible="false">
-		<ace:column headerText="Nimi">
+		<ace:column headerText="Nimi" styleClass="lefttext">
 			<h:outputText value="#{_treeni.nimi}" />
 		</ace:column>
-		<ace:column headerText="Tyyppi">
+		<ace:column headerText="Tyyppi" styleClass="lefttext">
 			<h:outputText value="#{_treeni.tyyppi.nimi}" />
 		</ace:column>
-		<ace:column headerText="Päivä">
+		<ace:column headerText="Päivä" styleClass="lefttext">
 			<h:outputText value="#{_treeni.päivä}" />
 		</ace:column>
-		<ace:column headerText="Alkaa">
+		<ace:column headerText="Alkaa" styleClass="lefttext">
 			<h:outputText value="#{_treeni.alkaa}">
 				<f:convertDateTime pattern="HH:mm" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Päättyy">
+		<ace:column headerText="Päättyy" styleClass="lefttext">
 			<h:outputText value="#{_treeni.päättyy}">
 				<f:convertDateTime pattern="HH:mm" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Vetäjät">
+		<ace:column headerText="Vetäjät" styleClass="lefttext">
 			<ui:repeat value="#{_treeni.vetäjät}" var="_vetäjä">
 				<h:outputText value="#{_vetäjä.nimi}" />
 				<br />
@@ -44,12 +44,12 @@
 		<ace:column headerText="Power">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_treeni.power}" />
 		</ace:column>
-		<ace:column headerText="Voimassa alk">
+		<ace:column headerText="Voimassa alk" styleClass="lefttext">
 			<h:outputText value="#{_treeni.voimassaAlkaa}">
 				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Voimassa lop">
+		<ace:column headerText="Voimassa lop" styleClass="lefttext">
 			<h:outputText value="#{_treeni.voimassaPäättyy}">
 				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
 			</h:outputText>

@@ -259,7 +259,11 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void tallennaHarrastaja()
    {
-      System.out.println(entityManager.contains(harrastaja));
+      if (löytyySamanniminenHarrastaja())
+      {
+         virhe("Samanniminen harrastaja löytyy jo");
+         return;
+      }
       harrastaja.siivoa();
       entityManager.persist(harrastaja);
       entityManager.flush();
@@ -272,6 +276,14 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       virkistäPerheet();
       haeHarrastajat();
       info("Harrastaja tallennettu");
+   }
+
+   private boolean löytyySamanniminenHarrastaja()
+   {
+      List<Henkilö> vanhat = entityManager.createNamedQuery("samanniminen_käyttäjä", Henkilö.class)
+         .setParameter("etunimi", harrastaja.getEtunimi()).setParameter("sukunimi", harrastaja.getSukunimi())
+         .setParameter("id", harrastaja.getId()).getResultList();
+      return vanhat.size() > 0;
    }
 
    private void poistaTyhjätPerheetJaOsoitteet()

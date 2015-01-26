@@ -19,51 +19,51 @@
 			<ace:fileEntry fileEntryListener="#{tuoVieAdmin.tuoExcel}" immediate="true" autoUpload="true" />
 			<ace:dataTable value="#{tuodutHarrastajat}" var="_harrastaja" selectionMode="multiple"
 				stateMap="#{tuoVieAdmin.harrastajaRSM}">
-				<ace:column headerText="Etunimi">
+				<ace:column headerText="Etunimi" styleClass="lefttext">
 					<h:outputText value="#{_harrastaja.etunimi}" />
 				</ace:column>
-				<ace:column headerText="Sukunimi">
+				<ace:column headerText="Sukunimi" styleClass="lefttext">
 					<h:outputText value="#{_harrastaja.sukunimi}" />
 				</ace:column>
-				<ace:column headerText="Sukupuoli">
+				<ace:column headerText="Sukupuoli" styleClass="lefttext">
 					<h:outputText value="#{_harrastaja.sukupuoli.nimi}" />
 				</ace:column>
-				<ace:column headerText="Syntynyt">
+				<ace:column headerText="Syntynyt" styleClass="lefttext">
 					<h:outputText value="#{_harrastaja.syntynyt}">
 						<f:convertDateTime pattern="dd.MM.yyyy" />
 					</h:outputText>
 				</ace:column>
-				<ace:column headerText="ICE">
+				<ace:column headerText="ICE" styleClass="lefttext">
 					<h:outputText value="#{_harrastaja.ice}" />
 				</ace:column>
-				<ace:column headerText="Huomautukset">
+				<ace:column headerText="Huomautukset" styleClass="lefttext">
 					<h:outputText value="#{_harrastaja.huomautus}" />
 				</ace:column>
 				<ace:column headerText="Arkistoitu">
 					<h:outputText value="#{_harrastaja.arkistoitu ? 'Kyllä' : 'Ei'}" />
 				</ace:column>
-				<ace:column headerText="Osoite">
+				<ace:column headerText="Osoite" styleClass="lefttext">
 					<h:outputText value="#{_harrastaja.osoite.osoite}" />
 				</ace:column>
-				<ace:column headerText="Postinumero">
+				<ace:column headerText="Postinumero" styleClass="lefttext">
 					<h:outputText value="#{_harrastaja.osoite.postinumero}" />
 				</ace:column>
-				<ace:column headerText="Kaupunki">
+				<ace:column headerText="Kaupunki" styleClass="lefttext">
 					<h:outputText value="#{_harrastaja.osoite.kaupunki}" />
 				</ace:column>
-				<ace:column headerText="Sähköposti">
+				<ace:column headerText="Sähköposti" styleClass="lefttext">
 					<h:outputText value="#{_harrastaja.yhteystiedot.sähköposti}" />
 				</ace:column>
 				<ace:column headerText="Spostilistalla">
 					<h:outputText value="#{_harrastaja.yhteystiedot.sähköpostilistalla ? 'Kyllä' : 'Ei'}" />
 				</ace:column>
-				<ace:column headerText="Jäsen#">
+				<ace:column headerText="Jäsen#" styleClass="lefttext">
 					<h:outputText value="#{_harrastaja.jäsennumero}" />
 				</ace:column>
-				<ace:column headerText="Kortti#">
+				<ace:column headerText="Kortti#" styleClass="lefttext">
 					<h:outputText value="#{_harrastaja.korttinumero}" />
 				</ace:column>
-				<ace:column headerText="Lisenssi#">
+				<ace:column headerText="Lisenssi#" styleClass="lefttext">
 					<h:outputText value="#{_harrastaja.lisenssinumero}" />
 				</ace:column>
 			</ace:dataTable>

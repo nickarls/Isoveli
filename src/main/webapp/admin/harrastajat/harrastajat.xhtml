@@ -11,29 +11,32 @@
 		paginatorPosition="bottom" paginatorAlwaysVisible="false" stateMap="#{harrastajaAdmin.harrastajaRSM}" rows="10"
 		rowSelectListener="#{harrastajaAdmin.harrastajaValittu}">
 		<ace:column headerText="Etunimi" sortBy="#{_harrastaja.etunimi}" filterBy="#{_harrastaja.etunimi}"
-			filterMatchMode="contains">
+			filterMatchMode="contains" styleClass="lefttext">
 			<h:outputText value="#{_harrastaja.etunimi}" />
 		</ace:column>
 		<ace:column headerText="Sukunimi" sortBy="#{_harrastaja.sukunimi}" filterBy="#{_harrastaja.sukunimi}"
-			filterMatchMode="contains">
+			filterMatchMode="contains" styleClass="lefttext">
 			<h:outputText value="#{_harrastaja.sukunimi}" />
 		</ace:column>
-		<ace:column headerText="Ikä">
+		<ace:column headerText="Ikä" styleClass="lefttext">
 			<h:outputText value="#{_harrastaja.ikä}" />
 		</ace:column>
-		<ace:column headerText="Sukupuoli">
+		<ace:column headerText="Sukupuoli" styleClass="lefttext">
 			<h:outputText value="#{_harrastaja.sukupuoli.nimi}" />
 		</ace:column>
-		<ace:column headerText="Vyöarvo">
+		<ace:column headerText="Vyöarvo" styleClass="lefttext">
 			<h:outputText value="#{_harrastaja.tuoreinVyöarvo.nimi}" />
 		</ace:column>
-		<ace:column headerText="Maksut">
+		<ace:column headerText="Maksut" styleClass="lefttext">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_harrastaja.sopimuksetOK}" />
 			<h:dataTable var="_viesti" value="#{_harrastaja.sopimusTarkistukset.viestit}">
 				<h:column>
 					<h:outputText value="#{_viesti}" style="color:red" />
 				</h:column>
 			</h:dataTable>
+		</ace:column>
+		<ace:column headerText="Tilapäinen">
+			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_harrastaja.tilapäinen}" />
 		</ace:column>
 		<ace:column headerText="Arkistoitu">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_harrastaja.arkistoitu}" />

@@ -25,6 +25,7 @@ import fi.budokwai.isoveli.malli.Tunnukset;
 import fi.budokwai.isoveli.util.AuditManager;
 import fi.budokwai.isoveli.util.DSExceptionHandler;
 import fi.budokwai.isoveli.util.Kirjautunut;
+import fi.budokwai.isoveli.util.Loggaaja;
 import fi.budokwai.isoveli.util.MailManager;
 
 @Stateful
@@ -36,6 +37,9 @@ public class Kirjautuminen extends Perustoiminnallisuus
 
    @PersistenceContext
    private EntityManager entityManager;
+
+   @Inject
+   private Loggaaja loggaaja;
 
    @Inject
    private MailManager mailManager;
@@ -124,6 +128,7 @@ public class Kirjautuminen extends Perustoiminnallisuus
          return null;
       }
       kirjautunutHenkilö = henkilöt.iterator().next();
+      loggaaja.loggaa("Sisäänkirjautuminen");
       if (kirjautunutHenkilö.isPääsyHallintaan())
       {
          return "admin/admin.xhtml?faces-redirect=true";

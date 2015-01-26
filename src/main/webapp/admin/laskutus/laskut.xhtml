@@ -22,38 +22,38 @@
 			<ace:expansionToggler />
 		</ace:column>
 		<ace:column headerText="Harrastaja" filterBy="#{_lasku.henkilö.nimi}" filterMatchMode="contains"
-			sortBy="#{_lasku.henkilö.nimi}">
+			sortBy="#{_lasku.henkilö.nimi}" styleClass="lefttext">
 			<h:outputText value="#{_lasku.henkilö.nimi}" />
 		</ace:column>
-		<ace:column headerText="Luotu" filterBy="#{_lasku.luotu}" filterMatchMode="contains" sortBy="#{_lasku.luotu}">
+		<ace:column headerText="Luotu" filterBy="#{_lasku.luotu}" filterMatchMode="contains" sortBy="#{_lasku.luotu}" styleClass="lefttext">
 			<h:outputText value="#{_lasku.luotu}">
 				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Eräpäivä" filterBy="#{_lasku.eräpäivä}" filterMatchMode="contains" sortBy="#{_lasku.eräpäivä}">
+		<ace:column headerText="Eräpäivä" filterBy="#{_lasku.eräpäivä}" filterMatchMode="contains" sortBy="#{_lasku.eräpäivä}" styleClass="lefttext">
 			<h:outputText value="#{_lasku.eräpäivä}">
 				<f:convertDateTime pattern="dd.MM.yyyy" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Maksettu" filterBy="#{_lasku.maksettu}" filterMatchMode="contains" sortBy="#{_lasku.maksettu}">
+		<ace:column headerText="Maksettu" filterBy="#{_lasku.maksettu}" filterMatchMode="contains" sortBy="#{_lasku.maksettu}" styleClass="lefttext">
 			<h:outputText value="#{_lasku.maksettu}">
 				<f:convertDateTime pattern="dd.MM.yyyy" />
 			</h:outputText>
 		</ace:column>
 		<ace:column headerText="Maksuaikaa" filterBy="#{_lasku.maksuaikaa}" filterMatchMode="contains"
-			sortBy="#{_lasku.maksuaikaa}">
+			sortBy="#{_lasku.maksuaikaa}" styleClass="lefttext">
 			<h:outputText value="#{_lasku.maksuaikaa}" rendered="#{_lasku.maksettu == null}"
 				style="color:#{_lasku.maksuaikaa &lt; 0 ? 'red' : 'green'}" />
 		</ace:column>
-		<ace:column headerText="Tila" filterBy="#{_lasku.tila}" filterOptions="#{tilasuodatukset}">
+		<ace:column headerText="Tila" filterBy="#{_lasku.tila}" filterOptions="#{tilasuodatukset}" styleClass="lefttext">
 			<h:outputText value="#{_lasku.tila.nimi}" />
 		</ace:column>
 		<ace:column headerText="Laskurivejä" filterBy="#{_lasku.laskurivejä}" filterMatchMode="contains"
-			sortBy="#{_lasku.laskurivejä}">
+			sortBy="#{_lasku.laskurivejä}" styleClass="lefttext">
 			<h:outputText value="#{_lasku.laskurivejä}" />
 		</ace:column>
 		<ace:column headerText="Summa" filterBy="#{_lasku.verollinenHinta}" filterMatchMode="contains"
-			sortBy="#{_lasku.verollinenHinta}">
+			sortBy="#{_lasku.verollinenHinta}" styleClass="lefttext">
 			<h:outputText value="#{_lasku.verollinenHinta}">
 				<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 			</h:outputText>
@@ -70,35 +70,35 @@
 		<ace:panelExpansion>
 			<ace:dataTable rows="10" value="#{_lasku.laskurivit}" var="_laskurivi" paginator="true" paginatorPosition="bottom"
 				paginatorAlwaysVisible="false">
-				<ace:column headerText="#">
+				<ace:column headerText="#" styleClass="lefttext">
 					<h:outputText value="#{_laskurivi.rivinumero}" />
 				</ace:column>
-				<ace:column headerText="Tuotenimi">
+				<ace:column headerText="Tuotenimi" styleClass="lefttext">
 					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tuotenimi}" />
 				</ace:column>
-				<ace:column headerText="Jakso">
+				<ace:column headerText="Jakso" styleClass="lefttext">
 					<h:outputText value="#{_laskurivi.sopimuslasku.jakso}" />
 				</ace:column>
-				<ace:column headerText="Määrä">
+				<ace:column headerText="Määrä" styleClass="lefttext">
 					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tyyppi.määrä}" />
 				</ace:column>
-				<ace:column headerText="Yksikkö">
+				<ace:column headerText="Yksikkö" styleClass="lefttext">
 					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tyyppi.yksikkö}" />
 				</ace:column>
-				<ace:column headerText="Verokanta">
+				<ace:column headerText="Verokanta" styleClass="lefttext">
 					<h:outputText value="ALV#{_laskurivi.sopimuslasku.sopimus.tyyppi.verokanta}" />
 				</ace:column>
-				<ace:column headerText="Veroton hinta">
+				<ace:column headerText="Veroton hinta" styleClass="lefttext">
 					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tyyppi.verotonHinta}">
 						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 					</h:outputText>
 				</ace:column>
-				<ace:column headerText="ALVn osuus">
+				<ace:column headerText="ALVn osuus" styleClass="lefttext">
 					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tyyppi.ALVnOsuus}">
 						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 					</h:outputText>
 				</ace:column>
-				<ace:column headerText="Verollinen hinta">
+				<ace:column headerText="Verollinen hinta" styleClass="lefttext">
 					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tyyppi.verollinenHinta}">
 						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 					</h:outputText>

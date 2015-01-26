@@ -7,27 +7,27 @@
 			<ace:column>
 				<ace:expansionToggler />
 			</ace:column>
-			<ace:column headerText="Harrastaja">
+			<ace:column headerText="Harrastaja" styleClass="lefttext">
 				<h:outputText value="#{_sopimus.harrastaja.etunimi}" />
 			</ace:column>
-			<ace:column headerText="Tyyppi">
+			<ace:column headerText="Tyyppi" styleClass="lefttext">
 				<h:outputText value="#{_sopimus.tyyppi.nimi}" />
 			</ace:column>
-			<ace:column headerText="Maksuväli">
+			<ace:column headerText="Maksuväli" styleClass="lefttext">
 				<h:outputText value="#{_sopimus.maksuväli}" />
 			</ace:column>
-			<ace:column headerText="Umpeutuu">
+			<ace:column headerText="Umpeutuu" styleClass="lefttext">
 				<h:outputText value="#{_sopimus.umpeutuu}">
 					<f:convertDateTime pattern="dd.MM.yyyy" />
 				</h:outputText>
 			</ace:column>
-			<ace:column headerText="Treenikertoja">
+			<ace:column headerText="Treenikertoja" styleClass="lefttext">
 				<h:outputText value="#{_sopimus.treenikertoja}" />
 			</ace:column>
 			<ace:panelExpansion>
 				<ace:dataTable rows="10" value="#{_sopimus.sopimuslaskut}" var="_sopimuslasku" paginator="true"
 					paginatorPosition="bottom" paginatorAlwaysVisible="false" rowStyleClass="#{_sopimuslasku.laskurivi.lasku.laskuMyöhässä ? 'erääntynyt' : ''}">
-					<ace:column headerText="Eräpäivä">
+					<ace:column headerText="Eräpäivä" styleClass="lefttext">
 						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.eräpäivä}">
 							<f:convertDateTime pattern="dd.MM.yyyy" />
 						</h:outputText>
@@ -37,17 +37,17 @@
 							<f:convertDateTime pattern="dd.MM.yyyy" />
 						</h:outputText>
 					</ace:column>
-					<ace:column headerText="Maksuaikaa">
+					<ace:column headerText="Maksuaikaa" styleClass="lefttext">
 						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.maksuaikaa}" rendered="#{_sopimuslasku.laskurivi.lasku.maksettu == null}"
 							styleClass="#{_sopimuslasku.laskurivi.lasku.maksuaikaa &lt; 0 ? 'erääntynytTeksti' : ''}" />
 					</ace:column>
-					<ace:column headerText="Tila">
+					<ace:column headerText="Tila" styleClass="lefttext">
 						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.tila.nimi}" />
 					</ace:column>
-					<ace:column headerText="Laskurivejä">
+					<ace:column headerText="Laskurivejä" styleClass="lefttext">
 						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.laskurivejä}" />
 					</ace:column>
-					<ace:column headerText="Summa">
+					<ace:column headerText="Summa" styleClass="lefttext">
 						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.verollinenHinta}">
 							<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 						</h:outputText>

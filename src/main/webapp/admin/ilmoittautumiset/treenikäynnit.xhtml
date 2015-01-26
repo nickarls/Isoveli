@@ -16,24 +16,26 @@
 	<ace:dataTable value="#{treenikäynnit}" var="_treenikäynti" selectionMode="single"
 		stateMap="#{ilmoittautumisAdmin.treenikäyntiRSM}" rows="10" paginator="true" paginatorPosition="bottom"
 		paginatorAlwaysVisible="false" rowSelectListener="#{ilmoittautumisAdmin.treenikäyntiValittu}">
-		<ace:column headerText="Aikaleima" filterBy="#{_treenikäynti.aikaleimaString}" filterMatchMode="contains">
+		<ace:column headerText="Aikaleima" filterBy="#{_treenikäynti.aikaleimaString}" filterMatchMode="contains"
+			styleClass="lefttext">
 			<h:outputText value="#{_treenikäynti.aikaleima}">
 				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Päivä">
+		<ace:column headerText="Päivä" styleClass="lefttext">
 			<h:outputText value="#{_treenikäynti.treenisessio.treeni.päivä}" class="teksti" />
 		</ace:column>
-		<ace:column headerText="Harrastaja" filterBy="#{_treenikäynti.harrastaja.nimi}" filterMatchMode="contains">
+		<ace:column headerText="Harrastaja" filterBy="#{_treenikäynti.harrastaja.nimi}" filterMatchMode="contains"
+			styleClass="lefttext">
 			<h:outputText value="#{_treenikäynti.harrastaja.nimi}" class="teksti" />
 		</ace:column>
-		<ace:column headerText="Vyöarvo">
+		<ace:column headerText="Vyöarvo" styleClass="lefttext">
 			<h:outputText value="#{_treenikäynti.harrastaja.tuoreinVyöarvo.nimi}" class="teksti" />
 		</ace:column>
-		<ace:column headerText="Treeni">
+		<ace:column headerText="Treeni" styleClass="lefttext">
 			<h:outputText value="#{_treenikäynti.treenisessio.treeni.nimi}" class="teksti" />
 		</ace:column>
-		<ace:column headerText="Tyyppi">
+		<ace:column headerText="Tyyppi" styleClass="lefttext">
 			<h:outputText value="#{_treenikäynti.treenisessio.treeni.tyyppi.nimi}" class="teksti" />
 		</ace:column>
 	</ace:dataTable>

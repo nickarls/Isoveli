@@ -28,8 +28,12 @@ public class DSExceptionHandler implements Serializable
    @Inject
    private Logger logger;
 
+   @Inject
+   private Loggaaja loggaaja;
+   
    public void tapaSessio()
    {
+      loggaaja.loggaa("Kirjautui ulos");
       HttpSession sessio = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
       sessio.invalidate();
       try

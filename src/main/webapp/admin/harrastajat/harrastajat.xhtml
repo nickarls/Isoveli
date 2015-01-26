@@ -5,7 +5,7 @@
 		immediate="true">
 		<f:ajax render="@form" />
 	</h:commandButton>
-	<h:button outcome="/tuo.xhtml" image="/kuvat/tuo.png" immediate="true" styleClass="ikoni"/>
+	<h:button outcome="/tuo.xhtml" image="/kuvat/tuo.png" immediate="true" styleClass="ikoni" rendered="#{harrastaja.ylläpitäjä}"/>
 	
 	<ace:dataTable value="#{harrastajat}" var="_harrastaja" selectionMode="single" paginator="true"
 		paginatorPosition="bottom" paginatorAlwaysVisible="false" stateMap="#{harrastajaAdmin.harrastajaRSM}" rows="10"

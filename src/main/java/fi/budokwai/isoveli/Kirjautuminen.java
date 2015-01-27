@@ -142,8 +142,7 @@ public class Kirjautuminen extends Perustoiminnallisuus
    public void tarkistaKirjautuminen(@Observes @AfterPhase(JsfPhaseId.RESTORE_VIEW) PhaseEvent e)
    {
       String näkymä = e.getFacesContext().getViewRoot().getViewId();
-      if (!(näkymä.endsWith("kirjautuminen.xhtml") || näkymä.endsWith("virhe.xhtml"))
-         && kirjautunutHenkilö == Henkilö.EI_KIRJAUTUNUT)
+      if (!salliKirjautumatta(näkymä) && kirjautunutHenkilö == Henkilö.EI_KIRJAUTUNUT)
       {
          loginSivulle(e.getFacesContext());
          return;
@@ -152,6 +151,12 @@ public class Kirjautuminen extends Perustoiminnallisuus
       {
          poikkeukset.tapaSessio();
       }
+   }
+
+   private boolean salliKirjautumatta(String näkymä)
+   {
+      return näkymä.endsWith("kirjautuminen.xhtml") || näkymä.endsWith("virhe.xhtml")
+         || näkymä.endsWith("ilmoittautuminen.xhtml");
    }
 
    private void loginSivulle(FacesContext facesContext)

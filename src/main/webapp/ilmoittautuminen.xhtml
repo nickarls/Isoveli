@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -6,9 +7,17 @@
 	xmlns:ace="http://www.icefaces.org/icefaces/components" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
 	<style>
+body {
+	background: url(kuvat/ilmo_tausta.png) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
 .kortti {
-	width: 500px;
-	height: 250px;
+	width: 550px;
+	height: 280px;
 	-webkit-border-radius: 30px;
 	-moz-border-radius: 30px;
 	border-radius: 30px;
@@ -24,6 +33,11 @@
 	height: 180px;
 }
 
+.kuva {
+	height: 220px;
+	width: 180px;
+}
+
 .syotto {
 	border: 2px solid black;
 	width: 300px;
@@ -36,9 +50,15 @@
 	text-align: center;
 }
 
+.vyö {
+	width: 180px;
+	height: 40px;
+}
+
 .nimi {
-	font-size: 30px;
+	font-size: 35px;
 	font-weight: bold;
+	vertical-align: top;
 }
 
 .treenit {
@@ -59,32 +79,79 @@
 </h:head>
 <h:body onload="document.getElementById('formi:korttinumero').focus();">
 	<f:view>
+		<ace:growlMessages />
 		<h:form id="formi">
+			<h:commandButton action="#{ilmoittautuminen.lueKortti()}" value="." style="display:none" id="luekortti" />
+			<br />
+
 			<h:panelGrid columns="3" columnClasses="ylareuna,ylareuna,ylareuna">
-				<h:panelGroup>
+				<h:panelGrid rendered="#{treeniharrastaja == null}" columns="2">
+					<ace:graphicImage value="kuvat/logo.png" class="logo" />
+					<h:inputText value="#{ilmoittautuminen.korttinumero}" required="true" styleClass="syotto korttinumero"
+						requiredMessage="Arvo on pakollinen" id="korttinumero"
+						onkeydown="if (event.keyCode == 13) document.getElementById('formi:luekortti').click()" />
+				</h:panelGrid>
+				<h:panelGrid rendered="#{treeniharrastaja != null}" columns="2" styleClass="kortti">
+					<h:panelGrid>
+						<ace:graphicImage value="kuvat/mies.jpg" class="kuva" rendered="#{ilmoittautuminen.mies}" />
+						<ace:graphicImage value="kuvat/nainen.jpg" class="kuva" rendered="#{ilmoittautuminen.nainen}" />
+						<ace:graphicImage value="#{treeniharrastaja.kuva.tieto}" class="kuva" rendered="#{ilmoittautuminen.omaKuva}" />
+						<h:graphicImage styleClass="vyö" value="/kuvat/vyöt/#{treeniharrastaja.tuoreinVyöarvo.id}.png" />
+					</h:panelGrid>
+					<h:panelGrid columns="2">
+						<h:outputText value="Nimi" />
+						<h:outputText value="#{treeniharrastaja.nimi}" />
+						<h:outputText value="&nbsp;" />
+						<h:outputText value="&nbsp;" />
+						<h:outputText value="Viimeisin treeni" />
+						<h:outputText value="#{treeniharrastaja.nimi}" />
+						<h:outputText value="Treenejä yhteensä" />
+						<h:outputText value="#{treeniharrastaja.nimi}" />
+						<h:outputText value="&nbsp;" />
+						<h:outputText value="&nbsp;" />
+						<h:outputText value="Aikaa kokeseen" />
+						<h:outputText value="#{treeniharrastaja.nimi}" />
+						<h:outputText value="Treenejä kokeeseen" />
+						<h:outputText value="#{treeniharrastaja.nimi}" />
+						<h:outputText value="&nbsp;" />
+						<h:outputText value="&nbsp;" />
+						<h:outputText value="Treenikertoja kortissa" />
+						<h:outputText value="#{treeniharrastaja.nimi}" />
+						<h:outputText value="Jäsenmaksu" />
+						<h:outputText value="#{treeniharrastaja.nimi}" />
+						<h:outputText value="Harjoittelumaksu" />
+						<h:outputText value="#{treeniharrastaja.nimi}" />
+					</h:panelGrid>
+				</h:panelGrid>
+
+				<!-- 				
 					<div class="kortti">
-						<table width="500" height="250">
+						<table>
 							<tr>
 								<td>
-									<ace:graphicImage value="kuvat/logo.png" class="logo" rendered="#{treeniharrastaja == null}"/>
-									<ace:graphicImage value="kuvat/mies.jpg" class="logo" rendered="#{ilmoittautuminen.mies}"/>
-									<ace:graphicImage value="kuvat/nainen.jpg" class="logo" rendered="#{ilmoittautuminen.nainen}"/>
-									<ace:graphicImage value="#{treeniharrastaja.kuva}" class="logo" rendered="#{ilmoittautuminen.omaKuva}"/>
+									<ace:graphicImage value="kuvat/logo.png" class="logo" rendered="#{treeniharrastaja == null}" /> 
+									<ace:graphicImage value="kuvat/mies.jpg" class="kuva" rendered="#{ilmoittautuminen.mies}" /> 
+									<ace:graphicImage value="kuvat/nainen.jpg" class="kuva" rendered="#{ilmoittautuminen.nainen}" /> 
+									<ace:graphicImage value="#{treeniharrastaja.kuva.tieto}" class="kuva" rendered="#{ilmoittautuminen.omaKuva}" />
 								</td>
-								<td><h:inputText value="#{ilmoittautuminen.korttinumero}" required="true" styleClass="syotto korttinumero"
-										requiredMessage="Arvo on pakollinen" id="korttinumero"
-										onkeydown="if (event.keyCode == 13) document.getElementById('formi:luekortti').click()" /> <h:commandButton
-										action="#{ilmoittautuminen.lueKortti()}" value="." style="display:none" id="luekortti" /> <br /> <h:outputText
-										value="#{treeniharrastaja.nimi}" rendered="#{treeniharrastaja != null}" styleClass="nimi" /></td>
+								<td style="vertical-align:top">
+									<h:inputText value="#{ilmoittautuminen.korttinumero}" required="true" styleClass="syotto korttinumero"
+										requiredMessage="Arvo on pakollinen" id="korttinumero" rendered="#{treeniharrastaja == null}"
+										onkeydown="if (event.keyCode == 13) document.getElementById('formi:luekortti').click()" /> 
+									<h:commandButton
+										action="#{ilmoittautuminen.lueKortti()}" value="." style="display:none" id="luekortti" /> <br /> 
+									<h:outputText value="#{treeniharrastaja.nimi}" rendered="#{treeniharrastaja != null}" styleClass="nimi" />
+								</td>
 							</tr>
 							<tr>
 								<td>
-									<h:graphicImage value="/kuvat/vyöt/#{treeniharrastaja.tuoreinVyöarvo.id}.png" />									
+									<h:graphicImage styleClass="vyö" value="/kuvat/vyöt/#{treeniharrastaja.tuoreinVyöarvo.id}.png" rendered="#{treeniharrastaja != null}"/>
 								</td>
 							</tr>
 						</table>
 					</div>
 				</h:panelGroup>
+-->
 				<ace:dataTable rendered="#{treeniharrastaja != null}" value="#{tulevatTreenit}" var="_treeni" selectionMode="single"
 					stateMap="#{ilmoittautuminen.stateMap}" style="margin-left:20px; font-size:25px;"
 					rowSelectListener="#{ilmoittautuminen.treeniValittu}">

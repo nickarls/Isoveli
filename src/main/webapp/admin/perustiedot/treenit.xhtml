@@ -38,6 +38,9 @@
 				<f:convertDateTime pattern="HH:mm" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
+		<ace:column headerText="Kesto" styleClass="lefttext">
+			<h:outputText value="#{_treeni.kesto}"/>
+		</ace:column>
 		<ace:column headerText="Vetäjät" styleClass="lefttext">
 			<ui:repeat value="#{_treeni.vetäjät}" var="_vetäjä">
 				<h:outputText value="#{_vetäjä.nimi}" />
@@ -48,10 +51,12 @@
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_treeni.power}" />
 		</ace:column>
 		<ace:column headerText="Vyöalaraja" styleClass="lefttext">
-			<h:outputText value="#{_treeni.vyöAlaraja.nimi}"/>
+			<h:graphicImage value="/kuvat/vyöt/#{_treeni.vyöAlaraja.id}.png" style="height:40px"
+				rendered="#{_treeni.vyöAlaraja.id != 0}" />
 		</ace:column>
 		<ace:column headerText="Vyöyläraja" styleClass="lefttext">
-			<h:outputText value="#{_treeni.vyöYläraja.nimi}"/>
+			<h:graphicImage value="/kuvat/vyöt/#{_treeni.vyöYläraja.id}.png" style="height:40px"
+				rendered="#{_treeni.vyöYläraja.id != 0}" />
 		</ace:column>
 		<ace:column headerText="Voimassa alk" styleClass="lefttext">
 			<h:outputText value="#{_treeni.voimassaAlkaa}">

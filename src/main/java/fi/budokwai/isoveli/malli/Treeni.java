@@ -1,5 +1,8 @@
 package fi.budokwai.isoveli.malli;
 
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +28,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
 
+import fi.budokwai.isoveli.util.Util;
+
 @Entity
 @Table(name = "treeni")
 @NamedQueries(
@@ -38,12 +43,12 @@ public class Treeni
    private int id;
 
    @NotNull
-   @Size(max=100)
+   @Size(max = 100)
    private String nimi;
 
-   @Size(max=100)
+   @Size(max = 100)
    private String sijainti;
-   
+
    @Column(name = "paiva")
    @NotNull
    private Viikonp‰iv‰ p‰iv‰;
@@ -249,5 +254,13 @@ public class Treeni
    public void setSijainti(String sijainti)
    {
       this.sijainti = sijainti;
+   }
+
+   public String getKesto()
+   {
+      Duration kesto = Duration.between(new Date(alkaa.getTime()).toInstant(), new Date(p‰‰ttyy.getTime()).toInstant());
+      long tunnit = kesto.toHours();
+      long minuutit = kesto.minusHours(tunnit).toMinutes();
+      return String.format("%d:%02d", tunnit, minuutit);
    }
 }

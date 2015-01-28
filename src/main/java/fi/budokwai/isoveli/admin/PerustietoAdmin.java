@@ -10,6 +10,7 @@ import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,6 +29,7 @@ import fi.budokwai.isoveli.malli.Treenisessio;
 import fi.budokwai.isoveli.malli.Treenityyppi;
 import fi.budokwai.isoveli.malli.Viikonpäivä;
 import fi.budokwai.isoveli.malli.Vyöarvo;
+import fi.budokwai.isoveli.util.Loggaaja;
 
 @Named
 @SessionScoped
@@ -62,6 +64,9 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    private RowStateMap treeniRSM = new RowStateMap();
    private RowStateMap sopimustyyppiRSM = new RowStateMap();
 
+   @Inject
+   private Loggaaja loggaaja;
+   
    @PostConstruct
    public void alusta()
    {
@@ -335,6 +340,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       treeniRSM.get(treeni).setSelected(true);
       haeTreenit();
       info("Treeni tallennettu");
+      loggaaja.loggaa(String.format("Tallensi treenin %s", treeni));
    }
 
    public void tallennaVyöarvo()

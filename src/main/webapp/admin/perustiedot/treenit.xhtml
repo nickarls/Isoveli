@@ -22,6 +22,9 @@
 		<ace:column headerText="Tyyppi" styleClass="lefttext">
 			<h:outputText value="#{_treeni.tyyppi.nimi}" />
 		</ace:column>
+		<ace:column headerText="Sijainti" styleClass="lefttext">
+			<h:outputText value="#{_treeni.sijainti}" />
+		</ace:column>
 		<ace:column headerText="Päivä" styleClass="lefttext">
 			<h:outputText value="#{_treeni.päivä}" />
 		</ace:column>
@@ -69,6 +72,11 @@
 				<h:panelGrid>
 					<ace:message for="form:treeninimi" />
 					<h:inputText value="#{treeni.nimi}" id="treeninimi" />
+				</h:panelGrid>
+				<h:outputText value="Sijainti" />
+				<h:panelGrid>
+					<ace:message for="form:sijainti" />
+					<h:inputText value="#{treeni.sijainti}" id="sijainti" />
 				</h:panelGrid>
 				<h:outputText value="Tyyppi" />
 				<h:panelGrid>

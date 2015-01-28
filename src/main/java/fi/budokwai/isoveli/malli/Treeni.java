@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
 
@@ -37,8 +38,12 @@ public class Treeni
    private int id;
 
    @NotNull
+   @Size(max=100)
    private String nimi;
 
+   @Size(max=100)
+   private String sijainti;
+   
    @Column(name = "paiva")
    @NotNull
    private Viikonpäivä päivä;
@@ -234,5 +239,15 @@ public class Treeni
    public void setVyöYläraja(Vyöarvo vyöYläraja)
    {
       this.vyöYläraja = vyöYläraja;
+   }
+
+   public String getSijainti()
+   {
+      return sijainti;
+   }
+
+   public void setSijainti(String sijainti)
+   {
+      this.sijainti = sijainti;
    }
 }

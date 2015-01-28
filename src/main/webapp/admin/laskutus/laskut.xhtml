@@ -58,7 +58,7 @@
 				<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 			</h:outputText>
 		</ace:column>
-		<ace:column>
+		<ace:column headerText="PDF">
 			<h:outputLink target="_blank" value="#{request.contextPath}/API/blob/lataa/#{_lasku.pdf.avain}"
 				rendered="#{_lasku.pdf != null}">
 				<h:graphicImage value="/kuvat/pdf.png" style="width:24px" />

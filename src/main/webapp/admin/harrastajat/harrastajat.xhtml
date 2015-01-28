@@ -19,15 +19,21 @@
 			filterMatchMode="contains" styleClass="lefttext">
 			<h:outputText value="#{_harrastaja.sukunimi}" />
 		</ace:column>
+		<ace:column headerText="Syntynyt" styleClass="lefttext">
+			<h:outputText value="#{_harrastaja.syntynyt}">
+				<f:convertDateTime pattern="dd.MM.yyyy" />
+			</h:outputText>
+		</ace:column>
 		<ace:column headerText="Ikä" styleClass="lefttext">
-			<h:outputText value="#{_harrastaja.ikä}" rendered="#{_harrastaja.ikä != 0}"/>
+			<h:outputText value="#{_harrastaja.ikä}" />
 		</ace:column>
 		<ace:column headerText="Sukupuoli">
-			<h:graphicImage value="/kuvat/uros.png" style="height:40px" rendered="#{_harrastaja.mies}"/>
-			<h:graphicImage value="/kuvat/naaras.png" style="height:40px" rendered="#{_harrastaja.nainen}"/>
+			<h:graphicImage value="/kuvat/uros.png" style="height:40px" rendered="#{_harrastaja.mies}" />
+			<h:graphicImage value="/kuvat/naaras.png" style="height:40px" rendered="#{_harrastaja.nainen}" />
 		</ace:column>
 		<ace:column headerText="Vyöarvo">
-			<h:graphicImage value="/kuvat/vyöt/#{_harrastaja.tuoreinVyöarvo.id}.png" style="height:40px" rendered="#{_harrastaja.tuoreinVyöarvo.id != 0}"/>
+			<h:graphicImage value="/kuvat/vyöt/#{_harrastaja.tuoreinVyöarvo.id}.png" style="height:40px"
+				rendered="#{_harrastaja.tuoreinVyöarvo.id != 0}" />
 		</ace:column>
 		<ace:column headerText="Maksut" styleClass="lefttext">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_harrastaja.sopimuksetOK}" />
@@ -37,10 +43,16 @@
 				</h:column>
 			</h:dataTable>
 		</ace:column>
-		<ace:column headerText="Tilapäinen">
+		<ace:column headerText="Kortti" styleClass="lefttext">
+			<h:outputText value="#{_harrastaja.korttinumero}" />
+		</ace:column>
+		<ace:column headerText="Infotsk">
+			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_harrastaja.infotiskille}" />
+		</ace:column>
+		<ace:column headerText="Tilap.">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_harrastaja.tilapäinen}" />
 		</ace:column>
-		<ace:column headerText="Arkistoitu">
+		<ace:column headerText="Ark.">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_harrastaja.arkistoitu}" />
 		</ace:column>
 	</ace:dataTable>

@@ -29,6 +29,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Type;
+
 import com.google.common.base.MoreObjects;
 
 import fi.budokwai.isoveli.util.Util;
@@ -89,6 +91,9 @@ public class Harrastaja extends Henkilö
 
    @Size(max = 1000)
    private String huomautus;
+   
+   @Type(type = "KylläEi")
+   private boolean infotiskille;
 
    public Harrastaja()
    {
@@ -415,6 +420,16 @@ public class Harrastaja extends Henkilö
       huomautus = null;
       syntynyt = null;
       sopimukset.clear();
+   }
+
+   public boolean isInfotiskille()
+   {
+      return infotiskille;
+   }
+
+   public void setInfotiskille(boolean infotiskille)
+   {
+      this.infotiskille = infotiskille;
    }
 
 }

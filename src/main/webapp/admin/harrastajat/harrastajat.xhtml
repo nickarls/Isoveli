@@ -21,7 +21,7 @@
 		</ace:column>
 		<ace:column headerText="Syntynyt" styleClass="lefttext">
 			<h:outputText value="#{_harrastaja.syntynyt}">
-				<f:convertDateTime pattern="dd.MM.yyyy" />
+				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET"/>
 			</h:outputText>
 		</ace:column>
 		<ace:column headerText="Ikä" styleClass="lefttext">

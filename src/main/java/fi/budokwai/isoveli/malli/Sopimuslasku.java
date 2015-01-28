@@ -128,5 +128,5 @@ public class Sopimuslasku
    {
       this.p‰‰ttyy = p‰‰ttyy;
    }
-
+   
 }

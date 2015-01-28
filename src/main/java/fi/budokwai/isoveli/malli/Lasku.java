@@ -20,6 +20,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
 
@@ -63,6 +64,9 @@ public class Lasku
    @Type(type = "Kyll‰Ei")
    private boolean laskutettu;
 
+   @Size(max=50)
+   private String viitenumero;
+   
    public Lasku()
    {
    }
@@ -224,6 +228,16 @@ public class Lasku
    public void setLaskutettu(boolean laskutettu)
    {
       this.laskutettu = laskutettu;
+   }
+
+   public String getViitenumero()
+   {
+      return viitenumero;
+   }
+
+   public void setViitenumero(String viitenumero)
+   {
+      this.viitenumero = viitenumero;
    }
 
 }

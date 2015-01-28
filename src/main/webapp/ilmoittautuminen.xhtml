@@ -161,17 +161,17 @@ body {
 					</ace:column>
 					<ace:column headerText="Alkaa">
 						<h:outputText value="#{_treeni.alkaa}">
-							<f:convertDateTime pattern="HH:mm" />
+							<f:convertDateTime pattern="HH:mm" timeZone="EET"/>
 						</h:outputText>
 					</ace:column>
 					<ace:column headerText="Päättyy">
 						<h:outputText value="#{_treeni.päättyy}">
-							<f:convertDateTime pattern="HH:mm" />
+							<f:convertDateTime pattern="HH:mm" timeZone="EET"/>
 						</h:outputText>
 					</ace:column>
 					<ace:column headerText="Treeni">
 						<h:outputText value="#{_treeni.nimi}">
-							<f:convertDateTime pattern="HH:mm" />
+							<f:convertDateTime pattern="HH:mm" timeZone="EET"/>
 						</h:outputText>
 					</ace:column>
 				</ace:dataTable>

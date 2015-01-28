@@ -21,23 +21,27 @@
 		<ace:column>
 			<ace:expansionToggler />
 		</ace:column>
+		<ace:column headerText="Viite" filterBy="#{_lasku.viitenumero}" filterMatchMode="contains"
+			sortBy="#{_lasku.viitenumero}" styleClass="lefttext">
+			<h:outputText value="#{_lasku.viitenumero}" />
+		</ace:column>
 		<ace:column headerText="Harrastaja" filterBy="#{_lasku.henkilö.nimi}" filterMatchMode="contains"
 			sortBy="#{_lasku.henkilö.nimi}" styleClass="lefttext">
 			<h:outputText value="#{_lasku.henkilö.nimi}" />
 		</ace:column>
 		<ace:column headerText="Luotu" filterBy="#{_lasku.luotu}" filterMatchMode="contains" sortBy="#{_lasku.luotu}" styleClass="lefttext">
 			<h:outputText value="#{_lasku.luotu}">
-				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
+				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET"/>
 			</h:outputText>
 		</ace:column>
 		<ace:column headerText="Eräpäivä" filterBy="#{_lasku.eräpäivä}" filterMatchMode="contains" sortBy="#{_lasku.eräpäivä}" styleClass="lefttext">
 			<h:outputText value="#{_lasku.eräpäivä}">
-				<f:convertDateTime pattern="dd.MM.yyyy" />
+				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET"/>
 			</h:outputText>
 		</ace:column>
 		<ace:column headerText="Maksettu" filterBy="#{_lasku.maksettu}" filterMatchMode="contains" sortBy="#{_lasku.maksettu}" styleClass="lefttext">
 			<h:outputText value="#{_lasku.maksettu}">
-				<f:convertDateTime pattern="dd.MM.yyyy" />
+				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET"/>
 			</h:outputText>
 		</ace:column>
 		<ace:column headerText="Maksuaikaa" filterBy="#{_lasku.maksuaikaa}" filterMatchMode="contains"

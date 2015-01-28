@@ -18,7 +18,7 @@
 			</ace:column>
 			<ace:column headerText="Umpeutuu" styleClass="lefttext">
 				<h:outputText value="#{_sopimus.umpeutuu}">
-					<f:convertDateTime pattern="dd.MM.yyyy" />
+					<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET"/>
 				</h:outputText>
 			</ace:column>
 			<ace:column headerText="Treenikertoja" styleClass="lefttext">
@@ -29,12 +29,12 @@
 					paginatorPosition="bottom" paginatorAlwaysVisible="false" rowStyleClass="#{_sopimuslasku.laskurivi.lasku.laskuMyöhässä ? 'erääntynyt' : ''}">
 					<ace:column headerText="Eräpäivä" styleClass="lefttext">
 						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.eräpäivä}">
-							<f:convertDateTime pattern="dd.MM.yyyy" />
+							<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET"/>
 						</h:outputText>
 					</ace:column>
 					<ace:column headerText="Maksettu">
 						<h:outputText value="#{_sopimuslasku.laskurivi.lasku.maksettu}">
-							<f:convertDateTime pattern="dd.MM.yyyy" />
+							<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET"/>
 						</h:outputText>
 					</ace:column>
 					<ace:column headerText="Maksuaikaa" styleClass="lefttext">

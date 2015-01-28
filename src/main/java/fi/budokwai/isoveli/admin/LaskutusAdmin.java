@@ -37,6 +37,7 @@ import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.util.Lasku2PDF;
+import fi.budokwai.isoveli.util.Loggaaja;
 import fi.budokwai.isoveli.util.MailManager;
 import fi.budokwai.isoveli.util.Util;
 import fi.budokwai.isoveli.util.Zippaaja;
@@ -51,6 +52,9 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 
    @Inject
    private MailManager mailManager;
+   
+   @Inject
+   private Loggaaja loggaaja;
 
    private RowStateMap laskuRSM = new RowStateMap();
    private RowStateMap laskuttamattomatRSM = new RowStateMap();
@@ -119,6 +123,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       sopimuksetPerOsoite.values().forEach(osoitteenSopimukset -> teeLaskuOsoitteelle(osoitteenSopimukset));
       haeLaskuttamattomat();
       info("Muodosti %d sopimuksesta %d laskua", sopimukset.size(), sopimuksetPerOsoite.keySet().size());
+      loggaaja.loggaa("Suoritti laskutusajon");
    }
 
    private void teeLaskuOsoitteelle(List<Sopimus> sopimukset)
@@ -134,6 +139,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       byte[] pdf = teePdfLasku(lasku);
       lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), pdf));
       entityManager.persist(lasku);
+      loggaaja.loggaa(String.format("Teki laskun henkilölle %s", henkilö.getNimi()));
    }
 
    private Henkilö haeLaskunVastaanottaja(List<Sopimus> sopimukset)

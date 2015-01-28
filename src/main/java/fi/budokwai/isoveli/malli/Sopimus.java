@@ -58,6 +58,9 @@ public class Sopimus
    @Temporal(TemporalType.DATE)
    private Date umpeutuu;
 
+   @Temporal(TemporalType.DATE)
+   private Date luotu;
+
    private int treenikertoja;
 
    @Column(name = "maksuvali")
@@ -223,5 +226,28 @@ public class Sopimus
          }
       }
       return tulos;
+   }
+
+   public Date getLuotu()
+   {
+      return luotu;
+   }
+
+   public void setLuotu(Date luotu)
+   {
+      this.luotu = luotu;
+   }
+
+   public Date getViimeksiLaskutettu()
+   {
+      if (sopimuslaskut.isEmpty())
+      {
+         return null;
+      }
+      return sopimuslaskut
+         .stream()
+         .sorted(
+            (Sopimuslasku s1, Sopimuslasku s2) -> s1.getLaskurivi().getLuotu().compareTo(s2.getLaskurivi().getLuotu()))
+         .findFirst().get().getLaskurivi().getLuotu();
    }
 }

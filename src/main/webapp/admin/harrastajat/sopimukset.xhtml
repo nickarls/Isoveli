@@ -24,11 +24,21 @@
 		</ace:column>
 		<ace:column headerText="Umpeutuu" styleClass="lefttext">
 			<h:outputText value="#{_sopimus.umpeutuu}">
-				<f:convertDateTime pattern="dd.MM.yyyy" />
+				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET"/>
 			</h:outputText>
 		</ace:column>
 		<ace:column headerText="Treenikertoja" styleClass="lefttext">
 			<h:outputText value="#{_sopimus.treenikertoja}" />
+		</ace:column>
+		<ace:column headerText="Luotu" styleClass="lefttext">
+			<h:outputText value="#{_sopimus.luotu}">
+				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET"/>
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Viim. lask." styleClass="lefttext">
+			<h:outputText value="#{_sopimus.viimeksiLaskutettu}">
+				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET"/>
+			</h:outputText>
 		</ace:column>
 	</ace:dataTable>
 	<p />

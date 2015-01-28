@@ -21,11 +21,11 @@
 			<ace:column headerText="Aika" styleClass="lefttext">
 				<h:panelGrid columns="3">
 					<h:outputText value="#{_treenikäynti.treenisessio.treeni.alkaa}">
-						<f:convertDateTime pattern="HH:mm" />
+						<f:convertDateTime pattern="HH:mm" timeZone="EET"/>
 					</h:outputText>
 					<h:outputText value="-" />
 					<h:outputText value="#{_treenikäynti.treenisessio.treeni.päättyy}">
-						<f:convertDateTime pattern="HH:mm" />
+						<f:convertDateTime pattern="HH:mm" timeZone="EET"/>
 					</h:outputText>
 				</h:panelGrid>
 			</ace:column>

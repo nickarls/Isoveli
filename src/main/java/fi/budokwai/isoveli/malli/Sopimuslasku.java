@@ -2,6 +2,7 @@ package fi.budokwai.isoveli.malli;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -53,9 +54,10 @@ public class Sopimuslasku
    public Sopimuslasku(Sopimus sopimus)
    {
       this.sopimus = sopimus;
+      Date viimeLaskutus = sopimus.getViimeksiLaskutettu();
+      alkaa = viimeLaskutus == null ? sopimus.getLuotu() : viimeLaskutus;
+      p‰‰ttyy = haeP‰‰ttymisp‰iv‰(sopimus);
       sopimus.getSopimuslaskut().add(this);
-      alkaa = new Date();
-      p‰‰ttyy = haeP‰‰ttymisp‰iv‰(sopimus.getUmpeutuu(), sopimus.getMaksuv‰li());
    }
 
    public String getJakso()
@@ -64,16 +66,16 @@ public class Sopimuslasku
       return String.format("%s-%s", sdf.format(alkaa), sdf.format(p‰‰ttyy));
    }
 
-   private Date haeP‰‰ttymisp‰iv‰(Date umpeutuu, int maksuv‰li)
+   private Date haeP‰‰ttymisp‰iv‰(Sopimus sopimus)
    {
       LocalDate sopimusLoppuu;
-      LocalDate jaksoLoppuu = Util.getT‰n‰‰n().plus(maksuv‰li, ChronoUnit.MONTHS);
-      if (umpeutuu == null)
+      LocalDate jaksoLoppuu = LocalDateTime.ofInstant(new Date(alkaa.getTime()).toInstant(), ZoneId.systemDefault()).plus(sopimus.getMaksuv‰li(), ChronoUnit.MONTHS).toLocalDate();
+      if (sopimus.getUmpeutuu() == null)
       {
          sopimusLoppuu = jaksoLoppuu;
       } else
       {
-         sopimusLoppuu = Util.date2LocalDateTime(umpeutuu);
+         sopimusLoppuu = Util.date2LocalDateTime(sopimus.getUmpeutuu());
       }
       LocalDate loppuuEnsin = sopimusLoppuu.isBefore(jaksoLoppuu) ? sopimusLoppuu : jaksoLoppuu;
       return Date.from(loppuuEnsin.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());

@@ -52,7 +52,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 
    @Inject
    private MailManager mailManager;
-   
+
    @Inject
    private Loggaaja loggaaja;
 
@@ -131,9 +131,12 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       Henkilˆ henkilˆ = haeLaskunVastaanottaja(sopimukset);
       Lasku lasku = new Lasku(henkilˆ);
       sopimukset.forEach(sopimus -> {
-         Sopimuslasku sopimuslasku = new Sopimuslasku(sopimus);
-         Laskurivi laskurivi = new Laskurivi(sopimuslasku);
-         lasku.lis‰‰Rivi(laskurivi);
+         do
+         {
+            Sopimuslasku sopimuslasku = new Sopimuslasku(sopimus);
+            Laskurivi laskurivi = new Laskurivi(sopimuslasku);
+            lasku.lis‰‰Rivi(laskurivi);
+         } while (!sopimus.valmiiksiLaskutettu());
       });
       entityManager.persist(lasku);
       byte[] pdf = teePdfLasku(lasku);

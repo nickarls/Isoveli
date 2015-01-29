@@ -1,7 +1,9 @@
 package fi.budokwai.isoveli.malli;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -244,10 +246,14 @@ public class Sopimus
       {
          return null;
       }
-      return sopimuslaskut
-         .stream()
-         .sorted(
-            (Sopimuslasku s1, Sopimuslasku s2) -> s1.getLaskurivi().getLuotu().compareTo(s2.getLaskurivi().getLuotu()))
-         .findFirst().get().getLaskurivi().getLuotu();
+      return sopimuslaskut.stream()
+         .sorted((Sopimuslasku s1, Sopimuslasku s2) -> -1 * s1.getP‰‰ttyy().compareTo(s2.getP‰‰ttyy())).findFirst()
+         .get().getP‰‰ttyy();
+   }
+
+   public boolean valmiiksiLaskutettu()
+   {
+      LocalDate check = Util.date2LocalDateTime(getViimeksiLaskutettu());
+      return check.isAfter(Util.t‰n‰‰nLD());
    }
 }

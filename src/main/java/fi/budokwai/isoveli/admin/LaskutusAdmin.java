@@ -1,6 +1,5 @@
 package fi.budokwai.isoveli.admin;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -148,16 +147,6 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), pdf));
       entityManager.persist(lasku);
       loggaaja.loggaa(String.format("Teki laskun henkilölle %s", henkilö.getNimi()));
-   }
-
-   public void testaa() throws IOException
-   {
-      Lasku lasku = entityManager.find(Lasku.class, 1);
-      byte[] data = teePdfLasku(lasku);
-      FileOutputStream out = new FileOutputStream("c:/temp/lasku.pdf");
-      out.write(data);
-      out.flush();
-      out.close();
    }
 
    private Henkilö haeLaskunVastaanottaja(List<Sopimus> sopimukset)

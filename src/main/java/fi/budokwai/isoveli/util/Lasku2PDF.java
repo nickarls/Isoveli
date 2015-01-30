@@ -91,14 +91,14 @@ public class Lasku2PDF
       lis‰‰Solu(taulu, "avain", format);
       lis‰‰Solu(taulu, "arvo", format);
       lis‰‰Solu(taulu, "avain", format);
-      lis‰‰Solu(taulu, "arvo", format);      
-      taulu.writeSelectedRows(0, -1, 350, 770, kangas); 
+      lis‰‰Solu(taulu, "arvo", format);
+      taulu.writeSelectedRows(0, -1, 350, 770, kangas);
    }
 
    private void kirjoitaSaajanOsoitetiedot()
    {
       PdfPTable taulu = teeTaulu(1, 100);
-      Format format = Format.create().withFont("Helvetica", 8, Font.NORMAL).withPadding(0);
+      Format format = Format.create().withFont("Helvetica", 8, Font.NORMAL).withPadding(0, Rectangle.BOX);
       lis‰‰Solu(taulu, asetukset.getSaaja(), format);
       lis‰‰Solu(taulu, asetukset.getOsoite(), format);
       lis‰‰Solu(taulu, String.format("%s %s", asetukset.getPostinumero(), asetukset.getKaupunki()), format);
@@ -108,7 +108,7 @@ public class Lasku2PDF
    private void kirjoitaSaajanTunnustiedot()
    {
       PdfPTable taulu = teeTaulu(2, 100);
-      Format format = Format.create().withFont("Helvetica", 8, Font.NORMAL).withPadding(0);
+      Format format = Format.create().withFont("Helvetica", 8, Font.NORMAL).withPadding(0, Rectangle.BOX);
       lis‰‰Solu(taulu, "Y-tunnus", format);
       lis‰‰Solu(taulu, asetukset.getYTunnus(), format);
       lis‰‰Solu(taulu, "ALV-tunnus", format);
@@ -119,13 +119,13 @@ public class Lasku2PDF
    private void kirjoitaSaajanYhteystiedot()
    {
       PdfPTable taulu = teeTaulu(2, 100);
-      Format format = Format.create().withFont("Helvetica", 8, Font.NORMAL).withPadding(0).withNoWrap(true);
+      Format format = Format.create().withFont("Helvetica", 8, Font.NORMAL).withPadding(0, Rectangle.BOX).withNoWrap(true);
       lis‰‰Solu(taulu, "Puhelin", format);
       lis‰‰Solu(taulu, asetukset.getPuhelin(), format);
       lis‰‰Solu(taulu, "S‰hkˆposti", format);
       lis‰‰Solu(taulu, asetukset.getS‰hkˆposti(), format);
       lis‰‰Solu(taulu, "Kotisivu", format);
-      lis‰‰Solu(taulu, asetukset.getKotisivu(), format);
+      lis‰‰Solu(taulu, asetukset.getKotisivut(), format);
       taulu.writeSelectedRows(0, -1, 400, 340, kangas);
    }
 
@@ -212,7 +212,7 @@ public class Lasku2PDF
    private void teeRiviotsikot(PdfPTable taulu)
    {
       Format format = Format.create().withFont("Helvetica", 10, Font.BOLD).withBorder(Rectangle.BOTTOM)
-         .withBorderWidth(1);
+         .withBorderWidth(1).withPadding(2, Rectangle.BOTTOM);
       lis‰‰Solu(taulu, "#", format);
       lis‰‰Solu(taulu, "Tuote", format);
       lis‰‰Solu(taulu, "Jakso", format);
@@ -292,7 +292,15 @@ public class Lasku2PDF
       solu.setBorder(format.getBorder());
       solu.setBorderWidth(format.getBorderWidth());
       solu.setVerticalAlignment(format.getVerticalAlignment());
-      solu.setPadding(format.getPadding());
+      switch (format.getPaddingType())
+      {
+      case Rectangle.BOX:
+         solu.setPadding(format.getPadding());
+         break;
+      case Rectangle.BOTTOM:
+         solu.setPaddingBottom(format.getPadding());
+         break;
+      }
       solu.setNoWrap(format.isNoWrap());
       Paragraph paragraaffi = new Paragraph(tieto, format.getFont());
       paragraaffi.setAlignment(format.getHorizontalAlignment());

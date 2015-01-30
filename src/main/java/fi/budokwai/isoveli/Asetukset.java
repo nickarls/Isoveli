@@ -10,7 +10,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "asetukset")
-@Typed({})
+@Typed(
+{})
 public class Asetukset implements Serializable
 {
    private static final long serialVersionUID = 1L;
@@ -41,15 +42,16 @@ public class Asetukset implements Serializable
    @Column(name = "sahkoposti")
    private String sähköposti;
 
-   private String kotisivu;
+   private String kotisivut;
 
    @Column(name = "viivastysprosentti")
    private int viivästysprosentti;
 
    private int maksuaikaa;
-   
+
+   @Column(name = "ylaotsikko")
    private String yläotsikko;
-   
+
    private String huomio;
 
    public String getInstallaatio()
@@ -172,14 +174,14 @@ public class Asetukset implements Serializable
       this.sähköposti = sähköposti;
    }
 
-   public String getKotisivu()
+   public String getKotisivut()
    {
-      return kotisivu;
+      return kotisivut;
    }
 
-   public void setKotisivu(String kotisivu)
+   public void setKotisivut(String kotisivut)
    {
-      this.kotisivu = kotisivu;
+      this.kotisivut = kotisivut;
    }
 
    public int getViivästysprosentti()

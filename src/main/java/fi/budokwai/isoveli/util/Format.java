@@ -13,6 +13,7 @@ public class Format
    private int border = Rectangle.NO_BORDER;
    private int borderWidth = 0;
    private int padding = 1;
+   private int paddingType = Rectangle.BOX;
    private boolean noWrap = false;
 
    public static Format create()
@@ -57,9 +58,10 @@ public class Format
       return this;
    }
 
-   public Format withPadding(int padding)
+   public Format withPadding(int padding, int paddingType)
    {
       this.padding = padding;
+      this.paddingType = paddingType;
       return this;
    }
 
@@ -96,5 +98,10 @@ public class Format
    public boolean isNoWrap()
    {
       return noWrap;
+   }
+
+   public int getPaddingType()
+   {
+      return paddingType;
    }
 }

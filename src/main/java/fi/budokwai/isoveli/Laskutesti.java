@@ -44,7 +44,7 @@ public class Laskutesti
       asetukset.setKaupunki("Turku");
       asetukset.setPuhelin("040 596 0298");
       asetukset.setSähköposti("laskut@budokwai.fi");
-      asetukset.setKotisivu("www.budokwai.fi/taekwondo");
+      asetukset.setKotisivut("www.budokwai.fi/taekwondo");
       return asetukset;
    }
 

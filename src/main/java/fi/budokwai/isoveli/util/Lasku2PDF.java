@@ -1,15 +1,13 @@
 package fi.budokwai.isoveli.util;
 
+import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
-import com.google.common.base.Strings;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -20,12 +18,13 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPRow;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
 
+import fi.budokwai.isoveli.Asetukset;
 import fi.budokwai.isoveli.IsoveliPoikkeus;
-import fi.budokwai.isoveli.malli.Henkilˆ;
 import fi.budokwai.isoveli.malli.Lasku;
 import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Sopimustyyppi;
@@ -33,79 +32,16 @@ import fi.budokwai.isoveli.malli.Vastaanottaja;
 
 public class Lasku2PDF
 {
-   private static class Formatointi
-   {
-      public Formatointi(Font fontti, int hTasaus, int vTasaus, int kehys, float kehysPaksuus)
-      {
-         this.fontti = fontti;
-         this.hTasaus = hTasaus;
-         this.vTasaus = vTasaus;
-         this.kehys = kehys;
-         this.kehysPaksuus = kehysPaksuus;
-      }
-
-      public Formatointi()
-      {
-      }
-
-      private Font fontti = FontFactory.getFont("Arial", 10);
-      private int hTasaus = Element.ALIGN_RIGHT;
-      private int vTasaus = Element.ALIGN_UNDEFINED;
-      private int kehys = Rectangle.NO_BORDER;
-      private float kehysPaksuus = 0f;
-
-      public static final Formatointi DATA = new Formatointi();
-
-      public static final Formatointi OTSIKKO = new Formatointi(FontFactory.getFont("Arial", 10, Font.BOLD),
-         Element.ALIGN_RIGHT, Element.ALIGN_TOP, Rectangle.BOTTOM, 1f);
-
-      public static final Formatointi V_OTSIKKO = new Formatointi(FontFactory.getFont("Arial", 10, Font.BOLD),
-         Element.ALIGN_LEFT, Element.ALIGN_TOP, Rectangle.BOTTOM, 1f);
-
-      public static final Formatointi V_DATA = new Formatointi(FontFactory.getFont("Arial", 10), Element.ALIGN_LEFT,
-         Element.ALIGN_TOP, Rectangle.NO_BORDER, 0f);
-
-      public static final Formatointi Y_DATA = new Formatointi(FontFactory.getFont("Arial", 10), Element.ALIGN_RIGHT,
-         Element.ALIGN_TOP, Rectangle.TOP, 2f);
-
-   }
-
-   @SuppressWarnings("unused")
-   private class Otsikkotiedot
-   {
-      private Date p‰iv‰ys;
-      private String yTunnus = "301005";
-      private int asiakasnumero;
-      private int laskunumero;
-      private int viitenumero;
-      private String tilinumero = "FI04 5711 6140 0501 84";
-      private String BICkoodi = "OKOYFIHH";
-      private String maksuehto = "10pv netto";
-      private Date er‰p‰iv‰;
-      private String viiv‰styskorko = "5%";
-      private String valuutta = "EUR";
-      private String yhteyshenkilˆ;
-      private String toimituspvm;
-
-      public Otsikkotiedot(Lasku lasku)
-      {
-         p‰iv‰ys = lasku.getLuotu();
-         asiakasnumero = lasku.getHenkilˆ().getId();
-         laskunumero = lasku.getId();
-         viitenumero = lasku.getId();
-         er‰p‰iv‰ = lasku.getEr‰p‰iv‰();
-         yhteyshenkilˆ = (lasku.getHenkilˆ() instanceof Henkilˆ) ? "Huoltaja" : "Harrastaja";
-         toimituspvm = "jatkuva";
-      }
-   }
-
    private PdfReader lukija;
    private ByteArrayOutputStream tulos;
    private PdfStamper kirjoittaja;
    private PdfContentByte kangas;
    private Lasku lasku;
+   private Asetukset asetukset;
+   private SimpleDateFormat p‰iv‰m‰‰r‰formaatti = new SimpleDateFormat("dd.MM.yyyy");
+   private NumberFormat hintaformaatti = DecimalFormat.getCurrencyInstance(Locale.GERMANY);
 
-   public Lasku2PDF(byte[] pohja, Lasku lasku)
+   public Lasku2PDF(byte[] pohja, Lasku lasku, Asetukset asetukset)
    {
       try
       {
@@ -118,27 +54,27 @@ public class Lasku2PDF
          throw new IsoveliPoikkeus(String.format("Laskun %d muodostus ep‰onnistui", lasku.getId()), e);
       }
       this.lasku = lasku;
-   }
-
-   private String getPankkiviivakoodi(Otsikkotiedot otsikkotiedot)
-   {
-      int versio = 4;
-      String tilinumero = otsikkotiedot.tilinumero.substring(2);
-      double sentit = lasku.getVerollinenHinta() % 1;
-      double eurot = lasku.getVerollinenHinta() - sentit;
-      String er‰p‰iv‰ = new SimpleDateFormat("yyMMdd").format(lasku.getEr‰p‰iv‰());
-      return String.format("%d%s%s%s000%s%s", versio, tilinumero, String.format("%06f", eurot),
-         String.format("%02f", sentit), Strings.padStart(otsikkotiedot.viitenumero + "", 20, '0'), er‰p‰iv‰);
+      this.asetukset = asetukset;
    }
 
    public byte[] muodosta()
    {
-      k‰sitteleRivit();
-      k‰sitteleVastaanottaja();
-      k‰sitteleOtsikko();
       try
       {
-         t‰yt‰Kent‰t();
+         kirjoitaLaskuotsikko();
+         kirjoitaYl‰otsikko();
+         kirjoitaVastaanottaja();
+         kirjoitaSaaja();
+         kirjoitaIBAN();
+         kirjoitaBIC();
+         kirjoitaViitenumero();
+         kirjoitaLoppusumma();
+         kirjoitaEr‰p‰iv‰();
+         kirjoitaHuomautus();
+         kirjoitaLaskurivit();
+         kirjoitaSaajanOsoitetiedot();
+         kirjoitaSaajanTunnustiedot();
+         kirjoitaSaajanYhteystiedot();
          return loppuk‰sittely();
       } catch (IOException | DocumentException e)
       {
@@ -146,17 +82,253 @@ public class Lasku2PDF
       }
    }
 
-   private void t‰yt‰Kent‰t() throws IOException, DocumentException
+   private void kirjoitaLaskuotsikko()
    {
-      Font fontti = FontFactory.getFont("Arial", 10);
-      DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-      NumberFormat nf = DecimalFormat.getCurrencyInstance(Locale.GERMANY);
+      PdfPTable taulu = teeTaulu(2, 120);
+      Format format = Format.create().withFont("Helvetica", 12, Font.NORMAL);
+      lis‰‰Solu(taulu, "avain", format);
+      lis‰‰Solu(taulu, "arvo", format);
+      lis‰‰Solu(taulu, "avain", format);
+      lis‰‰Solu(taulu, "arvo", format);
+      lis‰‰Solu(taulu, "avain", format);
+      lis‰‰Solu(taulu, "arvo", format);      
+      taulu.writeSelectedRows(0, -1, 350, 770, kangas); 
+   }
 
-      ColumnText.showTextAligned(kangas, Element.ALIGN_LEFT, new Phrase(lasku.getId() + "", fontti), 360, 108, 0);
-      ColumnText.showTextAligned(kangas, Element.ALIGN_LEFT, new Phrase(df.format(lasku.getEr‰p‰iv‰()), fontti), 360,
-         82, 0);
-      ColumnText.showTextAligned(kangas, Element.ALIGN_LEFT, new Phrase(nf.format(lasku.getVerollinenHinta()), fontti),
-         480, 82, 0);
+   private void kirjoitaSaajanOsoitetiedot()
+   {
+      PdfPTable taulu = teeTaulu(1, 100);
+      Format format = Format.create().withFont("Helvetica", 8, Font.NORMAL).withPadding(0);
+      lis‰‰Solu(taulu, asetukset.getSaaja(), format);
+      lis‰‰Solu(taulu, asetukset.getOsoite(), format);
+      lis‰‰Solu(taulu, String.format("%s %s", asetukset.getPostinumero(), asetukset.getKaupunki()), format);
+      taulu.writeSelectedRows(0, -1, 42, 340, kangas);
+   }
+
+   private void kirjoitaSaajanTunnustiedot()
+   {
+      PdfPTable taulu = teeTaulu(2, 100);
+      Format format = Format.create().withFont("Helvetica", 8, Font.NORMAL).withPadding(0);
+      lis‰‰Solu(taulu, "Y-tunnus", format);
+      lis‰‰Solu(taulu, asetukset.getYTunnus(), format);
+      lis‰‰Solu(taulu, "ALV-tunnus", format);
+      lis‰‰Solu(taulu, asetukset.getALVtunnus(), format);
+      taulu.writeSelectedRows(0, -1, 230, 340, kangas);
+   }
+
+   private void kirjoitaSaajanYhteystiedot()
+   {
+      PdfPTable taulu = teeTaulu(2, 100);
+      Format format = Format.create().withFont("Helvetica", 8, Font.NORMAL).withPadding(0).withNoWrap(true);
+      lis‰‰Solu(taulu, "Puhelin", format);
+      lis‰‰Solu(taulu, asetukset.getPuhelin(), format);
+      lis‰‰Solu(taulu, "S‰hkˆposti", format);
+      lis‰‰Solu(taulu, asetukset.getS‰hkˆposti(), format);
+      lis‰‰Solu(taulu, "Kotisivu", format);
+      lis‰‰Solu(taulu, asetukset.getKotisivu(), format);
+      taulu.writeSelectedRows(0, -1, 400, 340, kangas);
+   }
+
+   private void kirjoitaLaskurivit()
+   {
+      PdfPTable taulu = teeLaskurivit();
+      taulu.writeSelectedRows(0, -1, 20, 370 + taulu.getTotalHeight(), kangas);
+   }
+
+   private PdfPTable teeLaskurivit()
+   {
+      PdfPTable taulu = new PdfPTable(new float[]
+      { 1, 10, 6, 3, 2, 3, 4, 4, 4 });
+      taulu.setWidthPercentage(100);
+      taulu.setTotalWidth(550);
+      teeRiviotsikot(taulu);
+      taulu.setHeaderRows(1);
+      teeLaskurivit(taulu);
+      teeLaskurivisummat(taulu);
+      vuorov‰rit(taulu);
+      taulu.setComplete(true);
+      return taulu;
+   }
+
+   private void vuorov‰rit(PdfPTable taulu)
+   {
+      for (int i = 1; i < lasku.getLaskurivej‰() + 1; i++)
+      {
+         PdfPRow rivi = taulu.getRow(i);
+         for (PdfPCell solu : rivi.getCells())
+         {
+            solu.setBackgroundColor(i % 2 == 0 ? Color.WHITE : new Color(240, 240, 240));
+         }
+      }
+   }
+
+   private void teeLaskurivisummat(PdfPTable taulu)
+   {
+      PdfPCell rivi = new PdfPCell();
+      rivi.setColspan(9);
+      rivi.setMinimumHeight(5);
+      rivi.setBorder(Rectangle.NO_BORDER);
+      taulu.addCell(rivi);
+      PdfPCell t‰yttˆ = new PdfPCell();
+      t‰yttˆ.setColspan(6);
+      t‰yttˆ.setBorder(Rectangle.NO_BORDER);
+      taulu.addCell(t‰yttˆ);
+      taulu.getDefaultCell().setBorder(Rectangle.TOP);
+      taulu.getDefaultCell().setBorderWidthTop(2);
+      taulu.getDefaultCell().setPaddingTop(5);
+      Format format = Format.create().withFont("Helvetica", 10, Font.BOLD).withBorder(Rectangle.TOP).withBorderWidth(2)
+         .withHorizontalAlignment(Element.ALIGN_RIGHT);
+      lis‰‰Solu(taulu, hintaformaatti.format(lasku.getVerotonHinta()), format);
+      lis‰‰Solu(taulu, hintaformaatti.format(lasku.getALVnOsuus()), format);
+      lis‰‰Solu(taulu, hintaformaatti.format(lasku.getVerollinenHinta()), format);
+   }
+
+   private void teeLaskurivit(PdfPTable taulu)
+   {
+      for (Laskurivi laskurivi : lasku.getLaskurivit())
+      {
+         teeLaskurivi(taulu, laskurivi);
+      }
+   }
+
+   private void teeLaskurivi(PdfPTable taulu, Laskurivi laskurivi)
+   {
+      Format format = Format.create().withFont("Helvetica", 10, Font.NORMAL);
+      Sopimustyyppi tyyppi = laskurivi.getSopimuslasku().getSopimus().getTyyppi();
+      lis‰‰Solu(taulu, laskurivi.getRivinumero() + "", format);
+      lis‰‰Solu(taulu, laskurivi.getSopimuslasku().getSopimus().getTuotenimi(), format);
+      lis‰‰Solu(taulu, laskurivi.getSopimuslasku().getJakso(), format);
+      format.withHorizontalAlignment(Element.ALIGN_RIGHT);
+      lis‰‰Solu(taulu, tyyppi.getM‰‰r‰() + "", format);
+      format.withHorizontalAlignment(Element.ALIGN_LEFT);
+      lis‰‰Solu(taulu, tyyppi.getYksikkˆ(), format);
+      format.withHorizontalAlignment(Element.ALIGN_RIGHT);
+      lis‰‰Solu(taulu, tyyppi.getVerokanta() + "", format);
+      lis‰‰Solu(taulu, hintaformaatti.format(tyyppi.getVerotonHinta()), format);
+      lis‰‰Solu(taulu, hintaformaatti.format(tyyppi.getALVnOsuus()), format);
+      lis‰‰Solu(taulu, hintaformaatti.format(tyyppi.getVerollinenHinta()), format);
+   }
+
+   private void teeRiviotsikot(PdfPTable taulu)
+   {
+      Format format = Format.create().withFont("Helvetica", 10, Font.BOLD).withBorder(Rectangle.BOTTOM)
+         .withBorderWidth(1);
+      lis‰‰Solu(taulu, "#", format);
+      lis‰‰Solu(taulu, "Tuote", format);
+      lis‰‰Solu(taulu, "Jakso", format);
+      format.withHorizontalAlignment(Element.ALIGN_RIGHT);
+      lis‰‰Solu(taulu, "M‰‰r‰", format);
+      format.withHorizontalAlignment(Element.ALIGN_LEFT);
+      lis‰‰Solu(taulu, "Yks", format);
+      format.withHorizontalAlignment(Element.ALIGN_RIGHT);
+      lis‰‰Solu(taulu, "ALV%", format);
+      lis‰‰Solu(taulu, "ALV0", format);
+      lis‰‰Solu(taulu, "ALV-osa", format);
+      lis‰‰Solu(taulu, "Hinta", format);
+   }
+
+   private void kirjoitaHuomautus()
+   {
+      PdfPTable taulu = teeTaulu(1, 200);
+      Format format = Format.create().withFont("Helvetica", 10, Font.BOLD);
+      for (String rivi : asetukset.getHuomio().split("\n"))
+      {
+         lis‰‰Solu(taulu, rivi, format);
+      }
+      taulu.writeSelectedRows(0, -1, 330, 205, kangas);
+   }
+
+   private void kirjoitaEr‰p‰iv‰()
+   {
+      kirjoita(p‰iv‰m‰‰r‰formaatti.format(lasku.getEr‰p‰iv‰()), 360, 80);
+   }
+
+   private void kirjoitaLoppusumma()
+   {
+      kirjoita(hintaformaatti.format(lasku.getVerollinenHinta()), 475, 80);
+   }
+
+   private void kirjoitaViitenumero()
+   {
+      kirjoita(lasku.getViitenumero(), 360, 107);
+   }
+
+   private void kirjoitaBIC()
+   {
+      kirjoita(asetukset.getBIC(), 330, 250);
+   }
+
+   private void kirjoitaIBAN()
+   {
+      kirjoita(asetukset.getIBAN(), 73, 250);
+   }
+
+   private void kirjoitaSaaja()
+   {
+      kirjoita(asetukset.getSaaja(), 70, 212);
+   }
+
+   private void kirjoitaVastaanottaja()
+   {
+      Vastaanottaja vastaanottaja = new Vastaanottaja(lasku.getHenkilˆ());
+      PdfPTable osoitetaulu = teeOsoitetaulu(vastaanottaja);
+      osoitetaulu.writeSelectedRows(0, -1, 42, 770, kangas);
+      osoitetaulu.writeSelectedRows(0, -1, 70, 190, kangas);
+   }
+
+   private PdfPTable teeOsoitetaulu(Vastaanottaja vastaanottaja)
+   {
+      PdfPTable taulu = teeTaulu(1, 230);
+      Format format = Format.create().withFont("Helvetica", 12, Font.NORMAL);
+      lis‰‰Solu(taulu, vastaanottaja.getHenkilˆ().getNimi(), format);
+      lis‰‰Solu(taulu, vastaanottaja.getOsoite().getOsoite(), format);
+      lis‰‰Solu(taulu, vastaanottaja.getPostinumeroJaKaupunki(), format);
+      return taulu;
+   }
+
+   private void lis‰‰Solu(PdfPTable taulu, String tieto, Format format)
+   {
+      PdfPCell solu = new PdfPCell();
+      solu.setBorder(format.getBorder());
+      solu.setBorderWidth(format.getBorderWidth());
+      solu.setVerticalAlignment(format.getVerticalAlignment());
+      solu.setPadding(format.getPadding());
+      solu.setNoWrap(format.isNoWrap());
+      Paragraph paragraaffi = new Paragraph(tieto, format.getFont());
+      paragraaffi.setAlignment(format.getHorizontalAlignment());
+      solu.addElement(paragraaffi);
+      taulu.addCell(solu);
+   }
+
+   private PdfPTable teeTaulu(int sarakkeita, float leveys)
+   {
+      return alustaTaulu(new PdfPTable(sarakkeita), leveys);
+   }
+
+   private PdfPTable alustaTaulu(PdfPTable taulu, float leveys)
+   {
+      taulu.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+      taulu.setTotalWidth(leveys);
+      taulu.getDefaultCell().setPadding(1);
+      return taulu;
+   }
+
+   private void kirjoitaYl‰otsikko()
+   {
+      Font fontti = FontFactory.getFont("Helvetica", 12);
+      fontti.setStyle(Font.BOLD);
+      kirjoita(asetukset.getSaaja(), 42, 795, fontti);
+      kirjoita(asetukset.getYl‰otsikko(), 350, 795, fontti);
+   }
+
+   private void kirjoita(String teksti, int x, int y, Font fontti)
+   {
+      ColumnText.showTextAligned(kangas, Element.ALIGN_LEFT, new Phrase(teksti, fontti), x, y, 0);
+   }
+
+   private void kirjoita(String teksti, int x, int y)
+   {
+      kirjoita(teksti, x, y, FontFactory.getFont("Helvetica", 12));
    }
 
    private byte[] loppuk‰sittely() throws DocumentException, IOException
@@ -165,161 +337,4 @@ public class Lasku2PDF
       kirjoittaja.close();
       return tulos.toByteArray();
    }
-
-   private void k‰sitteleOtsikko()
-   {
-      Otsikkotiedot otsikkotiedot = new Otsikkotiedot(lasku);
-      String pankkiviivakoodi = getPankkiviivakoodi(otsikkotiedot);
-      PdfPTable otsikkotaulu = teeOtsikko(otsikkotiedot);
-      otsikkotaulu.writeSelectedRows(0, -1, 305, 600 + otsikkotaulu.getTotalHeight(), kangas);
-   }
-
-   private void k‰sitteleVastaanottaja()
-   {
-      Vastaanottaja vastaanottaja = new Vastaanottaja(lasku.getHenkilˆ());
-      PdfPTable osoitetaulu = teeOsoite(vastaanottaja);
-      osoitetaulu.writeSelectedRows(0, -1, 40, 700 + osoitetaulu.getTotalHeight(), kangas);
-      osoitetaulu.writeSelectedRows(0, -1, 65, 140 + osoitetaulu.getTotalHeight(), kangas);
-   }
-
-   private void k‰sitteleRivit()
-   {
-      PdfPTable rivitaulu = teeLaskurivit();
-      rivitaulu.writeSelectedRows(0, -1, 20, 450 + rivitaulu.getTotalHeight(), kangas);
-   }
-
-   private PdfPTable teeOtsikko(Otsikkotiedot otsikkotiedot)
-   {
-      PdfPTable taulukko = new PdfPTable(new float[]
-      { 2, 3 });
-      taulukko.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-      taulukko.setTotalWidth(200f);
-      SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-      lis‰‰Solu(taulukko, "P‰iv‰ys", Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, sdf.format(otsikkotiedot.p‰iv‰ys), Formatointi.V_DATA);
-      // taulukko.addCell(new Phrase("Y-tunnus", fontti));
-      // taulukko.addCell(new Phrase(otsikkotiedot.yTunnus, fontti));
-      // taulukko.addCell(new Phrase("Asiakasnumero", fontti));
-      // taulukko.addCell(new Phrase(otsikkotiedot.asiakasnumero + "", fontti));
-      lis‰‰Solu(taulukko, "Laskunumero", Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, otsikkotiedot.laskunumero + "", Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, "Viitenumero", Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, otsikkotiedot.viitenumero + "", Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, "Tilinumero", Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, otsikkotiedot.tilinumero, Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, "BIC-koodi", Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, otsikkotiedot.BICkoodi, Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, "Maksuehto", Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, otsikkotiedot.maksuehto, Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, "Er‰p‰iv‰", Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, sdf.format(otsikkotiedot.er‰p‰iv‰), Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, "Viiv‰styskorko", Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, otsikkotiedot.viiv‰styskorko, Formatointi.V_DATA);
-      // taulukko.addCell(new Phrase("Valuutta", fontti));
-      // taulukko.addCell(new Phrase(otsikkotiedot.valuutta, fontti));
-      // taulukko.addCell(new Phrase("Yhteyshenkilˆ", fontti));
-      // taulukko.addCell(new Phrase(otsikkotiedot.yhteyshenkilˆ, fontti));
-      // taulukko.addCell(new Phrase("Toimituspvm", fontti));
-      // taulukko.addCell(new Phrase(otsikkotiedot.toimituspvm, fontti));
-      return taulukko;
-   }
-
-   private PdfPTable teeOsoite(Vastaanottaja vastaanottaja)
-   {
-      PdfPTable taulukko = new PdfPTable(1);
-      taulukko.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-      taulukko.setTotalWidth(230f);
-      lis‰‰Solu(taulukko, vastaanottaja.getHenkilˆ().getNimi(), Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, vastaanottaja.getOsoite().getOsoite(), Formatointi.V_DATA);
-      lis‰‰Solu(taulukko,
-         String.format("%s %s", vastaanottaja.getOsoite().getPostinumero(), vastaanottaja.getOsoite().getKaupunki()),
-         Formatointi.V_DATA);
-      return taulukko;
-   }
-
-   private PdfPTable teeLaskurivit()
-   {
-      PdfPTable taulukko = new PdfPTable(new float[]
-      { 1, 7, 5, 2, 2, 2, 2, 2, 2 });
-      taulukko.setWidthPercentage(100f);
-      taulukko.setTotalWidth(550f);
-      kirjoitaRiviotsikot(taulukko);
-      taulukko.setHeaderRows(1);
-      kirjoitaLaskurivit(taulukko);
-      kirjoitaYhteenveto(taulukko);
-      taulukko.setComplete(true);
-      return taulukko;
-   }
-
-   private void kirjoitaYhteenveto(PdfPTable taulukko)
-   {
-      PdfPCell rivi = new PdfPCell();
-      rivi.setColspan(9);
-      rivi.setMinimumHeight(5f);
-      rivi.setBorder(Rectangle.NO_BORDER);
-      taulukko.addCell(rivi);
-      PdfPCell t‰yttˆ = new PdfPCell();
-      t‰yttˆ.setColspan(6);
-      t‰yttˆ.setBorder(Rectangle.NO_BORDER);
-      taulukko.addCell(t‰yttˆ);
-      taulukko.getDefaultCell().setBorder(Rectangle.TOP);
-      taulukko.getDefaultCell().setBorderWidthTop(2f);
-      taulukko.getDefaultCell().setPaddingTop(5f);
-      lis‰‰Solu(taulukko, hinta(lasku.getVerotonHinta()), Formatointi.Y_DATA);
-      lis‰‰Solu(taulukko, hinta(lasku.getALVnOsuus()), Formatointi.Y_DATA);
-      lis‰‰Solu(taulukko, hinta(lasku.getVerollinenHinta()), Formatointi.Y_DATA);
-   }
-
-   private void kirjoitaRiviotsikot(PdfPTable taulukko)
-   {
-      lis‰‰Solu(taulukko, "#", Formatointi.OTSIKKO);
-      lis‰‰Solu(taulukko, "Tuote", Formatointi.V_OTSIKKO);
-      lis‰‰Solu(taulukko, "Jakso", Formatointi.V_OTSIKKO);
-      lis‰‰Solu(taulukko, "M‰‰r‰", Formatointi.OTSIKKO);
-      lis‰‰Solu(taulukko, "Yks", Formatointi.OTSIKKO);
-      lis‰‰Solu(taulukko, "ALV%", Formatointi.OTSIKKO);
-      lis‰‰Solu(taulukko, "ALV0", Formatointi.OTSIKKO);
-      lis‰‰Solu(taulukko, "ALV-osa", Formatointi.OTSIKKO);
-      lis‰‰Solu(taulukko, "Hinta", Formatointi.OTSIKKO);
-   }
-
-   private void kirjoitaLaskurivit(PdfPTable taulukko)
-   {
-      for (Laskurivi laskurivi : lasku.getLaskurivit())
-      {
-         kirjoitaLaskurivi(taulukko, laskurivi);
-      }
-   }
-
-   private void kirjoitaLaskurivi(PdfPTable taulukko, Laskurivi laskurivi)
-   {
-      Sopimustyyppi tyyppi = laskurivi.getSopimuslasku().getSopimus().getTyyppi();
-      lis‰‰Solu(taulukko, laskurivi.getRivinumero() + "", Formatointi.DATA);
-      lis‰‰Solu(taulukko, laskurivi.getSopimuslasku().getSopimus().getTuotenimi(), Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, laskurivi.getSopimuslasku().getJakso(), Formatointi.V_DATA);
-      lis‰‰Solu(taulukko, tyyppi.getM‰‰r‰() + "", Formatointi.DATA);
-      lis‰‰Solu(taulukko, tyyppi.getYksikkˆ(), Formatointi.DATA);
-      lis‰‰Solu(taulukko, tyyppi.getVerokanta() + "", Formatointi.DATA);
-      lis‰‰Solu(taulukko, hinta(tyyppi.getVerotonHinta()), Formatointi.DATA);
-      lis‰‰Solu(taulukko, hinta(tyyppi.getALVnOsuus()), Formatointi.DATA);
-      lis‰‰Solu(taulukko, hinta(tyyppi.getVerollinenHinta()), Formatointi.DATA);
-   }
-
-   private void lis‰‰Solu(PdfPTable taulukko, String tieto, Formatointi formatointi)
-   {
-      PdfPCell solu = new PdfPCell();
-      solu.setBorder(formatointi.kehys);
-      solu.setVerticalAlignment(formatointi.vTasaus);
-      solu.setBorderWidth(formatointi.kehysPaksuus);
-      Paragraph paragraaffi = new Paragraph(tieto, formatointi.fontti);
-      paragraaffi.setAlignment(formatointi.hTasaus);
-      solu.addElement(paragraaffi);
-      taulukko.addCell(solu);
-   }
-
-   private String hinta(double hinta)
-   {
-      return DecimalFormat.getCurrencyInstance(Locale.GERMANY).format(hinta);
-   }
-
 }

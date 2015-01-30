@@ -82,7 +82,7 @@ public class Käyttäjärajapinta
    {
       Lasku l = entityManager.find(Lasku.class, 1);
       byte[] m = entityManager.find(BlobData.class, 1).getTieto();
-      return new Lasku2PDF(m, l).muodosta();
+      return new Lasku2PDF(m, l, null).muodosta();
    }
 
    @GET

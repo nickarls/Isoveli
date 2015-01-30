@@ -8,19 +8,15 @@ public class Vastaanottaja
    public Vastaanottaja(Henkilö henkilö)
    {
       this.henkilö = henkilö;
-      if (henkilö instanceof Henkilö)
+      if (henkilö.getOsoite() != null)
+      {
+         osoite = henkilö.getOsoite();
+      } else if (henkilö.getPerhe() != null)
       {
          osoite = henkilö.getPerhe().getOsoite();
       } else
       {
-         Harrastaja harrastaja = (Harrastaja) henkilö;
-         if (harrastaja.getOsoite() != null)
-         {
-            osoite = harrastaja.getOsoite();
-         } else
-         {
-            osoite = harrastaja.getPerhe().getOsoite();
-         }
+         osoite = new Osoite();
       }
    }
 
@@ -32,5 +28,10 @@ public class Vastaanottaja
    public Osoite getOsoite()
    {
       return osoite;
+   }
+
+   public String getPostinumeroJaKaupunki()
+   {
+      return String.format("%s %s", osoite.getPostinumero(), osoite.getKaupunki());
    }
 }

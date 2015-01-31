@@ -228,24 +228,6 @@ public class Sopimustyyppi
       this.laskutettava = laskutettava;
    }
 
-   public double getVerollinenHinta()
-   {
-      double result = määrä * hinta * (1 + verokanta / 100f);
-      return result;
-   }
-
-   public double getVerotonHinta()
-   {
-      double result = määrä * hinta;
-      return result;
-   }
-
-   public double getALVnOsuus()
-   {
-      double result = getVerollinenHinta() - getVerotonHinta();
-      return result;
-   }
-
    public double getHinta()
    {
       return hinta;

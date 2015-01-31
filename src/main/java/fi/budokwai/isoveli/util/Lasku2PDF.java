@@ -194,19 +194,18 @@ public class Lasku2PDF
    private void teeLaskurivi(PdfPTable taulu, Laskurivi laskurivi)
    {
       Format format = Format.create().withFont("Helvetica", 10, Font.NORMAL);
-      Sopimustyyppi tyyppi = laskurivi.getSopimuslasku().getSopimus().getTyyppi();
       lis‰‰Solu(taulu, laskurivi.getRivinumero() + "", format);
       lis‰‰Solu(taulu, laskurivi.getSopimuslasku().getSopimus().getTuotenimi(), format);
       lis‰‰Solu(taulu, laskurivi.getSopimuslasku().getJakso(), format);
       format.withHorizontalAlignment(Element.ALIGN_RIGHT);
-      lis‰‰Solu(taulu, tyyppi.getM‰‰r‰() + "", format);
+      lis‰‰Solu(taulu, laskurivi.getM‰‰r‰() + "", format);
       format.withHorizontalAlignment(Element.ALIGN_LEFT);
-      lis‰‰Solu(taulu, tyyppi.getYksikkˆ(), format);
+      lis‰‰Solu(taulu, laskurivi.getYksikkˆ(), format);
       format.withHorizontalAlignment(Element.ALIGN_RIGHT);
-      lis‰‰Solu(taulu, tyyppi.getVerokanta() + "", format);
-      lis‰‰Solu(taulu, hintaformaatti.format(tyyppi.getVerotonHinta()), format);
-      lis‰‰Solu(taulu, hintaformaatti.format(tyyppi.getALVnOsuus()), format);
-      lis‰‰Solu(taulu, hintaformaatti.format(tyyppi.getVerollinenHinta()), format);
+      lis‰‰Solu(taulu, laskurivi.getVerokanta() + "", format);
+      lis‰‰Solu(taulu, hintaformaatti.format(laskurivi.getVerotonHinta()), format);
+      lis‰‰Solu(taulu, hintaformaatti.format(laskurivi.getALVnOsuus()), format);
+      lis‰‰Solu(taulu, hintaformaatti.format(laskurivi.getVerollinenHinta()), format);
    }
 
    private void teeRiviotsikot(PdfPTable taulu)

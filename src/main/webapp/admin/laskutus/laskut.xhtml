@@ -78,32 +78,32 @@
 					<h:outputText value="#{_laskurivi.rivinumero}" />
 				</ace:column>
 				<ace:column headerText="Tuotenimi" styleClass="lefttext">
-					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tuotenimi}" />
+					<h:outputText value="#{_laskurivi.tuotenimi}" />
 				</ace:column>
-				<ace:column headerText="Jakso" styleClass="lefttext">
-					<h:outputText value="#{_laskurivi.sopimuslasku.jakso}" />
+				<ace:column headerText="Infotieto" styleClass="lefttext">
+					<h:outputText value="#{_laskurivi.infotieto}" />
 				</ace:column>
 				<ace:column headerText="Määrä" styleClass="lefttext">
-					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tyyppi.määrä}" />
+					<h:outputText value="#{_laskurivi.määrä}" />
 				</ace:column>
 				<ace:column headerText="Yksikkö" styleClass="lefttext">
-					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tyyppi.yksikkö}" />
+					<h:outputText value="#{_laskurivi.yksikkö}" />
 				</ace:column>
 				<ace:column headerText="Verokanta" styleClass="lefttext">
-					<h:outputText value="ALV#{_laskurivi.sopimuslasku.sopimus.tyyppi.verokanta}" />
+					<h:outputText value="ALV#{_laskurivi.verokanta}" />
 				</ace:column>
 				<ace:column headerText="Veroton hinta" styleClass="lefttext">
-					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tyyppi.verotonHinta}">
+					<h:outputText value="#{_laskurivi.verotonHinta}">
 						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 					</h:outputText>
 				</ace:column>
 				<ace:column headerText="ALVn osuus" styleClass="lefttext">
-					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tyyppi.ALVnOsuus}">
+					<h:outputText value="#{_laskurivi.ALVnOsuus}">
 						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 					</h:outputText>
 				</ace:column>
 				<ace:column headerText="Verollinen hinta" styleClass="lefttext">
-					<h:outputText value="#{_laskurivi.sopimuslasku.sopimus.tyyppi.verollinenHinta}">
+					<h:outputText value="#{_laskurivi.verollinenHinta}">
 						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 					</h:outputText>
 				</ace:column>

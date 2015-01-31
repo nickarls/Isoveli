@@ -143,11 +143,14 @@ public class LaskutusAdmin extends Perustoiminnallisuus
          } while (!sopimus.valmiiksiLaskutettu());
       });
       entityManager.persist(lasku);
+      lasku.laskeViitenumero();
       byte[] pdf = teePdfLasku(lasku);
       lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), pdf));
       entityManager.persist(lasku);
       loggaaja.loggaa(String.format("Teki laskun henkilölle %s", henkilö.getNimi()));
    }
+
+
 
    private Henkilö haeLaskunVastaanottaja(List<Sopimus> sopimukset)
    {

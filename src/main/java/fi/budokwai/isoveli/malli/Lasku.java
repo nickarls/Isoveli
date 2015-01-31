@@ -1,5 +1,7 @@
 package fi.budokwai.isoveli.malli;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -64,9 +66,9 @@ public class Lasku
    @Type(type = "Kyll‰Ei")
    private boolean laskutettu;
 
-   @Size(max=50)
+   @Size(max = 50)
    private String viitenumero;
-   
+
    public Lasku()
    {
    }
@@ -240,4 +242,25 @@ public class Lasku
       this.viitenumero = viitenumero;
    }
 
+   public void laskeViitenumero()
+   {
+      DateFormat sdf = new SimpleDateFormat("yyyy");
+      String viitenumero = String.format("%d%d", sdf.format(new Date()), id);
+      this.viitenumero = String.format("%s%s", viitenumero, viitenumeronTarkistussumma(viitenumero));
+   }
+
+   public static String viitenumeronTarkistussumma(String runko)
+   {
+      String numerot = runko.replace(" ", "");
+      if (numerot.length() <= 0)
+         return "";
+      int[] kertoimet =
+      { 7, 3, 1 };
+      int tarkistussumma = 0;
+      for (int i = numerot.length() - 1, j = 0; i >= 0; i--, j++)
+      {
+         tarkistussumma += kertoimet[j % 3] * Character.digit(numerot.charAt(i), 10);
+      }
+      return "" + (10 - tarkistussumma % 10) % 10;
+   }
 }

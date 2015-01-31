@@ -3,11 +3,13 @@ package fi.budokwai.isoveli.util;
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import com.google.common.base.Strings;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -15,6 +17,7 @@ import com.lowagie.text.FontFactory;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.Barcode128;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPCell;
@@ -22,12 +25,12 @@ import com.lowagie.text.pdf.PdfPRow;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
+import com.lowagie.text.pdf.PdfTemplate;
 
 import fi.budokwai.isoveli.Asetukset;
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.Lasku;
 import fi.budokwai.isoveli.malli.Laskurivi;
-import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.malli.Vastaanottaja;
 
 public class Lasku2PDF
@@ -38,7 +41,7 @@ public class Lasku2PDF
    private PdfContentByte kangas;
    private Lasku lasku;
    private Asetukset asetukset;
-   private SimpleDateFormat p‰iv‰m‰‰r‰formaatti = new SimpleDateFormat("dd.MM.yyyy");
+   private DateFormat p‰iv‰m‰‰r‰formaatti = new SimpleDateFormat("dd.MM.yyyy");
    private NumberFormat hintaformaatti = DecimalFormat.getCurrencyInstance(Locale.GERMANY);
 
    public Lasku2PDF(byte[] pohja, Lasku lasku, Asetukset asetukset)
@@ -75,6 +78,7 @@ public class Lasku2PDF
          kirjoitaSaajanOsoitetiedot();
          kirjoitaSaajanTunnustiedot();
          kirjoitaSaajanYhteystiedot();
+         kirjoitaViivakoodi();
          return loppuk‰sittely();
       } catch (IOException | DocumentException e)
       {
@@ -82,16 +86,45 @@ public class Lasku2PDF
       }
    }
 
-   private void kirjoitaLaskuotsikko()
+   private void kirjoitaViivakoodi()
    {
-      PdfPTable taulu = teeTaulu(2, 120);
+      Barcode128 bc128 = new Barcode128();
+      bc128.setBarHeight(30f);
+      bc128.setCode(getPankkiviivakoodi());
+      bc128.setX(1f);
+      bc128.setFont(null);
+      PdfTemplate viivakoodi = bc128.createTemplateWithBarcode(kangas, null, null);
+      kangas.addTemplate(viivakoodi, 15, 20);
+   }
+
+   private String getPankkiviivakoodi()
+   {
+      int versio = 4;
+      String tilinumero = asetukset.getIBAN().substring(2).replaceAll(" ", "");
+      double sentit = lasku.getVerollinenHinta() % 1;
+      double eurot = lasku.getVerollinenHinta() - sentit;
+      String er‰p‰iv‰ = new SimpleDateFormat("yyMMdd").format(lasku.getEr‰p‰iv‰());
+      return String.format("%d%s%s%s000%s%s", versio, tilinumero, String.format("%06d", (int)eurot),
+         String.format("%02d", (int)sentit), Strings.padStart(lasku.getViitenumero(), 20, '0'), er‰p‰iv‰);
+   }
+
+   void kirjoitaLaskuotsikko()
+   {
+      PdfPTable taulu = teeTaulu(2, 180);
       Format format = Format.create().withFont("Helvetica", 12, Font.NORMAL);
-      lis‰‰Solu(taulu, "avain", format);
-      lis‰‰Solu(taulu, "arvo", format);
-      lis‰‰Solu(taulu, "avain", format);
-      lis‰‰Solu(taulu, "arvo", format);
-      lis‰‰Solu(taulu, "avain", format);
-      lis‰‰Solu(taulu, "arvo", format);
+      DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+      lis‰‰Solu(taulu, "P‰iv‰ys", format);
+      lis‰‰Solu(taulu, df.format(lasku.getLuotu()), format);
+      lis‰‰Solu(taulu, "Laskunumero", format);
+      lis‰‰Solu(taulu, "" + lasku.getId(), format);
+      lis‰‰Solu(taulu, "Asiakasnumero", format);
+      lis‰‰Solu(taulu, lasku.getHenkilˆ().getId() + "", format);
+      lis‰‰Solu(taulu, "Maskuehto", format);
+      lis‰‰Solu(taulu, String.format("%d p‰iv‰‰ netto", asetukset.getMaksuaikaa()), format);
+      lis‰‰Solu(taulu, "Viiv‰styskorko", format);
+      lis‰‰Solu(taulu, String.format("%d%%", asetukset.getViiv‰stysprosentti()), format);
+      lis‰‰Solu(taulu, "Er‰p‰iv‰", format);
+      lis‰‰Solu(taulu, df.format(lasku.getEr‰p‰iv‰()), format);
       taulu.writeSelectedRows(0, -1, 350, 770, kangas);
    }
 
@@ -119,7 +152,8 @@ public class Lasku2PDF
    private void kirjoitaSaajanYhteystiedot()
    {
       PdfPTable taulu = teeTaulu(2, 100);
-      Format format = Format.create().withFont("Helvetica", 8, Font.NORMAL).withPadding(0, Rectangle.BOX).withNoWrap(true);
+      Format format = Format.create().withFont("Helvetica", 8, Font.NORMAL).withPadding(0, Rectangle.BOX)
+         .withNoWrap(true);
       lis‰‰Solu(taulu, "Puhelin", format);
       lis‰‰Solu(taulu, asetukset.getPuhelin(), format);
       lis‰‰Solu(taulu, "S‰hkˆposti", format);
@@ -244,7 +278,7 @@ public class Lasku2PDF
 
    private void kirjoitaLoppusumma()
    {
-      kirjoita(hintaformaatti.format(lasku.getVerollinenHinta()), 475, 80);
+      kirjoita(new DecimalFormat("#0.00").format(lasku.getVerollinenHinta()), 475, 80);
    }
 
    private void kirjoitaViitenumero()

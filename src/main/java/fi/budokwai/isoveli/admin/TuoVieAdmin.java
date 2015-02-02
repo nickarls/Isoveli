@@ -151,7 +151,6 @@ public class TuoVieAdmin extends Perustoiminnallisuus
                harrastaja.getYhteystiedot().setSähköposti(haeString("Sposti"));
                harrastaja.getYhteystiedot().setSähköpostilistalla(haeBoolean("Spostilistalla"));
                harrastaja.setJäsennumero(haeString("Jäsennumero"));
-               harrastaja.setKorttinumero(haeString("Korttinumero"));
                harrastaja.setLisenssinumero(haeString("Lisenssinumero"));
                harrastaja.siivoa();
                henkilöt.add(harrastaja);

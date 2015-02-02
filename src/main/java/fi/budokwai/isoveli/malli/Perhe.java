@@ -2,6 +2,7 @@ package fi.budokwai.isoveli.malli;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -169,6 +170,14 @@ public class Perhe
       return perheenjäsenet.stream().filter(h -> h.isHarrastaja()).map(h -> Harrastaja.class.cast(h))
          .filter(h -> h.getHuoltaja() != null && h.getHuoltaja().getId() == henkilö.getId())
          .collect(Collectors.toList());
+   }
+
+   public String getOletusICE()
+   {
+      Optional<Henkilö> iceHenkilö = perheenjäsenet.stream()
+         .filter(h -> !h.isAlaikäinen() && h.getYhteystiedot() != null && h.getYhteystiedot().isLöytyyPuhelin())
+         .findFirst();
+      return iceHenkilö.isPresent() ? iceHenkilö.get().getYhteystiedot().getPuhelinnumero() : null;
    }
 
 }

@@ -129,9 +129,21 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       return koeaika;
    }
 
-   public void perheMuuttui(ValueChangeEvent e)
+   public void huoltajaMuuttui(AjaxBehaviorEvent e)
    {
-      Perhe uusiPerhe = (Perhe) e.getNewValue();
+      Henkilö henkilö = harrastaja.getHuoltaja();
+      if (henkilö == null)
+      {
+         harrastaja.setIce(null);
+      } else if (henkilö.getYhteystiedot() != null)
+      {
+         harrastaja.setIce(henkilö.getYhteystiedot().getPuhelinnumero());
+      }
+   }
+
+   public void perheMuuttui(AjaxBehaviorEvent e)
+   {
+      Perhe uusiPerhe = harrastaja.getPerhe();
       if (uusiPerhe == null)
       {
          harrastaja.setOsoite(new Osoite());
@@ -142,6 +154,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          {
             harrastaja.setHuoltaja(uusiPerhe.getHuoltajat().iterator().next());
          }
+         harrastaja.setIce(uusiPerhe.getOletusICE());
       }
       harrastaja.setOsoiteMuuttunut(true);
       fokusoi("form:osoite");
@@ -427,8 +440,8 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
             .setParameter("päivä", val).getResultList();
          String päivämäärä = new SimpleDateFormat("YYYYMMdd").format(val);
          String lukumäärä = String.format("%03d", samaSyntymäpäivä.size() + 1);
-         String korttinumero = String.format("%s%s", päivämäärä, lukumäärä);
-         harrastaja.setKorttinumero(korttinumero);
+         String jäsennumero = String.format("%s%s", päivämäärä, lukumäärä);
+         harrastaja.setJäsennumero(jäsennumero);
       }
    }
 

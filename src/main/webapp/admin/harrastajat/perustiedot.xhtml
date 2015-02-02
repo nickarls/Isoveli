@@ -69,12 +69,12 @@
 			<h:panelGroup id="perhepanel">
 				<ace:panel header="Perhe" styleClass="panel" style="width:450px" rendered="#{!harrastaja.tilapäinen}">
 					<h:panelGrid columns="2">
-						<h:selectOneMenu value="#{harrastaja.perhe}" valueChangeListener="#{harrastajaAdmin.perheMuuttui}"
+						<h:selectOneMenu value="#{harrastaja.perhe}"
 							style="width: 350px">
 							<f:selectItem itemValue="#{null}" itemLabel="" noSelectionItem="true" />
 							<f:selectItems value="#{perheet}" var="_perhe" itemValue="#{_perhe}" itemLabel="#{_perhe.kuvaus}" />
 							<f:converter converterId="objectConverter" />
-							<f:ajax execute="@this" render="form:osoitepanel form:huoltajapanel" />
+							<f:ajax execute="@this form:henkilötietopanel" render="form:osoitepanel form:huoltajapanel form:henkilötietopanel" listener="#{harrastajaAdmin.perheMuuttui}"/>
 						</h:selectOneMenu>
 						<h:commandButton action="#{harrastajaAdmin.lisääPerhe}" value="x" image="/kuvat/lisää_perhe.jpg"
 							style="height:50px; width:50px; margin-left:15px">
@@ -93,6 +93,7 @@
 								<f:selectItems value="#{harrastaja.perhe.huoltajat}" var="_huoltaja" itemValue="#{_huoltaja}"
 									itemLabel="#{_huoltaja.nimi}" />
 								<f:converter converterId="objectConverter" />
+								<f:ajax execute="@this form:henkilötietopanel" render="form:henkilötietopanel" listener="#{harrastajaAdmin.huoltajaMuuttui}"/>
 							</h:selectOneMenu>
 						</h:panelGrid>
 						<h:commandButton action="#{harrastajaAdmin.lisääHuoltaja}" value="x" image="/kuvat/lisää_huoltaja.jpg"
@@ -151,11 +152,6 @@
 				<h:panelGrid>
 					<ace:message for="form:jasennumero" />
 					<h:inputText value="#{harrastaja.jäsennumero}" id="jasennumero" />
-				</h:panelGrid>
-				<h:outputText value="Korttinumero" />
-				<h:panelGrid>
-					<ace:message for="form:korttinumero" />
-					<h:inputText value="#{harrastaja.korttinumero}" id="korttinumero" />
 				</h:panelGrid>
 				<h:outputText value="Lisenssinumero" />
 				<h:panelGrid>

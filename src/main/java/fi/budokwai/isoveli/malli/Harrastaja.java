@@ -38,7 +38,7 @@ import fi.budokwai.isoveli.util.Util;
 @Entity
 @Table(name = "harrastaja")
 @NamedQueries(
-{ @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.korttinumero=:kortti"),
+{ @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.jäsennumero=:jäsennumero"),
       @NamedQuery(name = "treenivetäjät", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi"),
       @NamedQuery(name = "sama_syntymäpäivä", query = "select h from Harrastaja h where syntynyt = :päivä"),
       @NamedQuery(name = "harrastajat", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi") })
@@ -68,14 +68,11 @@ public class Harrastaja extends Henkilö
    @OrderBy("aikaleima desc")
    private List<Treenikäynti> treenikäynnit = new ArrayList<Treenikäynti>();
 
-   @Size(max = 10)
+   @Size(max = 20)
    @Column(name = "jasennumero")
    private String jäsennumero;
 
-   @Size(max = 100)
-   private String korttinumero;
-
-   @Size(max = 10)
+   @Size(max = 20)
    private String lisenssinumero;
 
    @Temporal(TemporalType.DATE)
@@ -112,16 +109,6 @@ public class Harrastaja extends Henkilö
    public void setJäsennumero(String jäsennumero)
    {
       this.jäsennumero = jäsennumero;
-   }
-
-   public String getKorttinumero()
-   {
-      return korttinumero;
-   }
-
-   public void setKorttinumero(String korttinumero)
-   {
-      this.korttinumero = korttinumero;
    }
 
    public String getLisenssinumero()

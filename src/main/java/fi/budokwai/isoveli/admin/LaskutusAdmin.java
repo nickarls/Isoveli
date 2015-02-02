@@ -122,6 +122,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       List<Sopimus> sopimukset = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class)
          .setParameter("nyt", Util.tänään()).getResultList();
       sopimukset.addAll(entityManager.createNamedQuery("uudet_sopimukset", Sopimus.class).getResultList());
+      sopimukset.addAll(entityManager.createNamedQuery("laskuttamattomat_kymppikerrat", Sopimus.class).getResultList());
       Map<Osoite, List<Sopimus>> sopimuksetPerOsoite = sopimukset.stream().collect(
          Collectors.groupingBy(sopimus -> sopimus.getLaskutusosoite()));
       sopimuksetPerOsoite.values().forEach(osoitteenSopimukset -> teeLaskuOsoitteelle(osoitteenSopimukset));
@@ -140,17 +141,24 @@ public class LaskutusAdmin extends Perustoiminnallisuus
             Sopimuslasku sopimuslasku = new Sopimuslasku(sopimus);
             Laskurivi laskurivi = new Laskurivi(sopimuslasku);
             lasku.lisääRivi(laskurivi);
+            if (sopimus.getTyyppi().isTreenikertoja())
+            {
+               sopimus.lisääTreenikertoja();
+               entityManager.persist(sopimus);
+            }
          } while (!sopimus.valmiiksiLaskutettu());
       });
+      lasku.laskePerhealennukset();
       entityManager.persist(lasku);
+      entityManager.flush();
+      entityManager.refresh(lasku);
       lasku.laskeViitenumero();
+      entityManager.persist(lasku);
       byte[] pdf = teePdfLasku(lasku);
       lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), pdf));
       entityManager.persist(lasku);
       loggaaja.loggaa(String.format("Teki laskun henkilölle %s", henkilö.getNimi()));
    }
-
-
 
    private Henkilö haeLaskunVastaanottaja(List<Sopimus> sopimukset)
    {
@@ -224,6 +232,8 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       laskuttamattomat = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class)
          .setParameter("nyt", Util.tänään()).getResultList();
       laskuttamattomat.addAll(entityManager.createNamedQuery("uudet_sopimukset", Sopimus.class).getResultList());
+      laskuttamattomat.addAll(entityManager.createNamedQuery("laskuttamattomat_kymppikerrat", Sopimus.class)
+         .getResultList());
    }
 
    public void tabiMuuttui(ValueChangeEvent e)

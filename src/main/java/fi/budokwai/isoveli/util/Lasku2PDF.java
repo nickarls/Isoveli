@@ -229,8 +229,8 @@ public class Lasku2PDF
    {
       Format format = Format.create().withFont("Helvetica", 10, Font.NORMAL);
       lis‰‰Solu(taulu, laskurivi.getRivinumero() + "", format);
-      lis‰‰Solu(taulu, laskurivi.getSopimuslasku().getSopimus().getTuotenimi(), format);
-      lis‰‰Solu(taulu, laskurivi.getSopimuslasku().getJakso(), format);
+      lis‰‰Solu(taulu, laskurivi.getTuotenimi(), format);
+      lis‰‰Solu(taulu, laskurivi.getInfotieto(), format);
       format.withHorizontalAlignment(Element.ALIGN_RIGHT);
       lis‰‰Solu(taulu, laskurivi.getM‰‰r‰() + "", format);
       format.withHorizontalAlignment(Element.ALIGN_LEFT);

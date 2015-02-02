@@ -38,7 +38,8 @@ import fi.budokwai.isoveli.util.Util;
          + "and s.tyyppi.laskutettava='K' and h.arkistoitu='E' "
          + "and not exists (select 1 from Sopimus s2 where s2.tyyppi.vapautus='K' and s2.harrastaja=h) "
          + "and sl.p‰‰ttyy < :nyt "
-         + "and sl.p‰‰ttyy = (select max(sl2.p‰‰ttyy) from Sopimuslasku sl2 where sl2.sopimus=s)") })
+         + "and sl.p‰‰ttyy = (select max(sl2.p‰‰ttyy) from Sopimuslasku sl2 where sl2.sopimus=s)"),
+      @NamedQuery(name = "laskuttamattomat_kymppikerrat", query = "select s from Sopimus s, Harrastaja h where s.harrastaja = h and s.tyyppi.treenikertoja='K' and s.treenikertoja = 0 and h.arkistoitu = 'E' and s.sopimuslaskut is not empty") })
 public class Sopimus
 {
    @Id
@@ -255,5 +256,10 @@ public class Sopimus
    {
       LocalDate check = Util.date2LocalDateTime(getViimeksiLaskutettu());
       return check.isAfter(Util.t‰n‰‰nLD());
+   }
+
+   public void lis‰‰Treenikertoja()
+   {
+      treenikertoja += tyyppi.getOletusTreenikerrat();
    }
 }

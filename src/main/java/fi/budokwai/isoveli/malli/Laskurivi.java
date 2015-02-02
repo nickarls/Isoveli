@@ -49,9 +49,9 @@ public class Laskurivi
    private int määrä;
 
    @Size(max = 20)
-   @Column(name="yksikko")
+   @Column(name = "yksikko")
    private String yksikkö;
-   
+
    @Column(name = "yksikkohinta")
    private double yksikköhinta;
 
@@ -206,6 +206,16 @@ public class Laskurivi
    public void setYksikkö(String yksikkö)
    {
       this.yksikkö = yksikkö;
+   }
+
+   public static Laskurivi perhealennus(int lukumäärä, float alennus, String infotieto)
+   {
+      Laskurivi laskurivi = new Laskurivi();
+      laskurivi.setTuotenimi("Perhealennus");
+      laskurivi.setInfotieto(infotieto);
+      laskurivi.setYksikköhinta(-1 * alennus);
+      laskurivi.setYksikkö("kpl");
+      return laskurivi;
    }
 
 }

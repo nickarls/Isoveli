@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -245,7 +246,7 @@ public class Lasku
    public void laskeViitenumero()
    {
       DateFormat sdf = new SimpleDateFormat("yyyy");
-      String viitenumero = String.format("%d%d", sdf.format(new Date()), id);
+      String viitenumero = String.format("%s%d", sdf.format(new Date()), id);
       this.viitenumero = String.format("%s%s", viitenumero, viitenumeronTarkistussumma(viitenumero));
    }
 
@@ -262,5 +263,41 @@ public class Lasku
          tarkistussumma += kertoimet[j % 3] * Character.digit(numerot.charAt(i), 10);
       }
       return "" + (10 - tarkistussumma % 10) % 10;
+   }
+
+   public void laskePerhealennukset()
+   {
+      List<Laskurivi> harjoitusmaksut = laskurivit
+         .stream()
+         .filter(l -> l.getSopimuslasku().getSopimus().getTyyppi().isHarjoittelumaksu())
+         .sorted(
+            (lr1, lr2) -> lr1.getSopimuslasku().getSopimus().getLuotu()
+               .compareTo(lr2.getSopimuslasku().getSopimus().getLuotu())).collect(Collectors.toList());
+      if (harjoitusmaksut.size() < 2)
+      {
+         return;
+      }
+      float kerroin = 0;
+      float alennus = 0;
+      String infotieto = "";
+      for (Laskurivi laskurivi : harjoitusmaksut)
+      {
+         alennus += (kerroin * laskurivi.getVerollinenHinta());
+         if (kerroin > 0)
+         {
+            if (infotieto.length() > 0)
+            {
+               infotieto += ", ";
+            }
+            String etunimi = laskurivi.getSopimuslasku().getSopimus().getHarrastaja().getEtunimi();
+            infotieto += String.format("%s (%d%%)", etunimi, alennus * 10);
+         }
+         kerroin += 0.1;
+      }
+      if (alennus > 0)
+      {
+         Laskurivi perhealennus = Laskurivi.perhealennus(harjoitusmaksut.size() - 1, alennus, infotieto);
+         lis‰‰Rivi(perhealennus);
+      }
    }
 }

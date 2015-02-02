@@ -69,6 +69,7 @@
 			<h:panelGrid>
 				<ace:message for="form:maksuväli" />
 				<h:selectOneMenu value="#{sopimus.maksuväli}">
+					<f:selectItem itemValue="" itemLabel="" noSelectionOption="true"/>
 					<f:selectItem itemValue="6" itemLabel="6kk" />
 					<f:selectItem itemValue="12" itemLabel="12kk" />
 				</h:selectOneMenu>
@@ -83,6 +84,6 @@
 		action="#{harrastajaAdmin.peruutaSopimusmuutos}" image="/kuvat/peruuta_muutos.png">
 		<f:ajax render="@form" />
 	</h:commandButton>
-	<h:commandButton rendered="#{sopimus.poistettavissa}" value="x" styleClass="ikoni"
+	<h:commandButton styleClass="ikoni"
 		onclick="ice.ace.instance('form:vahvistaSopimuksenPoisto').show();" image="/kuvat/poista.png" immediate="true" />
 </ui:composition>

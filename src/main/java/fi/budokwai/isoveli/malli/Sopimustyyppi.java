@@ -106,6 +106,11 @@ public class Sopimustyyppi
       return jäsenmaksu;
    }
 
+   public boolean isJäsenmaksutyyppi()
+   {
+      return jäsenmaksu && !alkeiskurssi && !harjoittelumaksu && !koeaika && !power && !treenikertoja && !vapautus;
+   }
+
    public void setJäsenmaksu(boolean jäsenmaksu)
    {
       this.jäsenmaksu = jäsenmaksu;

@@ -24,6 +24,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Type;
+
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
@@ -62,13 +64,16 @@ public class Sopimus
    private Date umpeutuu;
 
    @Temporal(TemporalType.DATE)
-   private Date luotu;
+   private Date luotu = new Date();
 
    private int treenikertoja;
 
    @Column(name = "maksuvali")
    private int maksuv‰li;
 
+   @Type(type = "Kyll‰Ei")
+   private boolean arkistoitu;   
+   
    public int getId()
    {
       return id;
@@ -261,5 +266,15 @@ public class Sopimus
    public void lis‰‰Treenikertoja()
    {
       treenikertoja += tyyppi.getOletusTreenikerrat();
+   }
+
+   public boolean isArkistoitu()
+   {
+      return arkistoitu;
+   }
+
+   public void setArkistoitu(boolean arkistoitu)
+   {
+      this.arkistoitu = arkistoitu;
    }
 }

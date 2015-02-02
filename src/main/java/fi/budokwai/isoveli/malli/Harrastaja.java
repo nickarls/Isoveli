@@ -91,7 +91,7 @@ public class Harrastaja extends Henkilö
 
    @Size(max = 1000)
    private String huomautus;
-   
+
    @Type(type = "KylläEi")
    private boolean infotiskille;
 
@@ -257,10 +257,6 @@ public class Harrastaja extends Henkilö
    public Sopimustarkistukset getSopimusTarkistukset()
    {
       Sopimustarkistukset sopimustarkistuset = new Sopimustarkistukset();
-      if (löytyyköVapautusMaksuista())
-      {
-         return sopimustarkistuset;
-      }
       if (!löytyyköJäsenmaksu())
       {
          sopimustarkistuset.lisää(new Sopimustarkistus("Jäsenmaksu puuttuu", false));
@@ -275,20 +271,16 @@ public class Harrastaja extends Henkilö
       return sopimustarkistuset;
    }
 
-   private boolean löytyyköVapautusMaksuista()
-   {
-      Optional<Sopimus> sopimus = sopimukset.stream().filter(s -> s.getTyyppi().isVapautus()).findFirst();
-      return sopimus.isPresent() && sopimus.get().isVoimassa();
-   }
-
    private boolean löytyyköHarjoittelumaksu()
    {
-      return sopimukset.stream().filter(s -> s.getTyyppi().isHarjoittelumaksu()).findFirst().isPresent();
+      Optional<Sopimus> sopimus = sopimukset.stream().filter(s -> s.getTyyppi().isHarjoittelumaksu()).findFirst();
+      return sopimus.isPresent() && sopimus.get().isVoimassa();
    }
 
    private boolean löytyyköJäsenmaksu()
    {
-      return sopimukset.stream().filter(s -> s.getTyyppi().isJäsenmaksu()).findFirst().isPresent();
+      Optional<Sopimus> sopimus = sopimukset.stream().filter(s -> s.getTyyppi().isJäsenmaksu()).findFirst();
+      return sopimus.isPresent() && sopimus.get().isVoimassa();
    }
 
    public boolean isMies()

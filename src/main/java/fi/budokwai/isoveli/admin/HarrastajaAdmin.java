@@ -386,7 +386,13 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void poistaSopimus()
    {
-      harrastaja.getSopimukset().remove(sopimus);
+      if (sopimus.isPoistettavissa())
+      {
+         harrastaja.getSopimukset().remove(sopimus);
+      } else
+      {
+         sopimus.setArkistoitu(true);
+      }
       entityManager.persist(harrastaja);
       entityManager.flush();
       info("Sopimus poistettu");
@@ -488,7 +494,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       {
          sopimus.setUmpeutuu(null);
       }
-      if (sopimus.getTyyppi().isJäsenmaksu())
+      if (sopimus.getTyyppi().isJäsenmaksutyyppi())
       {
          LocalDate päivä = LocalDate.now();
          päivä = päivä.with(TemporalAdjusters.lastDayOfYear());

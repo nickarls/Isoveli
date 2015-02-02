@@ -119,14 +119,11 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 
    public void laskutaSopimukset()
    {
-      List<Sopimus> sopimukset = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class)
-         .setParameter("nyt", Util.t‰n‰‰n()).getResultList();
-      sopimukset.addAll(entityManager.createNamedQuery("uudet_sopimukset", Sopimus.class).getResultList());
-      sopimukset.addAll(entityManager.createNamedQuery("laskuttamattomat_kymppikerrat", Sopimus.class).getResultList());
+      List<Sopimus> sopimukset = haeLaskuttamattomat();
       Map<Osoite, List<Sopimus>> sopimuksetPerOsoite = sopimukset.stream().collect(
          Collectors.groupingBy(sopimus -> sopimus.getLaskutusosoite()));
       sopimuksetPerOsoite.values().forEach(osoitteenSopimukset -> teeLaskuOsoitteelle(osoitteenSopimukset));
-      haeLaskuttamattomat();
+      laskuttamattomat = haeLaskuttamattomat();
       info("Muodosti %d sopimuksesta %d laskua", sopimukset.size(), sopimuksetPerOsoite.keySet().size());
       loggaaja.loggaa("Suoritti laskutusajon");
    }
@@ -227,13 +224,14 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       laskut = entityManager.createNamedQuery("laskut", Lasku.class).getResultList();
    }
 
-   private void haeLaskuttamattomat()
+   private List<Sopimus> haeLaskuttamattomat()
    {
       laskuttamattomat = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class)
          .setParameter("nyt", Util.t‰n‰‰n()).getResultList();
       laskuttamattomat.addAll(entityManager.createNamedQuery("uudet_sopimukset", Sopimus.class).getResultList());
       laskuttamattomat.addAll(entityManager.createNamedQuery("laskuttamattomat_kymppikerrat", Sopimus.class)
          .getResultList());
+      return laskuttamattomat;
    }
 
    public void tabiMuuttui(ValueChangeEvent e)

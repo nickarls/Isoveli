@@ -4,7 +4,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -92,19 +94,9 @@ public class Lasku
       return laskurivit.size();
    }
 
-   public double getVerotonHinta()
+   public double getYhteishinta()
    {
-      return laskurivit.stream().mapToDouble((lr) -> lr.getVerotonHinta()).sum();
-   }
-
-   public double getALVnOsuus()
-   {
-      return laskurivit.stream().mapToDouble((lr) -> lr.getALVnOsuus()).sum();
-   }
-
-   public double getVerollinenHinta()
-   {
-      return laskurivit.stream().mapToDouble((lr) -> lr.getVerollinenHinta()).sum();
+      return laskurivit.stream().mapToDouble((lr) -> lr.getRivihinta()).sum();
    }
 
    public int getId()
@@ -280,23 +272,29 @@ public class Lasku
       float kerroin = 0;
       float alennus = 0;
       String infotieto = "";
+      Set<Harrastaja> k‰ytetytAlennukset = new HashSet<>();
       for (Laskurivi laskurivi : harjoitusmaksut)
       {
-         alennus += (kerroin * laskurivi.getVerollinenHinta());
+         Harrastaja harrastaja = laskurivi.getSopimuslasku().getSopimus().getHarrastaja();
+         if (k‰ytetytAlennukset.contains(harrastaja))
+         {
+            continue;
+         }
+         alennus += (kerroin * laskurivi.getRivihinta());
          if (kerroin > 0)
          {
             if (infotieto.length() > 0)
             {
                infotieto += ", ";
             }
-            String etunimi = laskurivi.getSopimuslasku().getSopimus().getHarrastaja().getEtunimi();
-            infotieto += String.format("%s (%d%%)", etunimi, alennus * 10);
+            infotieto += String.format("%s (%d%%)", harrastaja.getEtunimi(), (int) (kerroin * 100));
          }
          kerroin += 0.1;
+         k‰ytetytAlennukset.add(harrastaja);
       }
       if (alennus > 0)
       {
-         Laskurivi perhealennus = Laskurivi.perhealennus(harjoitusmaksut.size() - 1, alennus, infotieto);
+         Laskurivi perhealennus = Laskurivi.perhealennus(alennus, infotieto);
          lis‰‰Rivi(perhealennus);
       }
    }

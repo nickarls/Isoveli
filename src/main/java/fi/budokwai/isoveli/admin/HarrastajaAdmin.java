@@ -1,14 +1,9 @@
 package fi.budokwai.isoveli.admin;
 
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAdjusters;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -506,12 +501,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       } else
       {
          sopimus.setUmpeutuu(null);
-      }
-      if (sopimus.getTyyppi().isJäsenmaksutyyppi())
-      {
-         LocalDate päivä = LocalDate.now();
-         päivä = päivä.with(TemporalAdjusters.lastDayOfYear());
-         sopimus.setUmpeutuu(Date.from(päivä.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
       }
    }
 

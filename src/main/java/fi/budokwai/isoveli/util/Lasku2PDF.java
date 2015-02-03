@@ -101,11 +101,11 @@ public class Lasku2PDF
    {
       int versio = 4;
       String tilinumero = asetukset.getIBAN().substring(2).replaceAll(" ", "");
-      double sentit = lasku.getVerollinenHinta() % 1;
-      double eurot = lasku.getVerollinenHinta() - sentit;
+      double sentit = lasku.getYhteishinta() % 1;
+      double eurot = lasku.getYhteishinta() - sentit;
       String er‰p‰iv‰ = new SimpleDateFormat("yyMMdd").format(lasku.getEr‰p‰iv‰());
-      return String.format("%d%s%s%s000%s%s", versio, tilinumero, String.format("%06d", (int)eurot),
-         String.format("%02d", (int)sentit), Strings.padStart(lasku.getViitenumero(), 20, '0'), er‰p‰iv‰);
+      return String.format("%d%s%s%s000%s%s", versio, tilinumero, String.format("%06d", (int) eurot),
+         String.format("%02d", (int) sentit), Strings.padStart(lasku.getViitenumero(), 20, '0'), er‰p‰iv‰);
    }
 
    void kirjoitaLaskuotsikko()
@@ -172,7 +172,7 @@ public class Lasku2PDF
    private PdfPTable teeLaskurivit()
    {
       PdfPTable taulu = new PdfPTable(new float[]
-      { 1, 10, 6, 3, 2, 3, 4, 4, 4 });
+      { 1, 10, 6, 3, 2, 3});
       taulu.setWidthPercentage(100);
       taulu.setTotalWidth(550);
       teeRiviotsikot(taulu);
@@ -199,12 +199,12 @@ public class Lasku2PDF
    private void teeLaskurivisummat(PdfPTable taulu)
    {
       PdfPCell rivi = new PdfPCell();
-      rivi.setColspan(9);
+      rivi.setColspan(6);
       rivi.setMinimumHeight(5);
       rivi.setBorder(Rectangle.NO_BORDER);
       taulu.addCell(rivi);
       PdfPCell t‰yttˆ = new PdfPCell();
-      t‰yttˆ.setColspan(6);
+      t‰yttˆ.setColspan(5);
       t‰yttˆ.setBorder(Rectangle.NO_BORDER);
       taulu.addCell(t‰yttˆ);
       taulu.getDefaultCell().setBorder(Rectangle.TOP);
@@ -212,9 +212,7 @@ public class Lasku2PDF
       taulu.getDefaultCell().setPaddingTop(5);
       Format format = Format.create().withFont("Helvetica", 10, Font.BOLD).withBorder(Rectangle.TOP).withBorderWidth(2)
          .withHorizontalAlignment(Element.ALIGN_RIGHT);
-      lis‰‰Solu(taulu, hintaformaatti.format(lasku.getVerotonHinta()), format);
-      lis‰‰Solu(taulu, hintaformaatti.format(lasku.getALVnOsuus()), format);
-      lis‰‰Solu(taulu, hintaformaatti.format(lasku.getVerollinenHinta()), format);
+      lis‰‰Solu(taulu, hintaformaatti.format(lasku.getYhteishinta()), format);
    }
 
    private void teeLaskurivit(PdfPTable taulu)
@@ -236,10 +234,7 @@ public class Lasku2PDF
       format.withHorizontalAlignment(Element.ALIGN_LEFT);
       lis‰‰Solu(taulu, laskurivi.getYksikkˆ(), format);
       format.withHorizontalAlignment(Element.ALIGN_RIGHT);
-      lis‰‰Solu(taulu, laskurivi.getVerokanta() + "", format);
-      lis‰‰Solu(taulu, hintaformaatti.format(laskurivi.getVerotonHinta()), format);
-      lis‰‰Solu(taulu, hintaformaatti.format(laskurivi.getALVnOsuus()), format);
-      lis‰‰Solu(taulu, hintaformaatti.format(laskurivi.getVerollinenHinta()), format);
+      lis‰‰Solu(taulu, hintaformaatti.format(laskurivi.getRivihinta()), format);
    }
 
    private void teeRiviotsikot(PdfPTable taulu)
@@ -254,9 +249,6 @@ public class Lasku2PDF
       format.withHorizontalAlignment(Element.ALIGN_LEFT);
       lis‰‰Solu(taulu, "Yks", format);
       format.withHorizontalAlignment(Element.ALIGN_RIGHT);
-      lis‰‰Solu(taulu, "ALV%", format);
-      lis‰‰Solu(taulu, "ALV0", format);
-      lis‰‰Solu(taulu, "ALV-osa", format);
       lis‰‰Solu(taulu, "Hinta", format);
    }
 
@@ -278,7 +270,7 @@ public class Lasku2PDF
 
    private void kirjoitaLoppusumma()
    {
-      kirjoita(new DecimalFormat("#0.00").format(lasku.getVerollinenHinta()), 475, 80);
+      kirjoita(new DecimalFormat("#0.00").format(lasku.getYhteishinta()), 475, 80);
    }
 
    private void kirjoitaViitenumero()

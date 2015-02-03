@@ -66,9 +66,6 @@
 				<ace:column headerText="Yks." styleClass="lefttext">
 					<h:outputText value="#{_sopimustyyppi.yksikkö}" />
 				</ace:column>
-				<ace:column headerText="Verok." styleClass="lefttext">
-					<h:outputText value="#{_sopimustyyppi.verokanta}" />
-				</ace:column>
 			</ace:dataTable>
 			<ace:panel header="Käyttö (#{fn:length(sopimustyyppiKäyttö)})" style="width:200px"
 				rendered="#{sopimustyyppi != null and sopimustyyppi.poistettavissa}">
@@ -177,11 +174,6 @@
 					<h:panelGrid>
 						<ace:message for="form:yksikkö" />
 						<h:inputText value="#{sopimustyyppi.yksikkö}" id="yksikkö" />
-					</h:panelGrid>
-					<h:outputText value="Verokanta" />
-					<h:panelGrid>
-						<ace:message for="form:verokanta" />
-						<h:inputText value="#{sopimustyyppi.verokanta}" id="verokanta" />
 					</h:panelGrid>
 					<h:outputText value="Oletusmaksuväli" />
 					<h:panelGrid>

@@ -1,8 +1,6 @@
 package fi.budokwai.isoveli.malli;
 
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,8 +25,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
-
-import fi.budokwai.isoveli.util.Util;
 
 @Entity
 @Table(name = "treeni")

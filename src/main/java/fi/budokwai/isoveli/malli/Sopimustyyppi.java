@@ -74,8 +74,6 @@ public class Sopimustyyppi
    @Size(max = 20)
    private String yksikkö;
 
-   private int verokanta;
-
    public int getId()
    {
       return id;
@@ -271,16 +269,6 @@ public class Sopimustyyppi
    public void setYksikkö(String yksikkö)
    {
       this.yksikkö = yksikkö;
-   }
-
-   public int getVerokanta()
-   {
-      return verokanta;
-   }
-
-   public void setVerokanta(int verokanta)
-   {
-      this.verokanta = verokanta;
    }
 
 }

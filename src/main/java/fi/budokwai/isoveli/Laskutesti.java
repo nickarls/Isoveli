@@ -62,7 +62,6 @@ public class Laskutesti
       sopimustyyppi.setMäärä(1);
       sopimustyyppi.setHinta(101);
       sopimustyyppi.setYksikkö("kpl");
-      sopimustyyppi.setVerokanta(22);
       Sopimus sopimus = new Sopimus();
       Harrastaja harrastaja = teeHarrastaja();
       sopimus.setHarrastaja(harrastaja);
@@ -75,6 +74,7 @@ public class Laskutesti
       laskurivi.setSopimuslasku(sopimuslasku);
       laskurivi.setRivinumero(1);
       lasku.getLaskurivit().add(laskurivi);
+      laskurivi.virkistäLaskurivi();
 
       Laskurivi laskurivi2 = new Laskurivi();
       laskurivi2.setSopimuslasku(sopimuslasku);
@@ -95,6 +95,9 @@ public class Laskutesti
       laskurivi5.setSopimuslasku(sopimuslasku);
       laskurivi5.setRivinumero(5);
       lasku.getLaskurivit().add(laskurivi5);
+      
+      lasku.getLaskurivit().forEach(lr -> lr.virkistäLaskurivi());
+      
       return lasku;
    }
 

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -31,7 +32,8 @@ public class Sopimuslasku
    private int id;
 
    @NotNull
-   @OneToOne(cascade = CascadeType.PERSIST, mappedBy = "sopimuslasku", optional = false)
+   @OneToOne(cascade = CascadeType.PERSIST,optional = false)
+   @JoinColumn(name="laskurivi")
    private Laskurivi laskurivi;
 
    @ManyToOne(optional = false)
@@ -69,7 +71,16 @@ public class Sopimuslasku
    private Date haeP‰‰ttymisp‰iv‰(Sopimus sopimus)
    {
       LocalDate sopimusLoppuu;
-      LocalDate jaksoLoppuu = LocalDateTime.ofInstant(new Date(alkaa.getTime()).toInstant(), ZoneId.systemDefault()).plus(sopimus.getMaksuv‰li(), ChronoUnit.MONTHS).toLocalDate();
+      LocalDate jaksoLoppuu = null;
+      if (sopimus.getTyyppi().isJ‰senmaksutyyppi())
+      {
+         LocalDate p‰iv‰ = LocalDate.now();
+         jaksoLoppuu = p‰iv‰.with(TemporalAdjusters.lastDayOfYear());
+      } else
+      {
+         jaksoLoppuu = LocalDateTime.ofInstant(new Date(alkaa.getTime()).toInstant(), ZoneId.systemDefault())
+            .plus(sopimus.getMaksuv‰li(), ChronoUnit.MONTHS).toLocalDate();
+      }
       if (sopimus.getUmpeutuu() == null)
       {
          sopimusLoppuu = jaksoLoppuu;
@@ -130,5 +141,5 @@ public class Sopimuslasku
    {
       this.p‰‰ttyy = p‰‰ttyy;
    }
-   
+
 }

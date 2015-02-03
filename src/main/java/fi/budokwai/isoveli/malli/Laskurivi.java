@@ -1,5 +1,7 @@
 package fi.budokwai.isoveli.malli;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -55,8 +57,6 @@ public class Laskurivi
    @Column(name = "yksikkohinta")
    private double yksikköhinta;
 
-   private int verokanta;
-
    public Laskurivi()
    {
    }
@@ -65,37 +65,27 @@ public class Laskurivi
    {
       this.sopimuslasku = sopimuslasku;
       sopimuslasku.setLaskurivi(this);
-      virkistäLasku();
+      virkistäLaskurivi();
    }
 
-   public void virkistäLasku()
+   public void virkistäLaskurivi()
    {
       if (sopimuslasku == null)
       {
          return;
       }
       Sopimustyyppi sopimustyyppi = sopimuslasku.getSopimus().getTyyppi();
-      tuotenimi = sopimustyyppi.getNimi();
+      tuotenimi = String.format("%s (%s)", sopimustyyppi.getNimi(), sopimuslasku.getSopimus().getHarrastaja()
+         .getEtunimi());
       infotieto = sopimuslasku.getJakso();
       yksikköhinta = sopimustyyppi.getHinta();
       määrä = sopimustyyppi.getMäärä();
       yksikkö = sopimustyyppi.getYksikkö();
-      verokanta = sopimustyyppi.getVerokanta();
    }
 
-   public double getVerotonHinta()
+   public double getRivihinta()
    {
       return määrä * yksikköhinta;
-   }
-
-   public double getALVnOsuus()
-   {
-      return getVerollinenHinta() - getVerotonHinta();
-   }
-
-   public double getVerollinenHinta()
-   {
-      return määrä * yksikköhinta * (1 + verokanta / 100f);
    }
 
    public int getId()
@@ -188,16 +178,6 @@ public class Laskurivi
       this.yksikköhinta = yksikköhinta;
    }
 
-   public int getVerokanta()
-   {
-      return verokanta;
-   }
-
-   public void setVerokanta(int verokanta)
-   {
-      this.verokanta = verokanta;
-   }
-
    public String getYksikkö()
    {
       return yksikkö;
@@ -208,12 +188,13 @@ public class Laskurivi
       this.yksikkö = yksikkö;
    }
 
-   public static Laskurivi perhealennus(int lukumäärä, float alennus, String infotieto)
+   public static Laskurivi perhealennus(float alennus, String infotieto)
    {
       Laskurivi laskurivi = new Laskurivi();
+      laskurivi.setMäärä(1);
       laskurivi.setTuotenimi("Perhealennus");
       laskurivi.setInfotieto(infotieto);
-      laskurivi.setYksikköhinta(-1 * alennus);
+      laskurivi.setYksikköhinta(new BigDecimal(-1 * alennus).setScale(2, RoundingMode.HALF_UP).doubleValue());
       laskurivi.setYksikkö("kpl");
       return laskurivi;
    }

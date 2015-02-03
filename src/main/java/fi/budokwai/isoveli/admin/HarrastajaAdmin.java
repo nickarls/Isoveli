@@ -98,6 +98,11 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       emMuuttui.fire(entityManager);
    }
 
+   public void huoltajanPuhelinMuuttui(AjaxBehaviorEvent e)
+   {
+      harrastaja.setIce(harrastaja.getHuoltaja().getYhteystiedot().getPuhelinnumero());
+   }
+
    public void tilapäisyysMuuttui(AjaxBehaviorEvent e)
    {
       if (harrastaja.isTilapäinen())

@@ -10,120 +10,65 @@
 		</h:panelGrid>
 	</ace:confirmationDialog>
 	<h:panelGrid columns="3" columnClasses="tabletop, tabletop, tabletop">
-		<ace:panel header="Henkilötiedot" styleClass="panel" id="henkilötietopanel">
-			<h:panelGrid columns="2">
-				<h:outputText value="Tilapäinen" rendered="#{harrastaja.tallentamaton or harrastaja.tilapäinen}" />
-				<h:selectBooleanCheckbox value="#{harrastaja.tilapäinen}" rendered="#{harrastaja.tallentamaton or harrastaja.tilapäinen}">
-					<f:ajax execute="@this" render="@all" listener="#{harrastajaAdmin.tilapäisyysMuuttui}" />
-				</h:selectBooleanCheckbox>
-				<h:outputText value="Etunimi" />
-				<h:panelGrid>
-					<ace:message for="form:etunimi" />
-					<h:inputText value="#{harrastaja.etunimi}" id="etunimi" styleClass="capitalized" />
-				</h:panelGrid>
-				<h:outputText value="Sukunimi" />
-				<h:panelGrid id="sukunimigrid">
-					<ace:message for="form:sukunimi" />
-					<h:inputText value="#{harrastaja.sukunimi}" id="sukunimi" styleClass="capitalized" />
-				</h:panelGrid>
-				<h:outputText value="Sukupuoli"/>
-				<h:panelGrid>
-					<ace:message for="form:sukupuoli" />
-					<h:selectOneRadio value="#{harrastaja.sukupuoli}" id="sukupuoli">
-						<f:selectItems value="#{sukupuolet}" />
-					</h:selectOneRadio>
-				</h:panelGrid>
-				<h:outputText value="Syntymäaika" rendered="#{!harrastaja.tilapäinen}"/>
-				<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
-					<ace:message for="form:syntymäaika" />
-					<ace:dateTimeEntry value="#{harrastaja.syntynyt}" renderAsPopup="true" pattern="dd.MM.yyyy" id="syntymäaika">
-						<ace:ajax event="dateSelect" execute="@this" render="form:huoltajapanel form:numeropanel"
-							listener="#{harrastajaAdmin.syntymäaikaMuuttui}" />
-						<ace:ajax event="dateTextChange" execute="@this" render="form:huoltajapanel form:numeropanel"
-							listener="#{harrastajaAdmin.syntymäaikaMuuttui}" />
-					</ace:dateTimeEntry>
-				</h:panelGrid>
-				<h:outputText value="ICE" rendered="#{!harrastaja.tilapäinen}"/>
-				<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
-					<ace:message for="form:ice" />
-					<h:inputText value="#{harrastaja.ice}" id="ice" />
-				</h:panelGrid>
-				<h:outputText value="Huomautus" rendered="#{!harrastaja.tilapäinen}"/>
-				<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
-					<ace:message for="form:huomautus" />
-					<h:inputTextarea value="#{harrastaja.huomautus}" id="huomautus" />
-				</h:panelGrid>
-				<h:outputText value="Arkistoitu" rendered="#{!harrastaja.tilapäinen}"/>
-				<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
-					<ace:message for="form:arkistoitu" />
-					<h:selectBooleanCheckbox value="#{harrastaja.arkistoitu}" id="arkistoitu" />
-				</h:panelGrid>
-				<h:outputText value="Infotiskille"/>
-				<h:panelGrid>
-					<ace:message for="form:infotiskille" />
-					<h:selectBooleanCheckbox value="#{harrastaja.infotiskille}" id="infotiskille" />
-				</h:panelGrid>
-			</h:panelGrid>
-		</ace:panel>
 		<h:panelGrid>
-			<h:panelGroup id="perhepanel">
-				<ace:panel header="Perhe" styleClass="panel" style="width:450px" rendered="#{!harrastaja.tilapäinen}">
-					<h:panelGrid columns="2">
-						<h:selectOneMenu value="#{harrastaja.perhe}"
-							style="width: 350px">
-							<f:selectItem itemValue="#{null}" itemLabel="" noSelectionItem="true" />
-							<f:selectItems value="#{perheet}" var="_perhe" itemValue="#{_perhe}" itemLabel="#{_perhe.kuvaus}" />
-							<f:converter converterId="objectConverter" />
-							<f:ajax execute="@this form:henkilötietopanel" render="form:osoitepanel form:huoltajapanel form:henkilötietopanel" listener="#{harrastajaAdmin.perheMuuttui}"/>
-						</h:selectOneMenu>
-						<h:commandButton action="#{harrastajaAdmin.lisääPerhe}" value="x" image="/kuvat/lisää_perhe.jpg"
-							style="height:50px; width:50px; margin-left:15px">
-							<f:ajax execute="form:henkilötietopanel" render="form:perhepanel form:sukunimigrid form:huoltajapanel" />
-						</h:commandButton>
-					</h:panelGrid>
-				</ace:panel>
-			</h:panelGroup>
-			<h:panelGroup id="huoltajapanel">
-				<ace:panel header="Huoltaja" rendered="#{harrastaja.alaikäinen and !harrastaja.tilapäinen}" styleClass="panel" style="width:450px">
-					<h:panelGrid columns="2">
-						<h:panelGrid columns="2">
-							<ace:message for="huoltaja" />
-							<h:selectOneMenu value="#{harrastaja.huoltaja}" required="true" id="huoltaja" style="width: 350px">
-								<f:selectItem itemValue="#{null}" itemLabel="" noSelectionItem="true" />
-								<f:selectItems value="#{harrastaja.perhe.huoltajat}" var="_huoltaja" itemValue="#{_huoltaja}"
-									itemLabel="#{_huoltaja.nimi}" />
-								<f:converter converterId="objectConverter" />
-								<f:ajax execute="@this form:henkilötietopanel" render="form:henkilötietopanel" listener="#{harrastajaAdmin.huoltajaMuuttui}"/>
-							</h:selectOneMenu>
-						</h:panelGrid>
-						<h:commandButton action="#{harrastajaAdmin.lisääHuoltaja}" value="x" image="/kuvat/lisää_huoltaja.jpg"
-							style="height:50px; width:50px; margin-left:15px">
-							<f:ajax execute="form:sukunimi" render="form:huoltajapanel form:perhepanel" />
-						</h:commandButton>
-						<h:panelGrid columns="2" rendered="#{harrastaja.huoltaja != null and harrastaja.huoltaja.tallentamaton}">
-							<h:inputText value="#{harrastaja.huoltaja.etunimi}" size="14" id="huoltajan_etunimi" />
-							<h:inputText value="#{harrastaja.huoltaja.sukunimi}" size="14" />
-						</h:panelGrid>
-					</h:panelGrid>
-				</ace:panel>
-			</h:panelGroup>
-			<ace:panel header="Osoitetiedot" styleClass="panel" id="osoitepanel" style="width:450px" rendered="#{!harrastaja.tilapäinen}">
+			<ace:panel header="Henkilötiedot" styleClass="panel" id="henkilötietopanel">
 				<h:panelGrid columns="2">
-					<h:outputText value="Osoite" />
+					<h:outputText value="Tilapäinen" rendered="#{harrastaja.tallentamaton or harrastaja.tilapäinen}" />
+					<h:selectBooleanCheckbox value="#{harrastaja.tilapäinen}"
+						rendered="#{harrastaja.tallentamaton or harrastaja.tilapäinen}">
+						<f:ajax execute="@this" render="@all" listener="#{harrastajaAdmin.tilapäisyysMuuttui}" />
+					</h:selectBooleanCheckbox>
+					<h:outputText value="Etunimi" />
 					<h:panelGrid>
-						<ace:message for="form:osoite" />
-						<h:inputText value="#{harrastaja.osoite.osoite}" id="osoite" styleClass="capitalized" />
+						<ace:message for="form:etunimi" />
+						<h:inputText value="#{harrastaja.etunimi}" id="etunimi" styleClass="capitalized" />
 					</h:panelGrid>
-					<h:outputText value="Postinumero" />
+					<h:outputText value="Sukunimi" />
+					<h:panelGrid id="sukunimigrid">
+						<ace:message for="form:sukunimi" />
+						<h:inputText value="#{harrastaja.sukunimi}" id="sukunimi" styleClass="capitalized" />
+					</h:panelGrid>
+					<h:outputText value="Sukupuoli" />
 					<h:panelGrid>
-						<ace:message for="form:postinumero" />
-						<h:inputText value="#{harrastaja.osoite.postinumero}" id="postinumero" />
+						<ace:message for="form:sukupuoli" />
+						<h:selectOneRadio value="#{harrastaja.sukupuoli}" id="sukupuoli">
+							<f:selectItems value="#{sukupuolet}" />
+						</h:selectOneRadio>
 					</h:panelGrid>
-					<h:outputText value="Kaupunki" />
+					<h:outputText value="Syntymäaika" rendered="#{!harrastaja.tilapäinen}" />
+					<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
+						<ace:message for="form:syntymäaika" />
+						<ace:dateTimeEntry value="#{harrastaja.syntynyt}" renderAsPopup="true" pattern="dd.MM.yyyy" id="syntymäaika">
+							<ace:ajax event="dateSelect" execute="@this" render="form:huoltajapanel form:numeropanel"
+								listener="#{harrastajaAdmin.syntymäaikaMuuttui}" />
+							<ace:ajax event="dateTextChange" execute="@this" render="form:huoltajapanel form:numeropanel"
+								listener="#{harrastajaAdmin.syntymäaikaMuuttui}" />
+						</ace:dateTimeEntry>
+					</h:panelGrid>
+					<h:outputText value="ICE" rendered="#{!harrastaja.tilapäinen}" />
+					<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
+						<ace:message for="form:ice" />
+						<h:inputText value="#{harrastaja.ice}" id="ice" />
+					</h:panelGrid>
+					<h:outputText value="Huomautus" rendered="#{!harrastaja.tilapäinen}" />
+					<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
+						<ace:message for="form:huomautus" />
+						<h:inputTextarea value="#{harrastaja.huomautus}" id="huomautus" />
+					</h:panelGrid>
+					<h:outputText value="Arkistoitu" rendered="#{!harrastaja.tilapäinen}" />
+					<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
+						<ace:message for="form:arkistoitu" />
+						<h:selectBooleanCheckbox value="#{harrastaja.arkistoitu}" id="arkistoitu" />
+					</h:panelGrid>
+					<h:outputText value="Infotiskille" />
 					<h:panelGrid>
-						<ace:message for="form:kaupunki" />
-						<h:inputText value="#{harrastaja.osoite.kaupunki}" id="kaupunki" styleClass="capitalized" />
+						<ace:message for="form:infotiskille" />
+						<h:selectBooleanCheckbox value="#{harrastaja.infotiskille}" id="infotiskille" />
 					</h:panelGrid>
+				</h:panelGrid>
+			</ace:panel>
+			<ace:panel header="Yhteystiedot" styleClass="panel" id="yhteystietopanel" rendered="#{!harrastaja.tilapäinen}">
+				<h:panelGrid columns="2">
 					<h:outputText value="Puhelin" />
 					<h:panelGrid>
 						<ace:message for="form:puhelin" />
@@ -140,26 +85,119 @@
 						<h:selectBooleanCheckbox value="#{harrastaja.yhteystiedot.sähköpostilistalla}" id="sähköpostilistalla" />
 					</h:panelGrid>
 				</h:panelGrid>
-				<!-- 				
-				<ace:gMap style="width: 400px; height: 400px" zoomLevel="8" id="kartta"
-					locateAddress="true" address="#{harrastaja.osoite.osoiteString}" />
--->
 			</ace:panel>
 		</h:panelGrid>
-		<ace:panel header="Korttitiedot" styleClass="panel" id="numeropanel" rendered="#{!harrastaja.tilapäinen}">
-			<h:panelGrid columns="2" style="margin-left: 20px;">
-				<h:outputText value="Jäsennumero" />
-				<h:panelGrid>
-					<ace:message for="form:jasennumero" />
-					<h:inputText value="#{harrastaja.jäsennumero}" id="jasennumero" />
+		<h:panelGrid>
+			<h:panelGroup id="perhepanel">
+				<ace:panel header="Perhe" styleClass="panel" style="width:450px" rendered="#{!harrastaja.tilapäinen}">
+					<h:panelGrid columns="2">
+						<h:selectOneMenu value="#{harrastaja.perhe}" style="width: 350px">
+							<f:selectItem itemValue="#{null}" itemLabel="" noSelectionItem="true" />
+							<f:selectItems value="#{perheet}" var="_perhe" itemValue="#{_perhe}" itemLabel="#{_perhe.kuvaus}" />
+							<f:converter converterId="objectConverter" />
+							<f:ajax execute="@this form:henkilötietopanel"
+								render="form:osoitepanel form:huoltajapanel form:henkilötietopanel" listener="#{harrastajaAdmin.perheMuuttui}" />
+						</h:selectOneMenu>
+						<h:commandButton action="#{harrastajaAdmin.lisääPerhe}" value="x" image="/kuvat/lisää_perhe.jpg"
+							style="height:50px; width:50px; margin-left:15px">
+							<f:ajax execute="form:henkilötietopanel" render="form:perhepanel form:sukunimigrid form:huoltajapanel" />
+						</h:commandButton>
+					</h:panelGrid>
+				</ace:panel>
+			</h:panelGroup>
+			<h:panelGroup id="huoltajapanel">
+				<ace:panel header="Huoltaja" rendered="#{harrastaja.alaikäinen and !harrastaja.tilapäinen}" styleClass="panel"
+					style="width:450px">
+					<h:panelGrid columns="2">
+						<h:panelGrid columns="2">
+							<ace:message for="huoltaja" />
+							<h:selectOneMenu value="#{harrastaja.huoltaja}" required="true" id="huoltaja" style="width: 350px">
+								<f:selectItem itemValue="#{null}" itemLabel="" noSelectionItem="true" />
+								<f:selectItems value="#{harrastaja.perhe.huoltajat}" var="_huoltaja" itemValue="#{_huoltaja}"
+									itemLabel="#{_huoltaja.nimi}" />
+								<f:converter converterId="objectConverter" />
+								<f:ajax execute="@this form:henkilötietopanel" render="form:henkilötietopanel form:huoltajapanel"
+									listener="#{harrastajaAdmin.huoltajaMuuttui}" />
+							</h:selectOneMenu>
+						</h:panelGrid>
+						<h:commandButton action="#{harrastajaAdmin.lisääHuoltaja}" value="x" image="/kuvat/lisää_huoltaja.jpg"
+							style="height:50px; width:50px; margin-left:15px">
+							<f:ajax execute="form:sukunimi" render="form:huoltajapanel form:perhepanel" />
+						</h:commandButton>
+						<h:panelGrid columns="2" rendered="#{harrastaja.huoltaja != null and harrastaja.huoltaja.tallentamaton}">
+							<h:inputText value="#{harrastaja.huoltaja.etunimi}" size="14" id="huoltajan_etunimi" />
+							<h:inputText value="#{harrastaja.huoltaja.sukunimi}" size="14" />
+						</h:panelGrid>
+					</h:panelGrid>
+					<h:panelGrid columns="2" rendered="#{harrastaja.huoltaja != null}">
+						<h:outputText value="Puhelin" />
+						<h:panelGrid>
+							<ace:message for="form:hpuhelin" />
+							<h:inputText value="#{harrastaja.huoltaja.yhteystiedot.puhelinnumero}" id="hpuhelin">
+								<f:ajax execute="@this" render="form:henkilötietopanel" listener="#{harrastajaAdmin.huoltajanPuhelinMuuttui}" />
+							</h:inputText>
+						</h:panelGrid>
+						<h:outputText value="Sähköposti-osoite" />
+						<h:panelGrid>
+							<ace:message for="form:hsähkoposti" />
+							<h:inputText value="#{harrastaja.huoltaja.yhteystiedot.sähköposti}" id="hsähköposti" />
+						</h:panelGrid>
+						<h:outputText value="Sähköpostilistalla" />
+						<h:panelGrid>
+							<ace:message for="form:hsähkopostilistalla" />
+							<h:selectBooleanCheckbox value="#{harrastaja.huoltaja.yhteystiedot.sähköpostilistalla}" id="hsähköpostilistalla" />
+						</h:panelGrid>
+					</h:panelGrid>
+
+				</ace:panel>
+			</h:panelGroup>
+			<ace:panel header="Osoitetiedot" styleClass="panel" id="osoitepanel" style="width:450px"
+				rendered="#{!harrastaja.tilapäinen}">
+				<h:panelGrid columns="2">
+					<h:outputText value="Osoite" />
+					<h:panelGrid>
+						<ace:message for="form:osoite" />
+						<h:inputText value="#{harrastaja.osoite.osoite}" id="osoite" styleClass="capitalized">
+							<f:ajax execute="@this" render="form:map" />
+						</h:inputText>
+					</h:panelGrid>
+					<h:outputText value="Postinumero" />
+					<h:panelGrid>
+						<ace:message for="form:postinumero" />
+						<h:inputText value="#{harrastaja.osoite.postinumero}" id="postinumero">
+							<f:ajax execute="@this" render="form:map" />
+						</h:inputText>
+					</h:panelGrid>
+					<h:outputText value="Kaupunki" />
+					<h:panelGrid>
+						<ace:message for="form:kaupunki" />
+						<h:inputText value="#{harrastaja.osoite.kaupunki}" id="kaupunki" styleClass="capitalized">
+							<f:ajax execute="@this" render="form:map" />
+						</h:inputText>
+					</h:panelGrid>
 				</h:panelGrid>
-				<h:outputText value="Lisenssinumero" />
-				<h:panelGrid>
-					<ace:message for="form:lisenssinumero" />
-					<h:inputText value="#{harrastaja.lisenssinumero}" id="lisenssinumero" />
+			</ace:panel>
+		</h:panelGrid>
+		<h:panelGrid>
+			<ace:panel header="Korttitiedot" styleClass="panel" id="numeropanel" rendered="#{!harrastaja.tilapäinen}">
+				<h:panelGrid columns="2" style="margin-left: 20px;">
+					<h:outputText value="Jäsennumero" />
+					<h:panelGrid>
+						<ace:message for="form:jasennumero" />
+						<h:inputText value="#{harrastaja.jäsennumero}" id="jasennumero" />
+					</h:panelGrid>
+					<h:outputText value="Lisenssinumero" />
+					<h:panelGrid>
+						<ace:message for="form:lisenssinumero" />
+						<h:inputText value="#{harrastaja.lisenssinumero}" id="lisenssinumero" />
+					</h:panelGrid>
 				</h:panelGrid>
-			</h:panelGrid>
-		</ace:panel>
+			</ace:panel>
+			<h:panelGroup id="map">
+				<ace:gMap style="width: 400px; height: 400px" zoomLevel="12" id="kartta" locateAddress="true" rendered="#{!harrastaja.tilapäinen}"
+					address="#{harrastaja.osoite.osoiteString}" />
+			</h:panelGroup>
+		</h:panelGrid>
 	</h:panelGrid>
 	<h:commandButton rendered="#{harrastaja != null}" value="x" styleClass="ikoni"
 		action="#{harrastajaAdmin.tallennaHarrastaja}" image="/kuvat/tallenna.jpg" />

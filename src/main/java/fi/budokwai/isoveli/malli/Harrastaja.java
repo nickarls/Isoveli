@@ -38,7 +38,7 @@ import fi.budokwai.isoveli.util.Util;
 @Entity
 @Table(name = "harrastaja")
 @NamedQueries(
-{ @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.jäsennumero=:jäsennumero"),
+{ @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.jäsennumero=:kortti"),
       @NamedQuery(name = "treenivetäjät", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi"),
       @NamedQuery(name = "sama_syntymäpäivä", query = "select h from Harrastaja h where syntynyt = :päivä"),
       @NamedQuery(name = "harrastajat", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi") })

@@ -158,9 +158,18 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
       return kortinOmistaja.iterator().next();
    }
 
-   public void treeniValittu(SelectEvent e)
+   public void valitseTreeni(Treeni treeni)
    {
-      treeni = (Treeni) e.getObject();
+      this.treeni = treeni;
+   }
+
+   public boolean isTreeniValittu(Treeni treeni)
+   {
+      if (this.treeni == null || treeni == null)
+      {
+         return false;
+      }
+      return this.treeni.getId() == treeni.getId();
    }
 
    public void tallenna()

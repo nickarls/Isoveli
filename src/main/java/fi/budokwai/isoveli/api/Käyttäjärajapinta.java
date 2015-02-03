@@ -1,24 +1,34 @@
 package fi.budokwai.isoveli.api;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
 
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
+
+import com.google.common.io.ByteStreams;
+
 import fi.budokwai.isoveli.admin.RaporttiAdmin;
 import fi.budokwai.isoveli.malli.BlobData;
+import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Lasku;
 import fi.budokwai.isoveli.util.AuditManager;
@@ -41,6 +51,9 @@ public class Käyttäjärajapinta
    @Inject
    private MailManager mailManager;
 
+   @Resource
+   private WebServiceContext webServiceContext;
+
    @GET
    @Path("/sahkopostilistalla")
    @Produces("text/plain")
@@ -51,6 +64,34 @@ public class Käyttäjärajapinta
       henkilöt
          .forEach(h -> sb.append(String.format("%s%s", h.getYhteystiedot().getSähköposti(), System.lineSeparator())));
       return sb.toString();
+   }
+
+   @GET
+   @Path("/kuva/{id}")
+   @Produces("image/jpeg")
+   public byte[] getKuva(@PathParam("id") int id, @Context ServletContext sctx) throws IOException
+   {
+      Harrastaja harrastaja = entityManager.find(Harrastaja.class, id);
+      if (harrastaja == null)
+      {
+         return lataaKuva("mies.jpg", sctx);
+      } else if (harrastaja.isKuvallinen())
+      {
+         return harrastaja.getKuva().getTieto();
+      } else if (harrastaja.isNainen())
+      {
+         return lataaKuva("nainen.jpg", sctx);
+      } else
+      {
+         return lataaKuva("mies.jpg", sctx);
+      }
+   }
+
+   private byte[] lataaKuva(String kuva, ServletContext ctx) throws IOException
+   {
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      ByteStreams.copy(ctx.getResourceAsStream(String.format("kuvat/%s", kuva)), out);
+      return out.toByteArray();
    }
 
    @GET

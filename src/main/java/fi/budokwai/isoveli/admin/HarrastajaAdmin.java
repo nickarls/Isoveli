@@ -434,8 +434,8 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          List<Harrastaja> samaSyntym‰p‰iv‰ = entityManager.createNamedQuery("sama_syntym‰p‰iv‰", Harrastaja.class)
             .setParameter("p‰iv‰", val).getResultList();
          String p‰iv‰m‰‰r‰ = new SimpleDateFormat("YYYYMMdd").format(val);
-         String lukum‰‰r‰ = String.format("%03d", samaSyntym‰p‰iv‰.size() + 1);
-         String j‰sennumero = String.format("%s%s", p‰iv‰m‰‰r‰, lukum‰‰r‰);
+         String lukum‰‰r‰ = String.format("%d", samaSyntym‰p‰iv‰.size() + 1);
+         String j‰sennumero = String.format("%s-%s", p‰iv‰m‰‰r‰, lukum‰‰r‰);
          harrastaja.setJ‰sennumero(j‰sennumero);
       }
    }

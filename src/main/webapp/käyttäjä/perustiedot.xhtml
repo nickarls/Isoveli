@@ -6,11 +6,11 @@
 		<h:panelGrid columns="2">
 			<h:panelGroup>
 				<c:if test="#{kohde.harrastaja}">
-					<ace:graphicImage value="/kuvat/mies.jpg" styleClass="kuva" rendered="#{!kohde.kuvallinen and kohde.mies}" />
-					<ace:graphicImage value="/kuvat/nainen.jpg" styleClass="kuva" rendered="#{!kohde.kuvallinen and kohde.nainen}" />
+					<ace:graphicImage value="/kuvat/mies.png" styleClass="kuva" rendered="#{!kohde.kuvallinen and kohde.mies}" />
+					<ace:graphicImage value="/kuvat/png.jpg" styleClass="kuva" rendered="#{!kohde.kuvallinen and kohde.nainen}" />
 				</c:if>
 				<c:if test="#{!kohde.harrastaja}">
-					<ace:graphicImage value="/kuvat/mies.jpg" styleClass="kuva" rendered="#{!kohde.kuvallinen}" />
+					<ace:graphicImage value="/kuvat/mies.png" styleClass="kuva" rendered="#{!kohde.kuvallinen}" />
 				</c:if>
 				<ace:graphicImage value="#{kohde.kuva.tieto}" styleClass="kuva" rendered="#{kohde.kuvallinen}" />
 				<ace:fileEntry fileEntryListener="#{käyttäjäylläpito.kuvatallennus}" immediate="true" />

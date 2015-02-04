@@ -2,7 +2,6 @@ package fi.budokwai.isoveli.api;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -19,7 +18,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.xml.ws.WebServiceContext;
-import javax.xml.ws.handler.MessageContext;
 
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
@@ -55,35 +53,23 @@ public class Käyttäjärajapinta
    private WebServiceContext webServiceContext;
 
    @GET
-   @Path("/sahkopostilistalla")
-   @Produces("text/plain")
-   public String getSähköpostilistalla()
-   {
-      StringBuilder sb = new StringBuilder();
-      List<Henkilö> henkilöt = entityManager.createNamedQuery("sähköpostilistalla", Henkilö.class).getResultList();
-      henkilöt
-         .forEach(h -> sb.append(String.format("%s%s", h.getYhteystiedot().getSähköposti(), System.lineSeparator())));
-      return sb.toString();
-   }
-
-   @GET
    @Path("/kuva/{id}")
-   @Produces("image/jpeg")
+   @Produces("image/png")
    public byte[] getKuva(@PathParam("id") int id, @Context ServletContext sctx) throws IOException
    {
       Harrastaja harrastaja = entityManager.find(Harrastaja.class, id);
       if (harrastaja == null)
       {
-         return lataaKuva("mies.jpg", sctx);
+         return lataaKuva("mies.png", sctx);
       } else if (harrastaja.isKuvallinen())
       {
          return harrastaja.getKuva().getTieto();
       } else if (harrastaja.isNainen())
       {
-         return lataaKuva("nainen.jpg", sctx);
+         return lataaKuva("nainen.png", sctx);
       } else
       {
-         return lataaKuva("mies.jpg", sctx);
+         return lataaKuva("mies.png", sctx);
       }
    }
 

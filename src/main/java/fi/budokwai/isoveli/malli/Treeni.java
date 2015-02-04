@@ -1,5 +1,6 @@
 package fi.budokwai.isoveli.malli;
 
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
@@ -258,5 +259,11 @@ public class Treeni
       long tunnit = kesto.toHours();
       long minuutit = kesto.minusHours(tunnit).toMinutes();
       return String.format("%d:%02d", tunnit, minuutit);
+   }
+
+   public String getAika()
+   {
+      SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+      return String.format("%s-%s", sdf.format(alkaa), sdf.format(p‰‰ttyy));
    }
 }

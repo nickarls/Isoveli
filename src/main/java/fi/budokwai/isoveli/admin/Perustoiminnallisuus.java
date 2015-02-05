@@ -7,20 +7,25 @@ import org.icefaces.util.JavaScriptRunner;
 
 public class Perustoiminnallisuus
 {
+   private String infoViesti = "$().toastmessage('showToast', { text : '%s', position : 'top-right', sticky: false, type : 'success'});";
+   private String virheViesti = "$().toastmessage('showToast', { text : '%s', position : 'center', sticky: true, type : 'error'});";
+
    protected void fokusoi(String kenttä)
    {
       String js = String.format("document.getElementById('%s').focus();", kenttä);
       JavaScriptRunner.runScript(FacesContext.getCurrentInstance(), js);
    }
-   
+
    protected void info(String runko, Object... parametrit)
    {
-      viesti(kasaaViesti(runko, parametrit), FacesMessage.SEVERITY_INFO);
+      JavaScriptRunner.runScript(FacesContext.getCurrentInstance(),
+         String.format(infoViesti, kasaaViesti(runko, parametrit)));
    }
 
    protected void virhe(String runko, Object... parametrit)
    {
-      viesti(kasaaViesti(runko, parametrit), FacesMessage.SEVERITY_ERROR);
+      JavaScriptRunner.runScript(FacesContext.getCurrentInstance(),
+         String.format(virheViesti, kasaaViesti(runko, parametrit)));
    }
 
    protected String kasaaViesti(String runko, Object[] parametrit)
@@ -31,5 +36,5 @@ public class Perustoiminnallisuus
    protected void viesti(String viesti, FacesMessage.Severity taso)
    {
       FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(taso, viesti, null));
-   }   
+   }
 }

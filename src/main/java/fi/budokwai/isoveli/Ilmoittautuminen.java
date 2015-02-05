@@ -1,6 +1,5 @@
 package fi.budokwai.isoveli;
 
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,9 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 
-import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
-import org.icefaces.application.PushRenderer;
 
 import fi.budokwai.isoveli.admin.Perustoiminnallisuus;
 import fi.budokwai.isoveli.malli.Harrastaja;
@@ -133,9 +130,18 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
       harrastaja = haeHarrastaja();
       if (harrastaja == null)
       {
-         virhe("Tuntematon kortti '%s'", korttinumero);
+         virhe("Tuntematon kortti %s", korttinumero);
          fokusoi("formi:korttinumero");
          korttinumero = null;
+         return;
+      }
+      if (harrastaja.isInfotiskille())
+      {
+         virhe("Voisitko tulla infotiskille käymään?");
+      }
+      if (!harrastaja.isSopimuksetOK())
+      {
+         virhe("Voisitko tulla infotiskille tarkistamaan maksut?");
          return;
       }
       haeTulevatTreenit();
@@ -188,7 +194,6 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
       harrastaja.getTreenikäynnit().add(treenikaynti);
       entityManager.persist(harrastaja);
       entityManager.flush();
-      PushRenderer.render("ilmoittautuminen");
       nollaa();
       info("Käynti rekisteröity");
       fokusoi("formi:korttinumero");

@@ -132,11 +132,19 @@ body {
 	height: 64px;
 	width: 64px;
 }
+
+.viesti {
+	font-size: 30px !important;
+}
 </style>
+<link rel="stylesheet" type="text/css" href="jquery.toastmessage.css"/>
+<script src="jquery-1.4.4.min.js"/>
+<script src="jquery.toastmessage.js"/>
 </h:head>
-<h:body onload="document.getElementById('formi:korttinumero').focus();">
+<h:body
+	onload="document.getElementById('formi:korttinumero').focus();">
 	<f:view>
-		<ace:growlMessages/>
+		<ace:growlMessages autoHide="info" messageStyleClass="viesti" />
 		<h:panelGroup styleClass="tilasto">
 			<h:panelGrid columns="2" style="width:100%;">
 				<h:outputText value="Harrastajia" styleClass="tilastoteksti" />
@@ -194,9 +202,9 @@ body {
 				<ui:repeat value="#{tulevatTreenit}" var="_treeni">
 					<h:panelGroup styleClass="#{ilmoittautuminen.isTreeniValittu(_treeni) ? 'valittutreeni' : 'treeni'}">
 						<h:commandLink action="#{ilmoittautuminen.valitseTreeni(_treeni)}">
-							<f:ajax render="@form"/>
+							<f:ajax render="@form" />
 							<h:panelGrid style="width:500px;">
-								<h:outputText value="#{_treeni.nimi} (#{_treeni.tyyppi.nimi})" styleClass="treeniteksti"/>
+								<h:outputText value="#{_treeni.nimi} (#{_treeni.tyyppi.nimi})" styleClass="treeniteksti" />
 								<h:outputText value="#{_treeni.sijainti}" styleClass="treeniteksti" />
 								<h:panelGrid columns="5" style="width:100%">
 									<ui:repeat value="#{_treeni.vetäjät}" var="_vetäjä">
@@ -207,10 +215,10 @@ body {
 									</ui:repeat>
 									<h:panelGrid styleClass="treeniteksti">
 										<h:outputText value="#{_treeni.alkaa}">
-											<f:convertDateTime pattern="HH:mm"/>
+											<f:convertDateTime pattern="HH:mm" />
 										</h:outputText>
 										<h:outputText value="#{_treeni.päättyy}">
-											<f:convertDateTime pattern="HH:mm"/>
+											<f:convertDateTime pattern="HH:mm" />
 										</h:outputText>
 									</h:panelGrid>
 									<h:panelGrid style="float:right">

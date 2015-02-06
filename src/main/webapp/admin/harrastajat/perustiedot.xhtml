@@ -50,6 +50,12 @@
 						<ace:message for="form:ice" />
 						<h:inputText value="#{harrastaja.ice}" id="ice" />
 					</h:panelGrid>
+					<h:outputText value="Tauolla" rendered="#{!harrastaja.tilapäinen}" />
+					<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
+						<ace:message for="form:tauolla" />
+						<ace:dateTimeEntry value="#{harrastaja.tauolla}" renderAsPopup="true" pattern="dd.MM.yyyy" id="tauolla">
+						</ace:dateTimeEntry>
+					</h:panelGrid>
 					<h:outputText value="Huomautus" rendered="#{!harrastaja.tilapäinen}" />
 					<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
 						<ace:message for="form:huomautus" />

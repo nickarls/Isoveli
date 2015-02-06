@@ -92,10 +92,10 @@ public class Util
       return Date.from(nyt.atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant());
    }
 
-   public static LocalDate date2LocalDateTime(Date p‰iv‰m‰‰r‰)
+   public static LocalDate date2LocalDate(Date p‰iv‰m‰‰r‰)
    {
       return LocalDateTime.ofInstant(new Date(p‰iv‰m‰‰r‰.getTime()).toInstant(), ZoneId.systemDefault()).toLocalDate()
          .atStartOfDay().toLocalDate();
    }
-
+     
 }

@@ -212,7 +212,7 @@ public class Sopimus
       List<Sopimustarkistus> tulos = new ArrayList<Sopimustarkistus>();
       if (!isVoimassa())
       {
-         LocalDate pvm = Util.date2LocalDateTime(umpeutuu);
+         LocalDate pvm = Util.date2LocalDate(umpeutuu);
          String viesti = String.format("%s: sopimus umpeutui %s", tyyppi.getNimi(),
             pvm.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
          tulos.add(new Sopimustarkistus(viesti, false));
@@ -257,7 +257,7 @@ public class Sopimus
 
    public boolean valmiiksiLaskutettu()
    {
-      LocalDate check = Util.date2LocalDateTime(getViimeksiLaskutettu());
+      LocalDate check = Util.date2LocalDate(getViimeksiLaskutettu());
       return check.isAfter(Util.t‰n‰‰nLD());
    }
 

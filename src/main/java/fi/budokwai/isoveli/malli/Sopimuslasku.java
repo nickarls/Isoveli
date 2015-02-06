@@ -86,7 +86,7 @@ public class Sopimuslasku
          sopimusLoppuu = jaksoLoppuu;
       } else
       {
-         sopimusLoppuu = Util.date2LocalDateTime(sopimus.getUmpeutuu());
+         sopimusLoppuu = Util.date2LocalDate(sopimus.getUmpeutuu());
       }
       LocalDate loppuuEnsin = sopimusLoppuu.isBefore(jaksoLoppuu) ? sopimusLoppuu : jaksoLoppuu;
       return Date.from(loppuuEnsin.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());

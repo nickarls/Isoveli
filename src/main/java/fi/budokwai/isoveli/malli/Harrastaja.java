@@ -92,6 +92,9 @@ public class Harrastaja extends Henkilö
    @Type(type = "KylläEi")
    private boolean infotiskille;
 
+   @Temporal(TemporalType.DATE)
+   private Date tauolla;
+
    public Harrastaja()
    {
    }
@@ -318,7 +321,7 @@ public class Harrastaja extends Henkilö
       }
       long treenit = seuraavaVyöarvo.getMinimitreenit() - getTreenejäViimeVyökokeesta();
       // FIXME -> luotu
-      LocalDate tuoreinVyökoe = getTuoreinVyökoe() == Vyökoe.EI_OOTA ? Util.date2LocalDateTime(luotu)
+      LocalDate tuoreinVyökoe = getTuoreinVyökoe() == Vyökoe.EI_OOTA ? Util.date2LocalDate(luotu)
          : getTuoreinVyökoe().getKoska();
       LocalDate nyt = Util.tänäänLD();
       Period aika = Period.between(nyt, tuoreinVyökoe.plus(seuraavaVyöarvo.getMinimikuukaudet(), ChronoUnit.MONTHS));
@@ -409,6 +412,21 @@ public class Harrastaja extends Henkilö
    public void setInfotiskille(boolean infotiskille)
    {
       this.infotiskille = infotiskille;
+   }
+
+   public Date getTauolla()
+   {
+      return tauolla;
+   }
+
+   public void setTauolla(Date tauolla)
+   {
+      this.tauolla = tauolla;
+   }
+
+   public boolean isTauollaNyt()
+   {
+      return tauolla != null && Util.getTänään().isBefore(Util.date2LocalDate(tauolla));
    }
 
 }

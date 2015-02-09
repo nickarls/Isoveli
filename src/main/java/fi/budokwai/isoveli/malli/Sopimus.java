@@ -1,7 +1,9 @@
 package fi.budokwai.isoveli.malli;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -287,5 +289,21 @@ public class Sopimus
    public void setArkistoitu(boolean arkistoitu)
    {
       this.arkistoitu = arkistoitu;
+   }
+
+   public void asetaPäättymispäivä()
+   {
+      if (tyyppi.getOletusKuukaudetVoimassa() > 0)
+      {
+         umpeutuu = Date.from(LocalDate.now().plus(tyyppi.getOletusKuukaudetVoimassa(), ChronoUnit.MONTHS)
+            .atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+      } else
+      {
+         umpeutuu = null;
+      }
+      if (tyyppi.getYläikäraja() > 0)
+      {
+         umpeutuu = Date.from(harrastaja.getSyntynyt().toInstant().atZone(ZoneId.systemDefault()).plus(tyyppi.getYläikäraja(), ChronoUnit.YEARS).toInstant());
+      }
    }
 }

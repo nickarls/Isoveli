@@ -505,15 +505,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    {
       sopimus.setTreenikertoja(sopimus.getTyyppi().getOletusTreenikerrat());
       sopimus.setMaksuv‰li(sopimus.getTyyppi().getOletusMaksuv‰li());
-      if (sopimus.getTyyppi().getOletusKuukaudetVoimassa() > 0)
-      {
-         sopimus.setUmpeutuu(Date.from(LocalDate.now()
-            .plus(sopimus.getTyyppi().getOletusKuukaudetVoimassa(), ChronoUnit.MONTHS).atStartOfDay()
-            .atZone(ZoneId.systemDefault()).toInstant()));
-      } else
-      {
-         sopimus.setUmpeutuu(null);
-      }
+      sopimus.asetaP‰‰ttymisp‰iv‰();
       List<Sopimustarkistus> tarkistukset = sopimus.tarkista();
       tarkistukset.forEach(t -> virhe(t.getViesti()));
    }

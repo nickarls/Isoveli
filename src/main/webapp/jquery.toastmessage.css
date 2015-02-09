@@ -53,14 +53,20 @@
 
 .toast-item-image-notice {
     background:url(./kuvat/growl/notice.png);
+    background-size: 50px 50px;
+    background-repeat: no-repeat;
 }
 
 .toast-item-image-success {
     background:url(./kuvat/growl/success.png);
+    background-size: 50px 50px;
+    background-repeat: no-repeat;
 }
 
 .toast-item-image-warning {
     background:url(./kuvat/growl/warning.png);
+    background-size: 50px 50px;
+    background-repeat: no-repeat;
 }
 
 .toast-item-image-error {

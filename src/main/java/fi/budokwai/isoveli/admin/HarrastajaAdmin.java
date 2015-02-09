@@ -35,12 +35,14 @@ import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Rooli;
 import fi.budokwai.isoveli.malli.Sopimus;
+import fi.budokwai.isoveli.malli.Sopimustarkistus;
 import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.malli.Sukupuoli;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Vyökoe;
 import fi.budokwai.isoveli.util.Loggaaja;
 import fi.budokwai.isoveli.util.Muuttui;
+import fi.budokwai.isoveli.util.Util;
 
 @Named
 @SessionScoped
@@ -443,6 +445,10 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          String jäsennumero = String.format("%s-%s", päivämäärä, lukumäärä);
          harrastaja.setJäsennumero(jäsennumero);
       }
+      if (Harrastaja.ikä(val) < 4)
+      {
+         virhe("Onko ikä alle 4 tarkoituksella?");
+      }
    }
 
    public void lisääHuoltaja()
@@ -475,6 +481,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void lisääSopimus()
    {
       sopimus = new Sopimus();
+      sopimus.setHarrastaja(harrastaja);
       sopimusRSM.setAllSelected(false);
       info("Uusi sopimus alustettu");
    }
@@ -507,6 +514,8 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       {
          sopimus.setUmpeutuu(null);
       }
+      List<Sopimustarkistus> tarkistukset = sopimus.tarkista();
+      tarkistukset.forEach(t -> virhe(t.getViesti()));
    }
 
    public void harrastajaValittu(SelectEvent e)

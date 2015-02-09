@@ -42,7 +42,7 @@
 		</ace:column>
 	</ace:dataTable>
 	<p />
-	<ace:panel header="Sopimustiedot" rendered="#{sopimus != null}" style="width:350px" id="sopimuspanel">
+	<ace:panel header="Sopimustiedot" rendered="#{sopimus != null}" style="width:450px" id="sopimuspanel">
 		<h:panelGrid columns="2">
 			<h:outputText value="Tyyppi" />
 			<h:panelGrid>
@@ -70,8 +70,12 @@
 				<ace:message for="form:maksuväli" />
 				<h:selectOneMenu value="#{sopimus.maksuväli}">
 					<f:selectItem itemValue="" itemLabel="" noSelectionOption="true"/>
+					<f:selectItem itemValue="1" itemLabel="1kk" />
+					<f:selectItem itemValue="2" itemLabel="2kk" />
+					<f:selectItem itemValue="3" itemLabel="3kk" />
+					<f:selectItem itemValue="4" itemLabel="4kk" />
+					<f:selectItem itemValue="5" itemLabel="5kk" />
 					<f:selectItem itemValue="6" itemLabel="6kk" />
-					<f:selectItem itemValue="12" itemLabel="12kk" />
 				</h:selectOneMenu>
 			</h:panelGrid>
 		</h:panelGrid>

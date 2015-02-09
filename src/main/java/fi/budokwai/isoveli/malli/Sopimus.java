@@ -70,8 +70,8 @@ public class Sopimus
    private int maksuväli;
 
    @Type(type = "KylläEi")
-   private boolean arkistoitu;   
-   
+   private boolean arkistoitu;
+
    public int getId()
    {
       return id;
@@ -222,6 +222,19 @@ public class Sopimus
          String viesti = String.format("Treenikertoja jäljellä %d", treenikertoja);
          tulos.add(new Sopimustarkistus(viesti, false));
       }
+      if (tyyppi.getAlaikäraja() > 0 && harrastaja.getIkä() < tyyppi.getAlaikäraja())
+      {
+         String viesti = String.format("%s: alaikäraja on %d mutta ikää on %d", tyyppi.getNimi(),
+            tyyppi.getAlaikäraja(), harrastaja.getIkä());
+         tulos.add(new Sopimustarkistus(viesti, false));
+      }
+      if (tyyppi.getYläikäraja() > 0 && harrastaja.getIkä() > tyyppi.getYläikäraja())
+      {
+         String viesti = String.format("%s: yläikäraja on %d mutta ikää on %d", tyyppi.getNimi(),
+            tyyppi.getYläikäraja(), harrastaja.getIkä());
+         tulos.add(new Sopimustarkistus(viesti, false));
+      }
+
       for (Sopimuslasku sopimuslasku : sopimuslaskut)
       {
          if (sopimuslasku.getLaskurivi().getLasku().isLaskuMyöhässä())

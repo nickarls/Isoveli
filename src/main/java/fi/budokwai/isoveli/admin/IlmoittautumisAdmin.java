@@ -1,10 +1,7 @@
 package fi.budokwai.isoveli.admin;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -23,7 +20,6 @@ import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
-import fi.budokwai.isoveli.malli.Treeni;
 import fi.budokwai.isoveli.malli.Treenik‰ynti;
 import fi.budokwai.isoveli.malli.Treenisessio;
 
@@ -162,38 +158,6 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       treenisessio = new Treenisessio();
       info("Uusi treenisessio alustettu");
       treenisessioRSM.setAllSelected(false);
-   }
-
-   private Treenisessio haeTreenisessio(Treeni treeni)
-   {
-      Date t‰n‰‰n = haeT‰n‰‰nPvm();
-      List<Treenisessio> treenisessiot = entityManager.createNamedQuery("treenisessio", Treenisessio.class)
-         .setParameter("treeni", treeni).setParameter("p‰iv‰", t‰n‰‰n).getResultList();
-      Treenisessio treenisessio = new Treenisessio();
-      if (!treenisessiot.isEmpty())
-      {
-         treenisessio = treenisessiot.iterator().next();
-      } else
-      {
-         treenisessio.setP‰iv‰(t‰n‰‰n);
-         treenisessio.setTreeni(treeni);
-         for (Harrastaja vet‰j‰ : treeni.getVet‰j‰t())
-         {
-            treenisessio.getVet‰j‰t().add(vet‰j‰);
-         }
-      }
-      return treenisessio;
-   }
-
-   private Date haeT‰n‰‰nPvm()
-   {
-      Calendar kalenteri = Calendar.getInstance();
-      kalenteri.setTimeZone(TimeZone.getTimeZone("EET"));
-      kalenteri.set(Calendar.HOUR_OF_DAY, 0);
-      kalenteri.set(Calendar.MINUTE, 0);
-      kalenteri.set(Calendar.SECOND, 0);
-      kalenteri.set(Calendar.MILLISECOND, 0);
-      return kalenteri.getTime();
    }
 
    public void poistaTreenik‰ynti()

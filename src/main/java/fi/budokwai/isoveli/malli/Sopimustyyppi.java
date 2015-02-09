@@ -53,9 +53,21 @@ public class Sopimustyyppi
    private boolean power;
 
    @Type(type = "KylläEi")
+   private boolean opiskelija;
+
+   @Type(type = "KylläEi")
+   private boolean valmennuskeskus;
+
+   @Type(type = "KylläEi")
    private boolean laskutettava;
 
    private int oletusKuukaudetVoimassa;
+
+   @Column(name = "alaikaraja")
+   private int alaikäraja;
+
+   @Column(name = "ylaikaraja")
+   private int yläikäraja;
 
    @Column(name = "oletusmaksuvali")
    private int oletusMaksuväli;
@@ -63,16 +75,6 @@ public class Sopimustyyppi
    private int oletusTreenikerrat;
 
    private double hinta;
-
-   @Size(max = 20)
-   private String tuotekoodi;
-
-   @Column(name = "maara")
-   private int määrä;
-
-   @Column(name = "yksikko")
-   @Size(max = 20)
-   private String yksikkö;
 
    public int getId()
    {
@@ -241,34 +243,44 @@ public class Sopimustyyppi
       this.hinta = hinta;
    }
 
-   public String getTuotekoodi()
+   public boolean isOpiskelija()
    {
-      return tuotekoodi;
+      return opiskelija;
    }
 
-   public void setTuotekoodi(String tuotekoodi)
+   public void setOpiskelija(boolean opiskelija)
    {
-      this.tuotekoodi = tuotekoodi;
+      this.opiskelija = opiskelija;
    }
 
-   public int getMäärä()
+   public int getAlaikäraja()
    {
-      return määrä;
+      return alaikäraja;
    }
 
-   public void setMäärä(int määrä)
+   public void setAlaikäraja(int alaikäraja)
    {
-      this.määrä = määrä;
+      this.alaikäraja = alaikäraja;
    }
 
-   public String getYksikkö()
+   public int getYläikäraja()
    {
-      return yksikkö;
+      return yläikäraja;
    }
 
-   public void setYksikkö(String yksikkö)
+   public void setYläikäraja(int yläikäraja)
    {
-      this.yksikkö = yksikkö;
+      this.yläikäraja = yläikäraja;
+   }
+
+   public boolean isValmennuskeskus()
+   {
+      return valmennuskeskus;
+   }
+
+   public void setValmennuskeskus(boolean valmennuskeskus)
+   {
+      this.valmennuskeskus = valmennuskeskus;
    }
 
 }

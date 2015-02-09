@@ -149,7 +149,7 @@ public class Harrastaja extends Henkilö
       return ikä(syntynyt);
    }
 
-   private static long ikä(Date päivämäärä)
+   public static long ikä(Date päivämäärä)
    {
       try
       {
@@ -232,7 +232,7 @@ public class Harrastaja extends Henkilö
    {
       return ikä(päivämäärä) < 18;
    }
-
+   
    @Override
    public String toString()
    {

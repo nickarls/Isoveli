@@ -59,9 +59,7 @@ public class Laskutesti
       lasku.setEräpäivä(new Date());
       Sopimustyyppi sopimustyyppi = new Sopimustyyppi();
       sopimustyyppi.setNimi("Harjoittelumaksu");
-      sopimustyyppi.setMäärä(1);
       sopimustyyppi.setHinta(101);
-      sopimustyyppi.setYksikkö("kpl");
       Sopimus sopimus = new Sopimus();
       Harrastaja harrastaja = teeHarrastaja();
       sopimus.setHarrastaja(harrastaja);

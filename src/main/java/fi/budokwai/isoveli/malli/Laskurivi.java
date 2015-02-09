@@ -48,14 +48,14 @@ public class Laskurivi
    private String infotieto;
 
    @Column(name = "maara")
-   private int määrä;
+   private int määrä = 1;
 
    @Size(max = 20)
    @Column(name = "yksikko")
-   private String yksikkö;
+   private String yksikkö = "kpl";
 
    @Column(name = "yksikkohinta")
-   private double yksikköhinta;
+   private double yksikköhinta = 0;
 
    public Laskurivi()
    {
@@ -79,8 +79,6 @@ public class Laskurivi
          .getEtunimi());
       infotieto = sopimuslasku.getJakso();
       yksikköhinta = sopimustyyppi.getHinta();
-      määrä = sopimustyyppi.getMäärä();
-      yksikkö = sopimustyyppi.getYksikkö();
    }
 
    public double getRivihinta()

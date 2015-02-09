@@ -40,11 +40,13 @@
 	background-position-y: -1400px; /* IE7 hack */
 }
 </style>
+<link rel="stylesheet" type="text/css" href="../jquery.toastmessage.css"/>
+<script src="../jquery-1.4.4.min.js"/>
+<script src="../jquery.toastmessage.js"/>
 </h:head>
 <h:body>
 	<f:view>
 		<h:form id="form">
-			<ace:growlMessages/>
 			<h:commandLink action="#{exceptionHandler.tapaSessio()}" value="Kirjaudu ulos" style="margin-right:20px"/>
 			<h:commandLink action="/käyttäjä/käyttäjä.xhtml?faces-redirect=true" value="Oma ylläpito" />
 			<ace:tabSet tabChangeListener="#{harrastajaAdmin.päätabiMuuttui}">

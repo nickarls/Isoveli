@@ -9,6 +9,7 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
@@ -97,5 +98,13 @@ public class Util
       return LocalDateTime.ofInstant(new Date(p‰iv‰m‰‰r‰.getTime()).toInstant(), ZoneId.systemDefault()).toLocalDate()
          .atStartOfDay().toLocalDate();
    }
-     
+
+   public static Date vuodenLoppu()
+   {
+      LocalDate ld = LocalDate.now().with(TemporalAdjusters.lastDayOfYear());
+      Instant instant = ld.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+      Date res = Date.from(instant);
+      return res;
+   }
+
 }

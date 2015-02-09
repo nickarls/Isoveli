@@ -42,29 +42,32 @@
 				<ace:column headerText="Power">
 					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.power}" />
 				</ace:column>
+				<ace:column headerText="Opisk.">
+					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.opiskelija}" />
+				</ace:column>
+				<ace:column headerText="VK">
+					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.valmennuskeskus}" />
+				</ace:column>
 				<ace:column headerText="Voim.">
 					<h:outputText value="#{_sopimustyyppi.oletusKuukaudetVoimassa}" />
 				</ace:column>
-				<ace:column headerText="Kertoja" styleClass="lefttext">
+				<ace:column headerText="Kertoja">
 					<h:outputText value="#{_sopimustyyppi.oletusTreenikerrat}" />
 				</ace:column>
-				<ace:column headerText="Maksuväli" styleClass="lefttext">
+				<ace:column headerText="Maksuväli">
 					<h:outputText value="#{_sopimustyyppi.oletusMaksuväli}" />
 				</ace:column>
 				<ace:column headerText="Laskut.">
 					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_sopimustyyppi.laskutettava}" />
 				</ace:column>
-				<ace:column headerText="Tkoodi" styleClass="lefttext">
-					<h:outputText value="#{_sopimustyyppi.tuotekoodi}" />
+				<ace:column headerText="Min. ikä">
+					<h:outputText value="#{_sopimustyyppi.alaikäraja}" />
 				</ace:column>
-				<ace:column headerText="Hinta" styleClass="lefttext">
+				<ace:column headerText="Max. ikä">
+					<h:outputText value="#{_sopimustyyppi.yläikäraja}" />
+				</ace:column>
+				<ace:column headerText="Hinta">
 					<h:outputText value="#{_sopimustyyppi.hinta}" />
-				</ace:column>
-				<ace:column headerText="Määrä" styleClass="lefttext">
-					<h:outputText value="#{_sopimustyyppi.määrä}" />
-				</ace:column>
-				<ace:column headerText="Yks." styleClass="lefttext">
-					<h:outputText value="#{_sopimustyyppi.yksikkö}" />
 				</ace:column>
 			</ace:dataTable>
 			<ace:panel header="Käyttö (#{fn:length(sopimustyyppiKäyttö)})" style="width:200px"
@@ -122,15 +125,35 @@
 							<ace:message for="form:power" />
 							<h:selectBooleanCheckbox value="#{sopimustyyppi.power}" id="power" />
 						</h:panelGrid>
+						<h:outputText value="Opiskelija" />
+						<h:panelGrid>
+							<ace:message for="form:opiskelija" />
+							<h:selectBooleanCheckbox value="#{sopimustyyppi.opiskelija}" id="opiskelija" />
+						</h:panelGrid>
+						<h:outputText value="Valmennuskeskus" />
+						<h:panelGrid>
+							<ace:message for="form:vk" />
+							<h:selectBooleanCheckbox value="#{sopimustyyppi.valmennuskeskus}" id="vk" />
+						</h:panelGrid>
 						<h:outputText value="Oletus-kk voim" />
 						<h:panelGrid>
 							<ace:message for="form:oletuskk" />
-							<h:inputText value="#{sopimustyyppi.oletusKuukaudetVoimassa}" id="oletuskk" />
+							<h:inputText value="#{sopimustyyppi.oletusKuukaudetVoimassa}" id="oletuskk" size="3"/>
 						</h:panelGrid>
 						<h:outputText value="Oletuskertoja" />
 						<h:panelGrid>
 							<ace:message for="form:oleuskerrrat" />
-							<h:inputText value="#{sopimustyyppi.oletusTreenikerrat}" id="oletuskerrat" />
+							<h:inputText value="#{sopimustyyppi.oletusTreenikerrat}" id="oletuskerrat" size="3"/>
+						</h:panelGrid>
+						<h:outputText value="Alaikäraja" />
+						<h:panelGrid>
+							<ace:message for="form:alaikäraja" />
+							<h:inputText value="#{sopimustyyppi.alaikäraja}" id="alaikäraja" size="3"/>
+						</h:panelGrid>
+						<h:outputText value="Yläikäraja" />
+						<h:panelGrid>
+							<ace:message for="form:yläikäraja" />
+							<h:inputText value="#{sopimustyyppi.yläikäraja}" id="yläikäraja" size="3"/>
 						</h:panelGrid>
 					</h:panelGrid>
 				</ace:panel>
@@ -155,25 +178,10 @@
 						<ace:message for="form:laskutettava" />
 						<h:selectBooleanCheckbox value="#{sopimustyyppi.laskutettava}" id="laskutettava" />
 					</h:panelGrid>
-					<h:outputText value="Tuotekoodi" />
-					<h:panelGrid>
-						<ace:message for="form:tuotekoodi" />
-						<h:inputText value="#{sopimustyyppi.tuotekoodi}" id="tuotekoodi" />
-					</h:panelGrid>
 					<h:outputText value="Hinta" />
 					<h:panelGrid>
 						<ace:message for="form:hinta" />
 						<h:inputText value="#{sopimustyyppi.hinta}" id="hinta" />
-					</h:panelGrid>
-					<h:outputText value="Määrä" />
-					<h:panelGrid>
-						<ace:message for="form:määrä" />
-						<h:inputText value="#{sopimustyyppi.määrä}" id="määrä" />
-					</h:panelGrid>
-					<h:outputText value="Yksikkö" />
-					<h:panelGrid>
-						<ace:message for="form:yksikkö" />
-						<h:inputText value="#{sopimustyyppi.yksikkö}" id="yksikkö" />
 					</h:panelGrid>
 					<h:outputText value="Oletusmaksuväli" />
 					<h:panelGrid>

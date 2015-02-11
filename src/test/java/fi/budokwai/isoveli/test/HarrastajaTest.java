@@ -11,6 +11,7 @@ import org.junit.Test;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Lasku;
 import fi.budokwai.isoveli.malli.Laskurivi;
+import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.malli.Sopimustarkistukset;
@@ -41,6 +42,19 @@ public class HarrastajaTest
       Assert.assertEquals("Harjoittelumaksu puuttuu", tarkistukset.getViestit().get(0));
    }
 
+   
+   private Sopimus teeKertamaksusopimus(Harrastaja harrastaja)
+   {
+      Sopimustyyppi tyyppi = new Sopimustyyppi();
+      tyyppi.setTreenikertoja(true);
+      tyyppi.setNimi("Treenikertoja");
+      Sopimus sopimus = new Sopimus();
+      sopimus.setTyyppi(tyyppi);
+      sopimus.setHarrastaja(harrastaja);
+      harrastaja.getSopimukset().add(sopimus);
+      return sopimus;
+   }
+   
    private Sopimus teeJ‰senmaksusopimus(Harrastaja harrastaja)
    {
       Sopimustyyppi tyyppi = new Sopimustyyppi();
@@ -48,6 +62,7 @@ public class HarrastajaTest
       tyyppi.setNimi("J‰senmaksu");
       Sopimus sopimus = new Sopimus();
       sopimus.setTyyppi(tyyppi);
+      sopimus.setHarrastaja(harrastaja);
       harrastaja.getSopimukset().add(sopimus);
       return sopimus;
    }
@@ -142,6 +157,7 @@ public class HarrastajaTest
       tyyppi.setNimi("Harjoittelumaksu");
       Sopimus sopimus = new Sopimus();
       sopimus.setTyyppi(tyyppi);
+      sopimus.setHarrastaja(harrastaja);
       harrastaja.getSopimukset().add(sopimus);
       return sopimus;
    }
@@ -165,5 +181,47 @@ public class HarrastajaTest
       teeJ‰senmaksusopimus(harrastaja);
       Assert.assertTrue(harrastaja.isSopimuksetOK());
    }
+   
+   @Test
+   public void testJ‰senmaksuJaTreenikertoja()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      teeHarjoittelusopimus(harrastaja);
+      teeJ‰senmaksusopimus(harrastaja);
+      Sopimus sopimus = teeKertamaksusopimus(harrastaja);
+      sopimus.setTreenikertoja(10);
+      Assert.assertTrue(harrastaja.isSopimuksetOK());
+   }
+   
+   @Test
+   public void testPerheell‰Treenikertoja()
+   {
+      Harrastaja vanhempi = new Harrastaja();
+      Sopimus sopimus = teeKertamaksusopimus(vanhempi);
+      sopimus.setTreenikertoja(10);
+      Harrastaja harrastaja = new Harrastaja();
+      teeJ‰senmaksusopimus(harrastaja);
+      Perhe perhe = new Perhe();
+      perhe.getPerheenj‰senet().add(vanhempi);
+      perhe.getPerheenj‰senet().add(harrastaja);
+      vanhempi.setPerhe(perhe);
+      harrastaja.setPerhe(perhe);
+      Assert.assertTrue(harrastaja.isSopimuksetOK());
+   }
+   
+   
+   @Test
+   public void testTreenikerratLoppu()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      teeHarjoittelusopimus(harrastaja);
+      teeJ‰senmaksusopimus(harrastaja);
+      teeKertamaksusopimus(harrastaja);
+      Assert.assertFalse(harrastaja.isSopimuksetOK());
+      Sopimustarkistukset tarkistukset = harrastaja.getSopimusTarkistukset();
+      Assert.assertEquals(1, tarkistukset.getViestit().size());
+      Assert.assertEquals("Treenikertoja j‰ljell‰ 0", tarkistukset.getViestit().get(0));
+   }   
+   
 
 }

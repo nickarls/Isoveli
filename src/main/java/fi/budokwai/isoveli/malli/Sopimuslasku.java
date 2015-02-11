@@ -2,10 +2,6 @@ package fi.budokwai.isoveli.malli;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -21,7 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
-import fi.budokwai.isoveli.util.Util;
+import fi.budokwai.isoveli.util.DateUtil;
 
 @Entity
 @Table(name = "sopimuslasku")
@@ -32,8 +28,8 @@ public class Sopimuslasku
    private int id;
 
    @NotNull
-   @OneToOne(cascade = CascadeType.PERSIST,optional = false)
-   @JoinColumn(name="laskurivi")
+   @OneToOne(cascade = CascadeType.PERSIST, optional = false)
+   @JoinColumn(name = "laskurivi")
    private Laskurivi laskurivi;
 
    @ManyToOne(optional = false)
@@ -72,24 +68,29 @@ public class Sopimuslasku
    {
       LocalDate sopimusLoppuu;
       LocalDate jaksoLoppuu = null;
-      if (sopimus.getTyyppi().isJ‰senmaksutyyppi())
+      if (sopimus.getTyyppi().isJ‰senmaksutyyppi() || sopimus.getTyyppi().isTreenikertoja())
       {
-         LocalDate p‰iv‰ = LocalDate.now();
-         jaksoLoppuu = p‰iv‰.with(TemporalAdjusters.lastDayOfYear());
+         jaksoLoppuu = DateUtil.vuodenViimeinenP‰iv‰();
       } else
       {
-         jaksoLoppuu = LocalDateTime.ofInstant(new Date(alkaa.getTime()).toInstant(), ZoneId.systemDefault())
-            .plus(sopimus.getMaksuv‰li(), ChronoUnit.MONTHS).toLocalDate();
+         jaksoLoppuu = DateUtil.kuukausienP‰‰st‰(alkaa, sopimus.getMaksuv‰li());
       }
       if (sopimus.getUmpeutuu() == null)
       {
          sopimusLoppuu = jaksoLoppuu;
       } else
       {
-         sopimusLoppuu = Util.date2LocalDate(sopimus.getUmpeutuu());
+         sopimusLoppuu = DateUtil.Date2LocalDate(sopimus.getUmpeutuu());
       }
-      LocalDate loppuuEnsin = sopimusLoppuu.isBefore(jaksoLoppuu) ? sopimusLoppuu : jaksoLoppuu;
-      return Date.from(loppuuEnsin.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+      LocalDate loppuuEnsin = null;
+      if (sopimus.getTyyppi().isKuukausilaskutus())
+      {
+         loppuuEnsin = sopimusLoppuu.isBefore(jaksoLoppuu) ? sopimusLoppuu : jaksoLoppuu;
+      } else
+      {
+         loppuuEnsin = sopimusLoppuu;
+      }
+      return DateUtil.LocalDate2Date(loppuuEnsin);
    }
 
    public int getId()
@@ -140,6 +141,11 @@ public class Sopimuslasku
    public void setP‰‰ttyy(Date p‰‰ttyy)
    {
       this.p‰‰ttyy = p‰‰ttyy;
+   }
+
+   public int getKuukausiaV‰liss‰()
+   {
+      return DateUtil.kuukausiaV‰liss‰(alkaa, p‰‰ttyy);
    }
 
 }

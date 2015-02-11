@@ -23,6 +23,11 @@
 		<ace:column headerText="Treenikertoja" styleClass="lefttext">
 			<h:outputText value="#{_sopimus.treenikertoja}" />
 		</ace:column>
+		<ace:column headerText="Viime lask." styleClass="lefttext">
+			<h:outputText value="#{_sopimus.viimeksiLaskutettu}" >
+				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET"/>
+			</h:outputText>
+		</ace:column>
 	</ace:dataTable>
 
 </ui:composition>

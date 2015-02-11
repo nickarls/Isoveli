@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.event.Event;
 import javax.enterprise.inject.Produces;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
@@ -30,6 +31,7 @@ import fi.budokwai.isoveli.malli.Treenityyppi;
 import fi.budokwai.isoveli.malli.Viikonpäivä;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.util.Loggaaja;
+import fi.budokwai.isoveli.util.Muuttui;
 
 @Named
 @SessionScoped
@@ -46,7 +48,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    private EntityManager entityManager;
 
    private List<Rooli> roolit;
-   private List<Vyöarvo> vyöarvot;
    private List<Treenityyppi> treenityypit;
    private List<Harrastaja> vyöarvoKäyttö;
    private List<Henkilö> rooliKäyttö;
@@ -67,11 +68,14 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    @Inject
    private Loggaaja loggaaja;
    
+   @Inject
+   @Muuttui
+   private Event<Vyöarvo> vyöarvoMuuttui;
+   
    @PostConstruct
    public void alusta()
    {
       haeRoolit();
-      haeVyöarvot();
       haeTreenityypit();
       haeTreenit();
       haeSopimustyypit();
@@ -130,13 +134,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public List<Rooli> getKaikkiRoolit()
    {
       return roolit;
-   }
-
-   @Produces
-   @Named
-   public List<Vyöarvo> getKaikkiVyöarvot()
-   {
-      return vyöarvot;
    }
 
    @Produces
@@ -347,7 +344,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       entityManager.persist(vyöarvo);      
       vyöarvoRSM.get(vyöarvo).setSelected(true);
-      haeVyöarvot();
+      vyöarvoMuuttui.fire(vyöarvo);
       info("Vyöarvo tallennettu");
    }
 
@@ -374,11 +371,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       roolit = entityManager.createNamedQuery("roolit", Rooli.class).getResultList();
    }
 
-   private void haeVyöarvot()
-   {
-      vyöarvot = entityManager.createNamedQuery("vyöarvot", Vyöarvo.class).getResultList();
-   }
-
    private void haeTreenityypit()
    {
       treenityypit = entityManager.createNamedQuery("treenityypit", Treenityyppi.class).getResultList();
@@ -401,7 +393,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void poistaVyöarvo()
    {
       entityManager.remove(vyöarvo);
-      haeVyöarvot();
+      vyöarvoMuuttui.fire(vyöarvo);
       info("Vyöarvo poistettu");
    }
 

@@ -37,10 +37,10 @@ import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
+import fi.budokwai.isoveli.util.DateUtil;
 import fi.budokwai.isoveli.util.Lasku2PDF;
 import fi.budokwai.isoveli.util.Loggaaja;
 import fi.budokwai.isoveli.util.MailManager;
-import fi.budokwai.isoveli.util.Util;
 import fi.budokwai.isoveli.util.Zippaaja;
 
 @Stateful
@@ -227,7 +227,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    private List<Sopimus> haeLaskuttamattomat()
    {
       laskuttamattomat = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class)
-         .setParameter("nyt", Util.t‰n‰‰n()).getResultList();
+         .setParameter("nyt", DateUtil.t‰n‰‰nDate()).getResultList();
       laskuttamattomat.addAll(entityManager.createNamedQuery("uudet_sopimukset", Sopimus.class).getResultList());
       laskuttamattomat.addAll(entityManager.createNamedQuery("laskuttamattomat_kymppikerrat", Sopimus.class)
          .getResultList());

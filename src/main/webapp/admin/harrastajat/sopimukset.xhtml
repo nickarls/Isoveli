@@ -60,14 +60,14 @@
 				<ace:message for="form:umpeutuu" />
 				<ace:dateTimeEntry value="#{sopimus.umpeutuu}" renderAsPopup="true" pattern="dd.MM.yyyy" id="umpeutuu" />
 			</h:panelGrid>
-			<h:outputText value="Treenikertoja" />
-			<h:panelGrid>
+			<h:outputText value="Treenikertoja" rendered="#{sopimus.tyyppi.treenikertoja}"/>
+			<h:panelGrid rendered="#{sopimus.tyyppi.treenikertoja}">
 				<ace:message for="form:a_treenikertoja" />
 				<h:inputText value="#{sopimus.treenikertoja}" id="a_treenikertoja" size="5" />
 			</h:panelGrid>
-			<h:outputText value="Maksuväli" />
+			<h:outputText value="Maksuväli" rendered="#{sopimus.tyyppi.kuukausilaskutus}"/>
 			<h:panelGrid>
-				<ace:message for="form:maksuväli" />
+				<ace:message for="form:maksuväli" rendered="#{sopimus.tyyppi.kuukausilaskutus}" />
 				<h:selectOneMenu value="#{sopimus.maksuväli}">
 					<f:selectItem itemValue="" itemLabel="" noSelectionOption="true"/>
 					<f:selectItem itemValue="1" itemLabel="1kk" />

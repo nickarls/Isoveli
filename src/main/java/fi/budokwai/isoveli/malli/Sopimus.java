@@ -1,9 +1,5 @@
 package fi.budokwai.isoveli.malli;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +22,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
 
-import fi.budokwai.isoveli.util.Util;
+import fi.budokwai.isoveli.util.DateUtil;
 
 @Entity
 @Table(name = "sopimus")
@@ -214,15 +210,24 @@ public class Sopimus
       List<Sopimustarkistus> tulos = new ArrayList<Sopimustarkistus>();
       if (!isVoimassa())
       {
-         LocalDate pvm = Util.date2LocalDate(umpeutuu);
-         String viesti = String.format("%s: sopimus umpeutui %s", tyyppi.getNimi(),
-            pvm.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+         String pvm = DateUtil.formatoi(umpeutuu);
+         String viesti = String.format("%s: sopimus umpeutui %s", tyyppi.getNimi(), pvm);
          tulos.add(new Sopimustarkistus(viesti, false));
       }
-      if ((tyyppi.isKoeaika() || tyyppi.isTreenikertoja()) && treenikertoja <= 0)
+      if (tyyppi.isKoeaika() && treenikertoja <= 0)
       {
-         String viesti = String.format("Treenikertoja j‰ljell‰ %d", treenikertoja);
+         String viesti = String.format("Koeajan treenikertoja j‰ljell‰ %d", treenikertoja);
          tulos.add(new Sopimustarkistus(viesti, false));
+      }
+      if (tyyppi.isTreenikertoja())
+      {
+         int perheKertoja = harrastaja.getPerhe() == null ? 0 : harrastaja.getPerhe().getPerheenTreenikerrat();
+         int yhteens‰ = perheKertoja + treenikertoja;
+         if (yhteens‰ <= 0)
+         {
+            String viesti = String.format("Treenikertoja j‰ljell‰ %d", treenikertoja);
+            tulos.add(new Sopimustarkistus(viesti, false));
+         }
       }
       if (tyyppi.getAlaik‰raja() > 0 && harrastaja.getIk‰() < tyyppi.getAlaik‰raja())
       {
@@ -242,7 +247,7 @@ public class Sopimus
          if (sopimuslasku.getLaskurivi().getLasku().isLaskuMyˆh‰ss‰())
          {
             String viesti = String.format("%s: lasku myˆh‰ss‰ %d p‰iv‰‰", tyyppi.getNimi(), sopimuslasku.getLaskurivi()
-               .getLasku().getMaksuaikaa());
+               .getLasku().getMaksuaikaa() * -1);
             tulos.add(new Sopimustarkistus(viesti, false));
          }
       }
@@ -272,8 +277,7 @@ public class Sopimus
 
    public boolean valmiiksiLaskutettu()
    {
-      LocalDate check = Util.date2LocalDate(getViimeksiLaskutettu());
-      return check.isAfter(Util.t‰n‰‰nLD());
+      return DateUtil.onkoTulevaisuudessa(getViimeksiLaskutettu());
    }
 
    public void lis‰‰Treenikertoja()
@@ -295,15 +299,14 @@ public class Sopimus
    {
       if (tyyppi.getOletusKuukaudetVoimassa() > 0)
       {
-         umpeutuu = Date.from(LocalDate.now().plus(tyyppi.getOletusKuukaudetVoimassa(), ChronoUnit.MONTHS)
-            .atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+         umpeutuu = DateUtil.kuukausienP‰‰st‰(tyyppi.getOletusKuukaudetVoimassa());
       } else
       {
          umpeutuu = null;
       }
-      if (tyyppi.getYl‰ik‰raja() > 0)
+      if (tyyppi.getYl‰ik‰raja() > 0 && !tyyppi.isAlkeiskurssi())
       {
-         umpeutuu = Date.from(harrastaja.getSyntynyt().toInstant().atZone(ZoneId.systemDefault()).plus(tyyppi.getYl‰ik‰raja(), ChronoUnit.YEARS).toInstant());
+         umpeutuu = DateUtil.vuosienP‰‰st‰(harrastaja.getSyntynyt(), tyyppi.getYl‰ik‰raja());
       }
    }
 }

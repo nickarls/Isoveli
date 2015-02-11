@@ -2,7 +2,7 @@ package fi.budokwai.isoveli.malli;
 
 import java.time.Period;
 
-import fi.budokwai.isoveli.util.Util;
+import fi.budokwai.isoveli.util.DateUtil;
 
 public class JäljelläVyökokeeseen
 {
@@ -41,7 +41,7 @@ public class JäljelläVyökokeeseen
 
    public String getAikaString()
    {
-      return Util.period2String(aika);
+      return DateUtil.aikaväli2String(aika);
    }
 
    public Vyöarvo getSeuraavaVyöarvo()

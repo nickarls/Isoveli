@@ -283,4 +283,9 @@ public class Sopimustyyppi
       this.valmennuskeskus = valmennuskeskus;
    }
 
+   public boolean isKuukausilaskutus()
+   {
+      return isHarjoittelumaksu();
+   }
+
 }

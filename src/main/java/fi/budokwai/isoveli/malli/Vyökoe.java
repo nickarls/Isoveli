@@ -1,10 +1,7 @@
 package fi.budokwai.isoveli.malli;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 
@@ -20,7 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import fi.budokwai.isoveli.util.Util;
+import fi.budokwai.isoveli.util.DateUtil;
 
 @Entity
 @Table(name = "vyokoe")
@@ -97,8 +94,7 @@ public class Vyökoe
 
    public LocalDate getKoska()
    {
-      return LocalDateTime.ofInstant(Instant.ofEpochMilli(päivä.getTime()), ZoneId.systemDefault())
-         .toLocalDate().atStartOfDay().toLocalDate();
+      return DateUtil.Date2LocalDate(päivä);
    }
 
    private Period getAikaEdellisestäKokeesta()
@@ -114,15 +110,13 @@ public class Vyökoe
       {
          return Period.ZERO;
       }
-      LocalDate edellinenKoe = LocalDateTime.ofInstant(
-         Instant.ofEpochMilli(edellinenVyökoe.get().getPäivä().getTime()), ZoneId.systemDefault()).toLocalDate();
-      return Period.between(edellinenKoe, getKoska());
+      return DateUtil.aikaväli(edellinenVyökoe.get().getPäivä());
    }
 
    public String getAikaaVälissä()
    {
       Period aika = getAikaEdellisestäKokeesta();
-      return Util.period2String(aika);
+      return DateUtil.aikaväli2String(aika);
    }
 
    public boolean equals(Object toinen)

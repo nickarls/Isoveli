@@ -1,0 +1,106 @@
+package fi.budokwai.isoveli.util;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Optional;
+
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Produces;
+import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
+
+import fi.budokwai.isoveli.malli.Harrastaja;
+import fi.budokwai.isoveli.malli.JäljelläVyökokeeseen;
+import fi.budokwai.isoveli.malli.Vyöarvo;
+import fi.budokwai.isoveli.malli.Vyökoe;
+
+@SessionScoped
+@Named
+public class Vyökoehelper implements Serializable
+{
+   private static final long serialVersionUID = 1L;
+
+   private List<Vyöarvo> vyöarvot;
+
+   @PersistenceContext(type = PersistenceContextType.EXTENDED)
+   private EntityManager entityManager;
+
+   @PostConstruct
+   public void init()
+   {
+      haeVyöarvot();
+   }
+
+   public void vyöarvotMuuttui(@Observes @Muuttui Vyöarvo vyöarvo)
+   {
+      haeVyöarvot();
+   }
+
+   private void haeVyöarvot()
+   {
+      vyöarvot = entityManager.createNamedQuery("vyöarvot", Vyöarvo.class).getResultList();
+   }
+
+   @Produces
+   @Named
+   public List<Vyöarvo> getVyöarvot()
+   {
+      return vyöarvot;
+   }
+
+   public JäljelläVyökokeeseen getJäljelläVyökokeeseen(Harrastaja harrastaja)
+   {
+      Vyöarvo nykyinenVyöarvo = harrastaja.getTuoreinVyöarvo();
+      Vyöarvo seuraavaVyöarvo = Vyöarvo.EI_OOTA;
+      if (nykyinenVyöarvo == Vyöarvo.EI_OOTA)
+      {
+         seuraavaVyöarvo = haeEnsimmäinenVyöarvo();
+      } else
+      {
+         seuraavaVyöarvo = haeSeuraavaVyöarvo(nykyinenVyöarvo);
+      }
+      if (seuraavaVyöarvo == Vyöarvo.EI_OOTA)
+      {
+         return JäljelläVyökokeeseen.EI_OOTA;
+      }
+      long tarvittavaTreenimäärä = seuraavaVyöarvo.getMinimitreenit() - harrastaja.getTreenejäViimeVyökokeesta();
+      LocalDate koskaViimeisinKoe = null;
+      if (harrastaja.getTuoreinVyökoe() == Vyökoe.EI_OOTA)
+      {
+         koskaViimeisinKoe = DateUtil.Date2LocalDate(harrastaja.getLuotu());
+      } else
+      {
+         koskaViimeisinKoe = harrastaja.getTuoreinVyökoe().getKoska();
+      }
+      Period tarvittavaAika = Period.between(DateUtil.tänään(),
+         koskaViimeisinKoe.plus(seuraavaVyöarvo.getMinimikuukaudet(), ChronoUnit.MONTHS));
+      long tarvittavatPäivät = ChronoUnit.DAYS.between(DateUtil.tänään(),
+         koskaViimeisinKoe.plus(seuraavaVyöarvo.getMinimikuukaudet(), ChronoUnit.MONTHS));
+      return new JäljelläVyökokeeseen(tarvittavaAika, tarvittavaTreenimäärä, tarvittavatPäivät, seuraavaVyöarvo);
+   }
+
+   private Vyöarvo haeSeuraavaVyöarvo(Vyöarvo nykyinenVyöarvo)
+   {
+      Optional<Vyöarvo> seuraavaVyöarvo = vyöarvot.stream()
+         .filter(va -> va.getJärjestys() == nykyinenVyöarvo.getJärjestys() + 1).findFirst();
+      if (seuraavaVyöarvo.isPresent())
+      {
+         return seuraavaVyöarvo.get();
+      } else
+      {
+         return Vyöarvo.EI_OOTA;
+      }
+   }
+
+   private Vyöarvo haeEnsimmäinenVyöarvo()
+   {
+      return vyöarvot.iterator().next();
+   }
+}

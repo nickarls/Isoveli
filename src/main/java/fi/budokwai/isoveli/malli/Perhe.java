@@ -180,4 +180,24 @@ public class Perhe
       return iceHenkilö.isPresent() ? iceHenkilö.get().getYhteystiedot().getPuhelinnumero() : null;
    }
 
+   public int getPerheenTreenikerrat()
+   {
+      int treenikerrat = 0;
+      for (Henkilö henkilö : perheenjäsenet)
+      {
+         if (henkilö.isHarrastaja())
+         {
+            Harrastaja harrastaja = (Harrastaja) henkilö;
+            for (Sopimus sopimus : harrastaja.getSopimukset())
+            {
+               if (sopimus.getTyyppi().isTreenikertoja())
+               {
+                  treenikerrat += sopimus.getTreenikertoja();
+               }
+            }
+         }
+      }
+      return treenikerrat;
+   }
+
 }

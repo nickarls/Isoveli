@@ -1,9 +1,6 @@
 package fi.budokwai.isoveli.admin;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,9 +37,9 @@ import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.malli.Sukupuoli;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Vyökoe;
+import fi.budokwai.isoveli.util.DateUtil;
 import fi.budokwai.isoveli.util.Loggaaja;
 import fi.budokwai.isoveli.util.Muuttui;
-import fi.budokwai.isoveli.util.Util;
 
 @Named
 @SessionScoped
@@ -125,9 +122,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          .getSingleResult();
       koeaika.setTyyppi(koeaikaSopimustyyppi);
       koeaika.setTreenikertoja(koeaikaSopimustyyppi.getOletusTreenikerrat());
-      LocalDate umpeutuu = LocalDate.now();
-      umpeutuu = umpeutuu.plus(koeaikaSopimustyyppi.getOletusKuukaudetVoimassa(), ChronoUnit.MONTHS);
-      koeaika.setUmpeutuu(Date.from(umpeutuu.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+      koeaika.setUmpeutuu(DateUtil.kuukausienPäästä(koeaikaSopimustyyppi.getOletusKuukaudetVoimassa()));
       return koeaika;
    }
 

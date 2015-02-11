@@ -1,11 +1,6 @@
 package fi.budokwai.isoveli.malli;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,14 +28,14 @@ import org.hibernate.annotations.Type;
 
 import com.google.common.base.MoreObjects;
 
-import fi.budokwai.isoveli.util.Util;
+import fi.budokwai.isoveli.util.DateUtil;
 
 @Entity
 @Table(name = "harrastaja")
 @NamedQueries(
 { @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.jäsennumero=:kortti"),
       @NamedQuery(name = "treenivetäjät", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi"),
-      @NamedQuery(name = "sama_syntymäpäivä", query = "select h from Harrastaja h where syntynyt = :päivä"),
+      @NamedQuery(name = "sama_syntymäpäivä", query = "select h from Harrastaja h where h.syntynyt = :päivä"),
       @NamedQuery(name = "harrastajat", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi") })
 @Typed(
 {})
@@ -153,9 +148,7 @@ public class Harrastaja extends Henkilö
    {
       try
       {
-         Date d = new Date(päivämäärä.getTime());
-         LocalDate päivä = LocalDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault()).toLocalDate();
-         return päivä.until(LocalDate.now(), ChronoUnit.YEARS);
+         return DateUtil.ikä(päivämäärä);
       } catch (Exception e)
       {
          return 0;
@@ -174,11 +167,8 @@ public class Harrastaja extends Henkilö
 
    public Vyökoe getTuoreinVyökoe()
    {
-      Optional<Vyökoe> vyökoe = vyökokeet
-         .stream()
-         .sorted(
-            (v1, v2) -> Integer.valueOf(v2.getVyöarvo().getJärjestys()).compareTo(
-               Integer.valueOf(v1.getVyöarvo().getJärjestys()))).findFirst();
+      Optional<Vyökoe> vyökoe = vyökokeet.stream().max(
+         (v1, v2) -> Integer.compare(v1.getVyöarvo().getJärjestys(), v2.getVyöarvo().getJärjestys()));
       return vyökoe.isPresent() ? vyökoe.get() : Vyökoe.EI_OOTA;
    }
 
@@ -232,7 +222,7 @@ public class Harrastaja extends Henkilö
    {
       return ikä(päivämäärä) < 18;
    }
-   
+
    @Override
    public String toString()
    {
@@ -264,13 +254,14 @@ public class Harrastaja extends Henkilö
    private boolean löytyyköHarjoittelumaksu()
    {
       Optional<Sopimus> sopimus = sopimukset.stream().filter(s -> s.getTyyppi().isHarjoittelumaksu()).findFirst();
-      return sopimus.isPresent() && sopimus.get().isVoimassa();
+      int perheenTreenikerrat = perhe == null ? 0 : perhe.getPerheenTreenikerrat();
+      return perheenTreenikerrat > 0 || sopimus.isPresent();
    }
 
    private boolean löytyyköJäsenmaksu()
    {
       Optional<Sopimus> sopimus = sopimukset.stream().filter(s -> s.getTyyppi().isJäsenmaksu()).findFirst();
-      return sopimus.isPresent() && sopimus.get().isVoimassa();
+      return sopimus.isPresent();
    }
 
    public boolean isMies()
@@ -300,34 +291,8 @@ public class Harrastaja extends Henkilö
       {
          return Period.ZERO;
       }
-      LocalDate edellinen = LocalDateTime.ofInstant(Instant.ofEpochMilli(vyökoe.getPäivä().getTime()),
-         ZoneId.systemDefault()).toLocalDate();
-      return Period.between(edellinen, LocalDate.now());
-   }
+      return DateUtil.aikaväli(vyökoe.getPäivä());
 
-   public JäljelläVyökokeeseen jäljelläVyökokeeseen(List<Vyöarvo> vyöarvot)
-   {
-      Vyöarvo nykyinenVyöarvo = getTuoreinVyöarvo();
-      Vyöarvo seuraavaVyöarvo = nykyinenVyöarvo == Vyöarvo.EI_OOTA ? vyöarvot.iterator().next() : null;
-      if (seuraavaVyöarvo == null)
-      {
-         Optional<Vyöarvo> seuraavaVyöarvoehdokas = vyöarvot.stream()
-            .filter(va -> va.getJärjestys() == nykyinenVyöarvo.getJärjestys() + 1).findFirst();
-         if (!seuraavaVyöarvoehdokas.isPresent())
-         {
-            return JäljelläVyökokeeseen.EI_OOTA;
-         }
-         seuraavaVyöarvo = seuraavaVyöarvoehdokas.get();
-      }
-      long treenit = seuraavaVyöarvo.getMinimitreenit() - getTreenejäViimeVyökokeesta();
-      // FIXME -> luotu
-      LocalDate tuoreinVyökoe = getTuoreinVyökoe() == Vyökoe.EI_OOTA ? Util.date2LocalDate(luotu)
-         : getTuoreinVyökoe().getKoska();
-      LocalDate nyt = Util.tänäänLD();
-      Period aika = Period.between(nyt, tuoreinVyökoe.plus(seuraavaVyöarvo.getMinimikuukaudet(), ChronoUnit.MONTHS));
-      long päiviä = ChronoUnit.DAYS.between(nyt,
-         tuoreinVyökoe.plus(seuraavaVyöarvo.getMinimikuukaudet(), ChronoUnit.MONTHS));
-      return new JäljelläVyökokeeseen(aika, treenit, päiviä, seuraavaVyöarvo);
    }
 
    public boolean isOsoiteMuuttunut()
@@ -426,7 +391,7 @@ public class Harrastaja extends Henkilö
 
    public boolean isTauollaNyt()
    {
-      return tauolla != null && Util.getTänään().isBefore(Util.date2LocalDate(tauolla));
+      return tauolla != null && DateUtil.onkoMenneysyydessä(tauolla);
    }
 
 }

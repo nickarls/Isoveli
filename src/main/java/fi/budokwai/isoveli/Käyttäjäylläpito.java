@@ -35,6 +35,7 @@ import fi.budokwai.isoveli.malli.Tiedostotyyppi;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Vyökoe;
 import fi.budokwai.isoveli.util.Kirjautunut;
+import fi.budokwai.isoveli.util.Vyökoehelper;
 
 @Stateful
 @SessionScoped
@@ -48,9 +49,14 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    @Kirjautunut
    private Henkilö itse;
 
+   @Inject
+   private List<Vyöarvo> vyöarvot;
+   
+   @Inject
+   private Vyökoehelper vyökoehelper;
+   
    private Henkilö ylläpidettävä;
 
-   private List<Vyöarvo> vyöarvot;
    private RowStateMap vyökoeRSM = new RowStateMap();
    private Vyökoe vyökoe;
    private TabSet tabi;
@@ -58,7 +64,6 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    @PostConstruct
    public void init()
    {
-      vyöarvot = entityManager.createNamedQuery("vyöarvot", Vyöarvo.class).getResultList();
       itse = entityManager.merge(itse);
       ylläpidettävä = itse;
    }
@@ -96,13 +101,6 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    public Vyökoe getOmaVyökoe()
    {
       return vyökoe;
-   }
-
-   @Produces
-   @Named
-   public List<Vyöarvo> getVyöarvot()
-   {
-      return vyöarvot;
    }
 
    public void peruutaVyökoemuutos()
@@ -212,7 +210,7 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
       Harrastaja harrastaja = (Harrastaja) ylläpidettävä;
       List<GaugeSeries> data = new ArrayList<GaugeSeries>();
       GaugeSeries sarja = new GaugeSeries();
-      JäljelläVyökokeeseen jäljelläVyökokeeseen = harrastaja.jäljelläVyökokeeseen(vyöarvot);
+      JäljelläVyökokeeseen jäljelläVyökokeeseen = vyökoehelper.getJäljelläVyökokeeseen(harrastaja);
       int max = jäljelläVyökokeeseen.getSeuraavaVyöarvo().getMinimikuukaudet() * 30;
       sarja.setMax(max);
       sarja.setMin(0);
@@ -229,7 +227,7 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
       Harrastaja harrastaja = (Harrastaja) ylläpidettävä;
       List<GaugeSeries> data = new ArrayList<GaugeSeries>();
       GaugeSeries sarja = new GaugeSeries();
-      JäljelläVyökokeeseen jäljelläVyökokeeseen = harrastaja.jäljelläVyökokeeseen(vyöarvot);
+      JäljelläVyökokeeseen jäljelläVyökokeeseen = vyökoehelper.getJäljelläVyökokeeseen(harrastaja);
       int max = jäljelläVyökokeeseen.getSeuraavaVyöarvo().getMinimitreenit();
       sarja.setMax(max);
       sarja.setMin(0);

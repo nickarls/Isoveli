@@ -29,7 +29,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
 
-import fi.budokwai.isoveli.util.Util;
+import fi.budokwai.isoveli.util.DateUtil;
 
 @Entity
 @Table(name = "lasku")
@@ -79,7 +79,7 @@ public class Lasku
    public Lasku(Henkilö henkilö)
    {
       this.henkilö = henkilö;
-      eräpäivä = Util.päivienPäästä(14);
+      eräpäivä = DateUtil.päivienPäästä(14);
    }
 
    public void lisääRivi(Laskurivi laskurivi)
@@ -187,7 +187,7 @@ public class Lasku
       {
          return 0;
       }
-      return Util.getPäiviäVälissä(eräpäivä);
+      return DateUtil.getPäiviäVälissä(eräpäivä);
    }
 
    public BlobData getPdf()

@@ -33,9 +33,9 @@
 		<ace:column headerText="Seuraavaan kokeeseen" styleClass="lefttext">
 			<h:panelGrid columns="2" rendered="#{_vyökoe.tuoreinVyökoe}">
 				<h:outputText value="Päiviä" />
-				<h:outputText value="#{harrastaja.jäljelläVyökokeeseen(kaikkiVyöarvot).aikaString}" />
+				<h:outputText value="#{vyökoehelper.getJäljelläVyökokeeseen(harrastaja).aikaString}" />
 				<h:outputText value="Treenikertoja" />
-				<h:outputText value="#{harrastaja.jäljelläVyökokeeseen(kaikkiVyöarvot).treenikertoja} kertaa" />
+				<h:outputText value="#{vyökoehelper.getJäljelläVyökokeeseen(harrastaja).treenikertoja} kertaa" />
 			</h:panelGrid>
 		</ace:column>
 	</ace:dataTable>

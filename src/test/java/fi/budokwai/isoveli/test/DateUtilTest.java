@@ -332,8 +332,8 @@ public class DateUtilTest
       Calendar cal = Calendar.getInstance();
       cal.setTime(result);
       Assert.assertEquals(cal.get(Calendar.YEAR), testDate.getYear());
-      Assert.assertEquals(cal.get(Calendar.MONTH), testDate.getMonth());
-      Assert.assertEquals(cal.get(Calendar.DAY_OF_MONTH), testDate.getMonthValue());
+      Assert.assertEquals(cal.get(Calendar.MONTH) + 1, testDate.getMonthValue());
+      Assert.assertEquals(cal.get(Calendar.DAY_OF_MONTH), testDate.getDayOfMonth());
    }
 
 }

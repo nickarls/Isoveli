@@ -14,8 +14,6 @@ import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
@@ -44,7 +42,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    private Treeni treeni;
    private Sopimustyyppi sopimustyyppi;
 
-   @PersistenceContext(type = PersistenceContextType.EXTENDED)
+   @Inject
    private EntityManager entityManager;
 
    private List<Rooli> roolit;
@@ -67,11 +65,11 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    @Inject
    private Loggaaja loggaaja;
-   
+
    @Inject
    @Muuttui
    private Event<Vyöarvo> vyöarvoMuuttui;
-   
+
    @PostConstruct
    public void alusta()
    {
@@ -317,7 +315,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void tallennaRooli()
    {
-      entityManager.persist(rooli);
+      rooli = entityManager.merge(rooli);
       rooliRSM.get(rooli).setSelected(true);
       haeRoolit();
       info("Rooli tallennettu");
@@ -325,7 +323,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void tallennaSopimustyyppi()
    {
-      entityManager.persist(sopimustyyppi);
+      sopimustyyppi = entityManager.merge(sopimustyyppi);
       rooliRSM.get(sopimustyyppi).setSelected(true);
       haeSopimustyypit();
       info("Sopimustyyppi tallennettu");
@@ -333,7 +331,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void tallennaTreeni()
    {
-      entityManager.persist(treeni);
+      treeni = entityManager.merge(treeni);
       treeniRSM.get(treeni).setSelected(true);
       haeTreenit();
       info("Treeni tallennettu");
@@ -342,7 +340,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void tallennaVyöarvo()
    {
-      entityManager.persist(vyöarvo);      
+      vyöarvo = entityManager.merge(vyöarvo);
       vyöarvoRSM.get(vyöarvo).setSelected(true);
       vyöarvoMuuttui.fire(vyöarvo);
       info("Vyöarvo tallennettu");
@@ -350,7 +348,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void tallennaTreenityyppi()
    {
-      entityManager.persist(treenityyppi);
+      treenityyppi = entityManager.merge(treenityyppi);
       treenityyppiRSM.get(treenityyppi).setSelected(true);
       haeTreenityypit();
       info("Treenityyppi tallennettu");
@@ -378,6 +376,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void poistaRooli()
    {
+      rooli = entityManager.merge(rooli);
       entityManager.remove(rooli);
       haeRoolit();
       info("Rooli poistettu");
@@ -385,6 +384,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void poistaTreeni()
    {
+      treeni = entityManager.merge(treeni);
       entityManager.remove(treeni);
       haeTreenit();
       info("Treeni poistettu");
@@ -392,6 +392,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void poistaVyöarvo()
    {
+      vyöarvo = entityManager.merge(vyöarvo);
       entityManager.remove(vyöarvo);
       vyöarvoMuuttui.fire(vyöarvo);
       info("Vyöarvo poistettu");
@@ -399,6 +400,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void poistaTreenityyppi()
    {
+      treenityyppi = entityManager.merge(treenityyppi);
       entityManager.remove(treenityyppi);
       haeTreenityypit();
       info("Treenityyppi poistettu");
@@ -406,6 +408,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void poistaSopimustyyppi()
    {
+      sopimustyyppi = entityManager.merge(sopimustyyppi);
       entityManager.remove(sopimustyyppi);
       haeSopimustyypit();
       info("Sopimustyyppi poistettu");

@@ -15,8 +15,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 
 import org.icefaces.ace.component.fileentry.FileEntry;
 import org.icefaces.ace.component.fileentry.FileEntryEvent;
@@ -42,7 +40,7 @@ import fi.budokwai.isoveli.util.Vyökoehelper;
 @Named
 public class Käyttäjäylläpito extends Perustoiminnallisuus
 {
-   @PersistenceContext(type = PersistenceContextType.EXTENDED)
+   @Inject
    private EntityManager entityManager;
 
    @Inject
@@ -126,7 +124,7 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
             (v1, v2) -> Integer.valueOf(v1.getVyöarvo().getJärjestys()).compareTo(
                Integer.valueOf(v2.getVyöarvo().getJärjestys())));
       }
-      entityManager.persist(itse);
+      itse = entityManager.merge(itse);
       vyökoeRSM.get(vyökoe).setSelected(true);
       vyökoe = null;
       info("Vyökoe tallennettu");
@@ -135,6 +133,7 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    public void poistaVyökoe()
    {
       Harrastaja harrastaja = (Harrastaja) itse;
+      vyökoe = entityManager.merge(vyökoe);
       harrastaja.getVyökokeet().remove(vyökoe);
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
@@ -185,7 +184,7 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
                   Tiedostotyyppi.JPG));
             }
             info("Kuva päivitetty");
-            entityManager.persist(itse);
+            itse = entityManager.merge(itse);
             fileInfo.getFile().delete();
          }
       }
@@ -200,7 +199,7 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
 
    public String tallennaKohde()
    {
-      entityManager.persist(ylläpidettävä);
+      ylläpidettävä = entityManager.merge(ylläpidettävä);
       info("Tiedot tallennettu");
       return "käyttäjä.xhtml?faces-redirect=true";
    }

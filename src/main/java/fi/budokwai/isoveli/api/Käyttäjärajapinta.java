@@ -7,7 +7,6 @@ import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -37,7 +36,7 @@ import fi.budokwai.isoveli.util.MailManager;
 @Stateless
 public class Käyttäjärajapinta
 {
-   @PersistenceContext
+   @Inject
    private EntityManager entityManager;
 
    @Inject

@@ -27,6 +27,14 @@
 		<param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
 		<param-value>true</param-value>
 	</context-param>
+	<filter>
+		<filter-name>OpenSessionFilter</filter-name>
+		<filter-class>fi.budokwai.isoveli.util.OpenSessionFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>OpenSessionFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	<session-config>
 		<session-timeout>0</session-timeout>
 	</session-config>

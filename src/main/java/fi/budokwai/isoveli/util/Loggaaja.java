@@ -10,7 +10,6 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Loki;
@@ -19,7 +18,7 @@ import fi.budokwai.isoveli.malli.Loki;
 @RequestScoped
 public class Loggaaja
 {
-   @PersistenceContext
+   @Inject
    private EntityManager entityManager;
 
    @Inject

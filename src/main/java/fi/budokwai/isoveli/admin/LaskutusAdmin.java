@@ -22,8 +22,6 @@ import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
@@ -48,7 +46,7 @@ import fi.budokwai.isoveli.util.Zippaaja;
 @Named
 public class LaskutusAdmin extends Perustoiminnallisuus
 {
-   @PersistenceContext(type = PersistenceContextType.EXTENDED)
+   @Inject
    private EntityManager entityManager;
 
    @Inject
@@ -109,7 +107,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
             mailManager.l‰het‰S‰hkˆposti(lasku.getHenkilˆ().getYhteystiedot().getS‰hkˆposti(), "Lasku", "Liitteen‰",
                lasku.getPdf());
             lasku.setLaskutettu(true);
-            entityManager.persist(lasku);
+            lasku = entityManager.merge(lasku);
          } catch (IsoveliPoikkeus e)
          {
 
@@ -132,7 +130,8 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    {
       Henkilˆ henkilˆ = haeLaskunVastaanottaja(sopimukset);
       Lasku lasku = new Lasku(henkilˆ);
-      sopimukset.forEach(sopimus -> {
+      for (Sopimus sopimus : sopimukset)
+      {
          do
          {
             Sopimuslasku sopimuslasku = new Sopimuslasku(sopimus);
@@ -141,12 +140,12 @@ public class LaskutusAdmin extends Perustoiminnallisuus
             if (sopimus.getTyyppi().isTreenikertoja())
             {
                sopimus.lis‰‰Treenikertoja();
-               entityManager.persist(sopimus);
+               sopimus = entityManager.merge(sopimus);
             }
          } while (!sopimus.valmiiksiLaskutettu());
-      });
+      }
       lasku.laskePerhealennukset();
-      entityManager.persist(lasku);
+      lasku = entityManager.merge(lasku);
       entityManager.flush();
       entityManager.refresh(lasku);
       lasku.laskeViitenumero();

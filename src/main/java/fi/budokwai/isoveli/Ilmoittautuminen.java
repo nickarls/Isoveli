@@ -10,10 +10,9 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 
 import org.icefaces.ace.model.table.RowStateMap;
 
@@ -29,7 +28,7 @@ import fi.budokwai.isoveli.malli.Viikonpäivä;
 @Stateful
 public class Ilmoittautuminen extends Perustoiminnallisuus
 {
-   @PersistenceContext(type = PersistenceContextType.EXTENDED)
+   @Inject
    private EntityManager entityManager;
 
    private String korttinumero;
@@ -192,11 +191,11 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
          {
             treenisessio.getVetäjät().add(h);
          }
-         entityManager.persist(treenisessio);
+         treenisessio = entityManager.merge(treenisessio);
       }
       Treenikäynti treenikaynti = new Treenikäynti(harrastaja, treenisessio);
       harrastaja.getTreenikäynnit().add(treenikaynti);
-      entityManager.persist(harrastaja);
+      harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       nollaa();
       info("Käynti rekisteröity");

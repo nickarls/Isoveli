@@ -15,7 +15,7 @@
 			<ace:ajax render="@form" />
 		</h:commandButton>
 		<h:panelGrid columns="3" columnClasses="tabletop, tabletop, tabletop">
-			<ace:dataTable value="#{kaikkiVyöarvot}" var="_vyöarvo" selectionMode="single" rows="15"
+			<ace:dataTable value="#{vyöarvot}" var="_vyöarvo" selectionMode="single" rows="15"
 				rowSelectListener="#{perustietoAdmin.vyöarvoValittu}" paginator="true" paginatorPosition="bottom"
 				paginatorAlwaysVisible="false" stateMap="#{perustietoAdmin.vyöarvoRSM}">
 				<ace:column headerText="Vyöarvo" styleClass="lefttext">

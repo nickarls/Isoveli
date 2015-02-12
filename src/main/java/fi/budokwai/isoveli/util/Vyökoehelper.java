@@ -11,10 +11,9 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.JäljelläVyökokeeseen;
@@ -29,7 +28,7 @@ public class Vyökoehelper implements Serializable
 
    private List<Vyöarvo> vyöarvot;
 
-   @PersistenceContext(type = PersistenceContextType.EXTENDED)
+   @Inject
    private EntityManager entityManager;
 
    @PostConstruct
@@ -86,8 +85,12 @@ public class Vyökoehelper implements Serializable
       return new JäljelläVyökokeeseen(tarvittavaAika, tarvittavaTreenimäärä, tarvittavatPäivät, seuraavaVyöarvo);
    }
 
-   private Vyöarvo haeSeuraavaVyöarvo(Vyöarvo nykyinenVyöarvo)
+   public Vyöarvo haeSeuraavaVyöarvo(Vyöarvo nykyinenVyöarvo)
    {
+      if (nykyinenVyöarvo == Vyöarvo.EI_OOTA)
+      {
+         return haeEnsimmäinenVyöarvo();
+      }
       Optional<Vyöarvo> seuraavaVyöarvo = vyöarvot.stream()
          .filter(va -> va.getJärjestys() == nykyinenVyöarvo.getJärjestys() + 1).findFirst();
       if (seuraavaVyöarvo.isPresent())

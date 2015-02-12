@@ -3,8 +3,8 @@ package fi.budokwai.isoveli.api;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -22,7 +22,7 @@ import fi.budokwai.isoveli.malli.BlobData;
 @Stateless
 public class BlobKäsittelijä
 {
-   @PersistenceContext
+   @Inject
    private EntityManager entityManager;
 
    @POST

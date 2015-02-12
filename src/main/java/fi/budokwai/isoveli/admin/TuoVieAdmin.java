@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import jxl.Cell;
 import jxl.DateCell;
@@ -41,7 +41,7 @@ public class TuoVieAdmin extends Perustoiminnallisuus
    private List<Henkilö> tuodutHenkilöt = new ArrayList<Henkilö>();
    private RowStateMap harrastajaRSM = new RowStateMap();
 
-   @PersistenceContext
+   @Inject
    private EntityManager entityManager;
 
    @Produces

@@ -16,8 +16,6 @@ import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
@@ -40,6 +38,7 @@ import fi.budokwai.isoveli.malli.Vyökoe;
 import fi.budokwai.isoveli.util.DateUtil;
 import fi.budokwai.isoveli.util.Loggaaja;
 import fi.budokwai.isoveli.util.Muuttui;
+import fi.budokwai.isoveli.util.Vyökoehelper;
 
 @Named
 @SessionScoped
@@ -48,10 +47,9 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 {
    private List<Harrastaja> harrastajat;
    private List<Rooli> roolit;
-   private List<Vyöarvo> vyöarvot;
    private List<Perhe> perheet;
 
-   @PersistenceContext(type = PersistenceContextType.EXTENDED)
+   @Inject
    private EntityManager entityManager;
 
    private TabSet tabi;
@@ -86,7 +84,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       entityManager.clear();
       harrastajat = null;
       roolit = null;
-      vyöarvot = null;
       perheet = null;
       harrastaja = null;
       sopimus = null;
@@ -165,7 +162,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       perhe.setOsoite(harrastaja.getOsoite());
       harrastaja.setOsoite(null);
       harrastaja.setPerhe(perhe);
-      entityManager.persist(perhe);
+      perhe = entityManager.merge(perhe);
       entityManager.flush();
       virkistäPerheet();
    }
@@ -174,7 +171,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void init()
    {
       ((Session) entityManager.getDelegate()).setFlushMode(FlushMode.MANUAL);
-      haeVyöarvot();
       haePerheet();
       haeHarrastajat();
    }
@@ -260,11 +256,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       perheet = entityManager.createNamedQuery("perheet", Perhe.class).getResultList();
    }
 
-   private void haeVyöarvot()
-   {
-      vyöarvot = entityManager.createNamedQuery("vyöarvot", Vyöarvo.class).getResultList();
-   }
-
    private void virkistäPerheet()
    {
       haePerheet();
@@ -280,7 +271,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       }
       loggaaja.loggaa(String.format("Tallensi harrastajan %s", harrastaja));
       harrastaja.siivoa();
-      entityManager.persist(harrastaja);
+      harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       harrastajaRSM.get(harrastaja).setSelected(true);
       if (harrastaja.isOsoiteMuuttunut())
@@ -314,6 +305,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       if (harrastaja.isPoistettavissa())
       {
          harrastaja.siivoa();
+         harrastaja = entityManager.merge(harrastaja);
          entityManager.refresh(harrastaja);
       } else
       {
@@ -348,6 +340,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void poistaHarrastaja()
    {
+      harrastaja = entityManager.merge(harrastaja);
       entityManager.remove(harrastaja);
       entityManager.flush();
       harrastaja = null;
@@ -364,7 +357,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          vyökoe.setHarrastaja(harrastaja);
          harrastaja.getVyökokeet().add(vyökoe);
       }
-      entityManager.persist(harrastaja);
+      harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       vyökoeRSM.get(vyökoe).setSelected(true);
       harrastaja.getVyökokeet().sort(
@@ -380,7 +373,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          sopimus.setHarrastaja(harrastaja);
          harrastaja.getSopimukset().add(sopimus);
       }
-      entityManager.persist(harrastaja);
+      harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       sopimusRSM.get(sopimus).setSelected(true);
       info("Sopimus tallennettu");
@@ -388,8 +381,9 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void poistaVyökoe()
    {
+      vyökoe = entityManager.merge(vyökoe);
       harrastaja.getVyökokeet().remove(vyökoe);
-      entityManager.persist(harrastaja);
+      harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       info("Vyökoe poistettu");
    }
@@ -398,12 +392,13 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    {
       if (sopimus.isPoistettavissa())
       {
+         sopimus = entityManager.merge(sopimus);
          harrastaja.getSopimukset().remove(sopimus);
       } else
       {
          sopimus.setArkistoitu(true);
       }
-      entityManager.persist(harrastaja);
+      harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       info("Sopimus poistettu");
    }
@@ -481,14 +476,13 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       info("Uusi sopimus alustettu");
    }
 
+   @Inject
+   private Vyökoehelper vyökoehelper;
+
    public void lisääVyökoe()
    {
       vyökoe = new Vyökoe();
-      Vyöarvo seuraavaVyöarvo = vyöarvot.iterator().next();
-      if (!harrastaja.getVyökokeet().isEmpty())
-      {
-         seuraavaVyöarvo = vyöarvot.get(vyöarvot.indexOf(harrastaja.getTuoreinVyöarvo()) + 1);
-      }
+      Vyöarvo seuraavaVyöarvo = vyökoehelper.haeSeuraavaVyöarvo(harrastaja.getTuoreinVyöarvo());
       vyökoe.setVyöarvo(seuraavaVyöarvo);
       vyökoe.setPäivä(new Date());
       vyökoe.setHarrastaja(harrastaja);

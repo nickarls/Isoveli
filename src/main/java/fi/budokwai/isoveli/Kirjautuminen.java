@@ -13,7 +13,6 @@ import javax.faces.event.PhaseEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.deltaspike.jsf.api.listener.phase.AfterPhase;
@@ -35,7 +34,7 @@ public class Kirjautuminen extends Perustoiminnallisuus
 {
    private Henkilö kirjautunutHenkilö = Henkilö.EI_KIRJAUTUNUT;
 
-   @PersistenceContext
+   @Inject
    private EntityManager entityManager;
 
    @Inject

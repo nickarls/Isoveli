@@ -12,9 +12,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import jxl.Workbook;
 import jxl.write.Label;
@@ -28,7 +28,7 @@ import fi.budokwai.isoveli.malli.Harrastaja;
 @Named
 public class RaporttiAdmin
 {
-   @PersistenceContext
+   @Inject
    private EntityManager entityManager;
 
    public BlobData muodostaJäsenkortit() throws RowsExceededException, WriteException, IOException

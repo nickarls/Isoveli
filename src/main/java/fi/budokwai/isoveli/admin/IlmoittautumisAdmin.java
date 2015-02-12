@@ -9,10 +9,9 @@ import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.event.ValueChangeEvent;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
@@ -28,7 +27,7 @@ import fi.budokwai.isoveli.malli.Treenisessio;
 @SessionScoped
 public class IlmoittautumisAdmin extends Perustoiminnallisuus
 {
-   @PersistenceContext(type = PersistenceContextType.EXTENDED)
+   @Inject
    private EntityManager entityManager;
 
    private List<Treenikäynti> treenikäynnit;
@@ -162,6 +161,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
 
    public void poistaTreenikäynti()
    {
+      treenikäynti = entityManager.merge(treenikäynti);
       entityManager.remove(treenikäynti);
       entityManager.flush();
       treenikäynnit = null;
@@ -170,6 +170,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
 
    public void poistaTreenisessio()
    {
+      treenisessio = entityManager.merge(treenisessio);
       entityManager.remove(treenisessio);
       entityManager.flush();
       treenisessio = null;
@@ -192,7 +193,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
 
    public void tallennaTreenikäynti()
    {
-      entityManager.persist(treenikäynti);
+      treenikäynti = entityManager.merge(treenikäynti);
       entityManager.flush();
       treenikäyntiRSM.get(treenikäynti).setSelected(true);
       haeTreenikäynnit();
@@ -201,7 +202,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
 
    public void tallennaTreenisessio()
    {
-      entityManager.persist(treenisessio);
+      treenisessio = entityManager.merge(treenisessio);
       entityManager.flush();
       treenisessioRSM.get(treenisessio).setSelected(true);
       haeTreenisessiot();

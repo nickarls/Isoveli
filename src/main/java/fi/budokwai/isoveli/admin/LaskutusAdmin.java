@@ -145,7 +145,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
          } while (!sopimus.valmiiksiLaskutettu());
       }
       lasku.laskePerhealennukset();
-      lasku = entityManager.merge(lasku);
+      entityManager.persist(lasku);
       entityManager.flush();
       entityManager.refresh(lasku);
       lasku.laskeViitenumero();

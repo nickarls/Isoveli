@@ -278,7 +278,7 @@ public class Sopimus
 
    public boolean valmiiksiLaskutettu()
    {
-      return DateUtil.onkoTulevaisuudessa(getViimeksiLaskutettu());
+      return getViimeksiLaskutettu() == null || DateUtil.onkoTulevaisuudessa(getViimeksiLaskutettu());
    }
 
    public void lis‰‰Treenikertoja()

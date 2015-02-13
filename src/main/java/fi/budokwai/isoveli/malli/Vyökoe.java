@@ -106,11 +106,8 @@ public class Vyökoe
          .sorted(
             (v1, v2) -> Integer.valueOf(v2.vyöarvo.getJärjestys())
                .compareTo(Integer.valueOf(v1.vyöarvo.getJärjestys()))).findFirst();
-      if (!edellinenVyökoe.isPresent())
-      {
-         return Period.ZERO;
-      }
-      return DateUtil.aikaväli(edellinenVyökoe.get().getPäivä());
+      return edellinenVyökoe.isPresent() ? DateUtil.aikaväli(edellinenVyökoe.get().getPäivä()) : DateUtil
+         .aikaväli(harrastaja.getLuotu());
    }
 
    public String getAikaaVälissä()

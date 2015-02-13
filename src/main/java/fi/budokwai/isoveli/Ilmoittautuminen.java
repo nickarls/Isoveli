@@ -38,6 +38,7 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
    private Harrastaja harrastaja;
    private List<Treeni> tulevatTreenit;
    private RowStateMap stateMap = new RowStateMap();
+   private boolean treenioikeus = false;
 
    private class Aikaraja
    {
@@ -97,7 +98,7 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
       {
          return new ArrayList<Treeni>();
       }
-      if (tulevatTreenit == null)
+      if (tulevatTreenit == null && treenioikeus)
       {
          haeTulevatTreenit();
       }
@@ -141,7 +142,8 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
          virhe("Voisitko tulla infotiskille käymään?");
       }
       Sopimustarkistukset sopimustarkistukset = harrastaja.getSopimusTarkistukset();
-      if (!sopimustarkistukset.isOK())
+      treenioikeus = sopimustarkistukset.isOK();
+      if (!treenioikeus)
       {
          sopimustarkistukset.getViestit().forEach(v -> virhe(v));
          virhe("Voisitko tulla infotiskille tarkistamaan maksut?");
@@ -290,5 +292,6 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
       harrastaja = null;
       stateMap = new RowStateMap();
       tulevatTreenit = null;
+      treenioikeus = false;
    }
 }

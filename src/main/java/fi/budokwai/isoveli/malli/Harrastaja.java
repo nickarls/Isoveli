@@ -394,4 +394,52 @@ public class Harrastaja extends Henkilö
       return tauolla != null && DateUtil.onkoMenneysyydessä(tauolla);
    }
 
+   public Date getViimeisinTreeni()
+   {
+      Optional<Treenikäynti> tuorein = treenikäynnit.stream().sorted((tk1, tk2) -> {
+         return tk1.getAikaleima().compareTo(tk2.getAikaleima());
+      }).findFirst();
+      return tuorein.isPresent() ? tuorein.get().getAikaleima() : null;
+   }
+
+   public int getTreenejäYhteensä()
+   {
+      return treenikäynnit.size();
+   }
+
+   private Sopimus getAktiivinenKertakortti()
+   {
+      Optional<Sopimus> omaSopimus = sopimukset.stream().filter(s -> s.getTyyppi().isTreenikertoja()).findFirst();
+      if (omaSopimus.isPresent())
+      {
+         return omaSopimus.get();
+      }
+      if (perhe != null)
+      {
+         return perhe.getPerheenKertakortti();
+      }
+      return null;
+   }
+
+   public boolean isKertakorttiKäytössä()
+   {
+      return getAktiivinenKertakortti() != null;
+   }
+
+   public int getTreenikertojaJäljellä()
+   {
+      Sopimus sopimus = getAktiivinenKertakortti();
+      return sopimus == null ? 0 : sopimus.getTreenikertoja();
+   }
+
+   public Sopimus getHarjoitteluoikeusSopimus()
+   {
+      Optional<Sopimus> harjoittelusopimukset = sopimukset.stream().filter(s -> s.isSopimusOK())
+         .filter(s -> s.getTyyppi().isHarjoittelumaksu()).filter(s -> !s.getTyyppi().isTreenikertoja()).findFirst();
+      if (harjoittelusopimukset.isPresent())
+      {
+         return harjoittelusopimukset.get();
+      }
+      return getAktiivinenKertakortti();
+   }
 }

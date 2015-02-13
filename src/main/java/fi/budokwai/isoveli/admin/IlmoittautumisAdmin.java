@@ -19,6 +19,7 @@ import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
+import fi.budokwai.isoveli.malli.Järjestelmätilasto;
 import fi.budokwai.isoveli.malli.Treenikäynti;
 import fi.budokwai.isoveli.malli.Treenisessio;
 
@@ -36,11 +37,20 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
    private List<Treenisessio> treenisessiot;
    private List<Harrastaja> kaikkivetäjät;
    private List<Harrastaja> sessiovetäjät;
-   
 
    private RowStateMap treenikäyntiRSM = new RowStateMap();
    private RowStateMap treenisessioRSM = new RowStateMap();
 
+   @Produces 
+   @Named
+   public Järjestelmätilasto getTilasto() {
+      long harrastajia = entityManager.createQuery("select count(h) from Harrastaja h", Long.class).getSingleResult();
+      long treenejä = entityManager.createQuery("select count(t) from Treenisessio t", Long.class).getSingleResult();
+      long treenikäyntejä = entityManager.createQuery("select count(t) from Treenikäynti t", Long.class).getSingleResult();
+      long vyöarvoja = entityManager.createQuery("select count(v) from Vyökoe v", Long.class).getSingleResult();
+      return new Järjestelmätilasto(harrastajia, treenejä, treenikäyntejä, vyöarvoja);
+   }
+   
    @Produces
    @Named
    public Treenikäynti getTreenikäynti()

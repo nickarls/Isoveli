@@ -137,24 +137,23 @@ body {
 	font-size: 30px !important;
 }
 </style>
-<link rel="stylesheet" type="text/css" href="jquery.toastmessage.css"/>
-<script src="jquery-1.4.4.min.js"/>
-<script src="jquery.toastmessage.js"/>
+	<link rel="stylesheet" type="text/css" href="jquery.toastmessage.css" />
+	<script src="jquery-1.4.4.min.js" />
+	<script src="jquery.toastmessage.js" />
 </h:head>
-<h:body
-	onload="document.getElementById('formi:korttinumero').focus();">
+<h:body onload="document.getElementById('formi:korttinumero').focus();">
 	<f:view>
 		<ace:growlMessages autoHide="info" messageStyleClass="viesti" />
 		<h:panelGroup styleClass="tilasto">
 			<h:panelGrid columns="2" style="width:100%;">
 				<h:outputText value="Harrastajia" styleClass="tilastoteksti" />
-				<h:outputText value="X" styleClass="tilastoteksti" />
+				<h:outputText value="#{tilasto.harrastajia}" styleClass="tilastoteksti" />
 				<h:outputText value="Treenejä" styleClass="tilastoteksti" />
-				<h:outputText value="X" styleClass="tilastoteksti" />
+				<h:outputText value="#{tilasto.treenejä}" styleClass="tilastoteksti" />
 				<h:outputText value="Treenikäyntejä" styleClass="tilastoteksti" />
-				<h:outputText value="X" styleClass="tilastoteksti" />
+				<h:outputText value="#{tilasto.treenikäyntejä}" styleClass="tilastoteksti" />
 				<h:outputText value="Vyöarvoja" styleClass="tilastoteksti" />
-				<h:outputText value="X" styleClass="tilastoteksti" />
+				<h:outputText value="#{tilasto.vyöarvoja}" styleClass="tilastoteksti" />
 			</h:panelGrid>
 		</h:panelGroup>
 		<h:form id="formi">
@@ -180,23 +179,21 @@ body {
 						<h:outputText value="&nbsp;" />
 						<h:outputText value="&nbsp;" />
 						<h:outputText value="Viimeisin treeni" />
-						<h:outputText value="#{treeniharrastaja.nimi}" />
+						<h:outputText value="#{treeniharrastaja.viimeisinTreeni}">
+							<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
+						</h:outputText>
 						<h:outputText value="Treenejä yhteensä" />
-						<h:outputText value="#{treeniharrastaja.nimi}" />
+						<h:outputText value="#{treeniharrastaja.treenejäYhteensä}" />
 						<h:outputText value="&nbsp;" />
 						<h:outputText value="&nbsp;" />
 						<h:outputText value="Aikaa kokeseen" />
-						<h:outputText value="#{treeniharrastaja.nimi}" />
+						<h:outputText value="#{vyökoehelper.getJäljelläVyökokeeseen(treeniharrastaja).aikaString}" />
 						<h:outputText value="Treenejä kokeeseen" />
-						<h:outputText value="#{treeniharrastaja.nimi}" />
+						<h:outputText value="#{vyökoehelper.getJäljelläVyökokeeseen(treeniharrastaja).treenikertoja}" />
 						<h:outputText value="&nbsp;" />
 						<h:outputText value="&nbsp;" />
-						<h:outputText value="Treenikertoja kortissa" />
-						<h:outputText value="#{treeniharrastaja.nimi}" />
-						<h:outputText value="Jäsenmaksu" />
-						<h:outputText value="#{treeniharrastaja.nimi}" />
-						<h:outputText value="Harjoittelumaksu" />
-						<h:outputText value="#{treeniharrastaja.nimi}" />
+						<h:outputText value="Treenikertoja kortissa" rendered="#{treeniharrastaja.kertakorttiKäytössä}"/>
+						<h:outputText value="#{treeniharrastaja.treenikertojaJäljellä}" rendered="#{treeniharrastaja.kertakorttiKäytössä}"/>
 					</h:panelGrid>
 				</h:panelGrid>
 				<ui:repeat value="#{tulevatTreenit}" var="_treeni">

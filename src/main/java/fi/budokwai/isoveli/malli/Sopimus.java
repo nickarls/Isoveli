@@ -247,7 +247,8 @@ public class Sopimus
          if (sopimuslasku.getLaskurivi().getLasku().isLaskuMyöhässä())
          {
             String viesti = String.format("%s: lasku myöhässä %d päivää", tyyppi.getNimi(), sopimuslasku.getLaskurivi()
-               .getLasku().getMaksuaikaa() * -1);
+               .getLasku().getMaksuaikaa()
+               * -1);
             tulos.add(new Sopimustarkistus(viesti, false));
          }
       }
@@ -308,5 +309,10 @@ public class Sopimus
       {
          umpeutuu = DateUtil.vuosienPäästä(harrastaja.getSyntynyt(), tyyppi.getYläikäraja());
       }
+   }
+
+   public void käytäTreenikerta()
+   {
+      treenikertoja--;
    }
 }

@@ -8,7 +8,7 @@ import org.icefaces.util.JavaScriptRunner;
 public class Perustoiminnallisuus
 {
    private String infoViesti = "$().toastmessage('showToast', { text : '%s', position : 'top-right', sticky: false, type : 'success'});";
-   private String virheViesti = "$().toastmessage('showToast', { text : '%s', position : 'center', sticky: true, type : 'error'});";
+   private String virheViesti = "$().toastmessage('showToast', { text : '%s', position : 'center', sticky: false, type : 'error', stayTime: 8000});";
 
    protected void fokusoi(String kenttä)
    {

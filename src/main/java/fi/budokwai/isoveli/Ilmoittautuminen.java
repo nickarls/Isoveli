@@ -18,6 +18,8 @@ import org.icefaces.ace.model.table.RowStateMap;
 
 import fi.budokwai.isoveli.admin.Perustoiminnallisuus;
 import fi.budokwai.isoveli.malli.Harrastaja;
+import fi.budokwai.isoveli.malli.Sopimus;
+import fi.budokwai.isoveli.malli.Sopimustarkistukset;
 import fi.budokwai.isoveli.malli.Treeni;
 import fi.budokwai.isoveli.malli.Treenik‰ynti;
 import fi.budokwai.isoveli.malli.Treenisessio;
@@ -138,12 +140,15 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
       {
          virhe("Voisitko tulla infotiskille k‰ym‰‰n?");
       }
-      if (!harrastaja.isSopimuksetOK())
+      Sopimustarkistukset sopimustarkistukset = harrastaja.getSopimusTarkistukset();
+      if (!sopimustarkistukset.isOK())
       {
+         sopimustarkistukset.getViestit().forEach(v -> virhe(v));
          virhe("Voisitko tulla infotiskille tarkistamaan maksut?");
          return;
       }
-      if (harrastaja.isTauollaNyt()) {
+      if (harrastaja.isTauollaNyt())
+      {
          virhe("Voisitko tulla infotiskille tarkistamaan treenitauon?");
          return;
       }
@@ -195,6 +200,12 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
       }
       Treenik‰ynti treenikaynti = new Treenik‰ynti(harrastaja, treenisessio);
       harrastaja.getTreenik‰ynnit().add(treenikaynti);
+      Sopimus sopimus = harrastaja.getHarjoitteluoikeusSopimus();
+      if (sopimus.getTyyppi().isTreenikertoja())
+      {
+         sopimus.k‰yt‰Treenikerta();
+         sopimus = entityManager.merge(sopimus);
+      }
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       nollaa();

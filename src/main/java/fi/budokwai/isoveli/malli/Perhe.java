@@ -180,24 +180,20 @@ public class Perhe
       return iceHenkilö.isPresent() ? iceHenkilö.get().getYhteystiedot().getPuhelinnumero() : null;
    }
 
+   public Sopimus getPerheenKertakortti()
+   {
+      Optional<Sopimus> sopimus = perheenjäsenet.stream().filter(h -> h.isHarrastaja())
+         .map(h -> Harrastaja.class.cast(h)).flatMap(h -> h.getSopimukset().stream())
+         .filter(s -> s.getTyyppi().isTreenikertoja()).sorted((s1, s2) -> {
+            return Integer.valueOf(s1.getTreenikertoja()).compareTo(Integer.valueOf(s2.getTreenikertoja()));
+         }).findFirst();
+      return sopimus.isPresent() ? sopimus.get() : null;
+   }
+
    public int getPerheenTreenikerrat()
    {
-      int treenikerrat = 0;
-      for (Henkilö henkilö : perheenjäsenet)
-      {
-         if (henkilö.isHarrastaja())
-         {
-            Harrastaja harrastaja = (Harrastaja) henkilö;
-            for (Sopimus sopimus : harrastaja.getSopimukset())
-            {
-               if (sopimus.getTyyppi().isTreenikertoja())
-               {
-                  treenikerrat += sopimus.getTreenikertoja();
-               }
-            }
-         }
-      }
-      return treenikerrat;
+      Sopimus perheenKertakortti = getPerheenKertakortti();
+      return perheenKertakortti == null ? 0 : perheenKertakortti.getTreenikertoja();
    }
 
 }

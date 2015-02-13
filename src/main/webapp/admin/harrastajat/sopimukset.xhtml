@@ -66,8 +66,8 @@
 				<h:inputText value="#{sopimus.treenikertoja}" id="a_treenikertoja" size="5" />
 			</h:panelGrid>
 			<h:outputText value="Maksuväli" rendered="#{sopimus.tyyppi.kuukausilaskutus}"/>
-			<h:panelGrid>
-				<ace:message for="form:maksuväli" rendered="#{sopimus.tyyppi.kuukausilaskutus}" />
+			<h:panelGrid rendered="#{sopimus.tyyppi.kuukausilaskutus}">
+				<ace:message for="form:maksuväli" />
 				<h:selectOneMenu value="#{sopimus.maksuväli}">
 					<f:selectItem itemValue="" itemLabel="" noSelectionOption="true"/>
 					<f:selectItem itemValue="1" itemLabel="1kk" />

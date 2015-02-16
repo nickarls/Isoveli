@@ -2,7 +2,7 @@ package fi.budokwai.isoveli.malli;
 
 public enum TilausTila
 {
-   A("Avoin"), M("Maksettu"), X("Mitätöity");
+   M("Muodostettu"), L("Lähetetty"), K("Maksettu"), X("Mitätöity");
 
    private final String nimi;
 

@@ -288,7 +288,7 @@ public class Sopimustyyppi
       return isHarjoittelumaksutyyppi();
    }
 
-   private boolean isHarjoittelumaksutyyppi()
+   public boolean isHarjoittelumaksutyyppi()
    {
       return !jäsenmaksu && !alkeiskurssi && harjoittelumaksu && !koeaika && !power && !treenikertoja && !vapautus;
    }

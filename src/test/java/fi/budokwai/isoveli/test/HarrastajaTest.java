@@ -30,7 +30,7 @@ public class HarrastajaTest
       Assert.assertEquals("Jäsenmaksu puuttuu", tarkistukset.getViestit().get(0));
       Assert.assertEquals("Harjoittelumaksu puuttuu", tarkistukset.getViestit().get(1));
    }
-
+   
    @Test
    public void testPelkästäänJäsenmaksu()
    {

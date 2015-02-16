@@ -46,7 +46,7 @@ public class Lasku
    private List<Laskurivi> laskurivit = new ArrayList<Laskurivi>();
 
    @Enumerated(EnumType.STRING)
-   private TilausTila tila = TilausTila.A;
+   private TilausTila tila = TilausTila.M;
 
    @Temporal(TemporalType.DATE)
    @Column(name = "erapaiva")
@@ -172,13 +172,19 @@ public class Lasku
    public void merkkaaMaksetuksi()
    {
       maksettu = new Date();
+      tila = TilausTila.K;
+   }
+
+   public void merkkaaMuodostetuksi()
+   {
+      maksettu = null;
       tila = TilausTila.M;
    }
 
-   public void merkkaaAvoimeksi()
+   public void merkkaaLähetetyksi()
    {
       maksettu = null;
-      tila = TilausTila.A;
+      tila = TilausTila.L;
    }
 
    public long getMaksuaikaa()
@@ -259,12 +265,10 @@ public class Lasku
 
    public void laskePerhealennukset()
    {
-      List<Laskurivi> harjoitusmaksut = laskurivit
-         .stream()
-         .filter(l -> l.getSopimuslasku().getSopimus().getTyyppi().isHarjoittelumaksu())
-         .sorted(
-            (lr1, lr2) -> lr1.getSopimuslasku().getSopimus().getLuotu()
-               .compareTo(lr2.getSopimuslasku().getSopimus().getLuotu())).collect(Collectors.toList());
+      List<Laskurivi> harjoitusmaksut = laskurivit.stream()
+         .filter(l -> l.getSopimuslasku().getSopimus().getTyyppi().isHarjoittelumaksutyyppi())
+         .sorted((lr1, lr2) -> Double.valueOf(lr1.getRivihinta()).compareTo(Double.valueOf(lr2.getRivihinta())))
+         .collect(Collectors.toList());
       if (harjoitusmaksut.size() < 2)
       {
          return;

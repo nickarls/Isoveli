@@ -57,18 +57,18 @@ public class Laskurivi
    @Column(name = "yksikkohinta")
    private double yksikkˆhinta = 0;
 
+   public Laskurivi(Sopimuslasku sopimuslasku, Laskutuskausi laskutuskausi)
+   {
+      this.sopimuslasku = sopimuslasku;
+      sopimuslasku.setLaskurivi(this);
+      virkist‰Laskurivi(laskutuskausi);
+   }
+
    public Laskurivi()
    {
    }
 
-   public Laskurivi(Sopimuslasku sopimuslasku)
-   {
-      this.sopimuslasku = sopimuslasku;
-      sopimuslasku.setLaskurivi(this);
-      virkist‰Laskurivi();
-   }
-
-   public void virkist‰Laskurivi()
+   private void virkist‰Laskurivi(Laskutuskausi laskutuskausi)
    {
       if (sopimuslasku == null)
       {
@@ -79,10 +79,7 @@ public class Laskurivi
          .getEtunimi());
       infotieto = sopimuslasku.getJakso();
       yksikkˆhinta = sopimustyyppi.getHinta();
-      if (sopimustyyppi.isKuukausilaskutus())
-      {
-         m‰‰r‰ = sopimuslasku.getKuukausiaV‰liss‰();
-      }
+      m‰‰r‰ = laskutuskausi.getM‰‰r‰();
    }
 
    public double getRivihinta()

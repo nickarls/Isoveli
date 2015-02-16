@@ -71,6 +71,16 @@
 		<ace:column headerText="Laskutettu">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_lasku.laskutettu}" />
 		</ace:column>
+		<ace:column>
+			<h:graphicImage value="/kuvat/alivalikko.png" style="width:24px" id="alivalikko"/>
+            <ace:contextMenu for="alivalikko">
+                <ace:menuItem value="Virkistä" action="#{laskutusAdmin.virkistäLasku(_lasku)}"/>
+                <ace:menuItem value="Muodosta PDF" action="#{laskutusAdmin.virkistäLasku(_lasku)}"/>
+                <ace:menuItem value="Lähetä" action="#{laskutusAdmin.virkistäLasku(_lasku)}"/>
+                <ace:menuItem value="Tulosta" action="#{laskutusAdmin.virkistäLasku(_lasku)}"/>
+                <ace:menuItem value="Peruuta" action="#{laskutusAdmin.virkistäLasku(_lasku)}"/>
+            </ace:contextMenu>			
+		</ace:column>
 		<ace:panelExpansion>
 			<ace:dataTable rows="10" value="#{_lasku.laskurivit}" var="_laskurivi" paginator="true" paginatorPosition="bottom"
 				paginatorAlwaysVisible="false">

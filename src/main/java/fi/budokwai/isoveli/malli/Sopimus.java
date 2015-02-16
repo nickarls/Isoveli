@@ -1,5 +1,7 @@
 package fi.budokwai.isoveli.malli;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -314,5 +316,58 @@ public class Sopimus
    public void k‰yt‰Treenikerta()
    {
       treenikertoja--;
+   }
+
+   public Laskutuskausi getLaskutuskausi()
+   {
+      Date kausiAlkaa = getKausiAlkaa();
+      Date kausiLoppuu = getKausiLoppuu(kausiAlkaa);
+      int kaudenM‰‰r‰ = getKaudenM‰‰r‰(kausiAlkaa, kausiLoppuu);
+      return new Laskutuskausi(kausiAlkaa, kausiLoppuu, kaudenM‰‰r‰);
+   }
+
+   private int getKaudenM‰‰r‰(Date kausiAlkaa, Date kausiLoppuu)
+   {
+      if (tyyppi.isJ‰senmaksutyyppi())
+      {
+         return DateUtil.laskutusvuosiaV‰liss‰(kausiAlkaa, kausiLoppuu);
+      } else if (tyyppi.isHarjoittelumaksutyyppi())
+      {
+         return DateUtil.laskutuskuukausiaV‰liss‰(kausiAlkaa, kausiLoppuu);
+      } else if (tyyppi.isTreenikertoja())
+      {
+         return tyyppi.getOletusTreenikerrat();
+      } else
+      {
+         return 1;
+      }
+   }
+
+   private Date getKausiLoppuu(Date alkaa)
+   {
+      if (umpeutuu != null)
+      {
+         return umpeutuu;
+      }
+      LocalDate loppu = DateUtil.Date2LocalDate(alkaa);
+      if (tyyppi.isJ‰senmaksutyyppi())
+      {
+         return DateUtil.LocalDate2Date(DateUtil.vuodenViimeinenP‰iv‰());
+      }
+      if (tyyppi.isTreenikertoja())
+      {
+         return DateUtil.t‰n‰‰nDate();
+      }
+      while (loppu.isBefore(DateUtil.t‰n‰‰n()))
+      {
+         loppu = loppu.plus(maksuv‰li, ChronoUnit.MONTHS);
+      }
+      return DateUtil.LocalDate2Date(loppu);
+   }
+
+   private Date getKausiAlkaa()
+   {
+      Date viimeLaskutus = getViimeksiLaskutettu();
+      return viimeLaskutus == null ? luotu : viimeLaskutus;
    }
 }

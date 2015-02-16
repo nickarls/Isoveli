@@ -25,7 +25,7 @@ public class DateUtil
       return Date2LocalDateTime(p‰iv‰m‰‰r‰).toLocalDate();
    }
 
-   private LocalTime Date2LocalTime(Date p‰iv‰m‰‰r‰) 
+   private LocalTime Date2LocalTime(Date p‰iv‰m‰‰r‰)
    {
       return Date2LocalDateTime(p‰iv‰m‰‰r‰).toLocalTime();
    }
@@ -150,6 +150,24 @@ public class DateUtil
    public static int kuukausiaV‰liss‰(Date alkaa, Date p‰‰ttyy)
    {
       return (int) ChronoUnit.MONTHS.between(Date2LocalDate(alkaa), Date2LocalDate(p‰‰ttyy));
+   }
+
+   public static int laskutuskuukausiaV‰liss‰(Date alkaa, Date p‰‰ttyy)
+   {
+      Period aikav‰li = Period.between(Date2LocalDate(alkaa), Date2LocalDate(p‰‰ttyy));
+      int vuosienkuukaudet = aikav‰li.getYears() * 12;
+      int kuukaudet = aikav‰li.getMonths();
+      if (aikav‰li.getDays() > 0)
+      {
+         kuukaudet++;
+      }
+      return vuosienkuukaudet + kuukaudet;
+   }
+
+   public static int laskutusvuosiaV‰liss‰(Date alkaa, Date p‰‰ttyy)
+   {
+      Period aikav‰li = Period.between(Date2LocalDate(alkaa), Date2LocalDate(p‰‰ttyy));
+      return aikav‰li.getYears() + 1;
    }
 
    public static String formatoi(Date p‰iv‰m‰‰r‰)

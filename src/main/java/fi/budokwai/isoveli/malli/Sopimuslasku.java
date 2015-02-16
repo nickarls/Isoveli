@@ -1,7 +1,6 @@
 package fi.budokwai.isoveli.malli;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -49,12 +48,11 @@ public class Sopimuslasku
    {
    }
 
-   public Sopimuslasku(Sopimus sopimus)
+   public Sopimuslasku(Sopimus sopimus, Laskutuskausi laskutuskausi)
    {
       this.sopimus = sopimus;
-      Date viimeLaskutus = sopimus.getViimeksiLaskutettu();
-      alkaa = viimeLaskutus == null ? sopimus.getLuotu() : viimeLaskutus;
-      p‰‰ttyy = haeP‰‰ttymisp‰iv‰(sopimus);
+      alkaa = laskutuskausi.getAlkaa();
+      p‰‰ttyy = laskutuskausi.getP‰‰ttyy();
       sopimus.getSopimuslaskut().add(this);
    }
 
@@ -62,35 +60,6 @@ public class Sopimuslasku
    {
       SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
       return String.format("%s-%s", sdf.format(alkaa), sdf.format(p‰‰ttyy));
-   }
-
-   private Date haeP‰‰ttymisp‰iv‰(Sopimus sopimus)
-   {
-      LocalDate sopimusLoppuu;
-      LocalDate jaksoLoppuu = null;
-      if (sopimus.getTyyppi().isJ‰senmaksutyyppi() || sopimus.getTyyppi().isTreenikertoja())
-      {
-         jaksoLoppuu = DateUtil.vuodenViimeinenP‰iv‰();
-      } else
-      {
-         jaksoLoppuu = DateUtil.kuukausienP‰‰st‰(alkaa, sopimus.getMaksuv‰li());
-      }
-      if (sopimus.getUmpeutuu() == null)
-      {
-         sopimusLoppuu = jaksoLoppuu;
-      } else
-      {
-         sopimusLoppuu = DateUtil.Date2LocalDate(sopimus.getUmpeutuu());
-      }
-      LocalDate loppuuEnsin = null;
-      if (sopimus.getTyyppi().isKuukausilaskutus())
-      {
-         loppuuEnsin = sopimusLoppuu.isBefore(jaksoLoppuu) ? sopimusLoppuu : jaksoLoppuu;
-      } else
-      {
-         loppuuEnsin = sopimusLoppuu;
-      }
-      return DateUtil.LocalDate2Date(loppuuEnsin);
    }
 
    public int getId()

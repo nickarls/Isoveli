@@ -32,9 +32,11 @@ import fi.budokwai.isoveli.malli.BlobData;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Lasku;
 import fi.budokwai.isoveli.malli.Laskurivi;
+import fi.budokwai.isoveli.malli.Laskutuskausi;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
+import fi.budokwai.isoveli.malli.TilausTila;
 import fi.budokwai.isoveli.util.DateUtil;
 import fi.budokwai.isoveli.util.Lasku2PDF;
 import fi.budokwai.isoveli.util.Loggaaja;
@@ -68,9 +70,14 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    {
       tilasuodatukset = new ArrayList<SelectItem>();
       tilasuodatukset.add(new SelectItem("", "Kaikki", "Kaikki", false, false, true));
-      tilasuodatukset.add(new SelectItem("A", "Avoin", "Avoin", false, false, false));
-      tilasuodatukset.add(new SelectItem("M", "Maksettu", "Maksettu", false, false, false));
-      tilasuodatukset.add(new SelectItem("X", "Mitätöity", "Mitätöity", false, false, false));
+      tilasuodatukset.add(new SelectItem(TilausTila.M.name(), TilausTila.M.getNimi(), TilausTila.M.getNimi(), false,
+         false, false));
+      tilasuodatukset.add(new SelectItem(TilausTila.L.name(), TilausTila.L.getNimi(), TilausTila.L.getNimi(), false,
+         false, false));
+      tilasuodatukset.add(new SelectItem(TilausTila.K.name(), TilausTila.K.getNimi(), TilausTila.K.getNimi(), false,
+         false, false));
+      tilasuodatukset.add(new SelectItem(TilausTila.X.name(), TilausTila.X.getNimi(), TilausTila.X.getNimi(), false,
+         false, false));
    }
 
    @Inject
@@ -126,6 +133,30 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       loggaaja.loggaa("Suoritti laskutusajon");
    }
 
+   public Lasku x(List<Sopimus> sopimukset)
+   {
+      if (sopimukset.isEmpty())
+      {
+         return new Lasku();
+      }
+      Henkilö henkilö = haeLaskunVastaanottaja(sopimukset);
+      Lasku lasku = new Lasku(henkilö);
+      for (Sopimus sopimus : sopimukset)
+      {
+         Laskutuskausi laskutuskausi = sopimus.getLaskutuskausi();
+         Sopimuslasku sopimuslasku = new Sopimuslasku(sopimus, laskutuskausi);
+         Laskurivi laskurivi = new Laskurivi(sopimuslasku, laskutuskausi);
+         lasku.lisääRivi(laskurivi);
+         if (sopimus.getTyyppi().isTreenikertoja())
+         {
+            sopimus.lisääTreenikertoja();
+            sopimus = entityManager.merge(sopimus);
+         }
+      }
+      lasku.laskePerhealennukset();
+      return lasku;
+   }
+
    private void teeLaskuOsoitteelle(List<Sopimus> sopimukset)
    {
       Henkilö henkilö = haeLaskunVastaanottaja(sopimukset);
@@ -134,8 +165,9 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       {
          do
          {
-            Sopimuslasku sopimuslasku = new Sopimuslasku(sopimus);
-            Laskurivi laskurivi = new Laskurivi(sopimuslasku);
+            Laskutuskausi laskutuskausi = sopimus.getLaskutuskausi();
+            Sopimuslasku sopimuslasku = new Sopimuslasku(sopimus, laskutuskausi);
+            Laskurivi laskurivi = new Laskurivi(sopimuslasku, laskutuskausi);
             lasku.lisääRivi(laskurivi);
             if (sopimus.getTyyppi().isTreenikertoja())
             {
@@ -163,6 +195,13 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       if (!huoltajat.isEmpty())
       {
          return huoltajat.stream().findFirst().get();
+      }
+      List<Henkilö> täysiikäisetPerheenjäsenet = sopimukset.stream().filter(s -> s.getHarrastaja().getPerhe() != null)
+         .flatMap(s -> s.getHarrastaja().getPerhe().getPerheenjäsenet().stream()).filter(h -> !h.isAlaikäinen())
+         .collect(Collectors.toList());
+      if (!täysiikäisetPerheenjäsenet.isEmpty())
+      {
+         return täysiikäisetPerheenjäsenet.stream().findFirst().get();
       }
       List<Henkilö> täysiikäiset = sopimukset.stream().map(sopimus -> sopimus.getHarrastaja())
          .filter(harrastaja -> !harrastaja.isAlaikäinen()).collect(Collectors.toList());

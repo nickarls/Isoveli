@@ -2,6 +2,7 @@ package fi.budokwai.isoveli.test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import junit.framework.Assert;
 
@@ -114,8 +115,9 @@ public class LaskutuskausiTest extends Perustesti
    {
       Sopimus sopimus = teeKertamaksusopimus(new Harrastaja(), "01.01.2014");
       Laskutuskausi kausi = sopimus.getLaskutuskausi();
+      String t‰n‰‰n = DateUtil.formatoi(DateUtil.t‰n‰‰nDate());
       Assert.assertEquals("01.01.2014", DateUtil.formatoi(kausi.getAlkaa()));
-      Assert.assertEquals("16.02.2015", DateUtil.formatoi(kausi.getP‰‰ttyy()));
+      Assert.assertEquals(t‰n‰‰n, DateUtil.formatoi(kausi.getP‰‰ttyy()));
       Assert.assertEquals(10, kausi.getM‰‰r‰());
    }
 

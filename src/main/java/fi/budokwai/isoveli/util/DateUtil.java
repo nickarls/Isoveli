@@ -1,5 +1,7 @@
 package fi.budokwai.isoveli.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -178,6 +180,23 @@ public class DateUtil
    public static Date vuosienP‰‰st‰(Date p‰iv‰m‰‰r‰, int vuosia)
    {
       return LocalDate2Date(vuosienP‰‰st‰(Date2LocalDate(p‰iv‰m‰‰r‰), vuosia));
+   }
+
+   public static boolean onkoV‰liss‰(Date alkaa, Date p‰‰ttyy)
+   {
+      return t‰n‰‰n().isAfter(Date2LocalDate(alkaa)) && t‰n‰‰n().isBefore(Date2LocalDate(p‰‰ttyy));
+   }
+
+   public static LocalDate silloin(String p‰iv‰m‰‰r‰)
+   {
+      try
+      {
+         return Date2LocalDate(new SimpleDateFormat("dd.MM.yyyy").parse(p‰iv‰m‰‰r‰));
+      } catch (ParseException e)
+      {
+         e.printStackTrace();
+      }
+      return null;
    }
 
 }

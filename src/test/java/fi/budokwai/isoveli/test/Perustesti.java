@@ -6,12 +6,49 @@ import java.util.Arrays;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
+import fi.budokwai.isoveli.malli.Lasku;
+import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Sopimus;
+import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.malli.Sopimustyyppi;
+import fi.budokwai.isoveli.malli.Vyöarvo;
+import fi.budokwai.isoveli.malli.Vyökoe;
 
 public class Perustesti
 {
+   protected Sopimuslasku teeSopimuslasku(Sopimus sopimus) throws ParseException
+   {
+      Sopimuslasku sopimuslasku = new Sopimuslasku();
+      sopimuslasku.setSopimus(sopimus);
+      sopimus.getSopimuslaskut().add(sopimuslasku);
+      Lasku lasku = new Lasku();
+      Laskurivi laskurivi = new Laskurivi();
+      lasku.getLaskurivit().add(laskurivi);
+      laskurivi.setLasku(lasku);
+      sopimuslasku.setLaskurivi(laskurivi);
+      return sopimuslasku;
+   }
+
+   protected void teeVyökoe(Harrastaja harrastaja, String koska, String vyöarvoNimi, int järjestys)
+   {
+      Vyökoe vyökoe = new Vyökoe();
+      Vyöarvo vyöarvo = new Vyöarvo();
+      vyöarvo.setNimi(vyöarvoNimi);
+      vyöarvo.setJärjestys(järjestys);
+      vyökoe.setVyöarvo(vyöarvo);
+      vyökoe.setHarrastaja(harrastaja);
+      try
+      {
+         vyökoe.setPäivä(new SimpleDateFormat("dd.MM.yyyy").parse(koska));
+      } catch (ParseException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+      harrastaja.getVyökokeet().add(vyökoe);
+   }
+
    protected Henkilö teeHenkilö(String nimi)
    {
       Henkilö henkilö = new Henkilö();
@@ -85,11 +122,13 @@ public class Perustesti
       Sopimus sopimus = new Sopimus();
       Sopimustyyppi sopimustyyppi = new Sopimustyyppi();
       sopimustyyppi.setLaskutettava(true);
+      sopimustyyppi.setHarjoittelumaksu(true);
       sopimustyyppi.setHinta(6);
       sopimustyyppi.setOletusTreenikerrat(10);
       sopimustyyppi.setNimi("Kertamaksu");
       sopimustyyppi.setTreenikertoja(true);
       sopimus.setTyyppi(sopimustyyppi);
+      sopimus.setTreenikertoja(10);
       try
       {
          sopimus.setLuotu(new SimpleDateFormat("dd.MM.yyyy").parse(luotu));

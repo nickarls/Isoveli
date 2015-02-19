@@ -88,7 +88,10 @@ public class Harrastaja extends Henkilö
    private boolean infotiskille;
 
    @Temporal(TemporalType.DATE)
-   private Date tauolla;
+   private Date taukoAlkaa;
+
+   @Temporal(TemporalType.DATE)
+   private Date taukoPäättyy;
 
    public Harrastaja()
    {
@@ -379,19 +382,21 @@ public class Harrastaja extends Henkilö
       this.infotiskille = infotiskille;
    }
 
-   public Date getTauolla()
+   public boolean isTauolla()
    {
-      return tauolla;
-   }
-
-   public void setTauolla(Date tauolla)
-   {
-      this.tauolla = tauolla;
-   }
-
-   public boolean isTauollaNyt()
-   {
-      return tauolla != null && DateUtil.onkoMenneysyydessä(tauolla);
+      if (taukoAlkaa == null && taukoPäättyy == null)
+      {
+         return false;
+      } else if (taukoAlkaa != null && taukoPäättyy == null)
+      {
+         return DateUtil.onkoMenneysyydessä(taukoAlkaa);
+      } else if (taukoAlkaa == null && taukoPäättyy != null)
+      {
+         return DateUtil.onkoTulevaisuudessa(taukoPäättyy);
+      } else
+      {
+         return DateUtil.onkoVälissä(taukoAlkaa, taukoPäättyy);
+      }
    }
 
    public Date getViimeisinTreeni()
@@ -418,7 +423,7 @@ public class Harrastaja extends Henkilö
       {
          return perhe.getPerheenKertakortti();
       }
-      return null;
+      return Sopimus.EI_OOTA;
    }
 
    public boolean isKertakorttiKäytössä()
@@ -441,5 +446,25 @@ public class Harrastaja extends Henkilö
          return harjoittelusopimukset.get();
       }
       return getAktiivinenKertakortti();
+   }
+
+   public Date getTaukoAlkaa()
+   {
+      return taukoAlkaa;
+   }
+
+   public void setTaukoAlkaa(Date taukoAlkaa)
+   {
+      this.taukoAlkaa = taukoAlkaa;
+   }
+
+   public Date getTaukoPäättyy()
+   {
+      return taukoPäättyy;
+   }
+
+   public void setTaukoPäättyy(Date taukoPäättyy)
+   {
+      this.taukoPäättyy = taukoPäättyy;
    }
 }

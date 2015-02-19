@@ -5,7 +5,6 @@ public class Sopimustarkistus
    private boolean OK;
    private String viesti;
 
-
    public Sopimustarkistus()
    {
       OK = true;
@@ -26,5 +25,11 @@ public class Sopimustarkistus
    public String getViesti()
    {
       return viesti;
+   }
+
+   @Override
+   public String toString()
+   {
+      return String.format("%s: %s", OK, viesti);
    }
 }

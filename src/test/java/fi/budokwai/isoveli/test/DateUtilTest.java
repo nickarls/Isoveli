@@ -27,6 +27,21 @@ public class DateUtilTest
    }
 
    @Test
+   public void testSilloin() {
+      LocalDate silloin = DateUtil.silloin("01.01.2015");
+      Assert.assertEquals(2015, silloin.getYear());
+      Assert.assertEquals(1, silloin.getMonthValue());
+      Assert.assertEquals(1, silloin.getDayOfMonth());
+   }
+   
+   @Test
+   public void testOnkoV‰liss‰() throws ParseException {
+      Date d1 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015");
+      Date d2 = new SimpleDateFormat("dd.MM.yyyy").parse("31.12.2015");
+      Assert.assertTrue(DateUtil.onkoV‰liss‰(d1, d2));
+   }
+   
+   @Test
    public void testT‰n‰‰nDate()
    {
       Calendar tarkistus = Calendar.getInstance();

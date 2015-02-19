@@ -178,11 +178,10 @@ public class LaskutusTest extends Perustesti
       täysiikäinenHarrastaja.setId(2);
       LaskutusAdmin laskutusAdmin = new LaskutusAdmin();
       List<Sopimus> sopimukset = new ArrayList<>();
-      sopimukset.add(teeHarjoittelusopimus(täysiikäinenHarrastaja, "01.01.2014", 6));
-      sopimukset.add(teeHarjoittelusopimus(täysiikäinenHarrastaja2, "01.01.2014", 6));
-      Lasku lasku = laskutusAdmin.x(sopimukset);
-      Assert.assertEquals(3, lasku.getLaskurivejä());
-      Assert.assertEquals(-180d, lasku.getLaskurivit().get(2).getRivihinta());
+      sopimukset.add(teeKertamaksusopimus(täysiikäinenHarrastaja, "01.01.2014"));
+      sopimukset.add(teeKertamaksusopimus(täysiikäinenHarrastaja2, "01.01.2014"));
+      // Lasku lasku = laskutusAdmin.x(sopimukset);
+      // Assert.assertEquals(2, lasku.getLaskurivejä());
    }
 
    @Test
@@ -200,6 +199,12 @@ public class LaskutusTest extends Perustesti
       Lasku lasku = laskutusAdmin.x(sopimukset);
       Assert.assertEquals(3, lasku.getLaskurivejä());
       Assert.assertEquals(-360d, lasku.getLaskurivit().get(2).getRivihinta());
+   }
+
+   @Test
+   public void testTauko()
+   {
+
    }
 
 }

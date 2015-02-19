@@ -3,22 +3,20 @@ package fi.budokwai.isoveli.test;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Date;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
-import fi.budokwai.isoveli.malli.Lasku;
-import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.malli.Sopimustarkistukset;
-import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.util.DateUtil;
 
-public class HarrastajaTest
+public class HarrastajaTest extends Perustesti
 {
    @Test
    public void testEiSopimuksia()
@@ -30,49 +28,24 @@ public class HarrastajaTest
       Assert.assertEquals("Jäsenmaksu puuttuu", tarkistukset.getViestit().get(0));
       Assert.assertEquals("Harjoittelumaksu puuttuu", tarkistukset.getViestit().get(1));
    }
-   
+
    @Test
    public void testPelkästäänJäsenmaksu()
    {
       Harrastaja harrastaja = new Harrastaja();
-      teeJäsenmaksusopimus(harrastaja);
+      teeJäsenmaksusopimus(harrastaja, "01.01.2015");
       Assert.assertFalse(harrastaja.isSopimuksetOK());
       Sopimustarkistukset tarkistukset = harrastaja.getSopimusTarkistukset();
       Assert.assertEquals(1, tarkistukset.getViestit().size());
       Assert.assertEquals("Harjoittelumaksu puuttuu", tarkistukset.getViestit().get(0));
    }
-
    
-   private Sopimus teeKertamaksusopimus(Harrastaja harrastaja)
-   {
-      Sopimustyyppi tyyppi = new Sopimustyyppi();
-      tyyppi.setTreenikertoja(true);
-      tyyppi.setNimi("Treenikertoja");
-      Sopimus sopimus = new Sopimus();
-      sopimus.setTyyppi(tyyppi);
-      sopimus.setHarrastaja(harrastaja);
-      harrastaja.getSopimukset().add(sopimus);
-      return sopimus;
-   }
-   
-   private Sopimus teeJäsenmaksusopimus(Harrastaja harrastaja)
-   {
-      Sopimustyyppi tyyppi = new Sopimustyyppi();
-      tyyppi.setJäsenmaksu(true);
-      tyyppi.setNimi("Jäsenmaksu");
-      Sopimus sopimus = new Sopimus();
-      sopimus.setTyyppi(tyyppi);
-      sopimus.setHarrastaja(harrastaja);
-      harrastaja.getSopimukset().add(sopimus);
-      return sopimus;
-   }
-
    @Test
    public void testJäsenmaksuEiVoimassa()
    {
       Harrastaja harrastaja = new Harrastaja();
-      Sopimus sopimus = teeJäsenmaksusopimus(harrastaja);
-      sopimus.setUmpeutuu(new Date());
+      teeJäsenmaksusopimus(harrastaja, "01.01.2015");
+      harrastaja.getSopimukset().iterator().next().setUmpeutuu(new Date());
       Assert.assertFalse(harrastaja.isSopimuksetOK());
       Sopimustarkistukset tarkistukset = harrastaja.getSopimusTarkistukset();
       Assert.assertEquals(2, tarkistukset.getViestit().size());
@@ -83,23 +56,23 @@ public class HarrastajaTest
    public void testLaskuMaksamatta() throws ParseException
    {
       Harrastaja harrastaja = new Harrastaja();
-      teeHarjoittelusopimus(harrastaja);
-      Sopimus sopimus = teeJäsenmaksusopimus(harrastaja);
-      Sopimuslasku sopimuslasku = teeSopimuslasku(sopimus);
+      teeHarjoittelusopimus(harrastaja, "01.01.2015", 6);
+      teeJäsenmaksusopimus(harrastaja, "01.01.2015");
+      Sopimuslasku sopimuslasku = teeSopimuslasku(harrastaja.getSopimukset().iterator().next());
       sopimuslasku.getLaskurivi().getLasku().setEräpäivä(new SimpleDateFormat("dd.MM.yyyy").parse("02.02.2015"));
       Assert.assertFalse(harrastaja.isSopimuksetOK());
       Sopimustarkistukset tarkistukset = harrastaja.getSopimusTarkistukset();
       Assert.assertEquals(1, tarkistukset.getViestit().size());
-      Assert.assertTrue(tarkistukset.getViestit().get(0).startsWith("Jäsenmaksu: lasku myöhässä"));
+      Assert.assertTrue(tarkistukset.getViestit().get(0).startsWith("Harjoittelumaksu: lasku myöhässä"));
    }
 
    @Test
    public void testLaskuMaksamattaTänään() throws ParseException
    {
       Harrastaja harrastaja = new Harrastaja();
-      teeHarjoittelusopimus(harrastaja);
-      Sopimus sopimus = teeJäsenmaksusopimus(harrastaja);
-      Sopimuslasku sopimuslasku = teeSopimuslasku(sopimus);
+      teeHarjoittelusopimus(harrastaja, "01.01.2005", 6);
+      teeJäsenmaksusopimus(harrastaja, "01.01.2015");
+      Sopimuslasku sopimuslasku = teeSopimuslasku(harrastaja.getSopimukset().iterator().next());
       sopimuslasku.getLaskurivi().getLasku().setEräpäivä(DateUtil.LocalDate2Date(LocalDate.now()));
       Assert.assertTrue(harrastaja.isSopimuksetOK());
    }
@@ -108,9 +81,9 @@ public class HarrastajaTest
    public void testLaskuAvoin() throws ParseException
    {
       Harrastaja harrastaja = new Harrastaja();
-      teeHarjoittelusopimus(harrastaja);
-      Sopimus sopimus = teeJäsenmaksusopimus(harrastaja);
-      Sopimuslasku sopimuslasku = teeSopimuslasku(sopimus);
+      teeHarjoittelusopimus(harrastaja, "01.01.2015", 6);
+      teeJäsenmaksusopimus(harrastaja, "01.01.2015");
+      Sopimuslasku sopimuslasku = teeSopimuslasku(harrastaja.getSopimukset().iterator().next());
       sopimuslasku.getLaskurivi().getLasku().setEräpäivä(new SimpleDateFormat("dd.MM.yyyy").parse("02.02.2016"));
       Assert.assertTrue(harrastaja.isSopimuksetOK());
    }
@@ -119,54 +92,29 @@ public class HarrastajaTest
    public void testLaskuMaksettu() throws ParseException
    {
       Harrastaja harrastaja = new Harrastaja();
-      teeHarjoittelusopimus(harrastaja);
-      Sopimus sopimus = teeJäsenmaksusopimus(harrastaja);
-      Sopimuslasku sopimuslasku = teeSopimuslasku(sopimus);
+      teeHarjoittelusopimus(harrastaja, "01.01.2015", 6);
+      teeJäsenmaksusopimus(harrastaja, "01.01.2015");
+      Sopimuslasku sopimuslasku = teeSopimuslasku(harrastaja.getSopimukset().iterator().next());
       sopimuslasku.getLaskurivi().getLasku().setMaksettu(new SimpleDateFormat("dd.MM.yyyy").parse("02.02.2015"));
       Assert.assertTrue(harrastaja.isSopimuksetOK());
    }
-   
+
    @Test
    public void testLaskuMaksettuTänään() throws ParseException
    {
       Harrastaja harrastaja = new Harrastaja();
-      teeHarjoittelusopimus(harrastaja);
-      Sopimus sopimus = teeJäsenmaksusopimus(harrastaja);
-      Sopimuslasku sopimuslasku = teeSopimuslasku(sopimus);
+      teeHarjoittelusopimus(harrastaja, "01.01.2015", 6);
+      teeJäsenmaksusopimus(harrastaja, "01.01.2015");
+      Sopimuslasku sopimuslasku = teeSopimuslasku(harrastaja.getSopimukset().iterator().next());
       sopimuslasku.getLaskurivi().getLasku().setMaksettu(DateUtil.LocalDate2Date(LocalDate.now()));
       Assert.assertTrue(harrastaja.isSopimuksetOK());
-   }   
-
-   private Sopimuslasku teeSopimuslasku(Sopimus sopimus) throws ParseException
-   {
-      Sopimuslasku sopimuslasku = new Sopimuslasku();
-      sopimuslasku.setSopimus(sopimus);
-      sopimus.getSopimuslaskut().add(sopimuslasku);
-      Lasku lasku = new Lasku();
-      Laskurivi laskurivi = new Laskurivi();
-      lasku.getLaskurivit().add(laskurivi);
-      laskurivi.setLasku(lasku);
-      sopimuslasku.setLaskurivi(laskurivi);
-      return sopimuslasku;
-   }
-
-   private Sopimus teeHarjoittelusopimus(Harrastaja harrastaja)
-   {
-      Sopimustyyppi tyyppi = new Sopimustyyppi();
-      tyyppi.setHarjoittelumaksu(true);
-      tyyppi.setNimi("Harjoittelumaksu");
-      Sopimus sopimus = new Sopimus();
-      sopimus.setTyyppi(tyyppi);
-      sopimus.setHarrastaja(harrastaja);
-      harrastaja.getSopimukset().add(sopimus);
-      return sopimus;
    }
 
    @Test
    public void testPelkästäänHarjoittelumaksu()
    {
       Harrastaja harrastaja = new Harrastaja();
-      teeHarjoittelusopimus(harrastaja);
+      teeHarjoittelusopimus(harrastaja, "01.01.2015", 6);
       Assert.assertFalse(harrastaja.isSopimuksetOK());
       Sopimustarkistukset tarkistukset = harrastaja.getSopimusTarkistukset();
       Assert.assertEquals(1, tarkistukset.getViestit().size());
@@ -177,30 +125,27 @@ public class HarrastajaTest
    public void testJäsenmaksuJaHarjoittelumaksu()
    {
       Harrastaja harrastaja = new Harrastaja();
-      teeHarjoittelusopimus(harrastaja);
-      teeJäsenmaksusopimus(harrastaja);
+      teeHarjoittelusopimus(harrastaja, "01.01.2015", 6);
+      teeJäsenmaksusopimus(harrastaja, "01.01.2015");
       Assert.assertTrue(harrastaja.isSopimuksetOK());
    }
-   
+
    @Test
    public void testJäsenmaksuJaTreenikertoja()
    {
       Harrastaja harrastaja = new Harrastaja();
-      teeHarjoittelusopimus(harrastaja);
-      teeJäsenmaksusopimus(harrastaja);
-      Sopimus sopimus = teeKertamaksusopimus(harrastaja);
-      sopimus.setTreenikertoja(10);
+      teeJäsenmaksusopimus(harrastaja, "01.01.2015");
+      teeKertamaksusopimus(harrastaja, "01.01.2015");
       Assert.assertTrue(harrastaja.isSopimuksetOK());
    }
-   
+
    @Test
    public void testPerheelläTreenikertoja()
    {
       Harrastaja vanhempi = new Harrastaja();
-      Sopimus sopimus = teeKertamaksusopimus(vanhempi);
-      sopimus.setTreenikertoja(10);
+      teeKertamaksusopimus(vanhempi, "01.01.2015");
       Harrastaja harrastaja = new Harrastaja();
-      teeJäsenmaksusopimus(harrastaja);
+      teeJäsenmaksusopimus(harrastaja, "01.01.2015");
       Perhe perhe = new Perhe();
       perhe.getPerheenjäsenet().add(vanhempi);
       perhe.getPerheenjäsenet().add(harrastaja);
@@ -208,20 +153,144 @@ public class HarrastajaTest
       harrastaja.setPerhe(perhe);
       Assert.assertTrue(harrastaja.isSopimuksetOK());
    }
-   
-   
+
    @Test
    public void testTreenikerratLoppu()
    {
       Harrastaja harrastaja = new Harrastaja();
-      teeHarjoittelusopimus(harrastaja);
-      teeJäsenmaksusopimus(harrastaja);
-      teeKertamaksusopimus(harrastaja);
+      teeJäsenmaksusopimus(harrastaja, "01.01.2015");
+      teeKertamaksusopimus(harrastaja, "01.01.2015");
+      harrastaja.getSopimukset().get(1).setTreenikertoja(0);
       Assert.assertFalse(harrastaja.isSopimuksetOK());
       Sopimustarkistukset tarkistukset = harrastaja.getSopimusTarkistukset();
       Assert.assertEquals(1, tarkistukset.getViestit().size());
       Assert.assertEquals("Treenikertoja jäljellä 0", tarkistukset.getViestit().get(0));
-   }   
+   }
+
+   @Test
+   public void testaaHarjoitteluoikeusSopimusEiSopimuksia()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      Sopimus sopimus = harrastaja.getHarjoitteluoikeusSopimus();
+      Assert.assertEquals(Sopimus.EI_OOTA, sopimus);
+   }
+
+   @Test
+   public void testaaHarjoitteluoikeusSopimusSopimusUmpeutunut()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      teeHarjoittelusopimus(harrastaja, "01.01.2015", 6);
+      harrastaja.getSopimukset().iterator().next().setUmpeutuu(DateUtil.tänäänDate());
+      Sopimus sopimus = harrastaja.getHarjoitteluoikeusSopimus();
+      Assert.assertEquals(Sopimus.EI_OOTA, sopimus);
+   }
+
+   @Test
+   public void testaaHarjoitteluoikeusSopimusHarjoitusEnnenKertoja()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      teeHarjoittelusopimus(harrastaja, "01.01.2015", 6);
+      teeKertamaksusopimus(harrastaja, "01.01.2015");
+      Sopimus sopimus = harrastaja.getHarjoitteluoikeusSopimus();
+      Assert.assertEquals(0, sopimus.getTreenikertoja());
+   }
+
+   @Test
+   public void testaaHarjoitteluoikeusSopimusHarjoitusEnnenPerheenKertoja()
+   {
+      Harrastaja vanhempi = new Harrastaja();
+      teeKertamaksusopimus(vanhempi, "01.01.2015");
+      Harrastaja harrastaja = new Harrastaja();
+      teeJäsenmaksusopimus(harrastaja, "01.01.2015");
+      teeHarjoittelusopimus(harrastaja, "01.01.2015", 6);
+      Perhe perhe = new Perhe();
+      perhe.getPerheenjäsenet().add(vanhempi);
+      perhe.getPerheenjäsenet().add(harrastaja);
+      vanhempi.setPerhe(perhe);
+      harrastaja.setPerhe(perhe);
+      Sopimus sopimus = harrastaja.getHarjoitteluoikeusSopimus();
+      Assert.assertEquals(0, sopimus.getTreenikertoja());
+   }
+
+   @Test
+   public void testaaHarjoitteluoikeusSopimusOmatKerttatEnnenPerheenKertoja()
+   {
+      Harrastaja vanhempi = new Harrastaja();
+      teeKertamaksusopimus(vanhempi, "01.01.2015");
+      Harrastaja harrastaja = new Harrastaja();
+      teeJäsenmaksusopimus(harrastaja, "01.01.2015");
+      teeKertamaksusopimus(harrastaja, "01.01.2015");
+      harrastaja.getSopimukset().get(1).setTreenikertoja(6);
+      Perhe perhe = new Perhe();
+      perhe.getPerheenjäsenet().add(vanhempi);
+      perhe.getPerheenjäsenet().add(harrastaja);
+      vanhempi.setPerhe(perhe);
+      harrastaja.setPerhe(perhe);
+      Sopimus sopimus = harrastaja.getHarjoitteluoikeusSopimus();
+      Assert.assertEquals(6, sopimus.getTreenikertoja());
+   }
+
+   @Test
+   public void testEiTauolla()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      Assert.assertEquals(false, harrastaja.isTauolla());
+   }
+
+   @Test
+   public void testTauollaAvoinPäättyy() throws ParseException
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      harrastaja.setTaukoAlkaa(new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015"));
+      Assert.assertEquals(true, harrastaja.isTauolla());
+   }
+
+   @Test
+   public void testTauollaAvoinAlkaa() throws ParseException
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      harrastaja.setTaukoPäättyy(new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2016"));
+      Assert.assertEquals(true, harrastaja.isTauolla());
+   }
+
+   @Test
+   public void testTauollaVäli() throws ParseException
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      harrastaja.setTaukoAlkaa(new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015"));
+      harrastaja.setTaukoPäättyy(new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2016"));
+      Assert.assertEquals(true, harrastaja.isTauolla());
+   }
+
+   @Test
+   public void testTauollaEiVäli() throws ParseException
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      harrastaja.setTaukoAlkaa(new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015"));
+      harrastaja.setTaukoPäättyy(new SimpleDateFormat("dd.MM.yyyy").parse("01.02.2015"));
+      Assert.assertEquals(false, harrastaja.isTauolla());
+   }
+
+   @Test
+   public void testAikaaViimeVyökokeestaEiKokeita() {
+      Harrastaja harrastaja = new Harrastaja();
+      Period aikaväli = harrastaja.getAikaaViimeVyökokeesta();
+      Assert.assertEquals(aikaväli, Period.ZERO);
+   }
+   
+   @Test
+   public void testAikaaViimeVyökokeesta() {
+      LocalDate nyt = DateUtil.tänään();
+      LocalDate silloin = DateUtil.silloin("01.01.2015");
+      Period väli = Period.between(nyt, silloin);
+      Harrastaja harrastaja = new Harrastaja();
+      teeVyökoe(harrastaja, "01.01.2014", "9. kup", 1);
+      teeVyökoe(harrastaja, "01.01.2015", "8. kup", 2);
+      Period aikaväli = harrastaja.getAikaaViimeVyökokeesta();
+      Assert.assertEquals(väli.getYears(), aikaväli.getYears());
+      Assert.assertEquals(väli.getMonths(), aikaväli.getMonths());
+      Assert.assertEquals(väli.getDays(), aikaväli.getDays());
+   }
    
 
 }

@@ -42,6 +42,8 @@ import fi.budokwai.isoveli.util.DateUtil;
       @NamedQuery(name = "laskuttamattomat_kymppikerrat", query = "select s from Sopimus s, Harrastaja h where s.harrastaja = h and s.tyyppi.treenikertoja='K' and s.treenikertoja = 0 and h.arkistoitu = 'E' and s.sopimuslaskut is not empty") })
 public class Sopimus
 {
+   public static final Sopimus EI_OOTA = new Sopimus();
+
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;

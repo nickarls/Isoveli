@@ -323,42 +323,28 @@ public class Sopimus
 
    public Laskutuskausi getLaskutuskausi()
    {
-      Date kausiAlkaa = getKausiAlkaa();
-      Date kausiLoppuu = getKausiLoppuu(kausiAlkaa);
-      int kaudenM‰‰r‰ = getKaudenM‰‰r‰(kausiAlkaa, kausiLoppuu);
-      long taukop‰ivi‰ = getKaudenTaukop‰iv‰t(kausiAlkaa, kausiLoppuu);
-      return new Laskutuskausi(kausiAlkaa, kausiLoppuu, kaudenM‰‰r‰, taukop‰ivi‰);
+      Jakso kausi = getKausirajat();
+      int kausikuukausia = getKausikuukaudet(kausi);
+      Jakso tauko = kausi.getP‰‰llekk‰isyys(harrastaja.getTauko());
+      long taukop‰ivi‰ = tauko.getP‰ivi‰V‰liss‰();
+      return new Laskutuskausi(kausi, kausikuukausia, tauko, taukop‰ivi‰);
    }
 
-   private long getKaudenTaukop‰iv‰t(Date kausiAlkaa, Date kausiLoppuu)
+   private Jakso getKausirajat()
    {
-      if (harrastaja.getTaukoAlkaa() == null || harrastaja.getTaukoP‰‰ttyy() == null)
-      {
-         return 0;
-      }
-      boolean alkuOsuu = DateUtil.onkoV‰liss‰(kausiAlkaa, kausiLoppuu, harrastaja.getTaukoAlkaa());
-      boolean loppuOsuu = DateUtil.onkoV‰liss‰(kausiAlkaa, kausiLoppuu, harrastaja.getTaukoP‰‰ttyy());
-      if (alkuOsuu && loppuOsuu)
-      {
-         return DateUtil.p‰ivi‰V‰liss‰(harrastaja.getTaukoAlkaa(), harrastaja.getTaukoP‰‰ttyy());
-      } else if (alkuOsuu && !loppuOsuu)
-      {
-         return DateUtil.p‰ivi‰V‰liss‰(harrastaja.getTaukoAlkaa(), kausiLoppuu);
-      } else if (!alkuOsuu && loppuOsuu)
-      {
-         return DateUtil.p‰ivi‰V‰liss‰(kausiAlkaa, harrastaja.getTaukoP‰‰ttyy());
-      }
-      return 0;
+      Date alkaa = getKausiAlkaa();
+      Date p‰‰ttyy = getKausiP‰‰ttyy(alkaa);
+      return new Jakso(alkaa, p‰‰ttyy);
    }
 
-   private int getKaudenM‰‰r‰(Date kausiAlkaa, Date kausiLoppuu)
+   private int getKausikuukaudet(Jakso kausi)
    {
       if (tyyppi.isJ‰senmaksutyyppi())
       {
-         return DateUtil.laskutusvuosiaV‰liss‰(kausiAlkaa, kausiLoppuu);
+         return DateUtil.laskutusvuosiaV‰liss‰(kausi);
       } else if (tyyppi.isHarjoittelumaksutyyppi())
       {
-         return DateUtil.laskutuskuukausiaV‰liss‰(kausiAlkaa, kausiLoppuu);
+         return DateUtil.laskutuskuukausiaV‰liss‰(kausi);
       } else if (tyyppi.isTreenikertoja())
       {
          return tyyppi.getOletusTreenikerrat();
@@ -368,7 +354,7 @@ public class Sopimus
       }
    }
 
-   private Date getKausiLoppuu(Date alkaa)
+   private Date getKausiP‰‰ttyy(Date alkaa)
    {
       if (umpeutuu != null)
       {
@@ -395,4 +381,5 @@ public class Sopimus
       Date viimeLaskutus = getViimeksiLaskutettu();
       return viimeLaskutus == null ? luotu : viimeLaskutus;
    }
+
 }

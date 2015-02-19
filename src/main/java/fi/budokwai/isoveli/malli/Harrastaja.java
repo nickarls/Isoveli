@@ -87,12 +87,8 @@ public class Harrastaja extends Henkilˆ
    @Type(type = "Kyll‰Ei")
    private boolean infotiskille;
 
-   @Temporal(TemporalType.DATE)
-   private Date taukoAlkaa;
-
-   @Temporal(TemporalType.DATE)
-   private Date taukoP‰‰ttyy;
-
+   private Jakso tauko = new Jakso();
+   
    public Harrastaja()
    {
    }
@@ -384,19 +380,7 @@ public class Harrastaja extends Henkilˆ
 
    public boolean isTauolla()
    {
-      if (taukoAlkaa == null && taukoP‰‰ttyy == null)
-      {
-         return false;
-      } else if (taukoAlkaa != null && taukoP‰‰ttyy == null)
-      {
-         return DateUtil.onkoMenneysyydess‰(taukoAlkaa);
-      } else if (taukoAlkaa == null && taukoP‰‰ttyy != null)
-      {
-         return DateUtil.onkoTulevaisuudessa(taukoP‰‰ttyy);
-      } else
-      {
-         return DateUtil.onkoV‰liss‰(taukoAlkaa, taukoP‰‰ttyy);
-      }
+      return tauko.isNytV‰liss‰();
    }
 
    public Date getViimeisinTreeni()
@@ -448,28 +432,18 @@ public class Harrastaja extends Henkilˆ
       return getAktiivinenKertakortti();
    }
 
-   public Date getTaukoAlkaa()
-   {
-      return taukoAlkaa;
-   }
-
-   public void setTaukoAlkaa(Date taukoAlkaa)
-   {
-      this.taukoAlkaa = taukoAlkaa;
-   }
-
-   public Date getTaukoP‰‰ttyy()
-   {
-      return taukoP‰‰ttyy;
-   }
-
-   public void setTaukoP‰‰ttyy(Date taukoP‰‰ttyy)
-   {
-      this.taukoP‰‰ttyy = taukoP‰‰ttyy;
-   }
-
    public boolean isAvoinTauko()
    {
-      return (taukoAlkaa == null && taukoP‰‰ttyy != null) || (taukoAlkaa != null && taukoP‰‰ttyy == null);
+      return (tauko.getAlkaa() == null && tauko.getP‰‰ttyy() != null) || (tauko.getAlkaa() != null && tauko.getP‰‰ttyy() == null);
+   }
+
+   public Jakso getTauko()
+   {
+      return tauko;
+   }
+
+   public void setTauko(Jakso tauko)
+   {
+      this.tauko = tauko;
    }
 }

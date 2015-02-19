@@ -1,6 +1,5 @@
 package fi.budokwai.isoveli.malli;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -51,15 +50,14 @@ public class Sopimuslasku
    public Sopimuslasku(Sopimus sopimus, Laskutuskausi laskutuskausi)
    {
       this.sopimus = sopimus;
-      alkaa = laskutuskausi.getAlkaa();
-      p‰‰ttyy = laskutuskausi.getP‰‰ttyy();
+      alkaa = laskutuskausi.getKausi().getAlkaa();
+      p‰‰ttyy = laskutuskausi.getKausi().getP‰‰ttyy();
       sopimus.getSopimuslaskut().add(this);
    }
 
    public String getJakso()
    {
-      SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-      return String.format("%s-%s", sdf.format(alkaa), sdf.format(p‰‰ttyy));
+      return DateUtil.aikav‰li2String(alkaa, p‰‰ttyy);
    }
 
    public int getId()

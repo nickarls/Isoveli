@@ -39,7 +39,7 @@ public class HarrastajaTest extends Perustesti
       Assert.assertEquals(1, tarkistukset.getViestit().size());
       Assert.assertEquals("Harjoittelumaksu puuttuu", tarkistukset.getViestit().get(0));
    }
-   
+
    @Test
    public void testJäsenmaksuEiVoimassa()
    {
@@ -241,7 +241,7 @@ public class HarrastajaTest extends Perustesti
    public void testTauollaAvoinPäättyy() throws ParseException
    {
       Harrastaja harrastaja = new Harrastaja();
-      harrastaja.setTaukoAlkaa(new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015"));
+      harrastaja.getTauko().setAlkaa(DateUtil.silloinD("01.01.2015"));
       Assert.assertEquals(true, harrastaja.isTauolla());
    }
 
@@ -249,7 +249,7 @@ public class HarrastajaTest extends Perustesti
    public void testTauollaAvoinAlkaa() throws ParseException
    {
       Harrastaja harrastaja = new Harrastaja();
-      harrastaja.setTaukoPäättyy(new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2016"));
+      harrastaja.getTauko().setPäättyy(DateUtil.silloinD("01.01.2016"));
       Assert.assertEquals(true, harrastaja.isTauolla());
    }
 
@@ -257,8 +257,8 @@ public class HarrastajaTest extends Perustesti
    public void testTauollaVäli() throws ParseException
    {
       Harrastaja harrastaja = new Harrastaja();
-      harrastaja.setTaukoAlkaa(new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015"));
-      harrastaja.setTaukoPäättyy(new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2016"));
+      harrastaja.getTauko().setAlkaa(DateUtil.silloinD("01.01.2015"));
+      harrastaja.getTauko().setPäättyy(DateUtil.silloinD("01.01.2016"));
       Assert.assertEquals(true, harrastaja.isTauolla());
    }
 
@@ -266,20 +266,22 @@ public class HarrastajaTest extends Perustesti
    public void testTauollaEiVäli() throws ParseException
    {
       Harrastaja harrastaja = new Harrastaja();
-      harrastaja.setTaukoAlkaa(new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015"));
-      harrastaja.setTaukoPäättyy(new SimpleDateFormat("dd.MM.yyyy").parse("01.02.2015"));
+      harrastaja.getTauko().setAlkaa(DateUtil.silloinD("01.01.2015"));
+      harrastaja.getTauko().setPäättyy(DateUtil.silloinD("01.02.2015"));
       Assert.assertEquals(false, harrastaja.isTauolla());
    }
 
    @Test
-   public void testAikaaViimeVyökokeestaEiKokeita() {
+   public void testAikaaViimeVyökokeestaEiKokeita()
+   {
       Harrastaja harrastaja = new Harrastaja();
       Period aikaväli = harrastaja.getAikaaViimeVyökokeesta();
       Assert.assertEquals(aikaväli, Period.ZERO);
    }
-   
+
    @Test
-   public void testAikaaViimeVyökokeesta() {
+   public void testAikaaViimeVyökokeesta()
+   {
       LocalDate nyt = DateUtil.tänään();
       LocalDate silloin = DateUtil.silloin("01.01.2015");
       Period väli = Period.between(nyt, silloin);
@@ -291,6 +293,5 @@ public class HarrastajaTest extends Perustesti
       Assert.assertEquals(väli.getMonths(), aikaväli.getMonths());
       Assert.assertEquals(väli.getDays(), aikaväli.getDays());
    }
-   
 
 }

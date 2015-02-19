@@ -13,6 +13,8 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 
+import fi.budokwai.isoveli.malli.Jakso;
+
 public class DateUtil
 {
    public static LocalDateTime Date2LocalDateTime(Date p‰iv‰m‰‰r‰)
@@ -27,11 +29,13 @@ public class DateUtil
       return Date2LocalDateTime(p‰iv‰m‰‰r‰).toLocalDate();
    }
 
+   @SuppressWarnings("unused")
    private LocalTime Date2LocalTime(Date p‰iv‰m‰‰r‰)
    {
       return Date2LocalDateTime(p‰iv‰m‰‰r‰).toLocalTime();
    }
 
+   @SuppressWarnings("unused")
    private static Date LocalDateTime2Date(LocalDateTime p‰iv‰m‰‰r‰)
    {
       Instant instant = p‰iv‰m‰‰r‰.atZone(ZoneId.systemDefault()).toInstant();
@@ -154,9 +158,9 @@ public class DateUtil
       return (int) ChronoUnit.MONTHS.between(Date2LocalDate(alkaa), Date2LocalDate(p‰‰ttyy));
    }
 
-   public static int laskutuskuukausiaV‰liss‰(Date alkaa, Date p‰‰ttyy)
+   public static int laskutuskuukausiaV‰liss‰(Jakso jakso)
    {
-      Period aikav‰li = Period.between(Date2LocalDate(alkaa), Date2LocalDate(p‰‰ttyy));
+      Period aikav‰li = Period.between(Date2LocalDate(jakso.getAlkaa()), Date2LocalDate(jakso.getP‰‰ttyy()));
       int vuosienkuukaudet = aikav‰li.getYears() * 12;
       int kuukaudet = aikav‰li.getMonths();
       if (aikav‰li.getDays() > 0)
@@ -166,9 +170,9 @@ public class DateUtil
       return vuosienkuukaudet + kuukaudet;
    }
 
-   public static int laskutusvuosiaV‰liss‰(Date alkaa, Date p‰‰ttyy)
+   public static int laskutusvuosiaV‰liss‰(Jakso jakso)
    {
-      Period aikav‰li = Period.between(Date2LocalDate(alkaa), Date2LocalDate(p‰‰ttyy));
+      Period aikav‰li = Period.between(Date2LocalDate(jakso.getAlkaa()), Date2LocalDate(jakso.getP‰‰ttyy()));
       return aikav‰li.getYears() + 1;
    }
 
@@ -187,17 +191,22 @@ public class DateUtil
       return t‰n‰‰n().isAfter(Date2LocalDate(alkaa)) && t‰n‰‰n().isBefore(Date2LocalDate(p‰‰ttyy));
    }
 
-   public static boolean onkoV‰liss‰(Date alkaa, Date p‰‰ttyy, Date p‰iv‰m‰‰r‰)
+   public static boolean onkoV‰liss‰(Jakso jakso, Date p‰iv‰m‰‰r‰)
    {
       LocalDate testi = Date2LocalDate(p‰iv‰m‰‰r‰);
-      return testi.isAfter(Date2LocalDate(alkaa)) && testi.isBefore(Date2LocalDate(p‰‰ttyy));
+      return testi.isAfter(Date2LocalDate(jakso.getAlkaa())) && testi.isBefore(Date2LocalDate(jakso.getP‰‰ttyy()));
    }
 
    public static LocalDate silloin(String p‰iv‰m‰‰r‰)
    {
+      return Date2LocalDate(silloinD(p‰iv‰m‰‰r‰));
+   }
+
+   public static Date silloinD(String p‰iv‰m‰‰r‰)
+   {
       try
       {
-         return Date2LocalDate(new SimpleDateFormat("dd.MM.yyyy").parse(p‰iv‰m‰‰r‰));
+         return new SimpleDateFormat("dd.MM.yyyy").parse(p‰iv‰m‰‰r‰);
       } catch (ParseException e)
       {
          e.printStackTrace();
@@ -208,6 +217,30 @@ public class DateUtil
    public static long p‰ivi‰V‰liss‰(Date alkaa, Date p‰‰ttyy)
    {
       return ChronoUnit.DAYS.between(Date2LocalDate(alkaa), Date2LocalDate(p‰‰ttyy));
+   }
+
+   public static String aikav‰li2String(Date alkaa, Date p‰‰ttyy)
+   {
+      if (alkaa == null || p‰‰ttyy == null)
+      {
+         return "";
+      }
+      return String.format("%s-%s", formatoi(alkaa), formatoi(p‰‰ttyy));
+   }
+
+   public static Date string2Date(String p‰iv‰m‰‰r‰)
+   {
+      if (p‰iv‰m‰‰r‰ == null)
+      {
+         return null;
+      }
+      try
+      {
+         return new SimpleDateFormat("dd.MM.yyyy").parse(p‰iv‰m‰‰r‰);
+      } catch (ParseException e)
+      {
+         throw new RuntimeException(e);
+      }
    }
 
 }

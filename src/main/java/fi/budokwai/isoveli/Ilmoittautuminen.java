@@ -149,7 +149,7 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
          virhe("Voisitko tulla infotiskille tarkistamaan maksut?");
          return;
       }
-      if (harrastaja.isTauollaNyt())
+      if (harrastaja.isTauolla())
       {
          virhe("Voisitko tulla infotiskille tarkistamaan treenitauon?");
          return;

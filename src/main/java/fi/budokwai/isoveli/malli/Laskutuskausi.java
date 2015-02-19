@@ -1,35 +1,34 @@
 package fi.budokwai.isoveli.malli;
 
-import java.util.Date;
 
 public class Laskutuskausi
 {
-   private Date alkaa;
-   private Date p‰‰ttyy;
-   private int m‰‰r‰;
+   private Jakso kausi;
+   private int kausikuukausia;
+   private Jakso tauko;
    private long taukop‰ivi‰;
 
-   public Laskutuskausi(Date alkaa, Date p‰‰ttyy, int m‰‰r‰, long taukop‰ivi‰)
+   public Laskutuskausi(Jakso kausi, int kausikuukausia, Jakso tauko, long taukop‰ivi‰)
    {
-      this.alkaa = alkaa;
-      this.p‰‰ttyy = p‰‰ttyy;
-      this.m‰‰r‰ = m‰‰r‰;
+      this.kausi = kausi;
+      this.kausikuukausia = kausikuukausia;
+      this.tauko = tauko;
       this.taukop‰ivi‰ = taukop‰ivi‰;
    }
 
-   public Date getAlkaa()
+   public Jakso getKausi()
    {
-      return alkaa;
+      return kausi;
    }
 
-   public Date getP‰‰ttyy()
+   public int getKausikuukausia()
    {
-      return p‰‰ttyy;
+      return kausikuukausia;
    }
 
-   public int getM‰‰r‰()
+   public Jakso getTauko()
    {
-      return m‰‰r‰;
+      return tauko;
    }
 
    public long getTaukop‰ivi‰()

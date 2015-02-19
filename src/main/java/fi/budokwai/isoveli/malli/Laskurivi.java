@@ -79,7 +79,7 @@ public class Laskurivi
          .getEtunimi());
       infotieto = sopimuslasku.getJakso();
       yksikköhinta = sopimustyyppi.getHinta();
-      määrä = laskutuskausi.getMäärä();
+      määrä = laskutuskausi.getKausikuukausia();
    }
 
    public double getRivihinta()

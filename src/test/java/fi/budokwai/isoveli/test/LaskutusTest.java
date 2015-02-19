@@ -176,7 +176,7 @@ public class LaskutusTest extends Perustesti
       täysiikäinenHarrastaja.setId(1);
       Harrastaja täysiikäinenHarrastaja2 = teeTäysiikäinenHarrastaja("Heidi Karlsson");
       täysiikäinenHarrastaja.setId(2);
-      LaskutusAdmin laskutusAdmin = new LaskutusAdmin();
+      // LaskutusAdmin laskutusAdmin = new LaskutusAdmin();
       List<Sopimus> sopimukset = new ArrayList<>();
       sopimukset.add(teeKertamaksusopimus(täysiikäinenHarrastaja, "01.01.2014"));
       sopimukset.add(teeKertamaksusopimus(täysiikäinenHarrastaja2, "01.01.2014"));

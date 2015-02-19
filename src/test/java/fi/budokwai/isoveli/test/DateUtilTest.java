@@ -11,6 +11,7 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 
+import fi.budokwai.isoveli.malli.Jakso;
 import fi.budokwai.isoveli.util.DateUtil;
 
 public class DateUtilTest
@@ -25,9 +26,29 @@ public class DateUtilTest
       Assert.assertEquals(tarkistus.get(Calendar.MONTH) + 1, t‰n‰‰n.getMonthValue());
       Assert.assertEquals(tarkistus.get(Calendar.DAY_OF_MONTH), t‰n‰‰n.getDayOfMonth());
    }
-   
+
    @Test
-   public void testP‰ivi‰V‰liss‰() throws ParseException {
+   public void testAikav‰li2String()
+   {
+      Date d1 = DateUtil.string2Date("01.01.2015");
+      Date d2 = DateUtil.string2Date("31.12.2015");
+      Assert.assertEquals("01.01.2015-31.12.2015", DateUtil.aikav‰li2String(d1, d2));
+   }
+
+   @Test
+   public void testString2Date()
+   {
+      Date d = DateUtil.string2Date("01.01.2015");
+      Calendar cal = Calendar.getInstance();
+      cal.setTime(d);
+      Assert.assertEquals(1, cal.get(Calendar.MONTH) + 1);
+      Assert.assertEquals(1, cal.get(Calendar.DAY_OF_MONTH));
+      Assert.assertEquals(2015, cal.get(Calendar.YEAR));
+   }
+
+   @Test
+   public void testP‰ivi‰V‰liss‰() throws ParseException
+   {
       SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
       Date d1 = sdf.parse("01.01.2015");
       Date d2 = sdf.parse("11.01.2015");
@@ -35,50 +56,56 @@ public class DateUtilTest
    }
 
    @Test
-   public void testSilloin() {
+   public void testSilloin()
+   {
       LocalDate silloin = DateUtil.silloin("01.01.2015");
       Assert.assertEquals(2015, silloin.getYear());
       Assert.assertEquals(1, silloin.getMonthValue());
       Assert.assertEquals(1, silloin.getDayOfMonth());
    }
-   
+
    @Test
-   public void testOnkoV‰liss‰() throws ParseException {
+   public void testOnkoV‰liss‰() throws ParseException
+   {
       Date d1 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015");
       Date d2 = new SimpleDateFormat("dd.MM.yyyy").parse("31.12.2015");
       Assert.assertTrue(DateUtil.onkoV‰liss‰(d1, d2));
    }
 
    @Test
-   public void testOnkoV‰liss‰On() throws ParseException {
+   public void testOnkoV‰liss‰On() throws ParseException
+   {
       Date d1 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015");
       Date d2 = new SimpleDateFormat("dd.MM.yyyy").parse("31.12.2015");
       Date d3 = new SimpleDateFormat("dd.MM.yyyy").parse("01.06.2015");
-      Assert.assertTrue(DateUtil.onkoV‰liss‰(d1, d2, d3));
+      Assert.assertTrue(DateUtil.onkoV‰liss‰(new Jakso(d1, d2), d3));
    }
 
    @Test
-   public void testOnkoV‰liss‰OnEnnen() throws ParseException {
+   public void testOnkoV‰liss‰OnEnnen() throws ParseException
+   {
       Date d1 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015");
       Date d2 = new SimpleDateFormat("dd.MM.yyyy").parse("31.12.2015");
       Date d3 = new SimpleDateFormat("dd.MM.yyyy").parse("01.06.2014");
-      Assert.assertFalse(DateUtil.onkoV‰liss‰(d1, d2, d3));
+      Assert.assertFalse(DateUtil.onkoV‰liss‰(new Jakso(d1, d2), d3));
    }
 
    @Test
-   public void testOnkoV‰liss‰OnJ‰lkeen() throws ParseException {
+   public void testOnkoV‰liss‰OnJ‰lkeen() throws ParseException
+   {
       Date d1 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015");
       Date d2 = new SimpleDateFormat("dd.MM.yyyy").parse("31.12.2015");
       Date d3 = new SimpleDateFormat("dd.MM.yyyy").parse("01.06.2016");
-      Assert.assertFalse(DateUtil.onkoV‰liss‰(d1, d2, d3));
+      Assert.assertFalse(DateUtil.onkoV‰liss‰(new Jakso(d1, d2), d3));
    }
 
    @Test
-   public void testOnkoV‰liss‰OnRajalla() throws ParseException {
+   public void testOnkoV‰liss‰OnRajalla() throws ParseException
+   {
       Date d1 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015");
       Date d2 = new SimpleDateFormat("dd.MM.yyyy").parse("31.12.2015");
       Date d3 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015");
-      Assert.assertFalse(DateUtil.onkoV‰liss‰(d1, d2, d3));
+      Assert.assertFalse(DateUtil.onkoV‰liss‰(new Jakso(d1, d2), d3));
    }
 
    @Test
@@ -237,20 +264,21 @@ public class DateUtilTest
    }
 
    @Test
-   public void testLaskutusKuukausiaV‰liss‰() throws ParseException {
+   public void testLaskutusKuukausiaV‰liss‰() throws ParseException
+   {
       Date d1 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015");
       Date d2 = new SimpleDateFormat("dd.MM.yyyy").parse("02.02.2015");
-      Assert.assertEquals(2, DateUtil.laskutuskuukausiaV‰liss‰(d1, d2));
+      Assert.assertEquals(2, DateUtil.laskutuskuukausiaV‰liss‰(new Jakso(d1, d2)));
 
       d1 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015");
       d2 = new SimpleDateFormat("dd.MM.yyyy").parse("02.01.2015");
-      Assert.assertEquals(1, DateUtil.laskutuskuukausiaV‰liss‰(d1, d2));
+      Assert.assertEquals(1, DateUtil.laskutuskuukausiaV‰liss‰(new Jakso(d1, d2)));
 
       d1 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2014");
       d2 = new SimpleDateFormat("dd.MM.yyyy").parse("02.01.2015");
-      Assert.assertEquals(13, DateUtil.laskutuskuukausiaV‰liss‰(d1, d2));
+      Assert.assertEquals(13, DateUtil.laskutuskuukausiaV‰liss‰(new Jakso(d1, d2)));
    }
-   
+
    @Test
    public void testKuukausiaV‰liss‰() throws ParseException
    {
@@ -273,10 +301,10 @@ public class DateUtilTest
       sitten.add(Calendar.MONTH, 13);
       check = new Date(sitten.getTimeInMillis());
       Assert.assertEquals(13, DateUtil.kuukausiaV‰liss‰(new Date(), check));
-      
+
       Date d1 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015");
       Date d2 = new SimpleDateFormat("dd.MM.yyyy").parse("01.02.2015");
-      Assert.assertEquals(1, DateUtil.laskutuskuukausiaV‰liss‰(d1, d2));
+      Assert.assertEquals(1, DateUtil.laskutuskuukausiaV‰liss‰(new Jakso(d1, d2)));
    }
 
    @Test
@@ -294,7 +322,7 @@ public class DateUtilTest
    {
       Date d1 = new SimpleDateFormat("dd.MM.yyyy").parse("12.12.2000");
       Date d2 = new SimpleDateFormat("dd.MM.yyyy").parse("14.12.2000");
-      int tulos = DateUtil.laskutusvuosiaV‰liss‰(d1, d2);
+      int tulos = DateUtil.laskutusvuosiaV‰liss‰(new Jakso(d1, d2));
       Assert.assertEquals(1, tulos);
    }
 
@@ -303,7 +331,7 @@ public class DateUtilTest
    {
       Date d1 = new SimpleDateFormat("dd.MM.yyyy").parse("12.12.2000");
       Date d2 = new SimpleDateFormat("dd.MM.yyyy").parse("14.12.2001");
-      int tulos = DateUtil.laskutusvuosiaV‰liss‰(d1, d2);
+      int tulos = DateUtil.laskutusvuosiaV‰liss‰(new Jakso(d1, d2));
       Assert.assertEquals(2, tulos);
    }
 

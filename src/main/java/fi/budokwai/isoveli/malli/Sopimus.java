@@ -1,6 +1,7 @@
 package fi.budokwai.isoveli.malli;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
@@ -325,7 +326,29 @@ public class Sopimus
       Date kausiAlkaa = getKausiAlkaa();
       Date kausiLoppuu = getKausiLoppuu(kausiAlkaa);
       int kaudenM‰‰r‰ = getKaudenM‰‰r‰(kausiAlkaa, kausiLoppuu);
-      return new Laskutuskausi(kausiAlkaa, kausiLoppuu, kaudenM‰‰r‰);
+      long taukop‰ivi‰ = getKaudenTaukop‰iv‰t(kausiAlkaa, kausiLoppuu);
+      return new Laskutuskausi(kausiAlkaa, kausiLoppuu, kaudenM‰‰r‰, taukop‰ivi‰);
+   }
+
+   private long getKaudenTaukop‰iv‰t(Date kausiAlkaa, Date kausiLoppuu)
+   {
+      if (harrastaja.getTaukoAlkaa() == null || harrastaja.getTaukoP‰‰ttyy() == null)
+      {
+         return 0;
+      }
+      boolean alkuOsuu = DateUtil.onkoV‰liss‰(kausiAlkaa, kausiLoppuu, harrastaja.getTaukoAlkaa());
+      boolean loppuOsuu = DateUtil.onkoV‰liss‰(kausiAlkaa, kausiLoppuu, harrastaja.getTaukoP‰‰ttyy());
+      if (alkuOsuu && loppuOsuu)
+      {
+         return DateUtil.p‰ivi‰V‰liss‰(harrastaja.getTaukoAlkaa(), harrastaja.getTaukoP‰‰ttyy());
+      } else if (alkuOsuu && !loppuOsuu)
+      {
+         return DateUtil.p‰ivi‰V‰liss‰(harrastaja.getTaukoAlkaa(), kausiLoppuu);
+      } else if (!alkuOsuu && loppuOsuu)
+      {
+         return DateUtil.p‰ivi‰V‰liss‰(kausiAlkaa, harrastaja.getTaukoP‰‰ttyy());
+      }
+      return 0;
    }
 
    private int getKaudenM‰‰r‰(Date kausiAlkaa, Date kausiLoppuu)

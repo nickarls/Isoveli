@@ -467,4 +467,9 @@ public class Harrastaja extends Henkilö
    {
       this.taukoPäättyy = taukoPäättyy;
    }
+
+   public boolean isAvoinTauko()
+   {
+      return (taukoAlkaa == null && taukoPäättyy != null) || (taukoAlkaa != null && taukoPäättyy == null);
+   }
 }

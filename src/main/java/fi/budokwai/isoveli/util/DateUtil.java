@@ -187,6 +187,12 @@ public class DateUtil
       return t‰n‰‰n().isAfter(Date2LocalDate(alkaa)) && t‰n‰‰n().isBefore(Date2LocalDate(p‰‰ttyy));
    }
 
+   public static boolean onkoV‰liss‰(Date alkaa, Date p‰‰ttyy, Date p‰iv‰m‰‰r‰)
+   {
+      LocalDate testi = Date2LocalDate(p‰iv‰m‰‰r‰);
+      return testi.isAfter(Date2LocalDate(alkaa)) && testi.isBefore(Date2LocalDate(p‰‰ttyy));
+   }
+
    public static LocalDate silloin(String p‰iv‰m‰‰r‰)
    {
       try
@@ -197,6 +203,11 @@ public class DateUtil
          e.printStackTrace();
       }
       return null;
+   }
+
+   public static long p‰ivi‰V‰liss‰(Date alkaa, Date p‰‰ttyy)
+   {
+      return ChronoUnit.DAYS.between(Date2LocalDate(alkaa), Date2LocalDate(p‰‰ttyy));
    }
 
 }

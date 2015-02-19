@@ -25,6 +25,14 @@ public class DateUtilTest
       Assert.assertEquals(tarkistus.get(Calendar.MONTH) + 1, t‰n‰‰n.getMonthValue());
       Assert.assertEquals(tarkistus.get(Calendar.DAY_OF_MONTH), t‰n‰‰n.getDayOfMonth());
    }
+   
+   @Test
+   public void testP‰ivi‰V‰liss‰() throws ParseException {
+      SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+      Date d1 = sdf.parse("01.01.2015");
+      Date d2 = sdf.parse("11.01.2015");
+      Assert.assertEquals(10, DateUtil.p‰ivi‰V‰liss‰(d1, d2));
+   }
 
    @Test
    public void testSilloin() {
@@ -40,7 +48,39 @@ public class DateUtilTest
       Date d2 = new SimpleDateFormat("dd.MM.yyyy").parse("31.12.2015");
       Assert.assertTrue(DateUtil.onkoV‰liss‰(d1, d2));
    }
-   
+
+   @Test
+   public void testOnkoV‰liss‰On() throws ParseException {
+      Date d1 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015");
+      Date d2 = new SimpleDateFormat("dd.MM.yyyy").parse("31.12.2015");
+      Date d3 = new SimpleDateFormat("dd.MM.yyyy").parse("01.06.2015");
+      Assert.assertTrue(DateUtil.onkoV‰liss‰(d1, d2, d3));
+   }
+
+   @Test
+   public void testOnkoV‰liss‰OnEnnen() throws ParseException {
+      Date d1 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015");
+      Date d2 = new SimpleDateFormat("dd.MM.yyyy").parse("31.12.2015");
+      Date d3 = new SimpleDateFormat("dd.MM.yyyy").parse("01.06.2014");
+      Assert.assertFalse(DateUtil.onkoV‰liss‰(d1, d2, d3));
+   }
+
+   @Test
+   public void testOnkoV‰liss‰OnJ‰lkeen() throws ParseException {
+      Date d1 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015");
+      Date d2 = new SimpleDateFormat("dd.MM.yyyy").parse("31.12.2015");
+      Date d3 = new SimpleDateFormat("dd.MM.yyyy").parse("01.06.2016");
+      Assert.assertFalse(DateUtil.onkoV‰liss‰(d1, d2, d3));
+   }
+
+   @Test
+   public void testOnkoV‰liss‰OnRajalla() throws ParseException {
+      Date d1 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015");
+      Date d2 = new SimpleDateFormat("dd.MM.yyyy").parse("31.12.2015");
+      Date d3 = new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015");
+      Assert.assertFalse(DateUtil.onkoV‰liss‰(d1, d2, d3));
+   }
+
    @Test
    public void testT‰n‰‰nDate()
    {

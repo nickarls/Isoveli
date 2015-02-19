@@ -269,6 +269,10 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          virhe("Samanniminen harrastaja löytyy jo");
          return;
       }
+      if (harrastaja.isAvoinTauko()) {
+         virhe("Sekä tauon alkamis- että päättymispäivämäärä annettava");
+         return;
+      }
       loggaaja.loggaa(String.format("Tallensi harrastajan %s", harrastaja));
       harrastaja.siivoa();
       harrastaja = entityManager.merge(harrastaja);

@@ -19,6 +19,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -90,9 +91,18 @@ public class Harrastaja extends Henkilö
 
    @Embedded
    private Jakso tauko = new Jakso();
-   
+
    public Harrastaja()
    {
+   }
+
+   @PostLoad
+   public void init()
+   {
+      if (tauko == null)
+      {
+         tauko = new Jakso();
+      }
    }
 
    public Henkilö getHuoltaja()
@@ -436,7 +446,8 @@ public class Harrastaja extends Henkilö
 
    public boolean isAvoinTauko()
    {
-      return (tauko.getAlkaa() == null && tauko.getPäättyy() != null) || (tauko.getAlkaa() != null && tauko.getPäättyy() == null);
+      return (tauko.getAlkaa() == null && tauko.getPäättyy() != null)
+         || (tauko.getAlkaa() != null && tauko.getPäättyy() == null);
    }
 
    public Jakso getTauko()

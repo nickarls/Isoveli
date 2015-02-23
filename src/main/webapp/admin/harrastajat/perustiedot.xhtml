@@ -50,10 +50,16 @@
 						<ace:message for="form:ice" />
 						<h:inputText value="#{harrastaja.ice}" id="ice" />
 					</h:panelGrid>
-					<h:outputText value="Tauolla" rendered="#{!harrastaja.tilapäinen}" />
+					<h:outputText value="Tauko alkaa" rendered="#{!harrastaja.tilapäinen}" />
 					<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
-						<ace:message for="form:tauolla" />
-						<ace:dateTimeEntry value="#{harrastaja.tauolla}" renderAsPopup="true" pattern="dd.MM.yyyy" id="tauolla">
+						<ace:message for="form:taukoAlkaa" />
+						<ace:dateTimeEntry value="#{harrastaja.tauko.alkaa}" renderAsPopup="true" pattern="dd.MM.yyyy" id="taukoAlkaa">
+						</ace:dateTimeEntry>
+					</h:panelGrid>
+					<h:outputText value="Tauko päättyy" rendered="#{!harrastaja.tilapäinen}" />
+					<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
+						<ace:message for="form:taukoPäättyy" />
+						<ace:dateTimeEntry value="#{harrastaja.tauko.päättyy}" renderAsPopup="true" pattern="dd.MM.yyyy" id="taukoPäättyy">
 						</ace:dateTimeEntry>
 					</h:panelGrid>
 					<h:outputText value="Huomautus" rendered="#{!harrastaja.tilapäinen}" />

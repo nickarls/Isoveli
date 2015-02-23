@@ -2,6 +2,7 @@ package fi.budokwai.isoveli.malli;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import fi.budokwai.isoveli.util.DateUtil;
@@ -9,7 +10,10 @@ import fi.budokwai.isoveli.util.DateUtil;
 @Embeddable
 public class Jakso
 {
+   @Column(name = "taukoalkaa")
    private Date alkaa;
+
+   @Column(name = "taukopaattyy")
    private Date p‰‰ttyy;
 
    public Jakso(Date alkaa, Date p‰‰ttyy)

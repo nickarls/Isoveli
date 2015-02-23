@@ -456,4 +456,20 @@ public class DateUtilTest
       Assert.assertEquals(cal.get(Calendar.DAY_OF_MONTH), testDate.getDayOfMonth());
    }
 
+   @Test
+   public void testSamat()
+   {
+      Date a = DateUtil.silloinD("01.02.2015");
+      LocalDate b = DateUtil.silloin("01.02.2015");
+      Assert.assertTrue(DateUtil.samat(a, b));
+   }
+
+   @Test
+   public void testEiSamat()
+   {
+      Date a = DateUtil.silloinD("01.02.2015");
+      LocalDate b = DateUtil.silloin("02.02.2015");
+      Assert.assertFalse(DateUtil.samat(a, b));
+   }
+
 }

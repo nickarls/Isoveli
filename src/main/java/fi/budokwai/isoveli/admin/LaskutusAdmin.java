@@ -153,35 +153,31 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 
    private void teeLaskuOsoitteelle(List<Sopimus> sopimukset)
    {
-      // Henkilö henkilö = haeLaskunVastaanottaja(sopimukset);
-      // Lasku lasku = new Lasku(henkilö);
-      // for (Sopimus sopimus : sopimukset)
-      // {
-      // do
-      // {
-      // Laskutuskausi laskutuskausi = sopimus.getLaskutuskausi();
-      // Sopimuslasku sopimuslasku = new Sopimuslasku(sopimus, laskutuskausi);
-      // Laskurivi laskurivi = new Laskurivi(sopimuslasku, laskutuskausi);
-      // lasku.lisääRivi(laskurivi);
-      // if (sopimus.getTyyppi().isTreenikertoja())
-      // {
-      // sopimus.lisääTreenikertoja();
-      // sopimus = entityManager.merge(sopimus);
-      // }
-      // } while (!sopimus.valmiiksiLaskutettu());
-      // }
-      // lasku.laskePerhealennukset();
-      // entityManager.persist(lasku);
-      // entityManager.flush();
-      // entityManager.refresh(lasku);
-      // lasku.laskeViitenumero();
-      // entityManager.persist(lasku);
-      // byte[] pdf = teePdfLasku(lasku);
-      // lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()),
-      // pdf));
-      // entityManager.persist(lasku);
-      // loggaaja.loggaa(String.format("Teki laskun henkilölle %s",
-      // henkilö.getNimi()));
+      if (sopimukset.isEmpty())
+      {
+         return;
+      }
+      Henkilö henkilö = haeLaskunVastaanottaja(sopimukset);
+      Lasku lasku = new Lasku(henkilö);
+      for (Sopimus sopimus : sopimukset)
+      {
+         lasku.lisääRivit(sopimus.laskuta());
+         if (sopimus.getTyyppi().isTreenikertoja())
+         {
+            sopimus.lisääTreenikertoja();
+            sopimus = entityManager.merge(sopimus);
+         }
+      }
+      lasku.laskePerhealennukset();
+      entityManager.persist(lasku);
+      entityManager.flush();
+      entityManager.refresh(lasku);
+      lasku.laskeViitenumero();
+      entityManager.persist(lasku);
+      byte[] pdf = teePdfLasku(lasku);
+      lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), pdf));
+      entityManager.persist(lasku);
+      loggaaja.loggaa(String.format("Teki laskun henkilölle %s", henkilö.getNimi()));
    }
 
    private Henkilö haeLaskunVastaanottaja(List<Sopimus> sopimukset)

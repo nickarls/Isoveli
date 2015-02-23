@@ -96,8 +96,13 @@
 				<ace:column headerText="Määrä" styleClass="lefttext">
 					<h:outputText value="#{_laskurivi.määrä}" />
 				</ace:column>
-				<ace:column headerText="Yksikkö" styleClass="lefttext">
+				<ace:column headerText="Yks." styleClass="lefttext">
 					<h:outputText value="#{_laskurivi.yksikkö}" />
+				</ace:column>
+				<ace:column headerText="Yks. hinta" styleClass="lefttext">
+					<h:outputText value="#{_laskurivi.yksikköhinta}" >
+						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
+					</h:outputText>
 				</ace:column>
 				<ace:column headerText="Hinta" styleClass="lefttext">
 					<h:outputText value="#{_laskurivi.rivihinta}">

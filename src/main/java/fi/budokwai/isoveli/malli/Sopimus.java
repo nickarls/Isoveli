@@ -368,7 +368,7 @@ public class Sopimus
       {
          return DateUtil.t‰n‰‰nDate();
       }
-      while (loppu.isBefore(DateUtil.t‰n‰‰n()))
+      while (loppu.isBefore(DateUtil.t‰n‰‰n()) || DateUtil.samat(alkaa, loppu))
       {
          loppu = loppu.plus(maksuv‰li, ChronoUnit.MONTHS);
       }

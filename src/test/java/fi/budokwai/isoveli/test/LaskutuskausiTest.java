@@ -17,6 +17,16 @@ import fi.budokwai.isoveli.util.DateUtil;
 public class LaskutuskausiTest extends Perustesti
 {
    @Test
+   public void testTuoreSopimus() {
+      Sopimus sopimus = teeHarjoittelusopimus(new Harrastaja(), "23.02.2015", 3);
+      Laskutuskausi kausi = sopimus.getLaskutuskausi();
+      Assert.assertEquals("23.02.2015", DateUtil.formatoi(kausi.getKausi().getAlkaa()));
+      Assert.assertEquals("23.05.2015", DateUtil.formatoi(kausi.getKausi().getP‰‰ttyy()));
+      Assert.assertEquals(1, kausi.getKausikuukausia());
+      
+   }
+   
+   @Test
    public void testYhdenVuodenJ‰senmaksu()
    {
       Sopimus sopimus = teeJ‰senmaksusopimus(new Harrastaja(), "02.02.2015");

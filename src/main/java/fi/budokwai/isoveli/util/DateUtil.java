@@ -243,4 +243,10 @@ public class DateUtil
       }
    }
 
+   public static boolean samat(Date alkaa, LocalDate loppu)
+   {
+      LocalDate alkaaPvm = Date2LocalDate(alkaa);
+      return alkaaPvm.getYear() == loppu.getYear() && alkaaPvm.getMonthValue() == loppu.getMonthValue() && alkaaPvm.getDayOfMonth() == loppu.getDayOfMonth();
+   }
+
 }

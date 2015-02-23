@@ -1,6 +1,5 @@
 package fi.budokwai.isoveli.malli;
 
-
 public class Laskutuskausi
 {
    private Jakso kausi;
@@ -34,6 +33,11 @@ public class Laskutuskausi
    public long getTaukopäiviä()
    {
       return taukopäiviä;
+   }
+
+   public boolean isTaukopäiviä()
+   {
+      return taukopäiviä > 0;
    }
 
 }

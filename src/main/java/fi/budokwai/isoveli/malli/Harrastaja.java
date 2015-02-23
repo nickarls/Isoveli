@@ -9,6 +9,7 @@ import java.util.Optional;
 import javax.enterprise.inject.Typed;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -87,6 +88,7 @@ public class Harrastaja extends Henkilö
    @Type(type = "KylläEi")
    private boolean infotiskille;
 
+   @Embedded
    private Jakso tauko = new Jakso();
    
    public Harrastaja()

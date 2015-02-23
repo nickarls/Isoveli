@@ -1,6 +1,9 @@
 package fi.budokwai.isoveli.test;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -10,9 +13,12 @@ import org.junit.Test;
 import fi.budokwai.isoveli.admin.LaskutusAdmin;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
+import fi.budokwai.isoveli.malli.Jakso;
 import fi.budokwai.isoveli.malli.Lasku;
+import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Sopimus;
+import fi.budokwai.isoveli.util.DateUtil;
 
 public class LaskutusTest extends Perustesti
 {
@@ -204,6 +210,22 @@ public class LaskutusTest extends Perustesti
    @Test
    public void testTauko()
    {
+      Harrastaja harrastaja = teeTäysiikäinenHarrastaja("Nicklas Karlsson");
+      LaskutusAdmin laskutusAdmin = new LaskutusAdmin();
+      List<Sopimus> sopimukset = new ArrayList<>();
+      sopimukset.add(teeHarjoittelusopimus(harrastaja, "01.01.2015", 6));
+      Date t1 = DateUtil.silloinD("01.02.2015");
+      Date t2 = DateUtil.silloinD("01.03.2015");
+      harrastaja.setTauko(new Jakso(t1, t2));
+      Lasku lasku = laskutusAdmin.x(sopimukset);
+      Assert.assertEquals(2, lasku.getLaskurivejä());
+      Laskurivi tauko = lasku.getLaskurivit().get(1);
+      Assert.assertEquals("01.02.2015-01.03.2015", tauko.getInfotieto());
+      Assert.assertEquals("Taukohyvitys (Nicklas)", tauko.getTuotenimi());
+      Assert.assertEquals(28, tauko.getMäärä());
+      Assert.assertEquals(-3.33, tauko.getYksikköhinta());
+      double hinta = new BigDecimal(tauko.getRivihinta()).setScale(2, RoundingMode.HALF_UP).doubleValue();
+      Assert.assertEquals(-93.24, hinta);
 
    }
 

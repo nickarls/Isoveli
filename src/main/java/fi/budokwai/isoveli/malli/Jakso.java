@@ -2,8 +2,11 @@ package fi.budokwai.isoveli.malli;
 
 import java.util.Date;
 
+import javax.persistence.Embeddable;
+
 import fi.budokwai.isoveli.util.DateUtil;
 
+@Embeddable
 public class Jakso
 {
    private Date alkaa;

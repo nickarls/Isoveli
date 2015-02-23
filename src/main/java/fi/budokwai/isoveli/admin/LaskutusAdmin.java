@@ -31,11 +31,8 @@ import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.BlobData;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Lasku;
-import fi.budokwai.isoveli.malli.Laskurivi;
-import fi.budokwai.isoveli.malli.Laskutuskausi;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Sopimus;
-import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.malli.TilausTila;
 import fi.budokwai.isoveli.util.DateUtil;
 import fi.budokwai.isoveli.util.Lasku2PDF;
@@ -143,10 +140,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       Lasku lasku = new Lasku(henkilö);
       for (Sopimus sopimus : sopimukset)
       {
-         Laskutuskausi laskutuskausi = sopimus.getLaskutuskausi();
-         Sopimuslasku sopimuslasku = new Sopimuslasku(sopimus, laskutuskausi);
-         Laskurivi laskurivi = new Laskurivi(sopimuslasku, laskutuskausi);
-         lasku.lisääRivi(laskurivi);
+         lasku.lisääRivit(sopimus.laskuta());
          if (sopimus.getTyyppi().isTreenikertoja())
          {
             sopimus.lisääTreenikertoja();
@@ -159,33 +153,35 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 
    private void teeLaskuOsoitteelle(List<Sopimus> sopimukset)
    {
-      Henkilö henkilö = haeLaskunVastaanottaja(sopimukset);
-      Lasku lasku = new Lasku(henkilö);
-      for (Sopimus sopimus : sopimukset)
-      {
-         do
-         {
-            Laskutuskausi laskutuskausi = sopimus.getLaskutuskausi();
-            Sopimuslasku sopimuslasku = new Sopimuslasku(sopimus, laskutuskausi);
-            Laskurivi laskurivi = new Laskurivi(sopimuslasku, laskutuskausi);
-            lasku.lisääRivi(laskurivi);
-            if (sopimus.getTyyppi().isTreenikertoja())
-            {
-               sopimus.lisääTreenikertoja();
-               sopimus = entityManager.merge(sopimus);
-            }
-         } while (!sopimus.valmiiksiLaskutettu());
-      }
-      lasku.laskePerhealennukset();
-      entityManager.persist(lasku);
-      entityManager.flush();
-      entityManager.refresh(lasku);
-      lasku.laskeViitenumero();
-      entityManager.persist(lasku);
-      byte[] pdf = teePdfLasku(lasku);
-      lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), pdf));
-      entityManager.persist(lasku);
-      loggaaja.loggaa(String.format("Teki laskun henkilölle %s", henkilö.getNimi()));
+      // Henkilö henkilö = haeLaskunVastaanottaja(sopimukset);
+      // Lasku lasku = new Lasku(henkilö);
+      // for (Sopimus sopimus : sopimukset)
+      // {
+      // do
+      // {
+      // Laskutuskausi laskutuskausi = sopimus.getLaskutuskausi();
+      // Sopimuslasku sopimuslasku = new Sopimuslasku(sopimus, laskutuskausi);
+      // Laskurivi laskurivi = new Laskurivi(sopimuslasku, laskutuskausi);
+      // lasku.lisääRivi(laskurivi);
+      // if (sopimus.getTyyppi().isTreenikertoja())
+      // {
+      // sopimus.lisääTreenikertoja();
+      // sopimus = entityManager.merge(sopimus);
+      // }
+      // } while (!sopimus.valmiiksiLaskutettu());
+      // }
+      // lasku.laskePerhealennukset();
+      // entityManager.persist(lasku);
+      // entityManager.flush();
+      // entityManager.refresh(lasku);
+      // lasku.laskeViitenumero();
+      // entityManager.persist(lasku);
+      // byte[] pdf = teePdfLasku(lasku);
+      // lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()),
+      // pdf));
+      // entityManager.persist(lasku);
+      // loggaaja.loggaa(String.format("Teki laskun henkilölle %s",
+      // henkilö.getNimi()));
    }
 
    private Henkilö haeLaskunVastaanottaja(List<Sopimus> sopimukset)

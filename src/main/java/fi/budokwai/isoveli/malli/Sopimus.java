@@ -1,7 +1,6 @@
 package fi.budokwai.isoveli.malli;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
@@ -380,6 +379,19 @@ public class Sopimus
    {
       Date viimeLaskutus = getViimeksiLaskutettu();
       return viimeLaskutus == null ? luotu : viimeLaskutus;
+   }
+
+   public List<Laskurivi> laskuta()
+   {
+      List<Laskurivi> laskurivit = new ArrayList<>();
+      Laskutuskausi laskutuskausi = getLaskutuskausi();
+      Sopimuslasku sopimuslasku = new Sopimuslasku(this, laskutuskausi);
+      laskurivit.add(new Laskurivi(sopimuslasku, laskutuskausi));
+      if (laskutuskausi.isTaukopäiviä())
+      {
+         laskurivit.add(Laskurivi.taukohyvitys(laskutuskausi, this));
+      }
+      return laskurivit;
    }
 
 }

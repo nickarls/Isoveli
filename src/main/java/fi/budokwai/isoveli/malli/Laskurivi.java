@@ -198,4 +198,16 @@ public class Laskurivi
       return laskurivi;
    }
 
+   public static Laskurivi taukohyvitys(Laskutuskausi laskutuskausi, Sopimus sopimus)
+   {
+      Laskurivi laskurivi = new Laskurivi();
+      laskurivi.setMäärä((int) laskutuskausi.getTaukopäiviä());
+      laskurivi.setTuotenimi(String.format("Taukohyvitys (%s)", sopimus.getHarrastaja().getEtunimi()));
+      laskurivi.setInfotieto(laskutuskausi.getTauko().getKuvaus());
+      double hinta = -1
+         * new BigDecimal(sopimus.getTyyppi().getHinta() / 30).setScale(2, RoundingMode.HALF_UP).doubleValue();
+      laskurivi.setYksikköhinta(hinta);
+      laskurivi.setYksikkö("kpl");
+      return laskurivi;
+   }
 }

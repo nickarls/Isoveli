@@ -266,7 +266,7 @@ public class Lasku
    public void laskePerhealennukset()
    {
       List<Laskurivi> harjoitusmaksut = laskurivit.stream()
-         .filter(l -> l.getSopimuslasku().getSopimus().getTyyppi().isHarjoittelumaksutyyppi())
+         .filter(l -> l.getSopimuslasku() != null && l.getSopimuslasku().getSopimus().getTyyppi().isHarjoittelumaksutyyppi())
          .sorted((lr1, lr2) -> Double.valueOf(lr1.getRivihinta()).compareTo(Double.valueOf(lr2.getRivihinta())))
          .collect(Collectors.toList());
       if (harjoitusmaksut.size() < 2)
@@ -301,5 +301,11 @@ public class Lasku
          Laskurivi perhealennus = Laskurivi.perhealennus(alennus, infotieto);
          lisääRivi(perhealennus);
       }
+   }
+
+   public void lisääRivit(List<Laskurivi> laskurivit)
+   {
+      this.laskurivit.addAll(laskurivit);
+      
    }
 }

@@ -1,10 +1,6 @@
 package fi.budokwai.isoveli.admin;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +11,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
@@ -25,6 +19,8 @@ import javax.persistence.EntityManager;
 
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
+
+import com.google.common.io.ByteStreams;
 
 import fi.budokwai.isoveli.Asetukset;
 import fi.budokwai.isoveli.IsoveliPoikkeus;
@@ -214,12 +210,10 @@ public class LaskutusAdmin extends Perustoiminnallisuus
          malli = mallit.get().getTieto();
       } else
       {
-         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
          try
          {
-            Path path = Paths.get(ec.getResource("/WEB-INF/classes/laskupohja.pdf").toURI());
-            malli = Files.readAllBytes(path);
-         } catch (IOException | URISyntaxException e)
+            malli = ByteStreams.toByteArray(getClass().getClassLoader().getResource("laskupohja.pdf").openStream());
+         } catch (IOException e)
          {
             throw new IsoveliPoikkeus("Mallin lukeminen epäonnistui", e);
          }

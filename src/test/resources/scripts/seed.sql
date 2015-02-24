@@ -22,12 +22,4 @@ insert into sopimustyyppi(id, nimi, harjoittelumaksu, vapautus) values (10, 'Vap
 insert into sopimustyyppi(id, nimi, jasenmaksu, harjoittelumaksu, power) values (11, 'Power', 'K', 'K', 'K');
 insert into sopimustyyppi(id, nimi, jasenmaksu, harjoittelumaksu, valmennuskeskus) values (12, 'Valmennuskeskus', 'K', 'K', 'K');
 insert into asetukset(installaatio, saaja, iban, bic, viitenumero, osoite, postinumero, kaupunki, ytunnus, alvtunnus, puhelin, sahkoposti, kotisivut, viivastysprosentti, maksuaikaa, huomio, ylaotsikko) values ('Budokwai', 'Budokwai ry Taekwondo', 'OKOYFIHH', 'FI04 5711 6140 0501 84', 1, 'Kirstinkatu 1', '20200', 'Turku', '1012368-8', 'FI10123688', '0405960298', 'laskut@budokwai.fi', 'www.budokwai.fi/taekwondo', 5, 14, 'KÄYTTÄKÄÄ AINA\nVIITENUMEROA MAKSAESSANNE', 'LASKU');
-insert into osoite(id, osoite, postinumero, kaupunki) values (1, 'Vaakunatie 10 as 7', '20780', 'Kaarina');
-insert into yhteystieto(id, puhelinnumero, sahkoposti) values (1, '0405062266', 'nickarls@gmail.com');
-insert into yhteystieto(id, puhelinnumero, sahkoposti) values (2, '0407218809', 'heidi.karlsson@abo.fi');
-insert into perhe(id, nimi, osoite) values (1, 'Karlsson', 1);
-insert into henkilo(id, etunimi, sukunimi, yhteystiedot, salasana, perhe) values (1, 'Nicklas', 'Karlsson', 1, '9DD4E461268C8034F5C8564E155C67A6', 1);
-insert into henkilo(id, etunimi, sukunimi, yhteystiedot, salasana, perhe) values (2, 'Heidi', 'Karlsson', 2, '9DD4E461268C8034F5C8564E155C67A6', 1);
-insert into henkilo(id, etunimi, sukunimi, salasana, perhe) values (3, 'Emil', 'Karlsson', '9DD4E461268C8034F5C8564E155C67A6', 1);
-insert into harrastaja (id, jasennumero, lisenssinumero, syntynyt, sukupuoli) values (1, '28061975-1', '666', parsedatetime('28.06.1975', 'dd.MM.yyyy'), 'M');
-insert into harrastaja (id, jasennumero, lisenssinumero, syntynyt, sukupuoli) values (2, '09081976-1', '667', parsedatetime('09.08.1976', 'dd.MM.yyyy'), 'N');
+

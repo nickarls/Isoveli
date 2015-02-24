@@ -30,15 +30,16 @@ public class Perustesti
          .addPackages(true, "fi.budokwai.isoveli")
          .addAsWebInfResource("beans.xml", "beans.xml")
          .addAsResource("persistence.xml", "META-INF/persistence.xml")
+         .addAsResource("laskupohja.pdf", "laskupohja.pdf")
          .addAsLibraries(
             Maven
                .resolver()
                .loadPomFromFile("pom.xml")
                .resolve("org.icefaces:icefaces-ace:4.0.0", "net.sourceforge.jexcelapi:jxl:2.6.12",
-                  "org.apache.deltaspike.core:deltaspike-core-impl:1.1.0", "com.google.guava:guava:18.0")
-               .withTransitivity().asFile());
-   }   
-   
+                  "org.apache.deltaspike.core:deltaspike-core-impl:1.1.0", "com.google.guava:guava:18.0",
+                  "com.lowagie:itext:2.1.7").withTransitivity().asFile());
+   }
+
    protected Sopimuslasku teeSopimuslasku(Sopimus sopimus) throws ParseException
    {
       Sopimuslasku sopimuslasku = new Sopimuslasku();

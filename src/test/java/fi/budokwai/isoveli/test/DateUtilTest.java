@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -425,23 +426,20 @@ public class DateUtilTest
    @Test
    public void testP‰ivienP‰‰st‰() throws ParseException
    {
-      Date nytDate = new Date();
-      Calendar nytCal = Calendar.getInstance();
-      nytCal.setTime(nytDate);
+      LocalDate t‰n‰‰n = DateUtil.t‰n‰‰n();
+      LocalDate sitten = t‰n‰‰n.plus(10, ChronoUnit.DAYS);
+      LocalDate testi = DateUtil.Date2LocalDate(DateUtil.p‰ivienP‰‰st‰(10));
+      
+      Assert.assertEquals(sitten.getYear(), testi.getYear());
+      Assert.assertEquals(sitten.getMonthValue(), testi.getMonthValue());
+      Assert.assertEquals(sitten.getDayOfMonth(), testi.getDayOfMonth());
 
-      Date sittenDate = DateUtil.p‰ivienP‰‰st‰(10);
-      Calendar sittenCal = Calendar.getInstance();
-      sittenCal.setTime(sittenDate);
-      Assert.assertEquals(nytCal.get(Calendar.YEAR), sittenCal.get(Calendar.YEAR));
-      Assert.assertEquals(nytCal.get(Calendar.MONTH), sittenCal.get(Calendar.MONTH));
-      Assert.assertEquals(nytCal.get(Calendar.DAY_OF_MONTH) + 10, sittenCal.get(Calendar.DAY_OF_MONTH));
+      sitten = t‰n‰‰n.minus(10, ChronoUnit.DAYS);
+      testi = DateUtil.Date2LocalDate(DateUtil.p‰ivienP‰‰st‰(-10));
 
-      sittenDate = DateUtil.p‰ivienP‰‰st‰(-10);
-      sittenCal = Calendar.getInstance();
-      sittenCal.setTime(sittenDate);
-      Assert.assertEquals(nytCal.get(Calendar.YEAR), sittenCal.get(Calendar.YEAR));
-      Assert.assertEquals(nytCal.get(Calendar.MONTH), sittenCal.get(Calendar.MONTH));
-      Assert.assertEquals(nytCal.get(Calendar.DAY_OF_MONTH) - 10, sittenCal.get(Calendar.DAY_OF_MONTH));
+      Assert.assertEquals(sitten.getYear(), testi.getYear());
+      Assert.assertEquals(sitten.getMonthValue(), testi.getMonthValue());
+      Assert.assertEquals(sitten.getDayOfMonth(), testi.getDayOfMonth());
    }
 
    @Test

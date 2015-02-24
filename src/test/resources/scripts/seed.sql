@@ -1,0 +1,11 @@
+insert into vyoarvo (id, nimi, minimikuukaudet, minimitreenit, jarjestys) values (1, '8.kup', 2, 15, 1);
+insert into vyoarvo (id, nimi, minimikuukaudet, minimitreenit, jarjestys) values (2, '7.kup', 3, 25, 2);
+insert into vyoarvo (id, nimi, minimikuukaudet, minimitreenit, jarjestys) values (3, '6.kup', 3, 25, 3);
+insert into vyoarvo (id, nimi, minimikuukaudet, minimitreenit, jarjestys) values (4, '5.kup', 3, 25, 4);
+insert into vyoarvo (id, nimi, minimikuukaudet, minimitreenit, jarjestys) values (5, '4.kup', 4, 35, 5);
+insert into vyoarvo (id, nimi, minimikuukaudet, minimitreenit, jarjestys) values (6, '3.kup', 4, 35, 6);
+insert into vyoarvo (id, nimi, minimikuukaudet, minimitreenit, jarjestys) values (7, '2.kup', 5, 40, 7);
+insert into vyoarvo (id, nimi, minimikuukaudet, minimitreenit, jarjestys) values (8, '1.kup', 6, 50, 8);
+insert into vyoarvo (id, nimi, minimikuukaudet, minimitreenit, jarjestys) values (9, '1.dan', 6, 60, 9);
+insert into vyoarvo (id, nimi, minimikuukaudet, minimitreenit, jarjestys) values (10, '2.dan', 24, 200, 10);
+insert into vyoarvo (id, nimi, minimikuukaudet, minimitreenit, jarjestys) values (11, '3.dan', 36, 300, 11);

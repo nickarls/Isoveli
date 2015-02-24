@@ -4,6 +4,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Lasku;
@@ -17,6 +22,23 @@ import fi.budokwai.isoveli.malli.Vyökoe;
 
 public class Perustesti
 {
+   @Deployment
+   public static WebArchive createDeployment()
+   {
+      return ShrinkWrap
+         .create(WebArchive.class)
+         .addPackages(true, "fi.budokwai.isoveli")
+         .addAsWebInfResource("beans.xml", "beans.xml")
+         .addAsResource("persistence.xml", "META-INF/persistence.xml")
+         .addAsLibraries(
+            Maven
+               .resolver()
+               .loadPomFromFile("pom.xml")
+               .resolve("org.icefaces:icefaces-ace:4.0.0", "net.sourceforge.jexcelapi:jxl:2.6.12",
+                  "org.apache.deltaspike.core:deltaspike-core-impl:1.1.0", "com.google.guava:guava:18.0")
+               .withTransitivity().asFile());
+   }   
+   
    protected Sopimuslasku teeSopimuslasku(Sopimus sopimus) throws ParseException
    {
       Sopimuslasku sopimuslasku = new Sopimuslasku();

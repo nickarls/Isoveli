@@ -1,42 +1,42 @@
 package fi.budokwai.isoveli.test;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
-import junit.framework.Assert;
-
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.persistence.ApplyScriptAfter;
+import org.jboss.arquillian.persistence.ApplyScriptBefore;
+import org.jboss.arquillian.transaction.api.annotation.Transactional;
+import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import fi.budokwai.isoveli.admin.LaskutusAdmin;
-import fi.budokwai.isoveli.malli.Harrastaja;
-import fi.budokwai.isoveli.malli.Henkilö;
-import fi.budokwai.isoveli.malli.Jakso;
 import fi.budokwai.isoveli.malli.Lasku;
-import fi.budokwai.isoveli.malli.Laskurivi;
-import fi.budokwai.isoveli.malli.Perhe;
-import fi.budokwai.isoveli.malli.Sopimus;
-import fi.budokwai.isoveli.util.DateUtil;
 
+@RunWith(Arquillian.class)
+@ApplyScriptBefore("seed.sql")
+@ApplyScriptAfter("cleanup.sql")
 public class LaskutusTest extends Perustesti
 {
 
+   @Inject
+   private LaskutusAdmin laskutusAdmin;
+   
+   @Inject
+   private EntityManager entityManager;
+   
    @Test
-   public void testLaskutushenkilöHuoltajalla()
+   @ApplyScriptBefore("emilsopimus.sql")
+   @Transactional
+   public void testLaskutushenkiloHuoltajalla()
    {
-      Henkilö huoltaja = teeHenkilö("Nicklas Karlsson");
-      Harrastaja harrastaja = teeAlaikäinenHarrastaja("Emil Karlsson");
-      harrastaja.setHuoltaja(huoltaja);
-      Perhe perhe = teePerhe("Karlsson", huoltaja, harrastaja);
-      LaskutusAdmin laskutusAdmin = new LaskutusAdmin();
-      List<Sopimus> sopimukset = new ArrayList<>();
-      sopimukset.add(teeHarjoittelusopimus(harrastaja, "01.01.2014", 3));
-      Lasku lasku = laskutusAdmin.x(sopimukset);
+      laskutusAdmin.laskutaSopimukset();
+      Lasku lasku = entityManager.createNamedQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
       Assert.assertEquals("Nicklas Karlsson", lasku.getHenkilö().getNimi());
    }
-
+/*
+   
    @Test
    public void testLaskutushenkilöTäysiikäiselläPerheenjäsenellä()
    {
@@ -72,91 +72,6 @@ public class LaskutusTest extends Perustesti
       sopimukset.add(teeHarjoittelusopimus(alaikäinenHarrastaja, "01.01.2014", 3));
       Lasku lasku = laskutusAdmin.x(sopimukset);
       Assert.assertEquals("Emil Karlsson", lasku.getHenkilö().getNimi());
-   }
-
-   @Test
-   public void testLaskutaYhdenVuodenJäsenmaksu()
-   {
-      Harrastaja täysiikäinenHarrastaja = teeTäysiikäinenHarrastaja("Nicklas Karlsson");
-      LaskutusAdmin laskutusAdmin = new LaskutusAdmin();
-      List<Sopimus> sopimukset = new ArrayList<>();
-      sopimukset.add(teeJäsenmaksusopimus(täysiikäinenHarrastaja, "01.01.2015"));
-      Lasku lasku = laskutusAdmin.x(sopimukset);
-      Assert.assertEquals(1, lasku.getLaskurivejä());
-      Assert.assertEquals(1, lasku.getLaskurivit().get(0).getMäärä());
-      Assert.assertEquals(10.0d, lasku.getLaskurivit().get(0).getYksikköhinta());
-      Assert.assertEquals("kpl", lasku.getLaskurivit().get(0).getYksikkö());
-      Assert.assertEquals(10.0d, lasku.getLaskurivit().get(0).getRivihinta());
-      Assert.assertEquals(10.0d, lasku.getYhteishinta());
-      Assert.assertEquals("01.01.2015-31.12.2015", lasku.getLaskurivit().get(0).getInfotieto());
-   }
-
-   @Test
-   public void testLaskutaKahdenVuodenJäsenmaksu()
-   {
-      Harrastaja täysiikäinenHarrastaja = teeTäysiikäinenHarrastaja("Nicklas Karlsson");
-      LaskutusAdmin laskutusAdmin = new LaskutusAdmin();
-      List<Sopimus> sopimukset = new ArrayList<>();
-      sopimukset.add(teeJäsenmaksusopimus(täysiikäinenHarrastaja, "01.01.2014"));
-      Lasku lasku = laskutusAdmin.x(sopimukset);
-      Assert.assertEquals(1, lasku.getLaskurivejä());
-      Assert.assertEquals(2, lasku.getLaskurivit().get(0).getMäärä());
-      Assert.assertEquals(10.0d, lasku.getLaskurivit().get(0).getYksikköhinta());
-      Assert.assertEquals("kpl", lasku.getLaskurivit().get(0).getYksikkö());
-      Assert.assertEquals(20.0d, lasku.getLaskurivit().get(0).getRivihinta());
-      Assert.assertEquals(20.0d, lasku.getYhteishinta());
-      Assert.assertEquals("01.01.2014-31.12.2015", lasku.getLaskurivit().get(0).getInfotieto());
-   }
-
-   @Test
-   public void testLaskutaHarjoittelumaksu1kkVäli()
-   {
-      Harrastaja täysiikäinenHarrastaja = teeTäysiikäinenHarrastaja("Nicklas Karlsson");
-      LaskutusAdmin laskutusAdmin = new LaskutusAdmin();
-      List<Sopimus> sopimukset = new ArrayList<>();
-      sopimukset.add(teeHarjoittelusopimus(täysiikäinenHarrastaja, "01.01.2015", 1));
-      Lasku lasku = laskutusAdmin.x(sopimukset);
-      Assert.assertEquals(1, lasku.getLaskurivejä());
-      Assert.assertEquals(2, lasku.getLaskurivit().get(0).getMäärä());
-      Assert.assertEquals(100.0d, lasku.getLaskurivit().get(0).getYksikköhinta());
-      Assert.assertEquals("kpl", lasku.getLaskurivit().get(0).getYksikkö());
-      Assert.assertEquals(200.0d, lasku.getLaskurivit().get(0).getRivihinta());
-      Assert.assertEquals(200.0d, lasku.getYhteishinta());
-      Assert.assertEquals("01.01.2015-01.03.2015", lasku.getLaskurivit().get(0).getInfotieto());
-   }
-
-   @Test
-   public void testLaskutaHarjoittelumaksu2kkVäli()
-   {
-      Harrastaja täysiikäinenHarrastaja = teeTäysiikäinenHarrastaja("Nicklas Karlsson");
-      LaskutusAdmin laskutusAdmin = new LaskutusAdmin();
-      List<Sopimus> sopimukset = new ArrayList<>();
-      sopimukset.add(teeHarjoittelusopimus(täysiikäinenHarrastaja, "01.01.2014", 2));
-      Lasku lasku = laskutusAdmin.x(sopimukset);
-      Assert.assertEquals(1, lasku.getLaskurivejä());
-      Assert.assertEquals(14, lasku.getLaskurivit().get(0).getMäärä());
-      Assert.assertEquals(100.0d, lasku.getLaskurivit().get(0).getYksikköhinta());
-      Assert.assertEquals("kpl", lasku.getLaskurivit().get(0).getYksikkö());
-      Assert.assertEquals(1400.0d, lasku.getLaskurivit().get(0).getRivihinta());
-      Assert.assertEquals(1400.0d, lasku.getYhteishinta());
-      Assert.assertEquals("01.01.2014-01.03.2015", lasku.getLaskurivit().get(0).getInfotieto());
-   }
-
-   @Test
-   public void testLaskutaHarjoittelumaksu6kkVäli()
-   {
-      Harrastaja täysiikäinenHarrastaja = teeTäysiikäinenHarrastaja("Nicklas Karlsson");
-      LaskutusAdmin laskutusAdmin = new LaskutusAdmin();
-      List<Sopimus> sopimukset = new ArrayList<>();
-      sopimukset.add(teeHarjoittelusopimus(täysiikäinenHarrastaja, "01.01.2014", 6));
-      Lasku lasku = laskutusAdmin.x(sopimukset);
-      Assert.assertEquals(1, lasku.getLaskurivejä());
-      Assert.assertEquals(18, lasku.getLaskurivit().get(0).getMäärä());
-      Assert.assertEquals(100.0d, lasku.getLaskurivit().get(0).getYksikköhinta());
-      Assert.assertEquals("kpl", lasku.getLaskurivit().get(0).getYksikkö());
-      Assert.assertEquals(1800.0d, lasku.getLaskurivit().get(0).getRivihinta());
-      Assert.assertEquals(1800.0d, lasku.getYhteishinta());
-      Assert.assertEquals("01.01.2014-01.07.2015", lasku.getLaskurivit().get(0).getInfotieto());
    }
 
    @Test
@@ -226,7 +141,7 @@ public class LaskutusTest extends Perustesti
       Assert.assertEquals(-3.33, tauko.getYksikköhinta());
       double hinta = new BigDecimal(tauko.getRivihinta()).setScale(2, RoundingMode.HALF_UP).doubleValue();
       Assert.assertEquals(-93.24, hinta);
-
    }
-
+*/
+   
 }

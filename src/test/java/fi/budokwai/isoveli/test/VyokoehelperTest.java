@@ -3,13 +3,9 @@ package fi.budokwai.isoveli.test;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.persistence.ApplyScriptAfter;
 import org.jboss.arquillian.persistence.ApplyScriptBefore;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +32,7 @@ public class VyokoehelperTest extends Perustesti
    }
 
    @Test
-   public void testSeuraavaVyaarvoEiVyota()
+   public void testSeuraavaVyoarvoEiVyota()
    {
       Vyöarvo seuraava = vyökoehelper.haeSeuraavaVyöarvo(Vyöarvo.EI_OOTA);
       Assert.assertEquals(seuraava.getNimi(), "8.kup");

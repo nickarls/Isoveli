@@ -459,4 +459,11 @@ public class Harrastaja extends Henkilö
    {
       this.tauko = tauko;
    }
+
+   public boolean löytyyJoSopimus(Sopimustyyppi sopimustyyppi)
+   {
+      Optional<Sopimus> vanha = sopimukset.stream().filter(s -> s.getTyyppi().getId() == sopimustyyppi.getId())
+         .findFirst();
+      return vanha.isPresent();
+   }
 }

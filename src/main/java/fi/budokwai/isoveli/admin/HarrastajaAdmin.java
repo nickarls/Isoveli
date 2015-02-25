@@ -4,11 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
+import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
@@ -269,7 +271,8 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          virhe("Samanniminen harrastaja löytyy jo");
          return;
       }
-      if (harrastaja.isAvoinTauko()) {
+      if (harrastaja.isAvoinTauko())
+      {
          virhe("Sekä tauon alkamis- että päättymispäivämäärä annettava");
          return;
       }
@@ -372,14 +375,17 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void tallennaSopimus()
    {
-      if (!harrastaja.getSopimukset().contains(sopimus))
-      {
-         sopimus.setHarrastaja(harrastaja);
-         harrastaja.getSopimukset().add(sopimus);
-      }
       harrastaja = entityManager.merge(harrastaja);
+      if (harrastaja.löytyyJoSopimus(sopimus.getTyyppi()))
+      {
+         return;
+      }
+      sopimus.setHarrastaja(harrastaja);
+      harrastaja.getSopimukset().add(sopimus);
+      entityManager.persist(harrastaja);
       entityManager.flush();
       sopimusRSM.get(sopimus).setSelected(true);
+      haeHarrastajat();
       info("Sopimus tallennettu");
    }
 

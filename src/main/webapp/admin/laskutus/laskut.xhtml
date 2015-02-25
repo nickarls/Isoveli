@@ -157,7 +157,9 @@
 		</ace:column>
 		<ace:column>
 			<h:panelGrid columns="2">
-				<h:commandButton value="-" action="#{laskutusAdmin.poistaRivi(_laskurivi)}" immediate="true" />
+				<h:commandButton value="-" action="#{laskutusAdmin.poistaRivi(_laskurivi)}" immediate="true">
+					<f:ajax render="@form"/>
+				</h:commandButton>
 				<h:commandButton value="+" action="#{laskutusAdmin.lisääRivi(_laskurivi)}" immediate="true" />
 			</h:panelGrid>
 		</ace:column>

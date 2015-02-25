@@ -42,7 +42,7 @@ public class Lasku
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
-   @OneToMany(mappedBy = "lasku", cascade = CascadeType.PERSIST, orphanRemoval = true)
+   @OneToMany(mappedBy = "lasku", cascade = CascadeType.ALL, orphanRemoval = true)
    private List<Laskurivi> laskurivit = new ArrayList<Laskurivi>();
 
    @Enumerated(EnumType.STRING)

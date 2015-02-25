@@ -29,19 +29,22 @@
 			sortBy="#{_lasku.henkilö.nimi}" styleClass="lefttext">
 			<h:outputText value="#{_lasku.henkilö.nimi}" />
 		</ace:column>
-		<ace:column headerText="Luotu" filterBy="#{_lasku.luotu}" filterMatchMode="contains" sortBy="#{_lasku.luotu}" styleClass="lefttext">
+		<ace:column headerText="Luotu" filterBy="#{_lasku.luotu}" filterMatchMode="contains" sortBy="#{_lasku.luotu}"
+			styleClass="lefttext">
 			<h:outputText value="#{_lasku.luotu}">
-				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET"/>
+				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Eräpäivä" filterBy="#{_lasku.eräpäivä}" filterMatchMode="contains" sortBy="#{_lasku.eräpäivä}" styleClass="lefttext">
+		<ace:column headerText="Eräpäivä" filterBy="#{_lasku.eräpäivä}" filterMatchMode="contains" sortBy="#{_lasku.eräpäivä}"
+			styleClass="lefttext">
 			<h:outputText value="#{_lasku.eräpäivä}">
-				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET"/>
+				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Maksettu" filterBy="#{_lasku.maksettu}" filterMatchMode="contains" sortBy="#{_lasku.maksettu}" styleClass="lefttext">
+		<ace:column headerText="Maksettu" filterBy="#{_lasku.maksettu}" filterMatchMode="contains" sortBy="#{_lasku.maksettu}"
+			styleClass="lefttext">
 			<h:outputText value="#{_lasku.maksettu}">
-				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET"/>
+				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
 		<ace:column headerText="Maksuaikaa" filterBy="#{_lasku.maksuaikaa}" filterMatchMode="contains"
@@ -72,45 +75,92 @@
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_lasku.laskutettu}" />
 		</ace:column>
 		<ace:column>
-			<h:graphicImage value="/kuvat/alivalikko.png" style="width:24px" id="alivalikko"/>
-            <ace:contextMenu for="alivalikko">
-                <ace:menuItem value="Virkistä" action="#{laskutusAdmin.virkistäLasku(_lasku)}"/>
-                <ace:menuItem value="Muodosta PDF" action="#{laskutusAdmin.virkistäLasku(_lasku)}"/>
-                <ace:menuItem value="Lähetä" action="#{laskutusAdmin.virkistäLasku(_lasku)}"/>
-                <ace:menuItem value="Tulosta" action="#{laskutusAdmin.virkistäLasku(_lasku)}"/>
-                <ace:menuItem value="Peruuta" action="#{laskutusAdmin.virkistäLasku(_lasku)}"/>
-            </ace:contextMenu>			
+			<h:graphicImage value="/kuvat/alivalikko.png" style="width:24px" id="alivalikko" />
+			<ace:contextMenu for="alivalikko">
+				<ace:menuItem value="Virkistä" action="#{laskutusAdmin.virkistäLasku(_lasku)}" />
+				<ace:menuItem value="Muodosta PDF" action="#{laskutusAdmin.virkistäLasku(_lasku)}" />
+				<ace:menuItem value="Lähetä" action="#{laskutusAdmin.virkistäLasku(_lasku)}" />
+				<ace:menuItem value="Tulosta" action="#{laskutusAdmin.virkistäLasku(_lasku)}" />
+				<ace:menuItem value="Peruuta" action="#{laskutusAdmin.virkistäLasku(_lasku)}" />
+			</ace:contextMenu>
+			<ace:rowEditor />
 		</ace:column>
-		<ace:panelExpansion>
-			<ace:dataTable rows="10" value="#{_lasku.laskurivit}" var="_laskurivi" paginator="true" paginatorPosition="bottom"
-				paginatorAlwaysVisible="false">
-				<ace:column headerText="#" styleClass="lefttext">
-					<h:outputText value="#{_laskurivi.rivinumero}" />
-				</ace:column>
-				<ace:column headerText="Tuotenimi" styleClass="lefttext">
+	</ace:dataTable>
+	<ace:dataTable rows="10" value="#{laskut[0].laskurivit}" var="_laskurivi" paginator="true" paginatorPosition="bottom"
+		paginatorAlwaysVisible="false">
+		<ace:ajax event="editSubmit" render="@all" listener="#{laskutusAdmin.tallennaRivi}" />
+		<ace:column headerText="#" styleClass="lefttext">
+			<h:outputText value="#{_laskurivi.rivinumero}" />
+		</ace:column>
+		<ace:column headerText="Tuotenimi" styleClass="lefttext">
+			<ace:cellEditor>
+				<f:facet name="output">
 					<h:outputText value="#{_laskurivi.tuotenimi}" />
-				</ace:column>
-				<ace:column headerText="Infotieto" styleClass="lefttext">
+				</f:facet>
+				<f:facet name="input">
+					<h:inputText value="#{_laskurivi.tuotenimi}" />
+				</f:facet>
+			</ace:cellEditor>
+		</ace:column>
+		<ace:column headerText="Infotieto" styleClass="lefttext">
+			<ace:cellEditor>
+				<f:facet name="output">
 					<h:outputText value="#{_laskurivi.infotieto}" />
-				</ace:column>
-				<ace:column headerText="Määrä" styleClass="lefttext">
+				</f:facet>
+				<f:facet name="input">
+					<h:inputText value="#{_laskurivi.infotieto}" />
+				</f:facet>
+			</ace:cellEditor>
+		</ace:column>
+		<ace:column headerText="Määrä" styleClass="lefttext">
+			<ace:cellEditor>
+				<f:facet name="output">
 					<h:outputText value="#{_laskurivi.määrä}" />
-				</ace:column>
-				<ace:column headerText="Yks." styleClass="lefttext">
+				</f:facet>
+				<f:facet name="input">
+					<h:inputText value="#{_laskurivi.määrä}" size="4" />
+				</f:facet>
+			</ace:cellEditor>
+		</ace:column>
+		<ace:column headerText="Yks." styleClass="lefttext">
+			<ace:cellEditor>
+				<f:facet name="output">
 					<h:outputText value="#{_laskurivi.yksikkö}" />
-				</ace:column>
-				<ace:column headerText="Yks. hinta" styleClass="lefttext">
-					<h:outputText value="#{_laskurivi.yksikköhinta}" >
+				</f:facet>
+				<f:facet name="input">
+					<h:inputText value="#{_laskurivi.yksikkö}" size="4" />
+				</f:facet>
+			</ace:cellEditor>
+		</ace:column>
+		<ace:column headerText="Yks. hinta" styleClass="lefttext">
+			<ace:cellEditor>
+				<f:facet name="output">
+					<h:outputText value="#{_laskurivi.yksikköhinta}">
 						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 					</h:outputText>
-				</ace:column>
-				<ace:column headerText="Hinta" styleClass="lefttext">
-					<h:outputText value="#{_laskurivi.rivihinta}">
-						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
-					</h:outputText>
-				</ace:column>
-			</ace:dataTable>
-		</ace:panelExpansion>
+				</f:facet>
+				<f:facet name="input">
+					<h:inputText value="#{_laskurivi.yksikköhinta}" size="4">
+					</h:inputText>
+				</f:facet>
+			</ace:cellEditor>
+		</ace:column>
+		<ace:column headerText="Hinta" styleClass="lefttext">
+			<h:outputText value="#{_laskurivi.rivihinta}">
+				<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
+			</h:outputText>
+		</ace:column>
+		<ace:column>
+			<!--  
+			<ace:rowEditor />
+		-->
+		</ace:column>
+		<ace:column>
+			<h:panelGrid columns="2">
+				<h:commandButton value="-" action="#{laskutusAdmin.poistaRivi(_laskurivi)}" immediate="true" />
+				<h:commandButton value="+" action="#{laskutusAdmin.lisääRivi(_laskurivi)}" immediate="true" />
+			</h:panelGrid>
+		</ace:column>
 	</ace:dataTable>
 	<h:commandButton rendered="#{lasku != null}" value="x" styleClass="ikoni"
 		onclick="ice.ace.instance('form:vahvistaLaskunPoisto').show();" image="/kuvat/poista.png" immediate="true" />

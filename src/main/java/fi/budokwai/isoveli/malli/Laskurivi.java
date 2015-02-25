@@ -33,7 +33,7 @@ public class Laskurivi
 
    private int rivinumero;
 
-   @OneToOne(cascade = CascadeType.PERSIST)
+   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
    @JoinColumn(name = "sopimuslasku")
    private Sopimuslasku sopimuslasku;
 

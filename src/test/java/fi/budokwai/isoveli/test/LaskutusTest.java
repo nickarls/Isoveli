@@ -1,5 +1,7 @@
 package fi.budokwai.isoveli.test;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
@@ -13,6 +15,7 @@ import org.junit.runner.RunWith;
 import fi.budokwai.isoveli.admin.LaskutusAdmin;
 import fi.budokwai.isoveli.malli.Lasku;
 import fi.budokwai.isoveli.malli.Laskurivi;
+import fi.budokwai.isoveli.malli.Sopimuslasku;
 
 @RunWith(Arquillian.class)
 public class LaskutusTest extends Perustesti
@@ -33,6 +36,26 @@ public class LaskutusTest extends Perustesti
       laskutusAdmin.laskutaSopimukset();
       Lasku lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
       Assert.assertEquals("Nicklas Karlsson", lasku.getHenkilö().getNimi());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "seed.sql", "huoltajaperhe.sql", "emilsopimus.sql" })
+   @ApplyScriptAfter("cleanup.sql")
+   public void testPoistalaskurivi()
+   {
+      laskutusAdmin.laskutaSopimukset();
+      Lasku lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
+      List<Sopimuslasku> sopimuslaskut = entityManager.createQuery("select s from Sopimuslasku s", Sopimuslasku.class)
+         .getResultList();
+      Assert.assertEquals(1, lasku.getLaskurivejä());
+      Assert.assertEquals(1, sopimuslaskut.size());
+      laskutusAdmin.poistaRivi(lasku.getLaskurivit().iterator().next());
+      entityManager.refresh(lasku);
+      Assert.assertEquals(0, lasku.getLaskurivejä());
+      entityManager.clear();
+      sopimuslaskut = entityManager.createQuery("select s from Sopimuslasku s", Sopimuslasku.class).getResultList();
+      Assert.assertEquals(0, sopimuslaskut.size());
    }
 
    @Test

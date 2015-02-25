@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
@@ -27,6 +28,7 @@ import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.BlobData;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Lasku;
+import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.TilausTila;
@@ -334,4 +336,23 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       });
       return zippaaja.haeZipTiedosto("laskuttamattomat");
    }
+
+   public void tallennaRivi(AjaxBehaviorEvent e)
+   {
+      Lasku lasku = (Lasku) laskuRSM.getSelected().iterator().next();
+      lasku = entityManager.merge(lasku);
+      info("Rivi muokattu ja lasku tallennettu");
+   }
+
+   public void poistaRivi(Laskurivi laskurivi)
+   {
+      Laskurivi lr = entityManager.merge(laskurivi);
+      Lasku l = entityManager.merge(laskurivi.getLasku());
+      laskurivi.setSopimuslasku(null);
+      l.getLaskurivit().remove(lr);
+      entityManager.persist(l);
+      entityManager.flush();
+      info("Rivi poistettu ja lasku tallennettu");
+   }
+
 }

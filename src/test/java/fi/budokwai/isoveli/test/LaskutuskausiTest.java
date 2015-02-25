@@ -22,7 +22,6 @@ public class LaskutuskausiTest extends Perustesti
       Assert.assertEquals("23.02.2015", DateUtil.formatoi(kausi.getKausi().getAlkaa()));
       Assert.assertEquals("23.05.2015", DateUtil.formatoi(kausi.getKausi().getPäättyy()));
       Assert.assertEquals(3, kausi.getKausikuukausia());
-      
    }
    
    @Test

@@ -469,5 +469,19 @@ public class DateUtilTest
       LocalDate b = DateUtil.silloin("02.02.2015");
       Assert.assertFalse(DateUtil.samat(a, b));
    }
+   
+   @Test
+   public void testOnkoAiemmin() {
+      Date d1 = DateUtil.silloinD("01.01.2015");
+      LocalDate d2 = DateUtil.t‰n‰‰n();
+      Assert.assertTrue(DateUtil.onkoAiemmin(d1, d2));
+   }
+   
+   @Test
+   public void testOnkoEiAiemmin() {
+      Date d1 = DateUtil.silloinD("01.01.2016");
+      LocalDate d2 = DateUtil.t‰n‰‰n();
+      Assert.assertFalse(DateUtil.onkoAiemmin(d1, d2));
+   }
 
 }

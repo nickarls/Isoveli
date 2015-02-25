@@ -340,6 +340,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public void tallennaRivi(AjaxBehaviorEvent e)
    {
       Lasku lasku = (Lasku) laskuRSM.getSelected().iterator().next();
+      lasku.numeroiRivit();
       lasku = entityManager.merge(lasku);
       info("Rivi muokattu ja lasku tallennettu");
    }
@@ -353,6 +354,12 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       entityManager.persist(l);
       entityManager.flush();
       info("Rivi poistettu ja lasku tallennettu");
+   }
+
+   public void lis‰‰Rivi(Laskurivi laskurivi)
+   {
+      int paikka = lasku.getLaskurivit().indexOf(laskurivi);
+      lasku.lis‰‰Rivi(paikka, new Laskurivi());
    }
 
 }

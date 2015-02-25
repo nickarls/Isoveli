@@ -154,6 +154,17 @@ public class LaskutuskausiTest extends Perustesti
       Assert.assertEquals("01.01.2015-01.07.2015", kausi.getKausi().getKuvaus());
       Assert.assertEquals("01.04.2015-01.05.2015", kausi.getTauko().getKuvaus());
    }
+   
+   @Test
+   public void testUmpeutuvaSopimus() {
+      Sopimus sopimus = teeHarjoittelusopimus(new Harrastaja(), "02.01.2015", 6);
+      sopimus.setUmpeutuu(DateUtil.silloinD("01.01.2020"));
+      Laskutuskausi kausi = sopimus.getLaskutuskausi();
+      Assert.assertEquals("02.01.2015", DateUtil.formatoi(kausi.getKausi().getAlkaa()));
+      Assert.assertEquals("02.07.2015", DateUtil.formatoi(kausi.getKausi().getP‰‰ttyy()));
+      Assert.assertEquals(6, kausi.getKausikuukausia());
+     
+   }
 
    @Test
    public void testTaukoAlkuOsuu()

@@ -355,10 +355,6 @@ public class Sopimus
 
    private Date getKausiP‰‰ttyy(Date alkaa)
    {
-      if (umpeutuu != null)
-      {
-         return umpeutuu;
-      }
       LocalDate loppu = DateUtil.Date2LocalDate(alkaa);
       if (tyyppi.isJ‰senmaksutyyppi())
       {
@@ -371,6 +367,10 @@ public class Sopimus
       while (loppu.isBefore(DateUtil.t‰n‰‰n()) || DateUtil.samat(alkaa, loppu))
       {
          loppu = loppu.plus(maksuv‰li, ChronoUnit.MONTHS);
+      }
+      if (umpeutuu != null && DateUtil.onkoAiemmin(umpeutuu, loppu))
+      {
+         return umpeutuu;
       }
       return DateUtil.LocalDate2Date(loppu);
    }

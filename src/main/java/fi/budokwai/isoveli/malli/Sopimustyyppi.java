@@ -293,4 +293,22 @@ public class Sopimustyyppi
       return !jäsenmaksu && !alkeiskurssi && harjoittelumaksu && !koeaika && !power && !treenikertoja && !vapautus;
    }
 
+   public boolean sopiiHarrastajalle(Harrastaja harrastaja)
+   {
+      if (alaikäraja == 0 && yläikäraja == 0)
+      {
+         return true;
+      } else if (alaikäraja > 0 && yläikäraja == 0)
+      {
+         return harrastaja.getIkä() > alaikäraja;
+      } else if (alaikäraja == 0 && yläikäraja > 0)
+      {
+         return harrastaja.getIkä() < yläikäraja;
+      } else if (alaikäraja > 0 && yläikäraja > 0)
+      {
+         return harrastaja.getIkä() > alaikäraja && harrastaja.getIkä() < yläikäraja;
+      }
+      return false;
+   }
+
 }

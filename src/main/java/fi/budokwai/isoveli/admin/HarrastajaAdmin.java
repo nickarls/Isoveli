@@ -4,13 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
-import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
@@ -51,12 +50,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    private List<Harrastaja> harrastajat;
    private List<Rooli> roolit;
    private List<Perhe> perheet;
-
-   @Inject
-   private EntityManager entityManager;
-
    private TabSet tabi;
-
    private Harrastaja harrastaja;
    private Sopimus sopimus;
    private Vyökoe vyökoe;
@@ -64,6 +58,15 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    private RowStateMap harrastajaRSM = new RowStateMap();
    private RowStateMap vyökoeRSM = new RowStateMap();
    private RowStateMap sopimusRSM = new RowStateMap();
+
+   @Inject
+   private EntityManager entityManager;
+
+   @Inject
+   private Vyökoehelper vyökoehelper;
+
+   @Inject
+   private List<Sopimustyyppi> sopimustyypit;
 
    @Inject
    private Loggaaja loggaaja;
@@ -487,11 +490,25 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       sopimus = new Sopimus();
       sopimus.setHarrastaja(harrastaja);
       sopimusRSM.setAllSelected(false);
+      sopimus.setTyyppi(ehdotaSopimusTyyppiä());
+      sopimus.setMaksuväli(sopimus.getTyyppi().getOletusMaksuväli());
       info("Uusi sopimus alustettu");
    }
 
-   @Inject
-   private Vyökoehelper vyökoehelper;
+   private Sopimustyyppi ehdotaSopimusTyyppiä()
+   {
+      Optional<Sopimustyyppi> ehdotus = null;
+      if (!harrastaja.getSopimukset().stream().filter(s -> s.getTyyppi().isJäsenmaksutyyppi()).findFirst().isPresent())
+      {
+         ehdotus = sopimustyypit.stream().filter(s -> s.isJäsenmaksutyyppi()).findFirst();
+      } else if (!harrastaja.getSopimukset().stream().filter(s -> s.getTyyppi().isHarjoittelumaksutyyppi()).findFirst()
+         .isPresent())
+      {
+         ehdotus = sopimustyypit.stream().filter(s -> s.isHarjoittelumaksutyyppi() && s.sopiiHarrastajalle(harrastaja))
+            .findFirst();
+      }
+      return (ehdotus == null || !ehdotus.isPresent()) ? null : ehdotus.get();
+   }
 
    public void lisääVyökoe()
    {

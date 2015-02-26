@@ -250,9 +250,14 @@ public class DateUtil
          && alkaaPvm.getDayOfMonth() == loppu.getDayOfMonth();
    }
 
-   public static boolean onkoAiemmin(Date umpeutuu, LocalDate loppu)
+   public static boolean onkoAiemmin(Date alkaa, LocalDate loppu)
    {
-      return Date2LocalDate(umpeutuu).isBefore(loppu);
+      return Date2LocalDate(alkaa).isBefore(loppu);
+   }
+
+   public static boolean onkoAiemmin(Date alkaa, Date loppuu)
+   {
+      return onkoAiemmin(alkaa, Date2LocalDate(loppuu));
    }
 
 }

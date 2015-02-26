@@ -308,23 +308,6 @@ public class Lasku
    public void lis‰‰Rivit(List<Laskurivi> laskurivit)
    {
       laskurivit.forEach(lr -> lis‰‰Rivi(lr));
-
    }
 
-   public void numeroiRivit()
-   {
-      int i = 1;
-      for (Laskurivi rivi : laskurivit)
-      {
-         rivi.setRivinumero(++i);
-      }
-
-   }
-
-   public void lis‰‰Rivi(int paikka, Laskurivi laskurivi)
-   {
-      laskurivi.setLasku(this);
-      laskurivit.add(paikka, laskurivi);
-      numeroiRivit();
-   }
 }

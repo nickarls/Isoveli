@@ -26,6 +26,7 @@ import org.icefaces.ace.component.tabset.TabSet;
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
+import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Osoite;
@@ -268,13 +269,15 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    {
       if (löytyySamanniminenHarrastaja())
       {
-         virhe("Samanniminen harrastaja löytyy jo");
-         return;
+         throw new IsoveliPoikkeus("Samanniminen harrastaja löytyy jo");
       }
-      if (harrastaja.isAvoinTauko())
+      if (harrastaja.getTauko().isAvoin())
       {
-         virhe("Sekä tauon alkamis- että päättymispäivämäärä annettava");
-         return;
+         throw new IsoveliPoikkeus("Sekä tauon alkamis- että päättymispäivämäärä annettava");
+      }
+      if (harrastaja.getTauko().isRajatRistissä())
+      {
+         throw new IsoveliPoikkeus("Tauko ei voi loppua ennen kun se alkaa");
       }
       loggaaja.loggaa(String.format("Tallensi harrastajan %s", harrastaja));
       harrastaja.siivoa();
@@ -325,6 +328,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    {
       if (sopimus.isPoistettavissa())
       {
+         sopimus = entityManager.merge(sopimus);
          entityManager.refresh(sopimus);
       } else
       {
@@ -376,13 +380,13 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void tallennaSopimus()
    {
       harrastaja = entityManager.merge(harrastaja);
-      if (harrastaja.löytyyJoSopimus(sopimus.getTyyppi()))
+      if (!sopimus.isTallennettu())
       {
-         return;
+         sopimus.setHarrastaja(harrastaja);
+         harrastaja.getSopimukset().add(sopimus);
+         entityManager.persist(harrastaja);
       }
-      sopimus.setHarrastaja(harrastaja);
-      harrastaja.getSopimukset().add(sopimus);
-      entityManager.persist(harrastaja);
+      sopimus = entityManager.merge(sopimus);
       entityManager.flush();
       sopimusRSM.get(sopimus).setSelected(true);
       haeHarrastajat();

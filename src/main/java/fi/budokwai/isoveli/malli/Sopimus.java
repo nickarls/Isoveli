@@ -394,4 +394,9 @@ public class Sopimus
       return laskurivit;
    }
 
+   public boolean isTallennettu()
+   {
+      return id > 0;
+   }
+
 }

@@ -444,12 +444,6 @@ public class Harrastaja extends Henkilö
       return getAktiivinenKertakortti();
    }
 
-   public boolean isAvoinTauko()
-   {
-      return (tauko.getAlkaa() == null && tauko.getPäättyy() != null)
-         || (tauko.getAlkaa() != null && tauko.getPäättyy() == null);
-   }
-
    public Jakso getTauko()
    {
       return tauko;

@@ -47,7 +47,7 @@
 			<h:outputText value="Tyyppi" />
 			<h:panelGrid>
 				<ace:message for="form:sopimustyyppi" />
-				<h:selectOneMenu value="#{sopimus.tyyppi}" id="sopimustyyppi" hideNoSelectionOption="true">
+				<h:selectOneMenu value="#{sopimus.tyyppi}" id="sopimustyyppi" hideNoSelectionOption="true" required="true">
 					<f:selectItem itemLabel="Valitse" itemValue="" noSelectionOption="true" />
 					<f:selectItems value="#{kaikkiSopimustyypit}" var="_sopimustyyppi" itemValue="#{_sopimustyyppi}"
 						itemLabel="#{_sopimustyyppi.nimi}" />
@@ -68,7 +68,7 @@
 			<h:outputText value="Maksuväli" rendered="#{sopimus.tyyppi.kuukausilaskutus}"/>
 			<h:panelGrid rendered="#{sopimus.tyyppi.kuukausilaskutus}">
 				<ace:message for="form:maksuväli" />
-				<h:selectOneMenu value="#{sopimus.maksuväli}">
+				<h:selectOneMenu value="#{sopimus.maksuväli}" required="true" id="maksuväli">
 					<f:selectItem itemValue="" itemLabel="" noSelectionOption="true"/>
 					<f:selectItem itemValue="1" itemLabel="1kk" />
 					<f:selectItem itemValue="2" itemLabel="2kk" />
@@ -88,6 +88,6 @@
 		action="#{harrastajaAdmin.peruutaSopimusmuutos}" image="/kuvat/peruuta_muutos.png">
 		<f:ajax render="@form" />
 	</h:commandButton>
-	<h:commandButton styleClass="ikoni" rendered="#{sopimus != null}"
+	<h:commandButton styleClass="ikoni" rendered="#{sopimus != null and sopimus.tallennettu}"
 		onclick="ice.ace.instance('form:vahvistaSopimuksenPoisto').show();" image="/kuvat/poista.png" immediate="true" />
 </ui:composition>

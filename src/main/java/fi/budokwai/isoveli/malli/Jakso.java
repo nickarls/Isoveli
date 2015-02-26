@@ -103,4 +103,13 @@ public class Jakso
       this.p‰‰ttyy = p‰‰ttyy;
    }
 
+   public boolean isAvoin()
+   {
+      return (alkaa == null && p‰‰ttyy != null) || (alkaa != null && p‰‰ttyy == null);
+   }
+
+   public boolean isRajatRistiss‰()
+   {
+      return alkaa != null && p‰‰ttyy != null && !DateUtil.onkoAiemmin(alkaa, p‰‰ttyy);
+   }
 }

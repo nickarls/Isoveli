@@ -18,10 +18,13 @@ import org.apache.deltaspike.core.api.exception.control.Handles;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
 import org.jboss.logging.Logger;
 
+import fi.budokwai.isoveli.IsoveliPoikkeus;
+import fi.budokwai.isoveli.admin.Perustoiminnallisuus;
+
 @ExceptionHandler
 @SessionScoped
 @Named("exceptionHandler")
-public class DSExceptionHandler implements Serializable
+public class DSExceptionHandler extends Perustoiminnallisuus implements Serializable
 {
    private static final long serialVersionUID = 1L;
 
@@ -30,7 +33,7 @@ public class DSExceptionHandler implements Serializable
 
    @Inject
    private Loggaaja loggaaja;
-   
+
    public void tapaSessio()
    {
       loggaaja.loggaa("Kirjautui ulos");
@@ -43,6 +46,13 @@ public class DSExceptionHandler implements Serializable
       {
          e.printStackTrace();
       }
+   }
+
+   void handleIsovelipoikkeus(@Handles ExceptionEvent<IsoveliPoikkeus> e)
+   {
+      logger.error("Virhe", e.getException());
+      virhe(e.getException().getMessage());
+      e.handled();
    }
 
    void handleException(@Handles ExceptionEvent<Throwable> e)

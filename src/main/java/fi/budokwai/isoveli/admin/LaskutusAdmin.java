@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
@@ -18,6 +19,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 
+import org.icefaces.ace.component.column.Column;
+import org.icefaces.ace.component.datatable.DataTable;
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
@@ -54,6 +57,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 
    private RowStateMap laskuRSM = new RowStateMap();
    private RowStateMap laskuttamattomatRSM = new RowStateMap();
+   private RowStateMap laskuriviRSM = new RowStateMap();
    private List<Sopimus> laskuttamattomat;
    private List<Lasku> laskut;
    private Lasku lasku;
@@ -340,9 +344,14 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public void tallennaRivi(AjaxBehaviorEvent e)
    {
       Lasku lasku = (Lasku) laskuRSM.getSelected().iterator().next();
-      lasku.numeroiRivit();
       lasku = entityManager.merge(lasku);
       info("Rivi muokattu ja lasku tallennettu");
+   }
+
+   public void tallennaLasku()
+   {
+      lasku = entityManager.merge(lasku);
+      info("Rivi ja lasku tallennettu");
    }
 
    public void poistaRivi(Laskurivi laskurivi)
@@ -353,13 +362,32 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       l.getLaskurivit().remove(lr);
       entityManager.persist(l);
       entityManager.flush();
+      lasku = l;
       info("Rivi poistettu ja lasku tallennettu");
    }
 
-   public void lis‰‰Rivi(Laskurivi laskurivi)
+   public void lis‰‰Rivi()
    {
-      int paikka = lasku.getLaskurivit().indexOf(laskurivi);
-      lasku.lis‰‰Rivi(paikka, new Laskurivi());
+      Laskurivi uusiRivi = new Laskurivi();
+      lasku.lis‰‰Rivi(uusiRivi);
+      DataTable t = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("form:laskurivit");
+      for (Column c : t.getColumns())
+      {
+         if (c.getCellEditor() != null)
+         {
+            laskuriviRSM.get(uusiRivi).addActiveCellEditor(c.getCellEditor());
+         }
+      }
+   }
+
+   public RowStateMap getLaskuriviRSM()
+   {
+      return laskuriviRSM;
+   }
+
+   public void setLaskuriviRSM(RowStateMap laskuriviRSM)
+   {
+      this.laskuriviRSM = laskuriviRSM;
    }
 
 }

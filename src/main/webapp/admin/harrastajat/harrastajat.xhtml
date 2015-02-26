@@ -28,14 +28,14 @@
 			<h:outputText value="#{_harrastaja.ikä}" />
 		</ace:column>
 		<ace:column headerText="Sukupuoli">
-			<h:graphicImage value="/kuvat/uros.png" style="height:40px" rendered="#{_harrastaja.mies}" />
-			<h:graphicImage value="/kuvat/naaras.png" style="height:40px" rendered="#{_harrastaja.nainen}" />
+			<h:graphicImage value="/kuvat/uros.png" style="height:30px" rendered="#{_harrastaja.mies}" />
+			<h:graphicImage value="/kuvat/naaras.png" style="height:30px" rendered="#{_harrastaja.nainen}" />
 		</ace:column>
 		<ace:column headerText="Vyöarvo">
-			<h:graphicImage value="/kuvat/vyöt/#{_harrastaja.tuoreinVyöarvo.id}.png" style="height:40px"
+			<h:graphicImage value="/kuvat/vyöt/#{_harrastaja.tuoreinVyöarvo.id}.png" style="height:30px"
 				rendered="#{_harrastaja.tuoreinVyöarvo.id != 0}" />
 		</ace:column>
-		<ace:column headerText="Maksut" styleClass="lefttext">
+		<ace:column headerText="Maksut" styleClass="lefttext" style="font-size:60%">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_harrastaja.sopimuksetOK}" />
 			<h:dataTable var="_viesti" value="#{_harrastaja.sopimusTarkistukset.viestit}">
 				<h:column>

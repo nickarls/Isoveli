@@ -87,7 +87,7 @@
 		</ace:column>
 	</ace:dataTable>
 	<ace:dataTable rows="10" value="#{laskut[0].laskurivit}" var="_laskurivi" paginator="true" paginatorPosition="bottom"
-		paginatorAlwaysVisible="false">
+		id="laskurivit" paginatorAlwaysVisible="false" rendered="#{lasku != null}" stateMap="#{laskutusAdmin.laskuriviRSM}">
 		<ace:ajax event="editSubmit" render="@all" listener="#{laskutusAdmin.tallennaRivi}" />
 		<ace:column headerText="#" styleClass="lefttext">
 			<h:outputText value="#{_laskurivi.rivinumero}" />
@@ -98,7 +98,10 @@
 					<h:outputText value="#{_laskurivi.tuotenimi}" />
 				</f:facet>
 				<f:facet name="input">
-					<h:inputText value="#{_laskurivi.tuotenimi}" />
+					<h:panelGrid>
+						<ace:message for=":tuotenimi" />
+						<h:inputText value="#{_laskurivi.tuotenimi}" id="tuotenimi" />
+					</h:panelGrid>
 				</f:facet>
 			</ace:cellEditor>
 		</ace:column>
@@ -151,19 +154,19 @@
 			</h:outputText>
 		</ace:column>
 		<ace:column>
-			<!--  
 			<ace:rowEditor />
-		-->
 		</ace:column>
 		<ace:column>
-			<h:panelGrid columns="2">
-				<h:commandButton value="-" action="#{laskutusAdmin.poistaRivi(_laskurivi)}" immediate="true">
-					<f:ajax render="@form"/>
-				</h:commandButton>
-				<h:commandButton value="+" action="#{laskutusAdmin.lisääRivi(_laskurivi)}" immediate="true" />
-			</h:panelGrid>
+			<h:commandButton value="-" action="#{laskutusAdmin.poistaRivi(_laskurivi)}" immediate="true">
+				<f:ajax render="@form" />
+			</h:commandButton>
 		</ace:column>
 	</ace:dataTable>
 	<h:commandButton rendered="#{lasku != null}" value="x" styleClass="ikoni"
 		onclick="ice.ace.instance('form:vahvistaLaskunPoisto').show();" image="/kuvat/poista.png" immediate="true" />
+	<h:commandButton value="+" action="#{laskutusAdmin.lisääRivi}" immediate="true" />
+	<h:commandButton rendered="#{lasku != null}" value="S" styleClass="ikoni" action="#{laskutusAdmin.tallennaLasku}">
+		<f:ajax execute="@form" render="@form" />
+	</h:commandButton>
+
 </ui:composition>

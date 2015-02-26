@@ -366,18 +366,22 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void tallennaVyökoe()
    {
-      if (!harrastaja.getVyökokeet().contains(vyökoe))
+      harrastaja = entityManager.merge(harrastaja);
+      if (!vyökoe.isTallennettu())
       {
          vyökoe.setHarrastaja(harrastaja);
          harrastaja.getVyökokeet().add(vyökoe);
+         entityManager.persist(harrastaja);
       }
-      harrastaja = entityManager.merge(harrastaja);
+      vyökoe = entityManager.merge(vyökoe);
+      entityManager.flush();
       entityManager.flush();
       vyökoeRSM.get(vyökoe).setSelected(true);
       harrastaja.getVyökokeet().sort(
          (v1, v2) -> Integer.valueOf(v1.getVyöarvo().getJärjestys()).compareTo(
             Integer.valueOf(v2.getVyöarvo().getJärjestys())));
       info("Vyökoe tallennettu");
+      haeHarrastajat();
    }
 
    public void tallennaSopimus()
@@ -402,6 +406,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastaja.getVyökokeet().remove(vyökoe);
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
+      haeHarrastajat();
       info("Vyökoe poistettu");
    }
 

@@ -112,8 +112,8 @@ public class Vyökoe
 
    public String getAikaaVälissä()
    {
-      Period aika = getAikaEdellisestäKokeesta();
-      return DateUtil.aikaväli2String(aika);
+      Period aika = getAikaEdellisestäKokeesta().negated();
+      return aika == Period.ZERO ? "ei yhtään" : DateUtil.aikaväli2String(aika);
    }
 
    public boolean equals(Object toinen)
@@ -129,6 +129,11 @@ public class Vyökoe
    public int hashCode()
    {
       return Integer.valueOf(id).hashCode();
+   }
+
+   public boolean isTallennettu()
+   {
+      return id > 0;
    }
 
 }

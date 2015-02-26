@@ -1,4 +1,4 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+ <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:ace="http://www.icefaces.org/icefaces/components">
 
@@ -39,9 +39,9 @@
 			<ace:column headerText="Seuraavaan kokeeseen" styleClass="lefttext">
 				<h:panelGrid columns="2" rendered="#{_vyökoe.tuoreinVyökoe}">
 					<h:outputText value="Päiviä" />
-					<h:outputText value="#{kohde.jäljelläVyökokeeseen(kaikkiVyöarvot).aikaString}" />
+					<h:outputText value="#{vyökoehelper.getJäljelläVyökokeeseen(kohde).aikaString}" />
 					<h:outputText value="Treenikertoja" />
-					<h:outputText value="#{kohde.jäljelläVyökokeeseen(kaikkiVyöarvot).treenikertoja} kertaa" />
+					<h:outputText value="#{vyökoehelper.getJäljelläVyökokeeseen(kohde).treenikertoja} kertaa" />
 				</h:panelGrid>
 			</ace:column>
 		</ace:dataTable>

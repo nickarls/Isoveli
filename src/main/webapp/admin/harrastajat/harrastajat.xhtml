@@ -35,11 +35,11 @@
 			<h:graphicImage value="/kuvat/vyöt/#{_harrastaja.tuoreinVyöarvo.id}.png" style="height:30px"
 				rendered="#{_harrastaja.tuoreinVyöarvo.id != 0}" />
 		</ace:column>
-		<ace:column headerText="Maksut" styleClass="lefttext" style="font-size:60%">
+		<ace:column headerText="Maksut" styleClass="lefttext">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_harrastaja.sopimuksetOK}" />
 			<h:dataTable var="_viesti" value="#{_harrastaja.sopimusTarkistukset.viestit}">
 				<h:column>
-					<h:outputText value="#{_viesti}" style="color:red" />
+					<h:outputText value="#{_viesti}" style="color:red;font-size:60%" />
 				</h:column>
 			</h:dataTable>
 		</ace:column>

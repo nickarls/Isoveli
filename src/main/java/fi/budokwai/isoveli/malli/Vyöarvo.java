@@ -16,7 +16,12 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @NamedQueries(
 {
       @NamedQuery(name = "vyöarvot", query = "select v from Vyöarvo v order by v.järjestys"),
@@ -136,6 +141,12 @@ public class Vyöarvo
    public void setJärjestys(int järjestys)
    {
       this.järjestys = järjestys;
+   }
+
+   @Override
+   public String toString()
+   {
+      return nimi;
    }
 
 }

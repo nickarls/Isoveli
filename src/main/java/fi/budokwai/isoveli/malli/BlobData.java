@@ -13,10 +13,15 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import fi.budokwai.isoveli.api.BlobLataus;
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "blobdata")
 @NamedQueries(
 { @NamedQuery(name = "blobdata", query = "select b from BlobData b where b.avain=:avain"),

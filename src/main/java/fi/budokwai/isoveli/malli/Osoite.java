@@ -9,7 +9,12 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "osoite")
 @NamedQuery(name = "poista_tyhjät_osoitteet", query = "delete from Osoite o where not exists(select h from Henkilö h where h.osoite=o) and not exists(select p from Perhe p where p.osoite=o)")
 public class Osoite
@@ -81,4 +86,9 @@ public class Osoite
          && (postinumero == null || "".equals(postinumero));
    }
 
+   @Override
+   public String toString()
+   {
+      return getOsoiteString();
+   }
 }

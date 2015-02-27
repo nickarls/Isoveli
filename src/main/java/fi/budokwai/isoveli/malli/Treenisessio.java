@@ -21,7 +21,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "treenisessio")
 @NamedQueries(
 {

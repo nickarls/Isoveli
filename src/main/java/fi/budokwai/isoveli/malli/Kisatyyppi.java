@@ -7,7 +7,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "kisatyyppi")
 public class Kisatyyppi
 {

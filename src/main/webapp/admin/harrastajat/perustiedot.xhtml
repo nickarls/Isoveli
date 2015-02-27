@@ -112,7 +112,7 @@
 						</h:selectOneMenu>
 						<h:commandButton action="#{harrastajaAdmin.lisääPerhe}" value="x" image="/kuvat/lisää_perhe.jpg"
 							style="height:50px; width:50px; margin-left:15px">
-							<f:ajax execute="form:henkilötietopanel" render="form:perhepanel form:sukunimigrid form:huoltajapanel" />
+							<f:ajax execute="form:henkilötietopanel" render="form:henkilötietopanel form:perhepanel form:sukunimigrid form:huoltajapanel" />
 						</h:commandButton>
 					</h:panelGrid>
 				</ace:panel>
@@ -136,7 +136,7 @@
 							style="height:50px; width:50px; margin-left:15px">
 							<f:ajax execute="form:sukunimi" render="form:huoltajapanel form:perhepanel" />
 						</h:commandButton>
-						<h:panelGrid columns="2" rendered="#{harrastaja.huoltaja != null and harrastaja.huoltaja.tallentamaton}">
+						<h:panelGrid columns="2" rendered="#{harrastaja.huoltaja != null}">
 							<h:inputText value="#{harrastaja.huoltaja.etunimi}" size="14" id="huoltajan_etunimi" />
 							<h:inputText value="#{harrastaja.huoltaja.sukunimi}" size="14" />
 						</h:panelGrid>

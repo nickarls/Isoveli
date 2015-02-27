@@ -17,7 +17,12 @@ import javax.persistence.TemporalType;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @NamedQuery(name = "treenikäynnit", query = "select t from Treenikäynti t order by t.id desc")
 @Table(name = "treenikaynti")
 public class Treenikäynti

@@ -26,6 +26,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import com.google.common.base.MoreObjects;
@@ -33,6 +35,8 @@ import com.google.common.base.MoreObjects;
 import fi.budokwai.isoveli.util.DateUtil;
 
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "harrastaja")
 @NamedQueries(
 { @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.jäsennumero=:kortti"),
@@ -45,7 +49,7 @@ public class Harrastaja extends Henkilö
 {
    private static final long serialVersionUID = 1L;
 
-   @OneToOne(cascade = CascadeType.PERSIST)
+   @OneToOne(cascade = CascadeType.ALL)
    @JoinColumn(name = "huoltaja")
    private Henkilö huoltaja;
 

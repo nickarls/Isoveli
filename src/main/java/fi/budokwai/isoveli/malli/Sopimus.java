@@ -22,11 +22,15 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import fi.budokwai.isoveli.util.DateUtil;
 
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "sopimus")
 @NamedQueries(
 {

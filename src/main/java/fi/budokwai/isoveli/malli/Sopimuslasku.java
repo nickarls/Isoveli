@@ -15,9 +15,14 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import fi.budokwai.isoveli.util.DateUtil;
 
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "sopimuslasku")
 public class Sopimuslasku
 {
@@ -26,7 +31,7 @@ public class Sopimuslasku
    private int id;
 
    @NotNull
-   @OneToOne(cascade = CascadeType.PERSIST, optional = false)
+   @OneToOne(cascade = CascadeType.MERGE, optional = false)
    @JoinColumn(name = "laskurivi")
    private Laskurivi laskurivi;
 

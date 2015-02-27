@@ -14,7 +14,12 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "loki")
 @NamedQuery(name = "lokitapahtumat", query = "select l from Loki l order by l.koska desc")
 public class Loki

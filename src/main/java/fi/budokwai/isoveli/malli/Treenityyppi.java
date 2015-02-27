@@ -10,7 +10,12 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "treenityyppi")
 @NamedQueries(
 { @NamedQuery(name = "treenityypit", query = "select t from Treenityyppi t order by t.nimi"),

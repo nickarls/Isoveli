@@ -17,9 +17,14 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import fi.budokwai.isoveli.util.DateUtil;
 
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "vyokoe")
 public class Vyökoe
 {

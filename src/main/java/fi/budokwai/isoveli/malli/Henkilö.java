@@ -29,11 +29,15 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "henkilo")
 @NamedQueries(
 {
@@ -75,7 +79,7 @@ public class Henkilö implements Serializable
    { @JoinColumn(name = "rooli", referencedColumnName = "id") })
    protected List<Rooli> roolit = new ArrayList<Rooli>();
 
-   @ManyToOne(cascade = CascadeType.PERSIST)
+   @ManyToOne
    @JoinColumn(name = "perhe")
    protected Perhe perhe;
 
@@ -347,6 +351,23 @@ public class Henkilö implements Serializable
    public String toString()
    {
       return getNimi();
+   }
+
+   @Override
+   public boolean equals(Object toinen)
+   {
+      if (!(toinen instanceof Henkilö))
+      {
+         return false;
+      }
+      Henkilö toinenHenkilö = (Henkilö) toinen;
+      return id == toinenHenkilö.getId();
+   }
+
+   @Override
+   public int hashCode()
+   {
+      return Integer.valueOf(id).hashCode();
    }
 
 }

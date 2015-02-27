@@ -17,7 +17,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "perhe")
 @NamedQueries(
 {
@@ -32,7 +37,7 @@ public class Perhe
 
    private String nimi;
 
-   @OneToMany(mappedBy = "perhe", cascade = CascadeType.PERSIST)
+   @OneToMany(mappedBy = "perhe", cascade=CascadeType.ALL)
    private List<Henkilö> perheenjäsenet = new ArrayList<Henkilö>();
 
    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
@@ -194,6 +199,17 @@ public class Perhe
    {
       Sopimus perheenKertakortti = getPerheenKertakortti();
       return perheenKertakortti == null ? 0 : perheenKertakortti.getTreenikertoja();
+   }
+
+   public boolean isTallennettu()
+   {
+      return id > 0;
+   }
+
+   @Override
+   public String toString()
+   {
+      return getKuvaus();  
    }
 
 }

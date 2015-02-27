@@ -25,9 +25,13 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "treeni")
 @NamedQueries(
 {

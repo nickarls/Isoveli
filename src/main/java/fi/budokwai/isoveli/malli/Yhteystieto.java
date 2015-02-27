@@ -9,9 +9,13 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "yhteystieto")
 @NamedQuery(name = "sähköpostilistalla", query = "select h from Henkilö h where h.yhteystiedot.sähköpostilistalla='K'")
 public class Yhteystieto

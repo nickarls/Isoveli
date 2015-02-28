@@ -41,16 +41,18 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
    private RowStateMap treenikäyntiRSM = new RowStateMap();
    private RowStateMap treenisessioRSM = new RowStateMap();
 
-   @Produces 
+   @Produces
    @Named
-   public Järjestelmätilasto getTilasto() {
+   public Järjestelmätilasto getTilasto()
+   {
       long harrastajia = entityManager.createQuery("select count(h) from Harrastaja h", Long.class).getSingleResult();
       long treenejä = entityManager.createQuery("select count(t) from Treenisessio t", Long.class).getSingleResult();
-      long treenikäyntejä = entityManager.createQuery("select count(t) from Treenikäynti t", Long.class).getSingleResult();
+      long treenikäyntejä = entityManager.createQuery("select count(t) from Treenikäynti t", Long.class)
+         .getSingleResult();
       long vyöarvoja = entityManager.createQuery("select count(v) from Vyökoe v", Long.class).getSingleResult();
       return new Järjestelmätilasto(harrastajia, treenejä, treenikäyntejä, vyöarvoja);
    }
-   
+
    @Produces
    @Named
    public Treenikäynti getTreenikäynti()
@@ -92,8 +94,8 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
          sessiovetäjät.removeAll(treenisessio.getVetäjät());
       }
       return sessiovetäjät;
-   }   
-   
+   }
+
    public void treenisessioValittu(SelectEvent e)
    {
       treenisessio = (Treenisessio) e.getObject();
@@ -129,7 +131,6 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       if (treenisessiot == null)
       {
          haeTreenisessiot();
-         treenisessiot.forEach(t -> entityManager.refresh(t));
       }
       return treenisessiot;
    }
@@ -175,6 +176,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       entityManager.remove(treenikäynti);
       entityManager.flush();
       treenikäynnit = null;
+      treenisessiot = null;
       info("Treenikäynti poistettu");
    }
 
@@ -217,30 +219,6 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       treenisessioRSM.get(treenisessio).setSelected(true);
       haeTreenisessiot();
       info("Treenisessio tallennettu");
-   }
-
-   public void peruutaTreenikäyntimuutos()
-   {
-      if (treenikäynti.isPoistettavissa())
-      {
-         entityManager.refresh(treenikäynti);
-      } else
-      {
-         treenikäynti = null;
-      }
-      virhe("Muutokset peruttu");
-   }
-
-   public void peruutaTreenisessiomuutos()
-   {
-      if (treenisessio.isPoistettavissa())
-      {
-         entityManager.refresh(treenisessio);
-      } else
-      {
-         treenisessio = null;
-      }
-      virhe("Muutokset peruttu");
    }
 
    public RowStateMap getTreenikäyntiRSM()

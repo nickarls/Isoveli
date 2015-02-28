@@ -67,10 +67,6 @@
 
 	<h:commandButton rendered="#{treenisessio != null}" value="x" styleClass="ikoni"
 		action="#{ilmoittautumisAdmin.tallennaTreenisessio}" image="/kuvat/tallenna.jpg" />
-	<h:commandButton rendered="#{treenisessio != null}" value="x" styleClass="ikoni" immediate="true"
-		action="#{ilmoittautumisAdmin.peruutaTreenisessiomuutos}" image="/kuvat/peruuta_muutos.png">
-		<f:ajax render="@form" />
-	</h:commandButton>
 	<h:commandButton rendered="#{treenisessio.poistettavissa}" value="x" styleClass="ikoni"
 		onclick="ice.ace.instance('form:vahvistaTreenisessionPoisto').show();" image="/kuvat/poista.png" immediate="true" />
 </ui:composition>

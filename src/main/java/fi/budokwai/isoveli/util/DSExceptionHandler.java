@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
+import org.h2.jdbc.JdbcSQLException;
 import org.jboss.logging.Logger;
 
 import fi.budokwai.isoveli.IsoveliPoikkeus;
@@ -68,6 +69,15 @@ public class DSExceptionHandler extends Perustoiminnallisuus implements Serializ
          e1.printStackTrace();
       }
       e.handled();
+   }
+
+   void handleUniqueConstraintViolatedExpired(@Handles ExceptionEvent<JdbcSQLException> e)
+   {
+      if (e.getException().getMessage().startsWith("Unique"))
+      {
+         e.handled();
+         virhe("Samanniminen tietue oli jo olemassa, tarkista tiedot");
+      }
    }
 
    void handleViewExpired(@Handles ExceptionEvent<ViewExpiredException> e)

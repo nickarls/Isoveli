@@ -66,10 +66,6 @@
 
 	<h:commandButton rendered="#{treenikäynti != null}" value="x" styleClass="ikoni"
 		action="#{ilmoittautumisAdmin.tallennaTreenikäynti}" image="/kuvat/tallenna.jpg" />
-	<h:commandButton rendered="#{treenikäynti != null}" value="x" styleClass="ikoni" immediate="true"
-		action="#{ilmoittautumisAdmin.peruutaTreenikäyntimuutos}" image="/kuvat/peruuta_muutos.png">
-		<f:ajax render="@form" />
-	</h:commandButton>
 	<h:commandButton rendered="#{treenikäynti.poistettavissa}" value="x" styleClass="ikoni"
 		onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').show();" image="/kuvat/poista.png" immediate="true" />
 </ui:composition>

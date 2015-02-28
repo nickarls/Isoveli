@@ -84,10 +84,6 @@
 		action="#{harrastajaAdmin.tallennaSopimus}">
 		<f:ajax execute="@form" render="@form" />
 	</h:commandButton>
-	<h:commandButton rendered="#{sopimus != null}" value="x" styleClass="ikoni" immediate="true"
-		action="#{harrastajaAdmin.peruutaSopimusmuutos}" image="/kuvat/peruuta_muutos.png">
-		<f:ajax render="@form" />
-	</h:commandButton>
 	<h:commandButton styleClass="ikoni" rendered="#{sopimus != null and sopimus.tallennettu}"
 		onclick="ice.ace.instance('form:vahvistaSopimuksenPoisto').show();" image="/kuvat/poista.png" immediate="true" />
 </ui:composition>

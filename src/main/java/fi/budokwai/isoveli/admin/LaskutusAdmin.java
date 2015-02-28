@@ -356,13 +356,12 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 
    public void poistaRivi(Laskurivi laskurivi)
    {
-      Laskurivi lr = entityManager.merge(laskurivi);
-      Lasku l = entityManager.merge(laskurivi.getLasku());
+      laskurivi = entityManager.merge(laskurivi);
+      lasku = entityManager.merge(laskurivi.getLasku());
       laskurivi.setSopimuslasku(null);
-      l.getLaskurivit().remove(lr);
-      entityManager.persist(l);
+      lasku.getLaskurivit().remove(laskurivi);
+      entityManager.persist(lasku);
       entityManager.flush();
-      lasku = l;
       info("Rivi poistettu ja lasku tallennettu");
    }
 

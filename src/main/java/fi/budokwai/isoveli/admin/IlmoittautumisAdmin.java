@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -40,6 +41,11 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
 
    private RowStateMap treenik‰yntiRSM = new RowStateMap();
    private RowStateMap treenisessioRSM = new RowStateMap();
+
+   public void treenisessioMuuttui(AjaxBehaviorEvent e)
+   {
+      treenik‰ynti.p‰ivit‰Aikaleima();
+   }
 
    @Produces
    @Named

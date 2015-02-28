@@ -40,7 +40,7 @@
 		</ace:column>
 	</ace:dataTable>
 	<p />
-	<h:panelGrid columnClasses="tabletop, tabletop" rendered="#{treenikäynti != null}">
+	<h:panelGrid columnClasses="tabletop, tabletop" rendered="#{treenikäynti != null}" id="treenikäynti">
 		<ace:panel header="Treenikäynti" styleClass="panel" style="width: 500px">
 			<h:panelGrid columns="2" style="margin-left: 20px;">
 				<h:outputText value="Harrastaja" />
@@ -55,10 +55,19 @@
 				<h:panelGrid>
 					<ace:message for="form:treenisessio" />
 					<h:selectOneMenu value="#{treenikäynti.treenisessio}" id="treenisessio" style="width:350px">
+						<f:selectItem itemValue="#{null}" itemLabel="" noSelectionItem="true" />
 						<f:selectItems value="#{kaikkiTreenisessiot}" var="_treenisessio" itemValue="#{_treenisessio}"
 							itemLabel="#{_treenisessio.kuvaus}" />
 						<f:converter converterId="objectConverter" />
+						<f:ajax execute="form:treenikäynti" render="form:treenikäynti" listener="#{ilmoittautumisAdmin.treenisessioMuuttui}" />
 					</h:selectOneMenu>
+				</h:panelGrid>
+				<h:outputText value="Aikaleima" />
+				<h:panelGrid>
+					<ace:message for="form:aikaleima" />
+					<h:inputText value="#{treenikäynti.aikaleima}">
+						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+					</h:inputText>
 				</h:panelGrid>
 			</h:panelGrid>
 		</ace:panel>

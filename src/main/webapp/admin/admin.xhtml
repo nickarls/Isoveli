@@ -7,7 +7,7 @@
 <h:head>
 	<style>
 .body {
-	font-size:90% !important;
+	font-size: 90% !important;
 }
 
 .ikoni {
@@ -44,14 +44,16 @@
 	background-position-y: -1400px; /* IE7 hack */
 }
 </style>
-<link rel="stylesheet" type="text/css" href="../jquery.toastmessage.css"/>
-<script src="../jquery-1.4.4.min.js"/>
-<script src="../jquery.toastmessage.js"/>
+	<link rel="stylesheet" type="text/css" href="../jquery.toastmessage.css" />
+	<script src="../jquery-1.4.4.min.js" />
+	<script src="../jquery.toastmessage.js" />
 </h:head>
 <h:body>
+	<icecore:config mandatoryResource='dataTable' />
 	<f:view>
 		<h:form id="form">
-			<h:commandLink action="#{exceptionHandler.tapaSessio()}" value="Kirjaudu ulos" immediate="true" style="margin-right:20px"/>
+			<h:commandLink action="#{exceptionHandler.tapaSessio()}" value="Kirjaudu ulos" immediate="true"
+				style="margin-right:20px" />
 			<h:commandLink action="/käyttäjä/käyttäjä.xhtml?faces-redirect=true" value="Oma ylläpito" />
 			<ace:tabSet tabChangeListener="#{harrastajaAdmin.päätabiMuuttui}">
 				<ace:tabPane label="Harrastajat">
@@ -73,7 +75,7 @@
 					<ui:include src="loki.xhtml" />
 				</ace:tabPane>
 			</ace:tabSet>
-			<h:outputText value="#{kirjautunutHenkilö.info}"/>
+			<h:outputText value="#{kirjautunutHenkilö.info}" />
 		</h:form>
 	</f:view>
 </h:body>

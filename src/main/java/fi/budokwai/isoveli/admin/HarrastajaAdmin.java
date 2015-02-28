@@ -328,19 +328,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       virhe("Muutokset peruttu");
    }
 
-   public void peruutaSopimusmuutos()
-   {
-      if (sopimus.isPoistettavissa())
-      {
-         sopimus = entityManager.merge(sopimus);
-         entityManager.refresh(sopimus);
-      } else
-      {
-         sopimus = null;
-      }
-      virhe("Muutokset peruttu");
-   }
-
    public void peruutaVyökoemuutos()
    {
       if (vyökoe.isPoistettavissa())
@@ -499,6 +486,10 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       sopimus.setHarrastaja(harrastaja);
       sopimusRSM.setAllSelected(false);
       sopimus.setTyyppi(ehdotaSopimusTyyppiä());
+      if (sopimus.getTyyppi() != null)
+      {
+         sopimus.asetaPäättymispäivä();
+      }
       sopimus.setMaksuväli(sopimus.getTyyppi().getOletusMaksuväli());
       info("Uusi sopimus alustettu");
    }

@@ -2,6 +2,7 @@ package fi.budokwai.isoveli.malli;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -125,4 +126,31 @@ public class Treenisessio
       return id > 0;
    }
 
+   public Date getAikaleima()
+   {
+      Calendar päivä = Calendar.getInstance();
+      päivä.setTime(this.päivä);
+      Calendar aika = Calendar.getInstance();
+      aika.setTime(treeni.getAlkaa());
+      päivä.set(Calendar.HOUR_OF_DAY, aika.get(Calendar.HOUR_OF_DAY));
+      päivä.set(Calendar.MINUTE, aika.get(Calendar.MINUTE));
+      return päivä.getTime();
+   }
+
+   @Override
+   public int hashCode()
+   {
+      return Integer.valueOf(id).hashCode();
+   }
+
+   @Override
+   public boolean equals(Object toinen)
+   {
+      if (!(toinen instanceof Treenisessio))
+      {
+         return false;
+      }
+      Treenisessio toinenTreenisessio = (Treenisessio) toinen;
+      return id == toinenTreenisessio.getId();
+   }
 }

@@ -124,4 +124,9 @@ public class Treenik‰ynti
    {
       return id > 0;
    }
+
+   public void p‰ivit‰Aikaleima()
+   {
+      aikaleima = treenisessio.getAikaleima();
+   }
 }

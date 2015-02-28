@@ -61,10 +61,6 @@
 						action="#{perustietoAdmin.tallennaVyöarvo}">
 						<f:ajax execute="@form" render="@form" />
 					</h:commandButton>
-					<h:commandButton rendered="#{vyöarvo != null}" value="x" styleClass="ikoni"
-						action="#{perustietoAdmin.peruutaVyöarvomuutos}" image="/kuvat/peruuta_muutos.png" immediate="true">
-						<f:ajax render="@form" />
-					</h:commandButton>
 					<h:commandButton rendered="#{vyöarvo.poistettavissa and fn:length(vyöarvoKäyttö) == 0}" value="x"
 						styleClass="ikoni" image="/kuvat/poista.png" immediate="true"
 						onclick="ice.ace.instance('form:vahvistaVyöarvonPoisto').show();" />

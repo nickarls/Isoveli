@@ -211,30 +211,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       virhe("Muutokset peruttu");
    }
 
-   public void peruutaTreenityyppimuutos()
-   {
-      if (treenityyppi.isPoistettavissa())
-      {
-         entityManager.refresh(treenityyppi);
-      } else
-      {
-         treenityyppi = null;
-      }
-      virhe("Muutokset peruttu");
-   }
-
-   public void peruutaVyöarvomuutos()
-   {
-      if (vyöarvo.isPoistettavissa())
-      {
-         entityManager.refresh(vyöarvo);
-      } else
-      {
-         vyöarvo = null;
-      }
-      virhe("Muutokset peruttu");
-   }
-
    public void piilotaRooli()
    {
       rooli = null;

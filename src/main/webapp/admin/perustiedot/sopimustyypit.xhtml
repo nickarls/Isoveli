@@ -67,7 +67,9 @@
 					<h:outputText value="#{_sopimustyyppi.yläikäraja}" />
 				</ace:column>
 				<ace:column headerText="Hinta">
-					<h:outputText value="#{_sopimustyyppi.hinta}" />
+					<h:outputText value="#{_sopimustyyppi.hinta}">
+						<f:convertNumber pattern="0.00"/>
+					</h:outputText>
 				</ace:column>
 			</ace:dataTable>
 			<ace:panel header="Käyttö (#{fn:length(sopimustyyppiKäyttö)})" style="width:200px"
@@ -162,10 +164,6 @@
 						action="#{perustietoAdmin.tallennaSopimustyyppi}">
 						<f:ajax execute="@form" render="@form" />
 					</h:commandButton>
-					<h:commandButton rendered="#{sopimustyyppi != null}" value="x" styleClass="ikoni"
-						action="#{perustietoAdmin.peruutaSopimustyyppimuutos}" image="/kuvat/peruuta_muutos.png" immediate="true">
-						<f:ajax render="@form" />
-					</h:commandButton>
 					<h:commandButton rendered="#{sopimustyyppi.poistettavissa and fn:length(sopimustyyppiKäyttö) == 0}" value="x"
 						styleClass="ikoni" onclick="ice.ace.instance('form:vahvistaSopimustyypinPoisto').show();"
 						image="/kuvat/poista.png" immediate="true" />
@@ -181,7 +179,9 @@
 					<h:outputText value="Hinta" />
 					<h:panelGrid>
 						<ace:message for="form:hinta" />
-						<h:inputText value="#{sopimustyyppi.hinta}" id="hinta" />
+						<h:inputText value="#{sopimustyyppi.hinta}" id="hinta">
+							<f:convertNumber pattern="0.00"/>
+						</h:inputText>
 					</h:panelGrid>
 					<h:outputText value="Oletusmaksuväli" />
 					<h:panelGrid>

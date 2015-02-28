@@ -235,18 +235,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       virhe("Muutokset peruttu");
    }
 
-   public void peruutaSopimustyyppimuutos()
-   {
-      if (sopimustyyppi.isPoistettavissa())
-      {
-         entityManager.refresh(sopimustyyppi);
-      } else
-      {
-         sopimustyyppi = null;
-      }
-      virhe("Muutokset peruttu");
-   }
-
    public void piilotaRooli()
    {
       rooli = null;

@@ -21,38 +21,46 @@
 				<ace:column headerText="Vyöarvo" styleClass="lefttext">
 					<h:outputText value="#{_vyöarvo.nimi}" />
 				</ace:column>
-				<ace:column headerText="Minimikuukaudet" styleClass="lefttext">
+				<ace:column headerText="Kuvaus" styleClass="lefttext">
+					<h:outputText value="#{_vyöarvo.kuvaus}" />
+				</ace:column>
+				<ace:column headerText="Minimikk" styleClass="lefttext">
 					<h:outputText value="#{_vyöarvo.minimikuukaudet}" />
 				</ace:column>
 				<ace:column headerText="Minimitreenit" styleClass="lefttext">
 					<h:outputText value="#{_vyöarvo.minimitreenit}" />
 				</ace:column>
-				<ace:column headerText="Järjestys" styleClass="lefttext">
+				<ace:column headerText="Järj." styleClass="lefttext">
 					<h:outputText value="#{_vyöarvo.järjestys}" />
 				</ace:column>
 			</ace:dataTable>
-			<h:panelGrid style="margin-left:20px; width:300px">
+			<h:panelGrid style="margin-left:20px; width:350px">
 				<ace:panel header="Vyöarvo" rendered="#{vyöarvo != null}" style="width:350px">
 					<h:panelGrid columns="2">
 						<h:outputText value="Nimi" />
 						<h:panelGrid>
 							<ace:message for="form:a_vyöarvo" />
-							<h:inputText value="#{vyöarvo.nimi}" id="a_vyöarvo" size="12" />
+							<h:inputText value="#{vyöarvo.nimi}" id="a_vyöarvo" size="6" />
+						</h:panelGrid>
+						<h:outputText value="Kuvaus" />
+						<h:panelGrid>
+							<ace:message for="form:kuvaus" />
+							<h:inputText value="#{vyöarvo.kuvaus}" id="kuvaus" size="20" />
 						</h:panelGrid>
 						<h:outputText value="Minimikuukaudet" />
 						<h:panelGrid>
 							<ace:message for="form:minimikuukaudet" />
-							<h:inputText value="#{vyöarvo.minimikuukaudet}" id="minimikuukaudet" size="12" />
+							<h:inputText value="#{vyöarvo.minimikuukaudet}" id="minimikuukaudet" size="6" />
 						</h:panelGrid>
 						<h:outputText value="Minimitreenit" />
 						<h:panelGrid>
 							<ace:message for="form:minimitreenit" />
-							<h:inputText value="#{vyöarvo.minimitreenit}" id="minimitreenit" size="12" />
+							<h:inputText value="#{vyöarvo.minimitreenit}" id="minimitreenit" size="6" />
 						</h:panelGrid>
 						<h:outputText value="Järjestys" />
 						<h:panelGrid>
 							<ace:message for="form:järjestys" />
-							<h:inputText value="#{vyöarvo.järjestys}" id="järjestys" size="12" />
+							<h:inputText value="#{vyöarvo.järjestys}" id="järjestys" size="6" />
 						</h:panelGrid>
 					</h:panelGrid>
 				</ace:panel>

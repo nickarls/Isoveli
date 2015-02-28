@@ -18,6 +18,7 @@ import javax.persistence.EntityManager;
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
+import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Rooli;
@@ -199,18 +200,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       virhe("Muutokset peruttu");
    }
 
-   public void peruutaTreenimuutos()
-   {
-      if (treeni.isPoistettavissa())
-      {
-         entityManager.refresh(treeni);
-      } else
-      {
-         treeni = null;
-      }
-      virhe("Muutokset peruttu");
-   }
-
    public void piilotaRooli()
    {
       rooli = null;
@@ -295,6 +284,22 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void tallennaTreeni()
    {
+      if (treeni.isRajatRistissä())
+      {
+         throw new IsoveliPoikkeus("Alaikäraja ei voi olla korkeampi kun yläraja");
+      }
+      if (treeni.isVyörajatRistissä())
+      {
+         throw new IsoveliPoikkeus("Vyöalaraja ei voi olla korkeampi kun yläraja");
+      }
+      if (treeni.isVoimassaoloRistissä())
+      {
+         throw new IsoveliPoikkeus("Alkamispäivä ei voi olla päättymispäivän jälkeen");
+      }
+      if (treeni.isAjankohtaRistissä())
+      {
+         throw new IsoveliPoikkeus("Treeni ei voi päättyä ennen kun se alkaa");
+      }
       treeni = entityManager.merge(treeni);
       treeniRSM.get(treeni).setSelected(true);
       haeTreenit();

@@ -429,7 +429,7 @@ public class DateUtilTest
       LocalDate t‰n‰‰n = DateUtil.t‰n‰‰n();
       LocalDate sitten = t‰n‰‰n.plus(10, ChronoUnit.DAYS);
       LocalDate testi = DateUtil.Date2LocalDate(DateUtil.p‰ivienP‰‰st‰(10));
-      
+
       Assert.assertEquals(sitten.getYear(), testi.getYear());
       Assert.assertEquals(sitten.getMonthValue(), testi.getMonthValue());
       Assert.assertEquals(sitten.getDayOfMonth(), testi.getDayOfMonth());
@@ -469,19 +469,45 @@ public class DateUtilTest
       LocalDate b = DateUtil.silloin("02.02.2015");
       Assert.assertFalse(DateUtil.samat(a, b));
    }
-   
+
    @Test
-   public void testOnkoAiemmin() {
+   public void testOnkoAiemmin()
+   {
       Date d1 = DateUtil.silloinD("01.01.2015");
       LocalDate d2 = DateUtil.t‰n‰‰n();
       Assert.assertTrue(DateUtil.onkoAiemmin(d1, d2));
    }
-   
+
    @Test
-   public void testOnkoEiAiemmin() {
+   public void testOnkoEiAiemmin()
+   {
       Date d1 = DateUtil.silloinD("01.01.2016");
       LocalDate d2 = DateUtil.t‰n‰‰n();
       Assert.assertFalse(DateUtil.onkoAiemmin(d1, d2));
+   }
+
+   @Test
+   public void testOnkoAikaAiemmin() throws ParseException
+   {
+      Date d1 = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse("01.01.2015 16:00");
+      Date d2 = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse("01.01.2015 17:00");
+      Assert.assertTrue(DateUtil.onkoAikaAiemmin(d1, d2));
+   }
+
+   @Test
+   public void testOnkoAikaEiAiemmin() throws ParseException
+   {
+      Date d1 = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse("01.01.2015 16:00");
+      Date d2 = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse("01.01.2015 17:00");
+      Assert.assertFalse(DateUtil.onkoAikaAiemmin(d2, d1));
+   }
+
+   @Test
+   public void testOnkoAikaEiAiemminSamat() throws ParseException
+   {
+      Date d1 = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse("01.01.2015 16:00");
+      Date d2 = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse("01.01.2015 16:00");
+      Assert.assertFalse(DateUtil.onkoAikaAiemmin(d1, d2));
    }
 
 }

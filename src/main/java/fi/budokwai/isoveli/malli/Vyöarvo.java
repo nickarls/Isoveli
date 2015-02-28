@@ -39,6 +39,10 @@ public class Vyöarvo
    @NotNull
    private String nimi;
 
+   @Size(max = 20)
+   @NotNull
+   private String kuvaus;
+
    @Min(value = 1)
    private int minimikuukaudet;
 
@@ -147,6 +151,16 @@ public class Vyöarvo
    public String toString()
    {
       return nimi;
+   }
+
+   public String getKuvaus()
+   {
+      return kuvaus;
+   }
+
+   public void setKuvaus(String kuvaus)
+   {
+      this.kuvaus = kuvaus;
    }
 
 }

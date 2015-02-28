@@ -39,7 +39,7 @@
 			</h:outputText>
 		</ace:column>
 		<ace:column headerText="Kesto" styleClass="lefttext">
-			<h:outputText value="#{_treeni.kesto}"/>
+			<h:outputText value="#{_treeni.kesto}" />
 		</ace:column>
 		<ace:column headerText="Vetäjät" styleClass="lefttext">
 			<ui:repeat value="#{_treeni.vetäjät}" var="_vetäjä">
@@ -50,13 +50,19 @@
 		<ace:column headerText="Power">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_treeni.power}" />
 		</ace:column>
+		<ace:column headerText="VK">
+			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_treeni.valmennuskeskus}" />
+		</ace:column>
 		<ace:column headerText="Vyöalaraja" styleClass="lefttext">
 			<h:graphicImage value="/kuvat/vyöt/#{_treeni.vyöAlaraja.id}.png" style="height:40px"
-				rendered="#{_treeni.vyöAlaraja.id != 0}" />
+				rendered="#{_treeni.vyöAlaraja.id != null}" />
 		</ace:column>
 		<ace:column headerText="Vyöyläraja" styleClass="lefttext">
 			<h:graphicImage value="/kuvat/vyöt/#{_treeni.vyöYläraja.id}.png" style="height:40px"
-				rendered="#{_treeni.vyöYläraja.id != 0}" />
+				rendered="#{_treeni.vyöYläraja.id != null}" />
+		</ace:column>
+		<ace:column headerText="Ikärajat" styleClass="lefttext">
+			<h:outputText value="#{_treeni.ikärajat}" />
 		</ace:column>
 		<ace:column headerText="Voimassa alk" styleClass="lefttext">
 			<h:outputText value="#{_treeni.voimassaAlkaa}">
@@ -98,50 +104,74 @@
 						<f:selectItems value="#{viikonpäivät}" var="_viikonpäivä" itemValue="#{_viikonpäivä}" itemLabel="#{_viikonpäivä}" />
 					</h:selectOneMenu>
 				</h:panelGrid>
-				<h:outputText value="Alkaa" />
-				<h:panelGrid>
-					<ace:message for="form:treenialkaa" />
-					<ace:dateTimeEntry value="#{treeni.alkaa}" renderAsPopup="true" pattern="HH:mm" id="treenialkaa" timeZone="EET" />
+				<h:outputText value="Ajankohta" />
+				<h:panelGrid columns="3">
+					<h:panelGrid>
+						<ace:message for="form:treenialkaa" />
+						<ace:dateTimeEntry value="#{treeni.alkaa}" renderAsPopup="true" pattern="HH:mm" id="treenialkaa" timeZone="EET" />
+					</h:panelGrid>
+					<h:outputText value="-" />
+					<h:panelGrid>
+						<ace:message for="form:treenipäättyy" />
+						<ace:dateTimeEntry value="#{treeni.päättyy}" renderAsPopup="true" pattern="HH:mm" id="treenipäättyy"
+							timeZone="EET" />
+					</h:panelGrid>
 				</h:panelGrid>
-				<h:outputText value="Vyöalaraja" />
-				<h:panelGrid>
-					<ace:message for="form:vyöalaraja" />
-					<h:selectOneMenu value="#{treeni.vyöAlaraja}" id="vyöalaraja">
-						<f:selectItem noSelectionOption="true" itemValue="" itemLabel=""/>
-						<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}" />
-						<f:converter converterId="objectConverter" />
-					</h:selectOneMenu>					
+				<h:outputText value="Vyörajat" />
+				<h:panelGrid columns="3">
+					<h:panelGrid>
+						<ace:message for="form:vyöalaraja" />
+						<h:selectOneMenu value="#{treeni.vyöAlaraja}" id="vyöalaraja">
+							<f:selectItem noSelectionOption="true" itemValue="" itemLabel="" />
+							<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}" />
+							<f:converter converterId="objectConverter" />
+						</h:selectOneMenu>
+					</h:panelGrid>
+					<h:outputText value="-" />
+					<h:panelGrid>
+						<ace:message for="form:vyöyläraja" />
+						<h:selectOneMenu value="#{treeni.vyöYläraja}" id="vyöyläraja">
+							<f:selectItem noSelectionOption="true" itemValue="" itemLabel="" />
+							<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}" />
+							<f:converter converterId="objectConverter" />
+						</h:selectOneMenu>
+					</h:panelGrid>
 				</h:panelGrid>
-				<h:outputText value="Vyöyläraja" />
-				<h:panelGrid>
-					<ace:message for="form:vyöyläraja" />
-					<h:selectOneMenu value="#{treeni.vyöYläraja}" id="vyöyläraja">
-						<f:selectItem noSelectionOption="true" itemValue="" itemLabel=""/>
-						<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}" />
-						<f:converter converterId="objectConverter" />
-					</h:selectOneMenu>					
-				</h:panelGrid>
-				<h:outputText value="Päättyy" />
-				<h:panelGrid>
-					<ace:message for="form:treenipäättyy" />
-					<ace:dateTimeEntry value="#{treeni.päättyy}" renderAsPopup="true" pattern="HH:mm" id="treenipäättyy" timeZone="EET" />
-				</h:panelGrid>
-				<h:outputText value="Voimassa alk" />
-				<h:panelGrid>
-					<ace:message for="form:voimassaAlkaa" />
-					<ace:dateTimeEntry value="#{treeni.voimassaAlkaa}" renderAsPopup="true" pattern="dd.MM.yyyy" id="voimassaAlkaa"
-						timeZone="EET" />
-				</h:panelGrid>
-				<h:outputText value="Voimassa lop" />
-				<h:panelGrid>
-					<ace:message for="form:voimassaPäättyy" />
-					<ace:dateTimeEntry value="#{treeni.voimassaPäättyy}" renderAsPopup="true" pattern="dd.MM.yyyy" id="voimassaPäättyy"
-						timeZone="EET" />
+				<h:outputText value="Ikärajat" />
+				<h:panelGrid columns="3">
+					<h:panelGrid>
+						<ace:message for="form:ikäalaraja" />
+						<h:inputText value="#{treeni.ikäAlaraja}" id="ikäalaraja" size="3" />
+					</h:panelGrid>
+					<h:outputText value="-" />
+					<h:panelGrid>
+						<ace:message for="form:ikayläraja" />
+						<h:inputText value="#{treeni.ikäYläraja}" id="ikäyläraja" size="3" />
+					</h:panelGrid>
 				</h:panelGrid>
 				<h:outputText value="Power" />
 				<h:panelGrid>
 					<ace:message for="form:treenipower" />
 					<h:selectBooleanCheckbox value="#{treeni.power}" id="treenipower" />
+				</h:panelGrid>
+				<h:outputText value="VK" />
+				<h:panelGrid>
+					<ace:message for="form:valke" />
+					<h:selectBooleanCheckbox value="#{treeni.valmennuskeskus}" id="valke" />
+				</h:panelGrid>
+				<h:outputText value="Voimassa" />
+				<h:panelGrid columns="3">
+					<h:panelGrid>
+						<ace:message for="form:voimassaAlkaa" />
+						<ace:dateTimeEntry value="#{treeni.voimassaAlkaa}" renderAsPopup="true" pattern="dd.MM.yyyy" id="voimassaAlkaa"
+							timeZone="EET" />
+					</h:panelGrid>
+					<h:outputText value="-" />
+					<h:panelGrid>
+						<ace:message for=" form:voimassaPäättyy" />
+						<ace:dateTimeEntry value="#{treeni.voimassaPäättyy}" renderAsPopup="true" pattern="dd.MM.yyyy"
+							id="voimassaPäättyy" timeZone="EET" />
+					</h:panelGrid>
 				</h:panelGrid>
 			</h:panelGrid>
 		</ace:panel>
@@ -160,10 +190,6 @@
 		<h:commandButton rendered="#{treeni != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
 			action="#{perustietoAdmin.tallennaTreeni}">
 			<f:ajax execute="@form" render="@form" />
-		</h:commandButton>
-		<h:commandButton rendered="#{treeni != null}" value="x" styleClass="ikoni"
-			action="#{perustietoAdmin.peruutaTreenimuutos}" image="/kuvat/peruuta_muutos.png" immediate="true">
-			<f:ajax render="@form" />
 		</h:commandButton>
 		<h:commandButton rendered="#{treeni.poistettavissa and fn:length(treeniKäyttö) == 0}" value="x" styleClass="ikoni"
 			onclick="ice.ace.instance('form:vahvistaTreeninPoisto').show();" image="/kuvat/poista.png" immediate="true" />

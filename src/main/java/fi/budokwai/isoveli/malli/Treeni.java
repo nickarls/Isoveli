@@ -22,12 +22,15 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
+
+import fi.budokwai.isoveli.util.DateUtil;
 
 @Entity
 @DynamicInsert
@@ -71,6 +74,9 @@ public class Treeni
    @Type(type = "Kyll‰Ei")
    private boolean power;
 
+   @Type(type = "Kyll‰Ei")
+   private boolean valmennuskeskus;
+
    @OneToOne
    @JoinColumn(name = "vyoalaraja")
    private Vyˆarvo vyˆAlaraja;
@@ -78,6 +84,14 @@ public class Treeni
    @OneToOne
    @JoinColumn(name = "vyoylaraja")
    private Vyˆarvo vyˆYl‰raja;
+
+   @Column(name = "ikaalaraja")
+   @Min(0)
+   private Integer ik‰Alaraja;
+
+   @Min(0)
+   @Column(name = "ikaylaraja")
+   private Integer ik‰Yl‰raja;
 
    @Temporal(TemporalType.DATE)
    private Date voimassaAlkaa;
@@ -269,5 +283,72 @@ public class Treeni
    {
       SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
       return String.format("%s-%s", sdf.format(alkaa), sdf.format(p‰‰ttyy));
+   }
+
+   public boolean isValmennuskeskus()
+   {
+      return valmennuskeskus;
+   }
+
+   public void setValmennuskeskus(boolean valmennuskeskus)
+   {
+      this.valmennuskeskus = valmennuskeskus;
+   }
+
+   public Integer getIk‰Alaraja()
+   {
+      return ik‰Alaraja;
+   }
+
+   public void setIk‰Alaraja(Integer ik‰Alaraja)
+   {
+      this.ik‰Alaraja = ik‰Alaraja;
+   }
+
+   public Integer getIk‰Yl‰raja()
+   {
+      return ik‰Yl‰raja;
+   }
+
+   public void setIk‰Yl‰raja(Integer ik‰Yl‰raja)
+   {
+      this.ik‰Yl‰raja = ik‰Yl‰raja;
+   }
+
+   public String getIk‰rajat()
+   {
+      if (ik‰Alaraja == null && ik‰Yl‰raja == null)
+      {
+         return null;
+      } else if (ik‰Alaraja != null && ik‰Yl‰raja == null)
+      {
+         return String.format("%d+", ik‰Alaraja);
+      } else if (ik‰Alaraja == null && ik‰Yl‰raja != null)
+      {
+         return String.format("-%d", ik‰Yl‰raja);
+      } else
+      {
+         return String.format("%d-%d", ik‰Alaraja, ik‰Yl‰raja);
+      }
+   }
+
+   public boolean isRajatRistiss‰()
+   {
+      return (ik‰Alaraja != null && ik‰Yl‰raja != null && (ik‰Alaraja > ik‰Yl‰raja));
+   }
+
+   public boolean isVyˆrajatRistiss‰()
+   {
+      return (vyˆAlaraja != null && vyˆYl‰raja != null && (vyˆAlaraja.getJ‰rjestys() > vyˆYl‰raja.getJ‰rjestys()));
+   }
+
+   public boolean isVoimassaoloRistiss‰()
+   {
+      return (voimassaAlkaa != null && voimassaP‰‰ttyy != null && DateUtil.onkoAiemmin(voimassaP‰‰ttyy, voimassaAlkaa));
+   }
+
+   public boolean isAjankohtaRistiss‰()
+   {
+      return (alkaa != null && p‰‰ttyy != null && DateUtil.onkoAikaAiemmin(p‰‰ttyy, alkaa));
    }
 }

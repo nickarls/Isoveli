@@ -260,4 +260,9 @@ public class DateUtil
       return onkoAiemmin(alkaa, Date2LocalDate(loppuu));
    }
 
+   public static boolean onkoAikaAiemmin(Date alkaa, Date loppuu)
+   {
+      return Date2LocalDateTime(alkaa).isBefore(Date2LocalDateTime(loppuu));
+   }
+
 }

@@ -47,7 +47,7 @@
 			<h:outputText value="Tyyppi" />
 			<h:panelGrid>
 				<ace:message for="form:sopimustyyppi" />
-				<h:selectOneMenu value="#{sopimus.tyyppi}" id="sopimustyyppi" hideNoSelectionOption="true" required="true">
+				<h:selectOneMenu value="#{sopimus.tyyppi}" id="sopimustyyppi" hideNoSelectionOption="true">
 					<f:selectItem itemLabel="Valitse" itemValue="" noSelectionOption="true" />
 					<f:selectItems value="#{kaikkiSopimustyypit}" var="_sopimustyyppi" itemValue="#{_sopimustyyppi}"
 						itemLabel="#{_sopimustyyppi.nimi}" />

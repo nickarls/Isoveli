@@ -275,7 +275,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          poistaTyhjätPerheetJaOsoitteet();
       }
       harrastaja.setOsoiteMuuttunut(false);
-      haeHarrastajat();
+      harrastajat = null;
       info("Harrastaja tallennettu");
    }
 
@@ -567,6 +567,11 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void setTabi(TabSet tabi)
    {
       this.tabi = tabi;
+   }
+
+   public void setHarrastaja(Harrastaja harrastaja)
+   {
+      this.harrastaja = harrastaja;
    }
 
 }

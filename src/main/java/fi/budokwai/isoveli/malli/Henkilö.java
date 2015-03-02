@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -62,12 +63,14 @@ public class Henkilö implements Serializable
    @NotNull
    protected String sukunimi;
 
-   @OneToOne
+   @OneToOne(cascade =
+   { CascadeType.MERGE }, orphanRemoval = true)
    @JoinColumn(name = "osoite")
    @Valid
    protected Osoite osoite;
 
-   @OneToOne
+   @OneToOne(cascade =
+   { CascadeType.MERGE }, orphanRemoval = true)
    @JoinColumn(name = "yhteystiedot")
    @Valid
    protected Yhteystieto yhteystiedot;

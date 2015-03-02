@@ -21,9 +21,9 @@ import org.hibernate.annotations.Type;
 @Table(name = "sopimustyyppi")
 @NamedQueries(
 {
-      @NamedQuery(name = "koeaikasopimus", query = "select s from Sopimustyyppi s where s.koeaika='K'"),
-      @NamedQuery(name = "sopimustyypit", query = "select s from Sopimustyyppi s order by s.nimi"),
-      @NamedQuery(name = "sopimustyyppikäyttö", query = "select s from Harrastaja h join h.sopimukset s join s.tyyppi st where st = :sopimustyyppi") })
+      @NamedQuery(name = "koeaikasopimus", query = "select s from Sopimustyyppi s where s.koeaika='K' and s.arkistoitu='E'"),
+      @NamedQuery(name = "sopimustyypit", query = "select s from Sopimustyyppi s where s.arkistoitu='E' order by s.nimi"),
+      @NamedQuery(name = "sopimustyyppiArq", query = "select s from Sopimustyyppi s order by s.nimi") })
 public class Sopimustyyppi
 {
    @Id
@@ -79,6 +79,9 @@ public class Sopimustyyppi
    private int oletusTreenikerrat;
 
    private double hinta;
+
+   @Type(type = "KylläEi")
+   private boolean arkistoitu;
 
    public int getId()
    {
@@ -313,6 +316,16 @@ public class Sopimustyyppi
          return harrastaja.getIkä() > alaikäraja && harrastaja.getIkä() < yläikäraja;
       }
       return false;
+   }
+
+   public boolean isArkistoitu()
+   {
+      return arkistoitu;
+   }
+
+   public void setArkistoitu(boolean arkistoitu)
+   {
+      this.arkistoitu = arkistoitu;
    }
 
 }

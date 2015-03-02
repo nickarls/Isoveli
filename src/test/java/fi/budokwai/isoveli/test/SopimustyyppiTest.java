@@ -50,7 +50,7 @@ public class SopimustyyppiTest extends Perustesti
    @Test
    @ApplyScriptBefore("jasenmaksu.sql")
    @ApplyScriptAfter("cleanup.sql")
-   public void testMuokkaaRooli()
+   public void testMuokkaaSopimustyyppi()
    {
       Sopimustyyppi sopimustyyppi = entityManager.find(Sopimustyyppi.class, 1);
       sopimustyyppi.setNimi("foo");
@@ -61,6 +61,21 @@ public class SopimustyyppiTest extends Perustesti
       Assert.assertEquals("foo", sopimustyyppi.getNimi());
    }
 
+   @Test
+   @ApplyScriptBefore("jasenmaksu.sql")
+   @ApplyScriptAfter("cleanup.sql")
+   public void testArkistoiSopimustyyppi()
+   {
+      Assert.assertEquals(1, sopimustyypit.get().size());
+      Sopimustyyppi sopimustyyppi = entityManager.find(Sopimustyyppi.class, 1);
+      sopimustyyppi.setArkistoitu(true);
+      perustietoAdmin.setSopimustyyppi(sopimustyyppi);
+      perustietoAdmin.tallennaSopimustyyppi();
+      entityManager.clear();
+      Assert.assertEquals(0, sopimustyypit.get().size());
+      sopimustyyppi = entityManager.find(Sopimustyyppi.class, 1);
+      Assert.assertNotNull(sopimustyyppi);
+   } 
    @Test
    @ApplyScriptBefore("jasenmaksu.sql")
    @ApplyScriptAfter("cleanup.sql")

@@ -297,6 +297,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void tallennaRooli()
    {
       rooli = entityManager.merge(rooli);
+      entityManager.flush();
       rooliRSM.get(rooli).setSelected(true);
       roolit = null;
       info("Rooli tallennettu");
@@ -376,10 +377,27 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void poistaRooli()
    {
+      tarkistaRoolikäyttö();
       rooli = entityManager.merge(rooli);
       entityManager.remove(rooli);
+      entityManager.flush();
       roolit = null;
       info("Rooli poistettu");
+   }
+
+   private void tarkistaRoolikäyttö()
+   {
+      List<Henkilö> käyttö = entityManager
+         .createQuery("select h from Henkilö h where :rooli member of h.roolit", Henkilö.class)
+         .setParameter("rooli", rooli).getResultList();
+      if (!käyttö.isEmpty())
+      {
+         StringJoiner stringJoiner = new StringJoiner(", ");
+         käyttö.forEach(h -> stringJoiner.add(h.getNimi()));
+         String viesti = String.format("Rooli on käytössä ja sitä ei voi poistaa (%dkpl: %s...)", käyttö.size(),
+            stringJoiner.toString());
+         throw new IsoveliPoikkeus(viesti);
+      }
    }
 
    public void poistaTreeni()
@@ -638,6 +656,11 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void setTreeni(Treeni treeni)
    {
       this.treeni = treeni;
+   }
+
+   public void setRooli(Rooli rooli)
+   {
+      this.rooli = rooli;
    }
 
 }

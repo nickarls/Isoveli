@@ -2,8 +2,11 @@ package fi.budokwai.isoveli.test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
@@ -28,6 +31,9 @@ public class TreeniTest extends Perustesti
    @Inject
    private EntityManager entityManager;
 
+   @Inject @Named("treenit")
+   private Instance<List<Treeni>> treenit;
+
    @Test
    @ApplyScriptBefore("perustekniikka.sql")
    @ApplyScriptAfter("cleanup.sql")
@@ -42,8 +48,10 @@ public class TreeniTest extends Perustesti
       treeni.setPäivä(Viikonpäivä.Maanantai);
       treeni.setTyyppi(treenityyppi);
       perustietoAdmin.setTreeni(treeni);
+      Assert.assertEquals(0, treenit.get().size());
       perustietoAdmin.tallennaTreeni();
       entityManager.clear();
+      Assert.assertEquals(1, treenit.get().size());
       Treeni testi = entityManager.createQuery("select t from Treeni t", Treeni.class).getSingleResult();
       Assert.assertNotNull(testi);
    }
@@ -69,8 +77,10 @@ public class TreeniTest extends Perustesti
    {
       Treeni treeni = entityManager.find(Treeni.class, 1);
       perustietoAdmin.setTreeni(treeni);
+      Assert.assertEquals(1, treenit.get().size());
       perustietoAdmin.poistaTreeni();
       entityManager.clear();
+      Assert.assertEquals(0, treenit.get().size());
       treeni = entityManager.find(Treeni.class, 1);
       Assert.assertNull(treeni);
       Treenityyppi treenityyppi = entityManager.find(Treenityyppi.class, 1);

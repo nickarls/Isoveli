@@ -28,12 +28,12 @@ public class Kisatulos
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
-   @ManyToOne(optional = false)
+   @ManyToOne
    @JoinColumn(name = "harrastaja", insertable=false, updatable=false)
    @NotNull
    private Harrastaja harrastaja;
    
-   @OneToOne(optional = false)
+   @OneToOne
    @JoinColumn(name = "tyyppi")
    @NotNull
    private Kisatyyppi kisatyyppi;

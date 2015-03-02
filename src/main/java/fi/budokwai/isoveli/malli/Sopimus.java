@@ -52,11 +52,11 @@ public class Sopimus
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
-   @ManyToOne(optional = false)
+   @ManyToOne
    @JoinColumn(name = "harrastaja")
    private Harrastaja harrastaja;
 
-   @OneToOne(optional = false)
+   @OneToOne
    @JoinColumn(name = "tyyppi")
    @NotNull
    private Sopimustyyppi tyyppi;

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.inject.Typed;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -49,23 +48,23 @@ public class Harrastaja extends Henkilö
 {
    private static final long serialVersionUID = 1L;
 
-   @OneToOne(cascade = CascadeType.ALL)
+   @OneToOne
    @JoinColumn(name = "huoltaja")
    private Henkilö huoltaja;
 
-   @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
+   @OneToMany(mappedBy = "harrastaja")
    @OrderBy("päivä asc")
    private List<Vyökoe> vyökokeet = new ArrayList<Vyökoe>();
 
-   @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
+   @OneToMany(mappedBy = "harrastaja")
    @OrderBy("paiva desc")
    private List<Kisatulos> kisatulokset = new ArrayList<Kisatulos>();
 
-   @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
+   @OneToMany(mappedBy = "harrastaja")
    @OrderBy("umpeutuu desc")
    private List<Sopimus> sopimukset = new ArrayList<Sopimus>();
 
-   @OneToMany(cascade = CascadeType.ALL, mappedBy = "harrastaja", orphanRemoval = true)
+   @OneToMany(mappedBy = "harrastaja")
    @OrderBy("aikaleima desc")
    private List<Treenikäynti> treenikäynnit = new ArrayList<Treenikäynti>();
 

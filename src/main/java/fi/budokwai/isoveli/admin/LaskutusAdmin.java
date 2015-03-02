@@ -172,10 +172,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       }
       lasku.laskePerhealennukset();
       entityManager.persist(lasku);
-      entityManager.flush();
-      entityManager.refresh(lasku);
       lasku.laskeViitenumero();
-      entityManager.persist(lasku);
       byte[] pdf = teePdfLasku(lasku);
       lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), pdf));
       entityManager.persist(lasku);

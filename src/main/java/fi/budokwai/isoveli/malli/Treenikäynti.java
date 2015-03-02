@@ -3,7 +3,6 @@ package fi.budokwai.isoveli.malli;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,13 +30,13 @@ public class Treenikäynti
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
-   @ManyToOne(optional = false)
+   @ManyToOne
    @JoinColumn(name = "harrastaja")
    @NotNull
    @Valid
    private Harrastaja harrastaja;
 
-   @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
+   @ManyToOne
    @JoinColumn(name = "treenisessio")
    @NotNull
    @Valid

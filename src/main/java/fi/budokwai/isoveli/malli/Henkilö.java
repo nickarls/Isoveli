@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -63,12 +62,12 @@ public class Henkilö implements Serializable
    @NotNull
    protected String sukunimi;
 
-   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = true)
+   @OneToOne
    @JoinColumn(name = "osoite")
    @Valid
    protected Osoite osoite;
 
-   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = true)
+   @OneToOne
    @JoinColumn(name = "yhteystiedot")
    @Valid
    protected Yhteystieto yhteystiedot;
@@ -86,7 +85,7 @@ public class Henkilö implements Serializable
    @Size(max = 50)
    protected String salasana;
 
-   @OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
+   @OneToOne
    @JoinColumn(name = "kuva")
    protected BlobData kuva;
 

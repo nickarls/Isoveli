@@ -2,7 +2,6 @@ package fi.budokwai.isoveli.malli;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,11 +30,11 @@ public class Sopimuslasku
    private int id;
 
    @NotNull
-   @OneToOne(cascade = CascadeType.MERGE, optional = false)
+   @OneToOne
    @JoinColumn(name = "laskurivi")
    private Laskurivi laskurivi;
 
-   @ManyToOne(optional = false)
+   @ManyToOne
    @JoinColumn(name = "sopimus")
    private Sopimus sopimus;
 

@@ -19,6 +19,8 @@ delete from treenikaynti;
 delete from treenisessiovetaja;
 delete from treenisessio;
 delete from treenivetaja;
+delete from treeni;
+delete from treenityyppi;
 delete from henkilorooli;
 delete from rooli;
 delete from harrastaja;

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -37,10 +36,10 @@ public class Perhe
 
    private String nimi;
 
-   @OneToMany(mappedBy = "perhe", cascade=CascadeType.ALL)
+   @OneToMany(mappedBy = "perhe")
    private List<Henkilö> perheenjäsenet = new ArrayList<Henkilö>();
 
-   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
+   @OneToOne
    @JoinColumn(name = "osoite")
    private Osoite osoite = new Osoite();
 

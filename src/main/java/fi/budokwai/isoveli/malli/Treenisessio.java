@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,7 +41,7 @@ public class Treenisessio
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
-   @ManyToOne(optional = false)
+   @ManyToOne
    @JoinColumn(name = "treeni")
    @NotNull
    private Treeni treeni;
@@ -57,7 +56,7 @@ public class Treenisessio
    { @JoinColumn(name = "harrastaja", referencedColumnName = "id") })
    private List<Harrastaja> vetäjät = new ArrayList<Harrastaja>();
 
-   @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "treenisessio", orphanRemoval = true)
+   @OneToMany(mappedBy = "treenisessio")
    private List<Treenikäynti> treenikäynnit = new ArrayList<Treenikäynti>();
 
    public int getId()

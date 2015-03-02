@@ -3,6 +3,7 @@ package fi.budokwai.isoveli.admin;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -18,6 +19,8 @@ import javax.persistence.EntityManager;
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
+import com.google.common.base.MoreObjects;
+
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
@@ -29,6 +32,7 @@ import fi.budokwai.isoveli.malli.Treenisessio;
 import fi.budokwai.isoveli.malli.Treenityyppi;
 import fi.budokwai.isoveli.malli.Viikonpäivä;
 import fi.budokwai.isoveli.malli.Vyöarvo;
+import fi.budokwai.isoveli.malli.Vyökoe;
 import fi.budokwai.isoveli.util.Loggaaja;
 import fi.budokwai.isoveli.util.Muuttui;
 
@@ -361,10 +365,26 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void poistaVyöarvo()
    {
+      tarkistaVyöarvoKäyttö();
       vyöarvo = entityManager.merge(vyöarvo);
       entityManager.remove(vyöarvo);
       vyöarvoMuuttui.fire(vyöarvo);
       info("Vyöarvo poistettu");
+   }
+
+   private void tarkistaVyöarvoKäyttö()
+   {
+      List<Vyökoe> käyttö = entityManager
+         .createQuery("select vk from Vyökoe vk where vk.vyöarvo=:vyöarvo", Vyökoe.class)
+         .setParameter("vyöarvo", vyöarvo).getResultList();
+      if (!käyttö.isEmpty())
+      {
+         StringJoiner stringJoiner = new StringJoiner(", ");
+         käyttö.forEach(v -> stringJoiner.add(v.getHarrastaja().getNimi()));
+         String viesti = String.format("Vyöarvo on käytössä ja sitä ei voi poistaa (%dkpl: %s...)", käyttö.size(),
+            stringJoiner.toString());
+         throw new IsoveliPoikkeus(viesti);
+      }
    }
 
    public void poistaTreenityyppi()
@@ -542,6 +562,11 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void setSopimustyyppiRSM(RowStateMap sopimustyyppiRSM)
    {
       this.sopimustyyppiRSM = sopimustyyppiRSM;
+   }
+
+   public void setVyöarvo(Vyöarvo vyöarvo)
+   {
+      this.vyöarvo = vyöarvo;
    }
 
 }

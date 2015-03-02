@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,7 +37,7 @@ public class Laskurivi
 
    private int rivinumero;
 
-   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+   @OneToOne
    @JoinColumn(name = "sopimuslasku")
    private Sopimuslasku sopimuslasku;
 

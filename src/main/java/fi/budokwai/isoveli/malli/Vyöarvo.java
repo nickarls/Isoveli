@@ -53,9 +53,6 @@ public class Vyöarvo
    @Min(value = 1)
    private int järjestys;
 
-   @OneToMany(mappedBy = "vyöarvo")
-   private List<Vyökoe> vyökokeet = new ArrayList<Vyökoe>();
-
    public Vyöarvo(String nimi)
    {
       this.nimi = nimi;
@@ -83,16 +80,6 @@ public class Vyöarvo
    public void setNimi(String nimi)
    {
       this.nimi = nimi;
-   }
-
-   public List<Vyökoe> getVyökokeet()
-   {
-      return vyökokeet;
-   }
-
-   public void setVyökokeet(List<Vyökoe> vyökokeet)
-   {
-      this.vyökokeet = vyökokeet;
    }
 
    public int getMinimikuukaudet()

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -66,7 +65,7 @@ public class Treeni
    @NotNull
    private Date p‰‰ttyy;
 
-   @OneToOne(optional = false)
+   @OneToOne
    @JoinColumn(name = "tyyppi")
    @NotNull
    private Treenityyppi tyyppi;
@@ -106,7 +105,7 @@ public class Treeni
    { @JoinColumn(name = "harrastaja", referencedColumnName = "id") })
    private List<Harrastaja> vet‰j‰t = new ArrayList<Harrastaja>();
 
-   @OneToMany(cascade = CascadeType.ALL, mappedBy = "treeni", orphanRemoval = true)
+   @OneToMany(mappedBy = "treeni")
    private List<Treenisessio> treenisessiot = new ArrayList<Treenisessio>();
 
    public int getId()

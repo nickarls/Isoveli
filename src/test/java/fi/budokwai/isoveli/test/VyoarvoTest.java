@@ -1,6 +1,5 @@
 package fi.budokwai.isoveli.test;
 
-import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,7 +18,7 @@ import fi.budokwai.isoveli.admin.PerustietoAdmin;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 
 @RunWith(Arquillian.class)
-public class PerustietoTest extends Perustesti
+public class VyoarvoTest extends Perustesti
 {
    @Inject
    private PerustietoAdmin perustietoAdmin;
@@ -28,7 +27,6 @@ public class PerustietoTest extends Perustesti
    private EntityManager entityManager;
 
    @Test
-   @ApplyScriptBefore("keltainenvyo.sql")
    @ApplyScriptAfter("cleanup.sql")
    public void testLisaaVyoarvo()
    {
@@ -40,7 +38,7 @@ public class PerustietoTest extends Perustesti
       vyöarvo.setMinimitreenit(1);
       perustietoAdmin.setVyöarvo(vyöarvo);
       perustietoAdmin.tallennaVyöarvo();
-      Vyöarvo testi = entityManager.createQuery("select v from Vyöarvo v where v.id=2", Vyöarvo.class)
+      Vyöarvo testi = entityManager.createQuery("select v from Vyöarvo v where v.id=1", Vyöarvo.class)
          .getSingleResult();
       Assert.assertNotNull(testi);
    }

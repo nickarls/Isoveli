@@ -510,4 +510,11 @@ public class DateUtilTest
       Assert.assertFalse(DateUtil.onkoAikaAiemmin(d1, d2));
    }
 
+   @Test
+   public void testP‰iv‰Tekstiksi()
+   {
+      Date p‰iv‰ = DateUtil.silloinD("12.12.2012");
+      Assert.assertEquals("12.12.2012", DateUtil.p‰iv‰Tekstiksi(p‰iv‰));
+   }
+
 }

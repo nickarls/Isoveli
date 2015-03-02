@@ -30,7 +30,6 @@ import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Perhe;
-import fi.budokwai.isoveli.malli.Rooli;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimustarkistus;
 import fi.budokwai.isoveli.malli.Sopimustyyppi;
@@ -48,7 +47,6 @@ import fi.budokwai.isoveli.util.Vyökoehelper;
 public class HarrastajaAdmin extends Perustoiminnallisuus
 {
    private List<Harrastaja> harrastajat;
-   private List<Rooli> roolit;
    private List<Perhe> perheet;
    private TabSet tabi;
    private Harrastaja harrastaja;
@@ -89,7 +87,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    {
       entityManager.clear();
       harrastajat = null;
-      roolit = null;
       perheet = null;
       harrastaja = null;
       sopimus = null;
@@ -214,22 +211,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public Vyökoe getVyökoe()
    {
       return vyökoe;
-   }
-
-   @Produces
-   @Named
-   public List<Rooli> getRoolit()
-   {
-      if (harrastaja == null)
-      {
-         return new ArrayList<Rooli>();
-      }
-      if (roolit == null)
-      {
-         roolit = entityManager.createNamedQuery("roolit", Rooli.class).getResultList();
-         roolit.removeAll(harrastaja.getRoolit());
-      }
-      return roolit;
    }
 
    @Produces
@@ -532,7 +513,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void harrastajaValittu(SelectEvent e)
    {
       harrastaja = (Harrastaja) e.getObject();
-      roolit = null;
       vyökoe = null;
       sopimus = null;
       vyökoeRSM = new RowStateMap();

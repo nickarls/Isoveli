@@ -1,33 +1,37 @@
 package fi.budokwai.isoveli.util;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.PersistenceContext;
 
 @ApplicationScoped
 public class EntityManagerProducer
 {
-   @PersistenceUnit
-   private EntityManagerFactory entityManagerFactory;
-
+//   @PersistenceUnit
+//   private EntityManagerFactory entityManagerFactory;
+//
+//   @Produces
+//   @Default
+//   @RequestScoped
+//   public EntityManager create()
+//   {
+//      return entityManagerFactory.createEntityManager();
+//   }
+//
+//   public void dispose(@Disposes @Default EntityManager entityManager)
+//   {
+//      if (entityManager.isOpen())
+//      {
+//         entityManager.close();
+//      }
+//   }
+   
+   @PersistenceContext
+   private EntityManager em;
+   
    @Produces
-   @Default
-   @RequestScoped
-   public EntityManager create()
-   {
-      return entityManagerFactory.createEntityManager();
-   }
-
-   public void dispose(@Disposes @Default EntityManager entityManager)
-   {
-      if (entityManager.isOpen())
-      {
-         entityManager.close();
-      }
-   }
+   public EntityManager get() {
+       return em;
+   }   
 }

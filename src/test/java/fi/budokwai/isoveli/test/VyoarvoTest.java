@@ -1,8 +1,10 @@
 package fi.budokwai.isoveli.test;
 
+import java.util.List;
+
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.persistence.ApplyScriptAfter;
@@ -26,6 +28,9 @@ public class VyoarvoTest extends Perustesti
    @Inject
    private EntityManager entityManager;
 
+   @Inject
+   private Instance<List<Vyöarvo>> vyöarvot; 
+   
    @Test
    @ApplyScriptAfter("cleanup.sql")
    public void testLisaaVyoarvo()
@@ -37,8 +42,11 @@ public class VyoarvoTest extends Perustesti
       vyöarvo.setMinimikuukaudet(1);
       vyöarvo.setMinimitreenit(1);
       perustietoAdmin.setVyöarvo(vyöarvo);
+      Assert.assertEquals(0, vyöarvot.get().size());
       perustietoAdmin.tallennaVyöarvo();
-      Vyöarvo testi = entityManager.createQuery("select v from Vyöarvo v where v.id=1", Vyöarvo.class)
+      entityManager.clear();
+      Assert.assertEquals(1, vyöarvot.get().size());
+      Vyöarvo testi = entityManager.createQuery("select v from Vyöarvo v", Vyöarvo.class)
          .getSingleResult();
       Assert.assertNotNull(testi);
    }
@@ -64,15 +72,14 @@ public class VyoarvoTest extends Perustesti
    {
       Vyöarvo vyöarvo = entityManager.find(Vyöarvo.class, 1);
       perustietoAdmin.setVyöarvo(vyöarvo);
+      Assert.assertEquals(1, vyöarvot.get().size());
       perustietoAdmin.poistaVyöarvo();
       entityManager.clear();
+      Assert.assertEquals(0, vyöarvot.get().size());
       vyöarvo = entityManager.find(Vyöarvo.class, 1);
       Assert.assertNull(vyöarvo);
    }
 
-   @PersistenceContext
-   private EntityManager freshEntityManager;
-   
    @Test
    @ApplyScriptBefore("vyoarvokaytossa.sql")
    @ApplyScriptAfter("cleanup.sql")
@@ -88,7 +95,8 @@ public class VyoarvoTest extends Perustesti
       {
          Assert.assertEquals("Vyöarvo on käytössä ja sitä ei voi poistaa (1kpl: Nicklas Karlsson...)", e.getMessage());
       }
-      vyöarvo = freshEntityManager.find(Vyöarvo.class, 1);
+      entityManager.clear();
+      vyöarvo = entityManager.find(Vyöarvo.class, 1);
       Assert.assertNotNull(vyöarvo);
    }
 

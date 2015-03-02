@@ -265,4 +265,9 @@ public class DateUtil
       return Date2LocalDateTime(alkaa).isBefore(Date2LocalDateTime(loppuu));
    }
 
+   public static String p‰iv‰Tekstiksi(Date p‰iv‰)
+   {
+      return new SimpleDateFormat("dd.MM.yyyy").format(p‰iv‰);
+   }
+
 }

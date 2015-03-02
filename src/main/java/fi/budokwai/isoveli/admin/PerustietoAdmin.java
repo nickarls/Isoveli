@@ -1,7 +1,6 @@
 package fi.budokwai.isoveli.admin;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
@@ -19,8 +18,6 @@ import javax.persistence.EntityManager;
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
-import com.google.common.base.MoreObjects;
-
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
@@ -33,6 +30,7 @@ import fi.budokwai.isoveli.malli.Treenityyppi;
 import fi.budokwai.isoveli.malli.Viikonpäivä;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Vyökoe;
+import fi.budokwai.isoveli.util.DateUtil;
 import fi.budokwai.isoveli.util.Loggaaja;
 import fi.budokwai.isoveli.util.Muuttui;
 
@@ -86,9 +84,46 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    @Produces
    @Named
-   public Collection<Treeni> getTreenit()
+   public List<Rooli> getRoolit()
    {
+      if (roolit == null)
+      {
+         haeRoolit();
+      }
+      return roolit;
+   }
+
+   @Produces
+   @Named
+   public List<Treeni> getTreenit()
+   {
+      if (treenit == null)
+      {
+         haeTreenit();
+      }
       return treenit;
+   }
+
+   @Produces
+   @Named
+   public List<Treenityyppi> getTreenityypit()
+   {
+      if (treenityypit == null)
+      {
+         haeTreenityypit();
+      }
+      return treenityypit;
+   }
+
+   @Produces
+   @Named
+   public List<Sopimustyyppi> getSopimustyypit()
+   {
+      if (sopimustyypit == null)
+      {
+         haeSopimustyypit();
+      }
+      return sopimustyypit;
    }
 
    @Produces
@@ -132,26 +167,26 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       return tulos;
    }
 
-   @Produces
-   @Named
-   public List<Rooli> getKaikkiRoolit()
-   {
-      return roolit;
-   }
-
-   @Produces
-   @Named
-   public List<Treenityyppi> getKaikkiTreenityypit()
-   {
-      return treenityypit;
-   }
-
-   @Produces
-   @Named
-   public List<Sopimustyyppi> getKaikkiSopimustyypit()
-   {
-      return sopimustyypit;
-   }
+   // @Produces
+   // @Named
+   // public List<Rooli> getKaikkiRoolit()
+   // {
+   // return roolit;
+   // }
+   //
+   // @Produces
+   // @Named
+   // public List<Treenityyppi> getKaikkiTreenityypit()
+   // {
+   // return treenityypit;
+   // }
+   //
+   // @Produces
+   // @Named
+   // public List<Sopimustyyppi> getKaikkiSopimustyypit()
+   // {
+   // return sopimustyypit;
+   // }
 
    @Produces
    @Named
@@ -179,17 +214,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public Treenityyppi getTreenityyppi()
    {
       return treenityyppi;
-   }
-
-   @Produces
-   @Named
-   public Collection<Treenityyppi> getTreenityypit()
-   {
-      if (treenityypit == null)
-      {
-         treenityypit = entityManager.createNamedQuery("treenityypit", Treenityyppi.class).getResultList();
-      }
-      return treenityypit;
    }
 
    public void peruutaRoolimuutos()
@@ -274,7 +298,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       rooli = entityManager.merge(rooli);
       rooliRSM.get(rooli).setSelected(true);
-      haeRoolit();
+      roolit = null;
       info("Rooli tallennettu");
    }
 
@@ -282,7 +306,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       sopimustyyppi = entityManager.merge(sopimustyyppi);
       rooliRSM.get(sopimustyyppi).setSelected(true);
-      haeSopimustyypit();
+      sopimustyypit = null;
       info("Sopimustyyppi tallennettu");
    }
 
@@ -305,8 +329,9 @@ public class PerustietoAdmin extends Perustoiminnallisuus
          throw new IsoveliPoikkeus("Treeni ei voi päättyä ennen kun se alkaa");
       }
       treeni = entityManager.merge(treeni);
+      entityManager.flush();
       treeniRSM.get(treeni).setSelected(true);
-      haeTreenit();
+      treenit = null;
       info("Treeni tallennettu");
       loggaaja.loggaa(String.format("Tallensi treenin %s", treeni));
    }
@@ -314,6 +339,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void tallennaVyöarvo()
    {
       vyöarvo = entityManager.merge(vyöarvo);
+      entityManager.flush();
       vyöarvoRSM.get(vyöarvo).setSelected(true);
       vyöarvoMuuttui.fire(vyöarvo);
       info("Vyöarvo tallennettu");
@@ -322,8 +348,9 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void tallennaTreenityyppi()
    {
       treenityyppi = entityManager.merge(treenityyppi);
+      entityManager.flush();
       treenityyppiRSM.get(treenityyppi).setSelected(true);
-      haeTreenityypit();
+      treenityypit = null;
       info("Treenityyppi tallennettu");
    }
 
@@ -351,16 +378,33 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       rooli = entityManager.merge(rooli);
       entityManager.remove(rooli);
-      haeRoolit();
+      roolit = null;
       info("Rooli poistettu");
    }
 
    public void poistaTreeni()
    {
+      tarkistaTreenikäyttö();
       treeni = entityManager.merge(treeni);
       entityManager.remove(treeni);
-      haeTreenit();
+      entityManager.flush();
+      treenit = null;
       info("Treeni poistettu");
+   }
+
+   private void tarkistaTreenikäyttö()
+   {
+      List<Treenisessio> käyttö = entityManager
+         .createQuery("select ts from Treenisessio ts where ts.treeni=:treeni", Treenisessio.class)
+         .setParameter("treeni", treeni).getResultList();
+      if (!käyttö.isEmpty())
+      {
+         StringJoiner stringJoiner = new StringJoiner(", ");
+         käyttö.forEach(ts -> stringJoiner.add(DateUtil.päiväTekstiksi(ts.getPäivä())));
+         String viesti = String.format("Treeni on käytössä ja sitä ei voi poistaa (%dkpl: %s...)", käyttö.size(),
+            stringJoiner.toString());
+         throw new IsoveliPoikkeus(viesti);
+      }
    }
 
    public void poistaVyöarvo()
@@ -368,6 +412,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       tarkistaVyöarvoKäyttö();
       vyöarvo = entityManager.merge(vyöarvo);
       entityManager.remove(vyöarvo);
+      entityManager.flush();
       vyöarvoMuuttui.fire(vyöarvo);
       info("Vyöarvo poistettu");
    }
@@ -389,17 +434,33 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void poistaTreenityyppi()
    {
+      tarkistaTreenityyppiKäyttö();
       treenityyppi = entityManager.merge(treenityyppi);
       entityManager.remove(treenityyppi);
-      haeTreenityypit();
+      entityManager.flush();
+      treenityypit = null;
       info("Treenityyppi poistettu");
+   }
+
+   private void tarkistaTreenityyppiKäyttö()
+   {
+      List<Treeni> käyttö = entityManager.createQuery("select t from Treeni t where t.tyyppi=:tyyppi", Treeni.class)
+         .setParameter("tyyppi", treenityyppi).getResultList();
+      if (!käyttö.isEmpty())
+      {
+         StringJoiner stringJoiner = new StringJoiner(", ");
+         käyttö.forEach(t -> stringJoiner.add(t.getNimi()));
+         String viesti = String.format("Treenityyppi on käytössä ja sitä ei voi poistaa (%dkpl: %s...)", käyttö.size(),
+            stringJoiner.toString());
+         throw new IsoveliPoikkeus(viesti);
+      }
    }
 
    public void poistaSopimustyyppi()
    {
       sopimustyyppi = entityManager.merge(sopimustyyppi);
       entityManager.remove(sopimustyyppi);
-      haeSopimustyypit();
+      sopimustyypit = null;
       info("Sopimustyyppi poistettu");
    }
 
@@ -567,6 +628,16 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void setVyöarvo(Vyöarvo vyöarvo)
    {
       this.vyöarvo = vyöarvo;
+   }
+
+   public void setTreenityyppi(Treenityyppi treenityyppi)
+   {
+      this.treenityyppi = treenityyppi;
+   }
+
+   public void setTreeni(Treeni treeni)
+   {
+      this.treeni = treeni;
    }
 
 }

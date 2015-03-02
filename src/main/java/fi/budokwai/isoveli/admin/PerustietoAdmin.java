@@ -50,11 +50,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    private List<Rooli> roolit;
    private List<Treenityyppi> treenityypit;
-   private List<Harrastaja> vyöarvoKäyttö;
-   private List<Henkilö> rooliKäyttö;
-   private List<Treeni> treenityyppiKäyttö;
-   private List<Treenisessio> treeniKäyttö;
-   private List<Sopimus> sopimustyyppiKäyttö;
    private List<Harrastaja> treenivetäjät;
    private List<Harrastaja> kaikkivetäjät;
    private List<Treeni> treenit;
@@ -257,7 +252,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       rooli = new Rooli();
       rooliRSM = new RowStateMap();
-      rooliKäyttö = null;
       info("Uusi rooli alustettu");
    }
 
@@ -265,7 +259,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       vyöarvo = new Vyöarvo();
       vyöarvoRSM = new RowStateMap();
-      vyöarvoKäyttö = null;
       info("Uusi vyöarvo alustettu");
    }
 
@@ -273,7 +266,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       treeni = new Treeni();
       treenivetäjät = null;
-      treeniKäyttö = null;
       treeniRSM.setAllSelected(false);
       info("Uusi treeni alustettu");
    }
@@ -282,7 +274,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       treenityyppi = new Treenityyppi();
       treenityyppiRSM = new RowStateMap();
-      treenityyppiKäyttö = null;
       info("Uusi treenityyppi alustettu");
    }
 
@@ -290,7 +281,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    {
       sopimustyyppi = new Sopimustyyppi();
       sopimustyyppiRSM = new RowStateMap();
-      sopimustyyppiKäyttö = null;
       info("Uusi sopimustyyppi alustettu");
    }
 
@@ -306,6 +296,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void tallennaSopimustyyppi()
    {
       sopimustyyppi = entityManager.merge(sopimustyyppi);
+      entityManager.flush();
       rooliRSM.get(sopimustyyppi).setSelected(true);
       sopimustyypit = null;
       info("Sopimustyyppi tallennettu");
@@ -476,121 +467,52 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void poistaSopimustyyppi()
    {
+      tarkistaSopimustyyppikäyttö();
       sopimustyyppi = entityManager.merge(sopimustyyppi);
       entityManager.remove(sopimustyyppi);
+      entityManager.flush();
       sopimustyypit = null;
       info("Sopimustyyppi poistettu");
    }
 
-   @Produces
-   @Named
-   public List<Henkilö> getRooliKäyttö()
+   private void tarkistaSopimustyyppikäyttö()
    {
-      if (rooli == null || !rooli.isPoistettavissa())
+      List<Sopimus> käyttö = entityManager.createQuery("select s from Sopimus s where s.tyyppi=:tyyppi", Sopimus.class)
+         .setParameter("tyyppi", sopimustyyppi).getResultList();
+      if (!käyttö.isEmpty())
       {
-         return new ArrayList<Henkilö>();
+         StringJoiner stringJoiner = new StringJoiner(", ");
+         käyttö.forEach(s -> stringJoiner.add(s.getHarrastaja().getNimi()));
+         String viesti = String.format("Sopimustyyppi on käytössä ja sitä ei voi poistaa (%dkpl: %s...)",
+            käyttö.size(), stringJoiner.toString());
+         throw new IsoveliPoikkeus(viesti);
       }
-      if (rooliKäyttö == null)
-      {
-         rooliKäyttö = entityManager.createNamedQuery("roolikäyttö", Henkilö.class).setParameter("rooli", rooli)
-            .getResultList();
-      }
-      return rooliKäyttö;
-   }
-
-   @Produces
-   @Named
-   public List<Treenisessio> getTreeniKäyttö()
-   {
-      if (treeni == null || !treeni.isPoistettavissa())
-      {
-         return new ArrayList<Treenisessio>();
-      }
-      if (treeniKäyttö == null)
-      {
-         treeniKäyttö = entityManager.createNamedQuery("treenikäyttö", Treenisessio.class)
-            .setParameter("treeni", treeni).getResultList();
-      }
-      return treeniKäyttö;
-   }
-
-   @Produces
-   @Named
-   public List<Harrastaja> getVyöarvoKäyttö()
-   {
-      if (vyöarvo == null || !vyöarvo.isPoistettavissa())
-      {
-         return new ArrayList<Harrastaja>();
-      }
-      if (vyöarvoKäyttö == null)
-      {
-         vyöarvoKäyttö = entityManager.createNamedQuery("vyöarvokäyttö", Harrastaja.class)
-            .setParameter("vyöarvo", vyöarvo).getResultList();
-      }
-      return vyöarvoKäyttö;
-   }
-
-   @Produces
-   @Named
-   public List<Sopimus> getSopimustyyppiKäyttö()
-   {
-      if (sopimustyyppi == null || !sopimustyyppi.isPoistettavissa())
-      {
-         return new ArrayList<Sopimus>();
-      }
-      if (sopimustyyppiKäyttö == null)
-      {
-         sopimustyyppiKäyttö = entityManager.createNamedQuery("sopimustyyppikäyttö", Sopimus.class)
-            .setParameter("sopimustyyppi", sopimustyyppi).getResultList();
-      }
-      return sopimustyyppiKäyttö;
-   }
-
-   @Produces
-   @Named
-   public List<Treeni> getTreenityyppiKäyttö()
-   {
-      if (treenityyppi == null || !treenityyppi.isPoistettavissa())
-      {
-         return new ArrayList<Treeni>();
-      }
-      if (treenityyppiKäyttö == null)
-      {
-         treenityyppiKäyttö = entityManager.createNamedQuery("treenityyppikäyttö", Treeni.class)
-            .setParameter("treenityyppi", treenityyppi).getResultList();
-      }
-      return treenityyppiKäyttö;
    }
 
    public void rooliValittu(SelectEvent e)
    {
       rooli = (Rooli) e.getObject();
-      rooliKäyttö = null;
    }
 
    public void treeniValittu(SelectEvent e)
    {
       treeni = (Treeni) e.getObject();
       treenivetäjät = null;
-      treeniKäyttö = null;
    }
 
    public void vyöarvoValittu(SelectEvent e)
    {
       vyöarvo = (Vyöarvo) e.getObject();
-      vyöarvoKäyttö = null;
    }
 
    public void treenityyppiValittu(SelectEvent e)
    {
       treenityyppi = (Treenityyppi) e.getObject();
-      treenityyppiKäyttö = null;
    }
 
    public void sopimustyyppiValittu(SelectEvent e)
    {
       sopimustyyppi = (Sopimustyyppi) e.getObject();
-      sopimustyyppiKäyttö = null;
    }
 
    public RowStateMap getTreenityyppiRSM()
@@ -661,6 +583,11 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void setRooli(Rooli rooli)
    {
       this.rooli = rooli;
+   }
+
+   public void setSopimustyyppi(Sopimustyyppi sopimustyyppi)
+   {
+      this.sopimustyyppi = sopimustyyppi;
    }
 
 }

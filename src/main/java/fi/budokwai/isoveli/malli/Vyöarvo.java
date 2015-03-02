@@ -1,8 +1,5 @@
 package fi.budokwai.isoveli.malli;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -18,14 +14,14 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Type;
 
 @Entity
 @DynamicInsert
 @DynamicUpdate
 @NamedQueries(
-{
-      @NamedQuery(name = "vyöarvot", query = "select v from Vyöarvo v order by v.järjestys"),
-      @NamedQuery(name = "vyöarvokäyttö", query = "select h from Harrastaja h join h.vyökokeet k join k.vyöarvo v where v = :vyöarvo") })
+{ @NamedQuery(name = "vyöarvot", query = "select v from Vyöarvo v where v.arkistoitu='E' order by v.järjestys"),
+      @NamedQuery(name = "vyöarvotArk", query = "select v from Vyöarvo v order by v.järjestys") })
 @Table(name = "vyoarvo")
 public class Vyöarvo
 {
@@ -52,6 +48,9 @@ public class Vyöarvo
    @Column(name = "jarjestys")
    @Min(value = 1)
    private int järjestys;
+
+   @Type(type = "KylläEi")
+   private boolean arkistoitu;
 
    public Vyöarvo(String nimi)
    {
@@ -148,6 +147,16 @@ public class Vyöarvo
    public void setKuvaus(String kuvaus)
    {
       this.kuvaus = kuvaus;
+   }
+
+   public boolean isArkistoitu()
+   {
+      return arkistoitu;
+   }
+
+   public void setArkistoitu(boolean arkistoitu)
+   {
+      this.arkistoitu = arkistoitu;
    }
 
 }

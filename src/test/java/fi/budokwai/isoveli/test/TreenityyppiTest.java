@@ -18,6 +18,7 @@ import com.google.inject.Exposed;
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.admin.PerustietoAdmin;
 import fi.budokwai.isoveli.malli.Treenityyppi;
+import fi.budokwai.isoveli.malli.Vyöarvo;
 
 @RunWith(Arquillian.class)
 public class TreenityyppiTest extends Perustesti
@@ -60,6 +61,22 @@ public class TreenityyppiTest extends Perustesti
       entityManager.clear();
       treenityyppi = entityManager.find(Treenityyppi.class, 1);
       Assert.assertEquals("foo", treenityyppi.getNimi());
+   }
+
+   @Test
+   @ApplyScriptBefore("perustekniikka.sql")
+   @ApplyScriptAfter("cleanup.sql")
+   public void testArkistoiTreenityyppi()
+   {
+      Assert.assertEquals(1, treenityypit.get().size());
+      Treenityyppi treenityyppi = entityManager.find(Treenityyppi.class, 1);
+      treenityyppi.setArkistoitu(true);
+      perustietoAdmin.setTreenityyppi(treenityyppi);
+      perustietoAdmin.tallennaTreenityyppi();
+      entityManager.clear();
+      Assert.assertEquals(0, treenityypit.get().size());
+      treenityyppi = entityManager.find(Treenityyppi.class, 1);
+      Assert.assertNotNull(treenityyppi);
    }
 
    @Test

@@ -37,8 +37,9 @@ import fi.budokwai.isoveli.util.DateUtil;
 @Table(name = "treeni")
 @NamedQueries(
 {
-      @NamedQuery(name = "tulevat_treenit", query = "select t from Treeni t where t.p‰iv‰=:p‰iv‰ and t.p‰‰ttyy >= :kello and not exists(select tk from Treenik‰ynti tk, Treenisessio ts where tk.harrastaja=:harrastaja and tk.treenisessio=ts and ts.treeni=t and ts.p‰iv‰ = :t‰n‰‰n)"),
-      @NamedQuery(name = "treenit", query = "select t from Treeni t order by t.p‰iv‰, t.alkaa") })
+      @NamedQuery(name = "tulevat_treenit", query = "select t from Treeni t where t.arkistoitu='E' and t.p‰iv‰=:p‰iv‰ and t.p‰‰ttyy >= :kello and not exists(select tk from Treenik‰ynti tk, Treenisessio ts where tk.harrastaja=:harrastaja and tk.treenisessio=ts and ts.treeni=t and ts.p‰iv‰ = :t‰n‰‰n)"),
+      @NamedQuery(name = "treenit", query = "select t from Treeni t where t.arkistoitu='E' order by t.p‰iv‰, t.alkaa"),
+      @NamedQuery(name = "treenitArq", query = "select t from Treeni t order by t.p‰iv‰, t.alkaa"), })
 public class Treeni
 {
    @Id
@@ -98,6 +99,9 @@ public class Treeni
    @Column(name = "voimassapaattyy")
    @Temporal(TemporalType.DATE)
    private Date voimassaP‰‰ttyy;
+
+   @Type(type = "Kyll‰Ei")
+   private boolean arkistoitu;
 
    @ManyToMany
    @JoinTable(name = "treenivetaja", joinColumns =
@@ -349,5 +353,15 @@ public class Treeni
    public boolean isAjankohtaRistiss‰()
    {
       return (alkaa != null && p‰‰ttyy != null && DateUtil.onkoAikaAiemmin(p‰‰ttyy, alkaa));
+   }
+
+   public boolean isArkistoitu()
+   {
+      return arkistoitu;
+   }
+
+   public void setArkistoitu(boolean arkistoitu)
+   {
+      this.arkistoitu = arkistoitu;
    }
 }

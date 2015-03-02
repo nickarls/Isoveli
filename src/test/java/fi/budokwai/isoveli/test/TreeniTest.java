@@ -31,7 +31,8 @@ public class TreeniTest extends Perustesti
    @Inject
    private EntityManager entityManager;
 
-   @Inject @Named("treenit")
+   @Inject
+   @Named("treenit")
    private Instance<List<Treeni>> treenit;
 
    @Test
@@ -68,6 +69,22 @@ public class TreeniTest extends Perustesti
       entityManager.clear();
       treeni = entityManager.find(Treeni.class, 1);
       Assert.assertEquals("foo", treeni.getNimi());
+   }
+
+   @Test
+   @ApplyScriptBefore("treenityyppikaytossa.sql")
+   @ApplyScriptAfter("cleanup.sql")
+   public void testArkistoiTreeni()
+   {
+      Assert.assertEquals(1, treenit.get().size());
+      Treeni treeni = entityManager.find(Treeni.class, 1);
+      treeni.setArkistoitu(true);
+      perustietoAdmin.setTreeni(treeni);
+      perustietoAdmin.tallennaTreeni();
+      entityManager.clear();
+      Assert.assertEquals(0, treenit.get().size());
+      treeni = entityManager.find(Treeni.class, 1);
+      Assert.assertNotNull(treeni);
    }
 
    @Test

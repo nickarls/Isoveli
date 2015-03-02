@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.admin.PerustietoAdmin;
 import fi.budokwai.isoveli.malli.Rooli;
+import fi.budokwai.isoveli.malli.Treeni;
 
 @RunWith(Arquillian.class)
 public class RooliTest extends Perustesti
@@ -45,7 +46,7 @@ public class RooliTest extends Perustesti
       rooli = entityManager.createQuery("select r from Rooli r", Rooli.class).getSingleResult();
       Assert.assertNotNull(rooli);
    }
-
+   
    @Test
    @ApplyScriptBefore("yllapitajarooli.sql")
    @ApplyScriptAfter("cleanup.sql")
@@ -60,6 +61,22 @@ public class RooliTest extends Perustesti
       Assert.assertEquals("foo", rooli.getNimi());
    }
 
+   @Test
+   @ApplyScriptBefore("yllapitajarooli.sql")
+   @ApplyScriptAfter("cleanup.sql")
+   public void testArkistoiRooli()
+   {
+      Assert.assertEquals(1, roolit.get().size());
+      Rooli rooli = entityManager.find(Rooli.class, 1);
+      rooli.setArkistoitu(true);
+      perustietoAdmin.setRooli(rooli);
+      perustietoAdmin.tallennaRooli();
+      entityManager.clear();
+      Assert.assertEquals(0, roolit.get().size());
+      rooli = entityManager.find(Rooli.class, 1);
+      Assert.assertNotNull(rooli);
+   }   
+   
    @Test
    @ApplyScriptBefore("yllapitajarooli.sql")
    @ApplyScriptAfter("cleanup.sql")

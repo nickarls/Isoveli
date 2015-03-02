@@ -29,8 +29,8 @@ public class VyoarvoTest extends Perustesti
    private EntityManager entityManager;
 
    @Inject
-   private Instance<List<Vyöarvo>> vyöarvot; 
-   
+   private Instance<List<Vyöarvo>> vyöarvot;
+
    @Test
    @ApplyScriptAfter("cleanup.sql")
    public void testLisaaVyoarvo()
@@ -46,8 +46,7 @@ public class VyoarvoTest extends Perustesti
       perustietoAdmin.tallennaVyöarvo();
       entityManager.clear();
       Assert.assertEquals(1, vyöarvot.get().size());
-      Vyöarvo testi = entityManager.createQuery("select v from Vyöarvo v", Vyöarvo.class)
-         .getSingleResult();
+      Vyöarvo testi = entityManager.createQuery("select v from Vyöarvo v", Vyöarvo.class).getSingleResult();
       Assert.assertNotNull(testi);
    }
 
@@ -63,6 +62,22 @@ public class VyoarvoTest extends Perustesti
       entityManager.clear();
       vyöarvo = entityManager.find(Vyöarvo.class, 1);
       Assert.assertEquals("vyöx", vyöarvo.getNimi());
+   }
+
+   @Test
+   @ApplyScriptBefore("keltainenvyo.sql")
+   @ApplyScriptAfter("cleanup.sql")
+   public void testArkistoiVyoarvo()
+   {
+      Assert.assertEquals(1, vyöarvot.get().size());
+      Vyöarvo vyöarvo = entityManager.find(Vyöarvo.class, 1);
+      vyöarvo.setArkistoitu(true);
+      perustietoAdmin.setVyöarvo(vyöarvo);
+      perustietoAdmin.tallennaVyöarvo();
+      entityManager.clear();
+      Assert.assertEquals(0, vyöarvot.get().size());
+      vyöarvo = entityManager.find(Vyöarvo.class, 1);
+      Assert.assertNotNull(vyöarvo);
    }
 
    @Test

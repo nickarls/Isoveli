@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.admin.PerustietoAdmin;
-import fi.budokwai.isoveli.malli.Rooli;
 import fi.budokwai.isoveli.malli.Sopimustyyppi;
 
 @RunWith(Arquillian.class)

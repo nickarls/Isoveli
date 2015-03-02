@@ -12,14 +12,15 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Type;
 
 @Entity
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "rooli")
 @NamedQueries(
-{ @NamedQuery(name = "roolit", query = "select r from Rooli r order by r.nimi"),
-      @NamedQuery(name = "roolikäyttö", query = "select h from Henkilö h join h.roolit r where r = :rooli") })
+{ @NamedQuery(name = "roolit", query = "select r from Rooli r where r.arkistoitu='E' order by r.nimi"),
+      @NamedQuery(name = "rooliArq", query = "select r from Rooli r where r.arkistoitu='E' order by r.nimi") })
 public class Rooli
 {
    @Id
@@ -29,6 +30,9 @@ public class Rooli
    @Size(max = 20)
    @NotNull
    private String nimi;
+
+   @Type(type = "KylläEi")
+   private boolean arkistoitu;
 
    public int getId()
    {
@@ -70,5 +74,15 @@ public class Rooli
    public boolean isPoistettavissa()
    {
       return id > 0;
+   }
+
+   public boolean isArkistoitu()
+   {
+      return arkistoitu;
+   }
+
+   public void setArkistoitu(boolean arkistoitu)
+   {
+      this.arkistoitu = arkistoitu;
    }
 }

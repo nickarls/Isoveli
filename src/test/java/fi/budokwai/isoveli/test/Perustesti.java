@@ -173,6 +173,7 @@ public class Perustesti
       sopimustyyppi.setHinta(200);
       sopimustyyppi.setNimi("Alkeiskurssi");
       sopimustyyppi.setAlkeiskurssi(true);
+      sopimustyyppi.setOletusKuukaudetVoimassa(3);
       sopimus.setTyyppi(sopimustyyppi);
       try
       {

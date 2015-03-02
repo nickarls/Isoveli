@@ -368,6 +368,10 @@ public class Sopimus
       {
          return DateUtil.t‰n‰‰nDate();
       }
+      if (tyyppi.isAlkeiskurssi())
+      {
+         return DateUtil.LocalDate2Date(DateUtil.kuukausienP‰‰st‰(alkaa, tyyppi.getOletusKuukaudetVoimassa()));
+      }
       while (loppu.isBefore(DateUtil.t‰n‰‰n()) || DateUtil.samat(alkaa, loppu))
       {
          loppu = loppu.plus(maksuv‰li, ChronoUnit.MONTHS);

@@ -50,8 +50,8 @@ public class LaskutuskausiTest extends Perustesti
       Sopimus sopimus = teeHarjoittelusopimus(new Harrastaja(), "02.02.2015", 1);
       Laskutuskausi kausi = sopimus.getLaskutuskausi();
       Assert.assertEquals("02.02.2015", DateUtil.formatoi(kausi.getKausi().getAlkaa()));
-      Assert.assertEquals("02.03.2015", DateUtil.formatoi(kausi.getKausi().getP‰‰ttyy()));
-      Assert.assertEquals(1, kausi.getKausikuukausia());
+      Assert.assertEquals("02.04.2015", DateUtil.formatoi(kausi.getKausi().getP‰‰ttyy()));
+      Assert.assertEquals(2, kausi.getKausikuukausia());
    }
 
    @Test

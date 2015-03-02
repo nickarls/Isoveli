@@ -28,7 +28,8 @@ public class Perustesti
       return ShrinkWrap
          .create(WebArchive.class)
          .addPackages(true, "fi.budokwai.isoveli")
-         .addAsWebInfResource("beans.xml", "beans.xml")
+         .addAsWebInfResource("beans.xml")
+         .addAsWebInfResource("jboss-deployment-structure.xml")
          .addAsResource("persistence.xml", "META-INF/persistence.xml")
          .addAsResource("laskupohja.pdf", "laskupohja.pdf")
          .addAsLibraries(

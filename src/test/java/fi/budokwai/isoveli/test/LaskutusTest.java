@@ -16,6 +16,7 @@ import fi.budokwai.isoveli.admin.LaskutusAdmin;
 import fi.budokwai.isoveli.malli.Lasku;
 import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
+import fi.budokwai.isoveli.malli.TilausTila;
 
 @RunWith(Arquillian.class)
 public class LaskutusTest extends Perustesti
@@ -78,6 +79,32 @@ public class LaskutusTest extends Perustesti
       laskutusAdmin.laskutaSopimukset();
       Lasku lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
       Assert.assertEquals("Nicklas Karlsson", lasku.getHenkilö().getNimi());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "seed.sql", "harrastajaperhe.sql", "harrastajasopimukset.sql" })
+   @ApplyScriptAfter("cleanup.sql")
+   public void testRelaatiotJaTilat()
+   {
+      laskutusAdmin.laskutaSopimukset();
+      Lasku lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
+      for (Laskurivi laskurivi : lasku.getLaskurivit())
+      {
+         Assert.assertNotNull(lasku.getHenkilö());
+         Assert.assertNotNull(lasku.getPdf());
+         Assert.assertNotNull(lasku.getViitenumero());
+         Assert.assertNotNull(lasku.getEräpäivä());
+         Assert.assertNotNull(lasku.getId());
+         Assert.assertNotNull(lasku.getLuotu());
+         Assert.assertNull(lasku.getMaksettu());
+         Assert.assertEquals(TilausTila.M, lasku.getTila());
+         Assert.assertNotNull(laskurivi.getLasku());
+         Assert.assertNotNull(laskurivi.getSopimuslasku());
+         Assert.assertNotNull(laskurivi.getSopimuslasku().getLaskurivi());
+         Assert.assertNotNull(laskurivi.getSopimuslasku().getSopimus());
+         Assert.assertNotNull(laskurivi.getSopimuslasku());
+      }
    }
 
    @Test

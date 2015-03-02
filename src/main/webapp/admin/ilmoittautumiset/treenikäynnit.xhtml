@@ -66,7 +66,7 @@
 				<h:panelGrid>
 					<ace:message for="form:aikaleima" />
 					<h:inputText value="#{treenikäynti.aikaleima}">
-						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="EET"/>
 					</h:inputText>
 				</h:panelGrid>
 			</h:panelGrid>

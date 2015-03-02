@@ -83,7 +83,6 @@
 				<ace:menuItem value="Tulosta" action="#{laskutusAdmin.virkistäLasku(_lasku)}" />
 				<ace:menuItem value="Peruuta" action="#{laskutusAdmin.virkistäLasku(_lasku)}" />
 			</ace:contextMenu>
-			<ace:rowEditor />
 		</ace:column>
 	</ace:dataTable>
 	<ace:dataTable rows="10" value="#{laskut[0].laskurivit}" var="_laskurivi" paginator="true" paginatorPosition="bottom"

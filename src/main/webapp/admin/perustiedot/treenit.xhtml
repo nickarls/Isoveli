@@ -55,11 +55,11 @@
 		</ace:column>
 		<ace:column headerText="Vyöalaraja" styleClass="lefttext">
 			<h:graphicImage value="/kuvat/vyöt/#{_treeni.vyöAlaraja.id}.png" style="height:40px"
-				rendered="#{_treeni.vyöAlaraja.id != null}" />
+				rendered="#{_treeni.vyöAlaraja != null}" />
 		</ace:column>
 		<ace:column headerText="Vyöyläraja" styleClass="lefttext">
 			<h:graphicImage value="/kuvat/vyöt/#{_treeni.vyöYläraja.id}.png" style="height:40px"
-				rendered="#{_treeni.vyöYläraja.id != null}" />
+				rendered="#{_treeni.vyöYläraja != null}" />
 		</ace:column>
 		<ace:column headerText="Ikärajat" styleClass="lefttext">
 			<h:outputText value="#{_treeni.ikärajat}" />

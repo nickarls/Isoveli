@@ -434,20 +434,13 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    {
       Henkilö huoltaja = new Henkilö();
       Perhe perhe = harrastaja.getPerhe();
-      if (perhe == null)
-      {
-         perhe = new Perhe();
-         perhe.setNimi(harrastaja.getSukunimi());
-         harrastaja.setPerhe(perhe);
-         perhe.getPerheenjäsenet().add(harrastaja);
-      }
       perhe.getPerheenjäsenet().add(huoltaja);
       huoltaja.setSukunimi(harrastaja.getSukunimi());
       huoltaja.setEtunimi("Huoltaja");
       huoltaja.setPerhe(perhe);
-      entityManager.persist(huoltaja);
       harrastaja.setHuoltaja(huoltaja);
-      entityManager.merge(perhe);
+      entityManager.persist(huoltaja);
+      entityManager.persist(perhe);
       perheet = null;
       fokusoi("form:huoltajan_etunimi");
    }
@@ -455,7 +448,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void lisääHarrastaja()
    {
       resetoi();
-      tabi.setSelectedIndex(0);
+//      tabi.setSelectedIndex(0);
       harrastaja = new Harrastaja();
       info("Uusi harrastaja alustettu");
       fokusoi("form:etunimi");

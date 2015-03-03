@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,7 +40,8 @@ public class Perhe
    @OneToMany(mappedBy = "perhe")
    private List<Henkilö> perheenjäsenet = new ArrayList<Henkilö>();
 
-   @OneToOne
+   @OneToOne(cascade =
+   { CascadeType.PERSIST })
    @JoinColumn(name = "osoite")
    private Osoite osoite = new Osoite();
 
@@ -85,7 +87,7 @@ public class Perhe
 
    public String getKuvaus()
    {
-      String etunimet = perheenjäsenet.stream().filter(h -> h.getEtunimi() != null).map(h -> h.getEtunimi())
+      String etunimet = perheenjäsenet.stream().map(h -> h.isAlaikäinen() ? h.getEtunimi() : String.format("*%s", h.getEtunimi()))
          .collect(Collectors.joining(", "));
       return "".equals(etunimet) ? nimi : String.format("%s (%s)", nimi, etunimet);
    }
@@ -208,7 +210,7 @@ public class Perhe
    @Override
    public String toString()
    {
-      return getKuvaus();  
+      return getKuvaus();
    }
 
 }

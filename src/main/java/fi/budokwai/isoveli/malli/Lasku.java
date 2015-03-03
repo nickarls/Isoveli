@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -45,7 +46,8 @@ public class Lasku
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
-   @OneToMany(mappedBy = "lasku")
+   @OneToMany(mappedBy = "lasku", cascade =
+   { CascadeType.PERSIST })
    private List<Laskurivi> laskurivit = new ArrayList<Laskurivi>();
 
    @Enumerated(EnumType.STRING)
@@ -65,7 +67,8 @@ public class Lasku
    @Temporal(TemporalType.TIMESTAMP)
    private Date luotu = new Date();
 
-   @OneToOne
+   @OneToOne(cascade =
+   { CascadeType.PERSIST })
    @JoinColumn(name = "pdf")
    private BlobData pdf;
 

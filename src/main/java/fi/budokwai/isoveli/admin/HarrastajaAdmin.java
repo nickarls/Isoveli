@@ -153,7 +153,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          }
          harrastaja.setIce(uusiPerhe.getOletusICE());
       }
-      harrastaja.setOsoiteMuuttunut(true);
       fokusoi("form:osoite");
    }
 
@@ -270,11 +269,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       harrastajaRSM.get(harrastaja).setSelected(true);
-      if (harrastaja.isOsoiteMuuttunut())
-      {
-         poistaTyhj‰tPerheetJaOsoitteet();
-      }
-      harrastaja.setOsoiteMuuttunut(false);
       harrastajat = null;
       info("Harrastaja tallennettu");
    }
@@ -285,14 +279,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          .setParameter("etunimi", harrastaja.getEtunimi()).setParameter("sukunimi", harrastaja.getSukunimi())
          .setParameter("id", harrastaja.getId()).getResultList();
       return harrastaja.isTallentamaton() && vanhat.size() > 0;
-   }
-
-   private void poistaTyhj‰tPerheetJaOsoitteet()
-   {
-      // entityManager.createNamedQuery("poista_turhat_huoltajat").executeUpdate();
-      // entityManager.createNativeQuery("delete from henkilo h where not exist(select 1 from harrastaja ha where ha.huoltaja=h.id)").executeUpdate();
-      entityManager.createNamedQuery("poista_tyhj‰t_perheet").executeUpdate();
-      entityManager.createNamedQuery("poista_tyhj‰t_osoitteet").executeUpdate();
    }
 
    public void peruutaPerustietomuutos()
@@ -448,7 +434,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void lis‰‰Harrastaja()
    {
       resetoi();
-//      tabi.setSelectedIndex(0);
+      // tabi.setSelectedIndex(0);
       harrastaja = new Harrastaja();
       info("Uusi harrastaja alustettu");
       fokusoi("form:etunimi");

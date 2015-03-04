@@ -24,7 +24,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -98,12 +97,9 @@ public class Henkilö implements Serializable
    @Temporal(TemporalType.DATE)
    protected Date luotu = new Date();
 
-   @Transient
-   public boolean osoiteMuuttunut;
-
    public void siivoa()
    {
-      if (osoiteMuuttunut || (osoite != null && osoite.isKäyttämätön()))
+      if (osoite != null && osoite.isKäyttämätön())
       {
          osoite = null;
       }
@@ -327,16 +323,6 @@ public class Henkilö implements Serializable
    public void setLuotu(Date luotu)
    {
       this.luotu = luotu;
-   }
-
-   public boolean isOsoiteMuuttunut()
-   {
-      return osoiteMuuttunut;
-   }
-
-   public void setOsoiteMuuttunut(boolean osoiteMuuttunut)
-   {
-      this.osoiteMuuttunut = osoiteMuuttunut;
    }
 
    public boolean isHuollettavia()

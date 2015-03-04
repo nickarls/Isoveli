@@ -18,7 +18,6 @@ import com.google.inject.Exposed;
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.admin.PerustietoAdmin;
 import fi.budokwai.isoveli.malli.Treenityyppi;
-import fi.budokwai.isoveli.malli.Vyöarvo;
 
 @RunWith(Arquillian.class)
 public class TreenityyppiTest extends Perustesti

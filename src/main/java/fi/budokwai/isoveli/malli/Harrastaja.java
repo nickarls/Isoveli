@@ -309,16 +309,6 @@ public class Harrastaja extends Henkilö
 
    }
 
-   public boolean isOsoiteMuuttunut()
-   {
-      return osoiteMuuttunut;
-   }
-
-   public void setOsoiteMuuttunut(boolean osoiteMuuttunut)
-   {
-      this.osoiteMuuttunut = osoiteMuuttunut;
-   }
-
    @Override
    public int hashCode()
    {

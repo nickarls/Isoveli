@@ -2,8 +2,7 @@ package fi.budokwai.isoveli.test;
 
 import java.util.List;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import fi.budokwai.isoveli.malli.Harrastaja;

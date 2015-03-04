@@ -35,7 +35,7 @@ public class HarrastajaTest extends Perustesti
    @Inject
    @Named("harrastajat")
    private Instance<List<Harrastaja>> harrastajat;
-   
+
    @Inject
    @Named("perheet")
    private Instance<List<Perhe>> perheet;
@@ -67,7 +67,7 @@ public class HarrastajaTest extends Perustesti
       Assert.assertEquals("Vaakunatie 10 as7", harrastaja.getOsoite().getOsoite());
       Assert.assertEquals("0405062266", harrastaja.getYhteystiedot().getPuhelinnumero());
    }
-   
+
    @Test
    @ApplyScriptAfter("cleanup.sql")
    public void testLisaaTaysiikainenYhdenHengenPerheenHarrastaja()
@@ -99,7 +99,7 @@ public class HarrastajaTest extends Perustesti
       Assert.assertEquals("Vaakunatie 10 as7", perhe.getOsoite().getOsoite());
       Assert.assertEquals(1, harrastaja.getPerhe().getPerheenjäsenet().size());
    }
-   
+
    @Test
    @ApplyScriptAfter("cleanup.sql")
    public void testLisaaAlaikainenHarrastaja()
@@ -115,13 +115,13 @@ public class HarrastajaTest extends Perustesti
       Assert.assertEquals(0, perheet.get().size());
       harrastajaAdmin.lisääPerhe();
       Assert.assertEquals(1, perheet.get().size());
-      
+
       Assert.assertEquals(0, harrastaja.getPerhe().getHuoltajat().size());
       harrastajaAdmin.lisääHuoltaja();
       Assert.assertEquals(1, harrastaja.getPerhe().getHuoltajat().size());
       Henkilö huoltaja = harrastaja.getHuoltaja();
       huoltaja.setEtunimi("Nicklas");
-      
+
       harrastaja.getOsoite().setOsoite("Vaakunatie 10 as7");
       harrastaja.getOsoite().setPostinumero("20780");
       harrastaja.getOsoite().setKaupunki("Kaarina");
@@ -145,8 +145,6 @@ public class HarrastajaTest extends Perustesti
       harrastaja = (Harrastaja) huoltaja.getPerhe().getHuollettavat(huoltaja).iterator().next();
       Assert.assertEquals("Emil", harrastaja.getEtunimi());
    }
-   
-   
 
    @Test
    @ApplyScriptBefore("nicklas.sql")
@@ -183,32 +181,58 @@ public class HarrastajaTest extends Perustesti
       Assert.assertNull(yhteystiedot);
       entityManager.clear();
    }
-   
+
    @Test
-   public void testHuoltajanPuhelinICEMuutos() {
-      
-   }
-   
-   @Test
-   public void testHuoltajaMuuttuu() {
-      
+   public void testHuoltajanPuhelinMuutosPaivittaaICEn()
+   {
+
    }
 
    @Test
-   public void testPerheMuuttuu() {
-      // ICE, jäsenet
+   public void testHuoltajaMuuttuu()
+   {
+      // ICE päivittyy
    }
-   
+
    @Test
-   public void testOrpoPerhePoistuu() {
-      
+   @ApplyScriptBefore(
+   { "karlsson.sql", "rosqvist.sql" })
+   @ApplyScriptAfter("cleanup.sql")
+   public void testPerheMuuttuu()
+   {
+      Assert.assertEquals(2, perheet.get().size());
+      perheet.get().stream().forEach(p -> Assert.assertEquals(2, p.getPerheenjäsenet().size()));
+      perheet.get().stream().forEach(p -> Assert.assertEquals(1, p.getHuoltajat().size()));
    }
-   
+
    @Test
-   public void testOrpoOsoitePoistuu() {
-      
+   public void testOrpoPerhePoistuu()
+   {
+
    }
-   
-   
+
+   @Test
+   public void testOrpoOsoitePoistuu()
+   {
+
+   }
+
+   @Test
+   public void testPoistaHarrastajaEiKaytossa()
+   {
+      // cascading delete
+   }
+
+   @Test
+   public void testPoistaHarrastajaKaytossa()
+   {
+
+   }
+
+   @Test
+   public void testArkistoiHarrastaja()
+   {
+
+   }
 
 }

@@ -63,13 +63,13 @@ public class Henkilö implements Serializable
    protected String sukunimi;
 
    @OneToOne(cascade =
-   { CascadeType.MERGE }, orphanRemoval = true)
+   { CascadeType.MERGE, CascadeType.PERSIST }, orphanRemoval = true)
    @JoinColumn(name = "osoite")
    @Valid
    protected Osoite osoite;
 
    @OneToOne(cascade =
-   { CascadeType.MERGE }, orphanRemoval = true)
+   { CascadeType.MERGE, CascadeType.PERSIST }, orphanRemoval = true)
    @JoinColumn(name = "yhteystiedot")
    @Valid
    protected Yhteystieto yhteystiedot;
@@ -80,7 +80,8 @@ public class Henkilö implements Serializable
    { @JoinColumn(name = "rooli", referencedColumnName = "id") })
    protected List<Rooli> roolit = new ArrayList<Rooli>();
 
-   @ManyToOne
+   @ManyToOne(cascade =
+   { CascadeType.PERSIST })
    @JoinColumn(name = "perhe")
    protected Perhe perhe;
 

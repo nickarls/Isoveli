@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.google.common.io.ByteStreams;
 
+import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.util.Tuonti;
 import fi.budokwai.isoveli.util.Tuontitulos;
 
@@ -107,16 +108,36 @@ public class TuontiTest
          Assert.assertNotNull(harr.getYhteystiedot());
          if (harr.getYhteystiedot().getPuhelinnumero().length() <= 3)
          {
-            Assert.assertEquals(true, harr.isInfotiskille());
-            Assert.assertEquals(true, harr.getHuomautus() != null && harr.getHuomautus().contains("puhelinnumero"));
+            tarkistaTiskihuomautus(harr, "puhelinnumero");
          }
          if (harr.getYhteystiedot().getSähköposti().length() <= 3)
          {
-            Assert.assertEquals(true, harr.isInfotiskille());
-            Assert.assertEquals(true, harr.getHuomautus() != null && harr.getHuomautus().contains("sähköposti"));
+            tarkistaTiskihuomautus(harr, "sähköposti");
          }
          Assert.assertTrue(harr.getYhteystiedot().isSähköpostilistalla());
       });
+   }
+
+   @Test
+   public void testHarrastajienPerustiedot()
+   {
+      tuontitulos.getHarrastajat().forEach(h -> {
+         Assert.assertNotNull(h.getEtunimi());
+         Assert.assertNotNull(h.getSukunimi());
+         Assert.assertNotNull(h.getSukupuoli());
+         Assert.assertNotNull(h.getSyntynyt());
+         Assert.assertNotNull(h.getJäsennumero());
+         if (h.getIce() == null)
+         {
+            tarkistaTiskihuomautus(h, "ICE");
+         }
+      });
+   }
+
+   private void tarkistaTiskihuomautus(Harrastaja harrastaja, String viesti)
+   {
+      Assert.assertTrue(harrastaja.isInfotiskille());
+      Assert.assertTrue(harrastaja.getHuomautus() != null && harrastaja.getHuomautus().contains(viesti));
    }
 
    @Test
@@ -127,13 +148,11 @@ public class TuontiTest
             Assert.assertNotNull(huo.getYhteystiedot());
             if (huo.getYhteystiedot().getPuhelinnumero().length() <= 3)
             {
-               Assert.assertEquals(true, harr.isInfotiskille());
-               Assert.assertEquals(true, harr.getHuomautus() != null && harr.getHuomautus().contains("puhelinnumero"));
+               tarkistaTiskihuomautus(harr, "puhelinnumero");
             }
             if (huo.getYhteystiedot().getSähköposti().length() <= 3)
             {
-               Assert.assertEquals(true, harr.isInfotiskille());
-               Assert.assertEquals(true, harr.getHuomautus() != null && harr.getHuomautus().contains("sähköposti"));
+               tarkistaTiskihuomautus(harr, "sähköposti");
             }
             Assert.assertTrue(huo.getYhteystiedot().isSähköpostilistalla());
 
@@ -142,7 +161,17 @@ public class TuontiTest
    }
 
    @Test
-   public void uniikitPerheenjäsenet()
+   public void uniikitJäsennumerotTest()
+   {
+      Set<String> jäsennumerot = new HashSet<>();
+      tuontitulos.getHarrastajat().stream().forEach(h -> {
+         Assert.assertFalse(jäsennumerot.contains(h.getJäsennumero()));
+         jäsennumerot.add(h.getJäsennumero());
+      });
+   }
+
+   @Test
+   public void uniikitPerheenjäsenetTest()
    {
       tuontitulos.getHarrastajat().stream().filter(h -> h.getPerhe() != null).map(h -> h.getPerhe()).forEach(p -> {
          Set<String> nimet = new HashSet<>();

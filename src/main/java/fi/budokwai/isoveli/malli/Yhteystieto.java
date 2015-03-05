@@ -26,11 +26,11 @@ public class Yhteystieto
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
-   @Size(max = 20)
+   @Size(max = 30)
    private String puhelinnumero = "";
 
    @Column(name = "sahkoposti")
-   @Size(max = 30)
+   @Size(max = 50)
    private String sähköposti = "";
 
    @Column(name = "sahkopostilistalla")

@@ -32,6 +32,7 @@ public class Perustesti
          .addAsWebInfResource("jboss-deployment-structure.xml")
          .addAsResource("persistence.xml", "META-INF/persistence.xml")
          .addAsResource("laskupohja.pdf", "laskupohja.pdf")
+         .addAsResource("jasenrekisteri.xls", "jasenrekisteri.xls")
          .addAsLibraries(
             Maven
                .resolver()

@@ -37,7 +37,8 @@ public class Perhe
 
    private String nimi;
 
-   @OneToMany(mappedBy = "perhe")
+   @OneToMany(mappedBy = "perhe", cascade =
+   { CascadeType.PERSIST })
    private List<Henkilö> perheenjäsenet = new ArrayList<Henkilö>();
 
    @OneToOne(cascade =

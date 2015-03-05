@@ -2,10 +2,17 @@ package fi.budokwai.isoveli.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+
+import javax.inject.Inject;
 
 import jxl.Sheet;
 import jxl.Workbook;
@@ -15,23 +22,37 @@ import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Perhe;
+import fi.budokwai.isoveli.malli.Sukupuoli;
+import fi.budokwai.isoveli.malli.Vyöarvo;
+import fi.budokwai.isoveli.malli.Vyökoe;
 import fi.budokwai.isoveli.malli.Yhteystieto;
 
 public class Tuonti
 {
+
+   private Set<String> jäsennumerot = new HashSet<>();
+
+   @Inject
+   private List<Vyöarvo> vyöarvot;
 
    private boolean tyhjä(String s)
    {
       return s == null || "".equals(s);
    }
 
-   public Tuontitulos tuoJäsenrekisteri(byte[] excel) throws BiffException, IOException
+   public Tuontitulos tuoJäsenrekisteri(byte[] excel)
    {
-      Tuontitulos tulos = new Tuontitulos();
-      Workbook työkirja = Workbook.getWorkbook(new ByteArrayInputStream(excel));
-      Map<Integer, Perhe> perheet = haePerheet(työkirja.getSheet(1), tulos);
-      haeHarrastajat(työkirja.getSheet(0), perheet, tulos);
-      return tulos;
+      try
+      {
+         Tuontitulos tulos = new Tuontitulos();
+         Workbook työkirja = Workbook.getWorkbook(new ByteArrayInputStream(excel));
+         Map<Integer, Perhe> perheet = haePerheet(työkirja.getSheet(1), tulos);
+         haeHarrastajat(työkirja.getSheet(0), perheet, tulos);
+         return tulos;
+      } catch (IOException | BiffException e)
+      {
+         throw new IsoveliPoikkeus("Excelin avaus epäonnistui", e);
+      }
    }
 
    private void haeHarrastajat(Sheet välilehti, Map<Integer, Perhe> perheet, Tuontitulos tulos)
@@ -39,16 +60,90 @@ public class Tuonti
       for (int rivi = 2; rivi < välilehti.getRows(); rivi++)
       {
          Harrastaja harrastaja = new Harrastaja();
-         harrastaja.setSukunimi(välilehti.getCell(2, rivi).getContents().trim());
-         harrastaja.setEtunimi(välilehti.getCell(3, rivi).getContents().trim());
+         asetaNimi(välilehti, rivi, harrastaja);
+         asetaLisenssinumero(välilehti, rivi, harrastaja);
+         asetaSukupuoli(välilehti, rivi, harrastaja);
          asetaSyntymäaika(välilehti, rivi, harrastaja);
+         asetaJäsennumero(harrastaja);
          String perheId = välilehti.getCell(14, rivi).getContents().trim();
          valitsePerhe(perheId, perheet, harrastaja, tulos);
          asetaOmaOsoite(välilehti, rivi, harrastaja);
          asetaOmaYhteystieto(välilehti, rivi, harrastaja);
          säädäPerhetiedot(harrastaja);
+         asetaVyöarvo(välilehti, rivi, harrastaja, tulos);
          tulos.lisääHarrastaja(harrastaja);
       }
+   }
+
+   private void asetaVyöarvo(Sheet välilehti, int rivi, Harrastaja harrastaja, Tuontitulos tulos)
+   {
+      if (vyöarvot == null)
+      {
+         return;
+      }
+      String vyöarvoString = välilehti.getCell(17, rivi).getContents().trim();
+      if (tyhjä(vyöarvoString))
+      {
+         return;
+      }
+      Optional<Vyöarvo> vyöarvo = vyöarvot.stream().filter(v -> v.getNimi().equals(vyöarvoString)).findFirst();
+      if (vyöarvo.isPresent())
+      {
+         Vyökoe vyökoe = new Vyökoe();
+         vyökoe.setHarrastaja(harrastaja);
+         vyökoe.setPäivä(new Date());
+         vyökoe.setVyöarvo(vyöarvo.get());
+         harrastaja.getVyökokeet().add(vyökoe);
+      } else
+      {
+         tulos.lisääVirhe(String.format("Harrastajalla %s tuntematon vyöarvo %s", harrastaja.getNimi(), vyöarvoString));
+      }
+   }
+
+   private void asetaLisenssinumero(Sheet välilehti, int rivi, Harrastaja harrastaja)
+   {
+      harrastaja.setLisenssinumero(välilehti.getCell(1, rivi).getContents().trim());
+      if (tyhjä(harrastaja.getLisenssinumero()))
+      {
+         harrastaja.setLisenssinumero(null);
+      }
+   }
+
+   private void asetaJäsennumero(Harrastaja harrastaja)
+   {
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+      String jäsennumero = null;
+      int i = 1;
+      do
+      {
+         jäsennumero = String.format("%s-%d", sdf.format(harrastaja.getSyntynyt()), i++);
+      } while (jäsennumerot.contains(jäsennumero));
+      jäsennumerot.add(jäsennumero);
+      harrastaja.setJäsennumero(jäsennumero);
+   }
+
+   private void asetaSukupuoli(Sheet välilehti, int rivi, Harrastaja harrastaja)
+   {
+      String sukupuoli = välilehti.getCell(23, rivi).getContents().trim();
+      switch (sukupuoli)
+      {
+      case "t":
+         harrastaja.setSukupuoli(Sukupuoli.N);
+         break;
+      case "p":
+         harrastaja.setSukupuoli(Sukupuoli.M);
+         break;
+      default:
+         throw new IsoveliPoikkeus(String.format("Tuntematon sukupuoli %s harrastajalla %s", sukupuoli,
+            harrastaja.getNimi()));
+      }
+      harrastaja.setEtunimi(välilehti.getCell(3, rivi).getContents().trim());
+   }
+
+   private void asetaNimi(Sheet välilehti, int rivi, Harrastaja harrastaja)
+   {
+      harrastaja.setSukunimi(välilehti.getCell(2, rivi).getContents().trim());
+      harrastaja.setEtunimi(välilehti.getCell(3, rivi).getContents().trim());
    }
 
    private void asetaSyntymäaika(Sheet välilehti, int rivi, Harrastaja harrastaja)
@@ -148,6 +243,23 @@ public class Tuonti
          {
             harrastaja.setHuoltaja(harrastaja.getPerhe().getHuoltajat().iterator().next());
          }
+         harrastaja.setIce(harrastaja.getHuoltaja().getYhteystiedot().getPuhelinnumero());
+      } else
+      {
+         if (harrastaja.getPerhe() != null)
+         {
+            Optional<Henkilö> toinenTäysiIkäinen = harrastaja.getPerhe().getHuoltajat().stream()
+               .filter(h -> !h.getNimi().equals(harrastaja.getNimi())).filter(h -> h.getYhteystiedot() != null)
+               .findFirst();
+            if (toinenTäysiIkäinen.isPresent())
+            {
+               harrastaja.setIce(toinenTäysiIkäinen.get().getYhteystiedot().getPuhelinnumero());
+            }
+         }
+      }
+      if (harrastaja.getIce() == null)
+      {
+         harrastaja.lisääHuomautus("Tarkista ICE-numero");
       }
 
    }
@@ -177,18 +289,9 @@ public class Tuonti
          return;
       }
       perhe.setNimi(harrastaja.getSukunimi());
-      if (tyhjä(perhe.getOsoite().getOsoite()))
-      {
-         perhe.getOsoite().setOsoite(harrastaja.getOsoite().getOsoite());
-      }
-      if (tyhjä(perhe.getOsoite().getPostinumero()))
-      {
-         perhe.getOsoite().setPostinumero(harrastaja.getOsoite().getPostinumero());
-      }
-      if (tyhjä(perhe.getOsoite().getKaupunki()))
-      {
-         perhe.getOsoite().setKaupunki(harrastaja.getOsoite().getKaupunki());
-      }
+      perhe.getOsoite().setOsoite(harrastaja.getOsoite().getOsoite());
+      perhe.getOsoite().setPostinumero(harrastaja.getOsoite().getPostinumero());
+      perhe.getOsoite().setKaupunki(harrastaja.getOsoite().getKaupunki());
       if (tyhjä(perhe.getOsoite().getOsoite()))
       {
          perhe.getOsoite().setOsoite("Kirstinkatu 1");
@@ -204,6 +307,7 @@ public class Tuonti
          perhe.getOsoite().setKaupunki("Turku");
          harrastaja.lisääHuomautus("Tarkista perheen osoitetiedot (kaupunki)");
       }
+
       perhe.getHuoltajat().forEach(h -> {
          int i = 1;
          if (tyhjä(h.getEtunimi()))
@@ -226,6 +330,7 @@ public class Tuonti
             harrastaja.lisääHuomautus(String.format("Huoltajan %s sähköposti puuttuu", h.getNimi()));
          }
       });
+      perhe.setId(0);
    }
 
    private Map<Integer, Perhe> haePerheet(Sheet välilehti, Tuontitulos tulos)

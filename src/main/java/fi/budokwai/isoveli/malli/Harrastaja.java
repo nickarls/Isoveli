@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.inject.Typed;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -49,11 +50,13 @@ public class Harrastaja extends Henkilö
 {
    private static final long serialVersionUID = 1L;
 
-   @OneToOne
+   @OneToOne(cascade =
+   { CascadeType.PERSIST })
    @JoinColumn(name = "huoltaja")
    private Henkilö huoltaja;
 
-   @OneToMany(mappedBy = "harrastaja")
+   @OneToMany(mappedBy = "harrastaja", cascade =
+   { CascadeType.PERSIST })
    @OrderBy("päivä asc")
    private List<Vyökoe> vyökokeet = new ArrayList<Vyökoe>();
 

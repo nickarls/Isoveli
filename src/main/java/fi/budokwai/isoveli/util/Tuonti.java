@@ -3,7 +3,9 @@ package fi.budokwai.isoveli.util;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 
 import jxl.Sheet;
 import jxl.Workbook;
@@ -106,10 +108,6 @@ public class Tuonti
 
    private void valitsePerhe(String perheId, Map<Integer, Perhe> perheet, Harrastaja harrastaja, Tuontitulos tulos)
    {
-      if ("Edelman".equals(harrastaja.getSukunimi()))
-      {
-         System.out.println("!");
-      }
       if (!tyhjä(perheId))
       {
          int pid = Integer.parseInt(perheId);
@@ -119,6 +117,15 @@ public class Tuonti
          } else
          {
             Perhe perhe = perheet.get(pid);
+            Iterator<Henkilö> i = perhe.getPerheenjäsenet().iterator();
+            while (i.hasNext())
+            {
+               Henkilö h = i.next();
+               if (harrastaja.getNimi().equals(h.getNimi()))
+               {
+                  i.remove();
+               }
+            }
             perhe.lisääPerheenjäsen(harrastaja);
          }
       }
@@ -233,6 +240,10 @@ public class Tuonti
             continue;
          }
          perhe.setId(Integer.parseInt(pid));
+         if (perheet.containsKey(perhe.getId()))
+         {
+            perhe = perheet.get(perhe.getId());
+         }
 
          Henkilö huoltaja = new Henkilö();
          String nimi = välilehti.getCell(1, rivi).getContents().trim();

@@ -21,11 +21,11 @@ public class TuontiTest
    @AfterClass
    public static void output()
    {
-//      Assert.assertTrue(tuontitulos.isOK());
-//      Assert.assertEquals(247, tuontitulos.getHarrastajat().size());
+      // Assert.assertTrue(tuontitulos.isOK());
+      // Assert.assertEquals(247, tuontitulos.getHarrastajat().size());
       tuontitulos.getVirheet().stream().forEach(v -> System.out.println(v));
       tuontitulos.getHarrastajat().stream().filter(h -> h.isInfotiskille())
-         .forEach(h -> System.out.println(String.format("%s:%s", h.getNimi(), h.getHuomautus())));
+         .forEach(h -> System.out.println(String.format("%s:\t%s", h.getNimi(), h.getHuomautus())));
    }
 
    @BeforeClass
@@ -147,6 +147,10 @@ public class TuontiTest
       tuontitulos.getHarrastajat().stream().filter(h -> h.getPerhe() != null).map(h -> h.getPerhe()).forEach(p -> {
          Set<String> nimet = new HashSet<>();
          p.getPerheenjäsenet().forEach(h -> {
+            if (nimet.contains(h.getNimi()))
+            {
+               System.out.println("!");
+            }
             Assert.assertFalse(nimet.contains(h.getNimi()));
             nimet.add(h.getNimi());
          });

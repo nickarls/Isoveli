@@ -87,7 +87,8 @@ public class Perhe
 
    public String getKuvaus()
    {
-      String etunimet = perheenjäsenet.stream().map(h -> h.isAlaikäinen() ? h.getEtunimi() : String.format("*%s", h.getEtunimi()))
+      String etunimet = perheenjäsenet.stream()
+         .map(h -> h.isAlaikäinen() ? h.getEtunimi() : String.format("*%s", h.getEtunimi()))
          .collect(Collectors.joining(", "));
       return "".equals(etunimet) ? nimi : String.format("%s (%s)", nimi, etunimet);
    }

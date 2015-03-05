@@ -13,6 +13,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
+import com.google.common.base.MoreObjects;
+
 @Entity
 @DynamicInsert
 @DynamicUpdate
@@ -25,11 +27,11 @@ public class Yhteystieto
    private int id;
 
    @Size(max = 20)
-   private String puhelinnumero;
+   private String puhelinnumero = "";
 
    @Column(name = "sahkoposti")
    @Size(max = 30)
-   private String sähköposti;
+   private String sähköposti = "";
 
    @Column(name = "sahkopostilistalla")
    @Type(type = "KylläEi")
@@ -84,5 +86,11 @@ public class Yhteystieto
    public boolean isLöytyyPuhelin()
    {
       return puhelinnumero != null;
+   }
+
+   @Override
+   public String toString()
+   {
+      return String.format("%s/%s(%s)", puhelinnumero, sähköposti, sähköpostilistalla);
    }
 }

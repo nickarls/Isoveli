@@ -38,7 +38,8 @@ import fi.budokwai.isoveli.util.DateUtil;
 @DynamicUpdate
 @Table(name = "harrastaja")
 @NamedQueries(
-{ @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.jäsennumero=:kortti"),
+{
+      @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.jäsennumero=:kortti"),
       @NamedQuery(name = "treenivetäjät", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi"),
       @NamedQuery(name = "sama_syntymäpäivä", query = "select h from Harrastaja h where h.syntynyt = :päivä"),
       @NamedQuery(name = "harrastajat", query = "select h from Harrastaja h where h.arkistoitu='E' order by h.sukunimi, h.etunimi") })
@@ -452,5 +453,17 @@ public class Harrastaja extends Henkilö
       Optional<Sopimus> vanha = sopimukset.stream().filter(s -> s.getTyyppi().getId() == sopimustyyppi.getId())
          .findFirst();
       return vanha.isPresent();
+   }
+
+   public void lisääHuomautus(String huomautus)
+   {
+      if (this.huomautus == null)
+      {
+         this.huomautus = huomautus;
+      } else
+      {
+         this.huomautus = this.huomautus + "\\n" + huomautus;
+      }
+      infotiskille = true;
    }
 }

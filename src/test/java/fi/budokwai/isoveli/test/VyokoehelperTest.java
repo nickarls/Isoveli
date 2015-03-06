@@ -29,7 +29,7 @@ public class VyokoehelperTest extends Perustesti
    @Test
    public void testVyoarvotOlemassa()
    {
-      Assert.assertEquals(11, vyökoehelper.getVyöarvot().size());
+      Assert.assertEquals(18, vyökoehelper.getVyöarvot().size());
    }
 
    @Test
@@ -50,8 +50,8 @@ public class VyokoehelperTest extends Perustesti
    @Test
    public void testSeuraavaVyoarvo3dan()
    {
-      Vyöarvo dan3 = entityManager.find(Vyöarvo.class, 11);
-      Vyöarvo seuraava = vyökoehelper.haeSeuraavaVyöarvo(dan3);
+      Vyöarvo dan6 = entityManager.find(Vyöarvo.class, 18);
+      Vyöarvo seuraava = vyökoehelper.haeSeuraavaVyöarvo(dan6);
       Assert.assertEquals(Vyöarvo.EI_OOTA, seuraava);
    }
 

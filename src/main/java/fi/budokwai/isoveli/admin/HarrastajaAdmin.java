@@ -485,8 +485,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       vyökoe = new Vyökoe();
       Vyöarvo seuraavaVyöarvo = vyökoehelper.haeSeuraavaVyöarvo(harrastaja.getTuoreinVyöarvo());
       vyökoe.setVyöarvo(seuraavaVyöarvo);
-      vyökoe.setPäivä(new Date());
-      vyökoe.setHarrastaja(harrastaja);
+      harrastaja.lisääVyökoe(vyökoe);
       vyökoeRSM.setAllSelected(false);
       info("Uusi vyökoe alustettu");
    }

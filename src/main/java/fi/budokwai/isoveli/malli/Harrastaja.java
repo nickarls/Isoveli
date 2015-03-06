@@ -56,7 +56,7 @@ public class Harrastaja extends Henkilö
    private Henkilö huoltaja;
 
    @OneToMany(mappedBy = "harrastaja", cascade =
-   { CascadeType.PERSIST })
+   { CascadeType.PERSIST, CascadeType.MERGE })
    @OrderBy("päivä asc")
    private List<Vyökoe> vyökokeet = new ArrayList<Vyökoe>();
 
@@ -476,5 +476,11 @@ public class Harrastaja extends Henkilö
       sopimus.setHarrastaja(this);
       sopimukset.add(sopimus);
       return sopimus;
+   }
+
+   public void lisääVyökoe(Vyökoe vyökoe)
+   {
+      vyökoe.setHarrastaja(this);
+      vyökokeet.add(vyökoe);
    }
 }

@@ -44,7 +44,7 @@ public class Vyökoe
 
    @Temporal(TemporalType.DATE)
    @Column(name = "paiva")
-   private Date päivä;
+   private Date päivä = new Date();
 
    public Date getPäivä()
    {

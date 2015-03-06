@@ -35,9 +35,6 @@ public class HarrastajaTest extends Perustesti
    private HarrastajaAdmin harrastajaAdmin;
 
    @Inject
-   private PerustietoAdmin perustietoAdmin;
-
-   @Inject
    private EntityManager entityManager;
 
    @Inject
@@ -276,8 +273,9 @@ public class HarrastajaTest extends Perustesti
    public void testLisaaSopimus()
    {
       Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
-      Sopimustyyppi j‰senmaksu = perustietoAdmin.getSopimustyypit().stream().filter(s -> s.isJ‰senmaksutyyppi())
-         .findFirst().get();
+      List<Sopimustyyppi> sopimustyypit = entityManager.createNamedQuery("sopimustyypit", Sopimustyyppi.class)
+         .getResultList();
+      Sopimustyyppi j‰senmaksu = sopimustyypit.stream().filter(s -> s.isJ‰senmaksutyyppi()).findFirst().get();
       Sopimus sopimus = new Sopimus(j‰senmaksu);
       harrastaja.lis‰‰Sopimus(sopimus);
       harrastajaAdmin.setHarrastaja(harrastaja);
@@ -370,7 +368,8 @@ public class HarrastajaTest extends Perustesti
          harrastajaAdmin.poistaSopimus();
       } catch (IsoveliPoikkeus e)
       {
-         Assert.assertEquals("Sopimuksella on sopimuslaskuja ja sit‰ ei voi poistaa (1kpl: 01.01.2013-30.05.2013...)", e.getMessage());
+         Assert.assertEquals("Sopimuksella on sopimuslaskuja ja sit‰ ei voi poistaa (1kpl: 01.01.2013-30.05.2013...)",
+            e.getMessage());
       }
       entityManager.clear();
       harrastaja = entityManager.find(Harrastaja.class, 1);
@@ -381,7 +380,7 @@ public class HarrastajaTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "cleanup.sql", "seed.sql", "nicklas.sql"})
+   { "cleanup.sql", "seed.sql", "nicklas.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testLisaaVyokoe()
    {

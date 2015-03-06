@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.persistence.ApplyScriptBefore;
 import org.jboss.arquillian.persistence.Cleanup;
 import org.jboss.arquillian.persistence.TestExecutionPhase;
 import org.jboss.arquillian.transaction.api.annotation.Transactional;
@@ -34,7 +33,7 @@ public class TuontitallenusTest extends Perustesti
 
    @Test
    @Transactional
-//   @ApplyScriptBefore("seed.sql")
+   // @ApplyScriptBefore("seed.sql")
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testTuoJaTallenna() throws IOException
    {

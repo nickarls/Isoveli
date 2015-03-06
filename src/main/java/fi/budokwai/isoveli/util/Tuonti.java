@@ -289,9 +289,8 @@ public class Tuonti
          return;
       }
       perhe.setNimi(harrastaja.getSukunimi());
-      perhe.getOsoite().setOsoite(harrastaja.getOsoite().getOsoite());
-      perhe.getOsoite().setPostinumero(harrastaja.getOsoite().getPostinumero());
-      perhe.getOsoite().setKaupunki(harrastaja.getOsoite().getKaupunki());
+      perhe.setOsoite(harrastaja.getOsoite());
+      harrastaja.setOsoite(null);
       if (tyhjä(perhe.getOsoite().getOsoite()))
       {
          perhe.getOsoite().setOsoite("Kirstinkatu 1");

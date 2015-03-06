@@ -1,6 +1,7 @@
 package fi.budokwai.isoveli.test;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,7 +12,9 @@ import org.junit.Test;
 
 import com.google.common.io.ByteStreams;
 
+import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.Harrastaja;
+import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.util.Tuonti;
 import fi.budokwai.isoveli.util.Tuontitulos;
 
@@ -62,7 +65,23 @@ public class TuontiTest
             Assert.assertNotNull(h.getYhteystiedot());
             Assert.assertTrue(h.getNimi().length() > 5);
          });
+         p.getPerheenjäsenet().stream().forEach(h -> {
+            Assert.assertNull(kentänArvo(h, "osoite"));
+         });
       });
+   }
+
+   private Object kentänArvo(Object olio, String kenttänimi)
+   {
+      try
+      {
+         Field kenttä = Henkilö.class.getDeclaredField(kenttänimi);
+         kenttä.setAccessible(true);
+         return kenttä.get(olio);
+      } catch (Exception e)
+      {
+         throw new IsoveliPoikkeus(String.format("Ei voinut lukea kenttää %s oliosta %s", kenttänimi, olio), e);
+      }
    }
 
    @Test

@@ -6,8 +6,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.persistence.ApplyScriptAfter;
 import org.jboss.arquillian.persistence.ApplyScriptBefore;
+import org.jboss.arquillian.persistence.Cleanup;
+import org.jboss.arquillian.persistence.TestExecutionPhase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,8 +31,8 @@ public class LaskutusTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "seed.sql", "huoltajaperhe.sql", "emilsopimus.sql" })
-   @ApplyScriptAfter("cleanup.sql")
+   { "cleanup.sql", "seed.sql", "huoltajaperhe.sql", "emilsopimus.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testLaskutushenkiloHuoltajalla()
    {
       laskutusAdmin.laskutaSopimukset();
@@ -41,8 +42,8 @@ public class LaskutusTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "seed.sql", "huoltajaperhe.sql", "emilsopimus.sql" })
-   @ApplyScriptAfter("cleanup.sql")
+   { "cleanup.sql", "seed.sql", "huoltajaperhe.sql", "emilsopimus.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistalaskurivi()
    {
       laskutusAdmin.laskutaSopimukset();
@@ -61,8 +62,8 @@ public class LaskutusTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "seed.sql", "harrastajaperhe.sql", "emilsopimus.sql" })
-   @ApplyScriptAfter("cleanup.sql")
+   { "cleanup.sql", "seed.sql", "harrastajaperhe.sql", "emilsopimus.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testLaskutushenkiloTaysiikaisellaPerheenjasenella()
    {
       laskutusAdmin.laskutaSopimukset();
@@ -72,8 +73,8 @@ public class LaskutusTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "seed.sql", "harrastajaperhe.sql", "emilsopimus.sql", "nicklassopimus.sql" })
-   @ApplyScriptAfter("cleanup.sql")
+   { "cleanup.sql", "seed.sql", "harrastajaperhe.sql", "emilsopimus.sql", "nicklassopimus.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testLaskutushenkiloTaysiikaisella()
    {
       laskutusAdmin.laskutaSopimukset();
@@ -83,8 +84,8 @@ public class LaskutusTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "seed.sql", "harrastajaperhe.sql", "harrastajasopimukset.sql" })
-   @ApplyScriptAfter("cleanup.sql")
+   { "cleanup.sql", "seed.sql", "harrastajaperhe.sql", "harrastajasopimukset.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testRelaatiotJaTilat()
    {
       laskutusAdmin.laskutaSopimukset();
@@ -109,8 +110,8 @@ public class LaskutusTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "seed.sql", "harrastajaperhe.sql", "harrastajasopimukset.sql" })
-   @ApplyScriptAfter("cleanup.sql")
+   { "cleanup.sql", "seed.sql", "harrastajaperhe.sql", "harrastajasopimukset.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPerhealennus()
    {
       laskutusAdmin.laskutaSopimukset();
@@ -121,8 +122,8 @@ public class LaskutusTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "seed.sql", "harrastajaperhe.sql", "kertasopimukset.sql" })
-   @ApplyScriptAfter("cleanup.sql")
+   { "cleanup.sql", "seed.sql", "harrastajaperhe.sql", "kertasopimukset.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPerhealennusVainHarjoittelumaksuista()
    {
       laskutusAdmin.laskutaSopimukset();
@@ -132,8 +133,8 @@ public class LaskutusTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "seed.sql", "harrastajaperhe.sql", "erihintaisetsopimukset.sql" })
-   @ApplyScriptAfter("cleanup.sql")
+   { "cleanup.sql", "seed.sql", "harrastajaperhe.sql", "erihintaisetsopimukset.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPerhealennusKohdistuuKallimpaan()
    {
       laskutusAdmin.laskutaSopimukset();
@@ -144,8 +145,8 @@ public class LaskutusTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "seed.sql", "harrastajaperhe.sql", "tauko.sql" })
-   @ApplyScriptAfter("cleanup.sql")
+   { "cleanup.sql", "seed.sql", "harrastajaperhe.sql", "tauko.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testTauko()
    {
       laskutusAdmin.laskutaSopimukset();

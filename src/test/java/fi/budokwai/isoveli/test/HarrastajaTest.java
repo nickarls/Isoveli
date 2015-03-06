@@ -379,4 +379,20 @@ public class HarrastajaTest extends Perustesti
       Assert.assertNotNull(sopimus);
    }
 
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql"})
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testLisaaVyokoe()
+   {
+      Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      harrastajaAdmin.lisääVyökoe();
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      harrastaja = entityManager.find(Harrastaja.class, 1);
+      Assert.assertEquals(1, harrastaja.getVyökokeet().size());
+      Assert.assertEquals("8.kup", harrastaja.getVyökokeet().iterator().next().getVyöarvo().getNimi());
+   }
+
 }

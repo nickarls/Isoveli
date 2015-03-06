@@ -16,7 +16,7 @@ public class PerheTesti extends Perustesti
       Henkilö n = teeHenkilö("Nicklas Karlsson");
       Henkilö h = teeHenkilö("Heidi Karlsson");
       Perhe perhe = teePerhe("Karlsson", n, h);
-      Assert.assertEquals("Karlsson (Nicklas, Heidi)", perhe.getKuvaus());
+      Assert.assertEquals("Karlsson (*Nicklas, *Heidi)", perhe.getKuvaus());
    }
    
    @Test

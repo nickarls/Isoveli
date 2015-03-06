@@ -7,13 +7,12 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.persistence.ApplyScriptAfter;
 import org.jboss.arquillian.persistence.ApplyScriptBefore;
+import org.jboss.arquillian.persistence.Cleanup;
+import org.jboss.arquillian.persistence.TestExecutionPhase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.google.inject.Exposed;
 
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.admin.PerustietoAdmin;
@@ -32,7 +31,9 @@ public class VyoarvoTest extends Perustesti
    private Instance<List<Vyöarvo>> vyöarvot;
 
    @Test
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testLisaaVyoarvo()
    {
       Vyöarvo vyöarvo = new Vyöarvo();
@@ -51,8 +52,9 @@ public class VyoarvoTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("keltainenvyo.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "keltainenvyo.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testMuokkaaVyoarvo()
    {
       Vyöarvo vyöarvo = entityManager.find(Vyöarvo.class, 1);
@@ -65,8 +67,9 @@ public class VyoarvoTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("keltainenvyo.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "keltainenvyo.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testArkistoiVyoarvo()
    {
       Assert.assertEquals(1, vyöarvot.get().size());
@@ -81,8 +84,9 @@ public class VyoarvoTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("keltainenvyo.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "keltainenvyo.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistaVyoarvoEiKaytossa()
    {
       Vyöarvo vyöarvo = entityManager.find(Vyöarvo.class, 1);
@@ -96,9 +100,9 @@ public class VyoarvoTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("vyoarvokaytossa.sql")
-   @ApplyScriptAfter("cleanup.sql")
-   @Exposed
+   @ApplyScriptBefore(
+   { "cleanup.sql", "vyoarvokaytossa.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistaVyoarvoKaytossa()
    {
       Vyöarvo vyöarvo = entityManager.find(Vyöarvo.class, 1);

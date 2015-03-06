@@ -8,8 +8,9 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.persistence.ApplyScriptAfter;
 import org.jboss.arquillian.persistence.ApplyScriptBefore;
+import org.jboss.arquillian.persistence.Cleanup;
+import org.jboss.arquillian.persistence.TestExecutionPhase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +33,9 @@ public class RooliTest extends Perustesti
    private Instance<List<Rooli>> roolit;
 
    @Test
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testLisaaRooli()
    {
       Rooli rooli = new Rooli();
@@ -45,10 +48,11 @@ public class RooliTest extends Perustesti
       rooli = entityManager.createQuery("select r from Rooli r", Rooli.class).getSingleResult();
       Assert.assertNotNull(rooli);
    }
-   
+
    @Test
-   @ApplyScriptBefore("yllapitajarooli.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "yllapitajarooli.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testMuokkaaRooli()
    {
       Rooli rooli = entityManager.find(Rooli.class, 1);
@@ -61,8 +65,9 @@ public class RooliTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("yllapitajarooli.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "yllapitajarooli.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testArkistoiRooli()
    {
       Assert.assertEquals(1, roolit.get().size());
@@ -74,11 +79,12 @@ public class RooliTest extends Perustesti
       Assert.assertEquals(0, roolit.get().size());
       rooli = entityManager.find(Rooli.class, 1);
       Assert.assertNotNull(rooli);
-   }   
-   
+   }
+
    @Test
-   @ApplyScriptBefore("yllapitajarooli.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "yllapitajarooli.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistaRooliEiKaytossa()
    {
       Rooli rooli = entityManager.find(Rooli.class, 1);
@@ -92,8 +98,9 @@ public class RooliTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("roolikaytossa.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "roolikaytossa.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistaRooliKaytossa()
    {
       Rooli rooli = entityManager.find(Rooli.class, 1);

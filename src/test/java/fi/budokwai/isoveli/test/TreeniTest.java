@@ -10,8 +10,9 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.persistence.ApplyScriptAfter;
 import org.jboss.arquillian.persistence.ApplyScriptBefore;
+import org.jboss.arquillian.persistence.Cleanup;
+import org.jboss.arquillian.persistence.TestExecutionPhase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,8 +37,9 @@ public class TreeniTest extends Perustesti
    private Instance<List<Treeni>> treenit;
 
    @Test
-   @ApplyScriptBefore("perustekniikka.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "perustekniikka.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testLisaaTreeni() throws ParseException
    {
       Treenityyppi treenityyppi = entityManager.find(Treenityyppi.class, 1);
@@ -58,8 +60,9 @@ public class TreeniTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("treenityyppikaytossa.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "treenityyppikaytossa.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testMuokkaaTreeni()
    {
       Treeni treeni = entityManager.find(Treeni.class, 1);
@@ -72,8 +75,9 @@ public class TreeniTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("treenityyppikaytossa.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "treenityyppikaytossa.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testArkistoiTreeni()
    {
       Assert.assertEquals(1, treenit.get().size());
@@ -88,8 +92,9 @@ public class TreeniTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("treenityyppikaytossa.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "treenityyppikaytossa.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistaTreeniEiKaytossa()
    {
       Treeni treeni = entityManager.find(Treeni.class, 1);
@@ -105,8 +110,9 @@ public class TreeniTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("treenikaytossa.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "treenikaytossa.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistaTreeniKaytossa()
    {
       Treeni treeni = entityManager.find(Treeni.class, 1);

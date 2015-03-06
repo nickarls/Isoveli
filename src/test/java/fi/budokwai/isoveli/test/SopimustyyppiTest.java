@@ -8,8 +8,9 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.persistence.ApplyScriptAfter;
 import org.jboss.arquillian.persistence.ApplyScriptBefore;
+import org.jboss.arquillian.persistence.Cleanup;
+import org.jboss.arquillian.persistence.TestExecutionPhase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +33,9 @@ public class SopimustyyppiTest extends Perustesti
    private Instance<List<Sopimustyyppi>> sopimustyypit;
 
    @Test
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testLisaaSopimustyyppi()
    {
       Sopimustyyppi sopimustyyppi = new Sopimustyyppi();
@@ -48,8 +51,9 @@ public class SopimustyyppiTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("jasenmaksu.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "jasenmaksu.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testMuokkaaSopimustyyppi()
    {
       Sopimustyyppi sopimustyyppi = entityManager.find(Sopimustyyppi.class, 1);
@@ -62,8 +66,9 @@ public class SopimustyyppiTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("jasenmaksu.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "jasenmaksu.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testArkistoiSopimustyyppi()
    {
       Assert.assertEquals(1, sopimustyypit.get().size());
@@ -75,10 +80,12 @@ public class SopimustyyppiTest extends Perustesti
       Assert.assertEquals(0, sopimustyypit.get().size());
       sopimustyyppi = entityManager.find(Sopimustyyppi.class, 1);
       Assert.assertNotNull(sopimustyyppi);
-   } 
+   }
+
    @Test
-   @ApplyScriptBefore("jasenmaksu.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "jasenmaksu.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistaSopimustyyppiEiKaytossa()
    {
       Sopimustyyppi sopimustyyppi = entityManager.find(Sopimustyyppi.class, 1);
@@ -92,8 +99,9 @@ public class SopimustyyppiTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("sopimustyyppikaytossa.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "sopimustyyppikaytossa.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistaSopimustyyppiKaytossa()
    {
       Sopimustyyppi sopimustyyppi = entityManager.find(Sopimustyyppi.class, 1);
@@ -103,7 +111,8 @@ public class SopimustyyppiTest extends Perustesti
          perustietoAdmin.poistaSopimustyyppi();
       } catch (IsoveliPoikkeus e)
       {
-         Assert.assertEquals("Sopimustyyppi on käytössä ja sitä ei voi poistaa (1kpl: Nicklas Karlsson...)", e.getMessage());
+         Assert.assertEquals("Sopimustyyppi on käytössä ja sitä ei voi poistaa (1kpl: Nicklas Karlsson...)",
+            e.getMessage());
       }
       entityManager.clear();
       sopimustyyppi = entityManager.find(Sopimustyyppi.class, 1);

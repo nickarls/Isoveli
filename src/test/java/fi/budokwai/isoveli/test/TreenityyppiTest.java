@@ -9,6 +9,8 @@ import javax.persistence.EntityManager;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.persistence.ApplyScriptAfter;
 import org.jboss.arquillian.persistence.ApplyScriptBefore;
+import org.jboss.arquillian.persistence.Cleanup;
+import org.jboss.arquillian.persistence.TestExecutionPhase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +34,9 @@ public class TreenityyppiTest extends Perustesti
    private Instance<List<Treenityyppi>> treenityypit;
 
    @Test
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testLisaaTreenityyppi()
    {
       Treenityyppi treenityyppi = new Treenityyppi();
@@ -49,8 +53,9 @@ public class TreenityyppiTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("perustekniikka.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "perustekniikka.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testMuokkaaTreenityyppi()
    {
       Treenityyppi treenityyppi = entityManager.find(Treenityyppi.class, 1);
@@ -63,8 +68,9 @@ public class TreenityyppiTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("perustekniikka.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "perustekniikka.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testArkistoiTreenityyppi()
    {
       Assert.assertEquals(1, treenityypit.get().size());
@@ -79,8 +85,9 @@ public class TreenityyppiTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("perustekniikka.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "perustekniikka.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistaVyoarvoEiKaytossa()
    {
       Treenityyppi treenityyppi = entityManager.find(Treenityyppi.class, 1);
@@ -94,9 +101,9 @@ public class TreenityyppiTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("treenityyppikaytossa.sql")
-   @ApplyScriptAfter("cleanup.sql")
-   @Exposed
+   @ApplyScriptBefore(
+   { "cleanup.sql", "treenityyppikaytossa.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistaVyoarvoKaytossa()
    {
       Treenityyppi treenityyppi = entityManager.find(Treenityyppi.class, 1);

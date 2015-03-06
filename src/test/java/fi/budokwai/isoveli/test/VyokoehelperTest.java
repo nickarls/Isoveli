@@ -4,8 +4,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.persistence.ApplyScriptAfter;
 import org.jboss.arquillian.persistence.ApplyScriptBefore;
+import org.jboss.arquillian.persistence.Cleanup;
+import org.jboss.arquillian.persistence.TestExecutionPhase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,8 +15,9 @@ import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.util.Vyökoehelper;
 
 @RunWith(Arquillian.class)
-@ApplyScriptBefore("seed.sql")
-@ApplyScriptAfter("cleanup.sql")
+@ApplyScriptBefore(
+{ "cleanup.sql", "seed.sql" })
+@Cleanup(phase = TestExecutionPhase.NONE)
 public class VyokoehelperTest extends Perustesti
 {
    @Inject
@@ -23,7 +25,6 @@ public class VyokoehelperTest extends Perustesti
 
    @Inject
    private EntityManager entityManager;
-  
 
    @Test
    public void testVyoarvotOlemassa()
@@ -45,7 +46,7 @@ public class VyokoehelperTest extends Perustesti
       Vyöarvo seuraava = vyökoehelper.haeSeuraavaVyöarvo(vihreä);
       Assert.assertEquals(seuraava.getNimi(), "5.kup");
    }
-   
+
    @Test
    public void testSeuraavaVyoarvo3dan()
    {

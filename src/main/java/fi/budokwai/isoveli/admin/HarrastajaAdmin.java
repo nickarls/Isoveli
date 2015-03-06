@@ -315,7 +315,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       entityManager.remove(harrastaja);
       entityManager.flush();
       harrastaja = null;
-      haeHarrastajat();
+      harrastajat = null;
       harrastajaRSM.setAllSelected(false);
       info("Harrastaja poistettu");
    }
@@ -336,7 +336,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          (v1, v2) -> Integer.valueOf(v1.getVyöarvo().getJärjestys()).compareTo(
             Integer.valueOf(v2.getVyöarvo().getJärjestys())));
       info("Vyökoe tallennettu");
-      haeHarrastajat();
+      harrastajat = null;
    }
 
    public void tallennaSopimus()
@@ -351,7 +351,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       sopimus = entityManager.merge(sopimus);
       entityManager.flush();
       sopimusRSM.get(sopimus).setSelected(true);
-      haeHarrastajat();
+      harrastajat = null;
       info("Sopimus tallennettu");
    }
 
@@ -361,7 +361,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastaja.getVyökokeet().remove(vyökoe);
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
-      haeHarrastajat();
+      harrastajat = null;
       info("Vyökoe poistettu");
    }
 
@@ -566,6 +566,11 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void setSopimus(Sopimus sopimus)
    {
       this.sopimus = sopimus;
+   }
+
+   public void setVyökoe(Vyökoe vyökoe)
+   {
+      this.vyökoe = vyökoe;
    }
 
 }

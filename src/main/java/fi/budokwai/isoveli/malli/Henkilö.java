@@ -63,13 +63,13 @@ public class Henkilö implements Serializable
    protected String sukunimi;
 
    @OneToOne(cascade =
-   { CascadeType.MERGE, CascadeType.PERSIST }, orphanRemoval = true)
+   { CascadeType.PERSIST }, orphanRemoval = true)
    @JoinColumn(name = "osoite")
    @Valid
    protected Osoite osoite;
 
    @OneToOne(cascade =
-   { CascadeType.MERGE, CascadeType.PERSIST }, orphanRemoval = true)
+   { CascadeType.PERSIST }, orphanRemoval = true)
    @JoinColumn(name = "yhteystiedot")
    @Valid
    protected Yhteystieto yhteystiedot;

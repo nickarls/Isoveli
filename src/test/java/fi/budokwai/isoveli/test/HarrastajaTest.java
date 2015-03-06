@@ -17,7 +17,6 @@ import org.junit.runner.RunWith;
 
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.admin.HarrastajaAdmin;
-import fi.budokwai.isoveli.admin.PerustietoAdmin;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Osoite;
@@ -25,6 +24,7 @@ import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.malli.Sukupuoli;
+import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Yhteystieto;
 import fi.budokwai.isoveli.util.DateUtil;
 
@@ -392,6 +392,57 @@ public class HarrastajaTest extends Perustesti
       harrastaja = entityManager.find(Harrastaja.class, 1);
       Assert.assertEquals(1, harrastaja.getVyökokeet().size());
       Assert.assertEquals("8.kup", harrastaja.getVyökokeet().iterator().next().getVyöarvo().getNimi());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql", "nicklas8kup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testLisaaToinenVyokoe()
+   {
+      Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      harrastajaAdmin.lisääVyökoe();
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      harrastaja = entityManager.find(Harrastaja.class, 1);
+      Assert.assertEquals(2, harrastaja.getVyökokeet().size());
+      Assert.assertEquals("8.kup", harrastaja.getVyökokeet().get(0).getVyöarvo().getNimi());
+      Assert.assertEquals("7.kup", harrastaja.getVyökokeet().get(1).getVyöarvo().getNimi());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql", "nicklas8kup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testMuokkaaVyokoe()
+   {
+      Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      Vyöarvo kup7 = entityManager.find(Vyöarvo.class, 2);
+      harrastajaAdmin.setVyökoe(harrastaja.getVyökokeet().iterator().next());
+      harrastajaAdmin.getVyökoe().setVyöarvo(kup7);
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      harrastaja = entityManager.find(Harrastaja.class, 1);
+      Assert.assertEquals(1, harrastaja.getVyökokeet().size());
+      Assert.assertEquals("7.kup", harrastaja.getVyökokeet().iterator().next().getVyöarvo().getNimi());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql", "nicklas8kup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testPoistaVyokoe()
+   {
+      Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      harrastajaAdmin.setVyökoe(harrastaja.getVyökokeet().iterator().next());
+      harrastajaAdmin.poistaVyökoe();
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      harrastaja = entityManager.find(Harrastaja.class, 1);
+      Assert.assertEquals(0, harrastaja.getVyökokeet().size());
    }
 
 }

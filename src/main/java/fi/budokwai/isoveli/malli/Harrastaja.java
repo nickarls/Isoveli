@@ -56,7 +56,7 @@ public class Harrastaja extends Henkilö
    private Henkilö huoltaja;
 
    @OneToMany(mappedBy = "harrastaja", cascade =
-   { CascadeType.PERSIST, CascadeType.MERGE })
+   { CascadeType.PERSIST }, orphanRemoval = true)
    @OrderBy("päivä asc")
    private List<Vyökoe> vyökokeet = new ArrayList<Vyökoe>();
 

@@ -65,7 +65,7 @@ public class Harrastaja extends Henkilö
    private List<Kisatulos> kisatulokset = new ArrayList<Kisatulos>();
 
    @OneToMany(mappedBy = "harrastaja", cascade =
-   { CascadeType.PERSIST })
+   { CascadeType.PERSIST }, orphanRemoval = true)
    @OrderBy("umpeutuu desc")
    private List<Sopimus> sopimukset = new ArrayList<Sopimus>();
 

@@ -365,14 +365,8 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void poistaSopimus()
    {
-      if (sopimus.isPoistettavissa())
-      {
-         sopimus = entityManager.merge(sopimus);
-         harrastaja.getSopimukset().remove(sopimus);
-      } else
-      {
-         sopimus.setArkistoitu(true);
-      }
+      sopimus = entityManager.merge(sopimus);
+      harrastaja.getSopimukset().remove(sopimus);
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       info("Sopimus poistettu");
@@ -549,6 +543,11 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void setHarrastaja(Harrastaja harrastaja)
    {
       this.harrastaja = harrastaja;
+   }
+
+   public void setSopimus(Sopimus sopimus)
+   {
+      this.sopimus = sopimus;
    }
 
 }

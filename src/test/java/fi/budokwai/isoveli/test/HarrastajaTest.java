@@ -341,14 +341,23 @@ public class HarrastajaTest extends Perustesti
    @ApplyScriptBefore(
    { "cleanup.sql", "seed.sql", "nicklas.sql", "nicklassopimus.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
-   public void testPoistaSopimusEiKäytössä()
+   public void testPoistaSopimusEiKaytossa()
    {
-      throw new UnsupportedOperationException();
+      Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      Sopimus sopimus = entityManager.find(Sopimus.class, 1);
+      harrastajaAdmin.setSopimus(sopimus);
+      harrastajaAdmin.poistaSopimus();
+      entityManager.clear();
+      harrastaja = entityManager.find(Harrastaja.class, 1);
+      Assert.assertEquals(0, harrastaja.getSopimukset().size());
+      sopimus = entityManager.find(Sopimus.class, 1);
+      Assert.assertNull(sopimus);
    }
 
    @Test
    @ApplyScriptBefore(
-   { "cleanup.sql", "seed.sql", "nicklas.sql", "nicklassopimuskäytössä.sql" })
+   { "cleanup.sql", "seed.sql", "nicklas.sql", "nicklassopimuskaytossa.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistaSopimusKäytössä()
    {

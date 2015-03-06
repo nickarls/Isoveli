@@ -22,6 +22,7 @@ import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilˆ;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Perhe;
+import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.malli.Sukupuoli;
 import fi.budokwai.isoveli.malli.Vyˆarvo;
@@ -38,7 +39,7 @@ public class Tuonti
 
    @Inject
    private List<Sopimustyyppi> sopimustyypit;
-   
+
    private boolean tyhj‰(String s)
    {
       return s == null || "".equals(s);
@@ -75,8 +76,70 @@ public class Tuonti
          asetaOmaYhteystieto(v‰lilehti, rivi, harrastaja);
          s‰‰d‰Perhetiedot(harrastaja);
          asetaVyˆarvo(v‰lilehti, rivi, harrastaja, tulos);
+         asetaSopimukset(v‰lilehti, rivi, harrastaja, tulos);
          tulos.lis‰‰Harrastaja(harrastaja);
       }
+   }
+
+   private void asetaSopimukset(Sheet v‰lilehti, int rivi, Harrastaja harrastaja, Tuontitulos tulos)
+   {
+      if (sopimustyypit == null)
+      {
+         return;
+      }
+      teeJ‰sensopimus(harrastaja, tulos);
+      teeHarjoittelusopimus(v‰lilehti, rivi, harrastaja, tulos);
+      if (!harrastaja.isSopimuksetOK()) {
+         harrastaja.lis‰‰Huomautus("Tarkista sopimukset");
+      }
+   }
+
+   private void teeHarjoittelusopimus(Sheet v‰lilehti, int rivi, Harrastaja harrastaja, Tuontitulos tulos)
+   {
+      String maksuperuste = v‰lilehti.getCell(15, rivi).getContents().trim();
+      Optional<Sopimustyyppi> sopimustyyppi = null;
+      switch (maksuperuste)
+      {
+      case "aikuinen":
+         sopimustyyppi = sopimustyypit.stream().filter(s -> "Harjoittelu (18+v)".equals(s.getNimi())).findFirst();
+         break;
+      case "junior":
+         sopimustyyppi = sopimustyypit.stream().filter(s -> "Harjoittelu (7-17v)".equals(s.getNimi())).findFirst();
+         break;
+      case "opiskelija":
+         sopimustyyppi = sopimustyypit.stream().filter(s -> "Harjoittelu (opisk.)".equals(s.getNimi())).findFirst();
+         break;
+      case "kerho":
+         sopimustyyppi = sopimustyypit.stream().filter(s -> "Harjoittelu (4-6v)".equals(s.getNimi())).findFirst();
+         break;
+      case "perheryhm‰":
+         sopimustyyppi = sopimustyypit.stream().filter(s -> "Harjoittelu (18+v)".equals(s.getNimi())).findFirst();
+         break;
+      case "p‰ivyst‰j‰":
+         sopimustyyppi = sopimustyypit.stream().filter(s -> "Harjoittelu (18+v)".equals(s.getNimi())).findFirst();
+         break;
+      case "":
+         sopimustyyppi = sopimustyypit.stream().filter(s -> "Harjoittelu (18+v)".equals(s.getNimi())).findFirst();
+         break;
+      default:
+         throw new IsoveliPoikkeus(String.format("Harrastajalla %s on tuntematon maksuperuste %s",
+            harrastaja.getNimi(), maksuperuste));
+      }
+      Sopimus sopimus = new Sopimus(sopimustyyppi.get());
+      harrastaja.lis‰‰Sopimus(sopimus);
+   }
+
+   private void teeJ‰sensopimus(Harrastaja harrastaja, Tuontitulos tulos)
+   {
+      Sopimus sopimus = new Sopimus();
+      Optional<Sopimustyyppi> j‰senmaksu = sopimustyypit.stream().filter(s -> s.isJ‰senmaksutyyppi()).findFirst();
+      if (!j‰senmaksu.isPresent())
+      {
+         tulos.lis‰‰Virhe("J‰senmaksutyyppi ei lˆytynyt");
+         return;
+      }
+      sopimus.setTyyppi(j‰senmaksu.get());
+      harrastaja.lis‰‰Sopimus(sopimus);
    }
 
    private void asetaVyˆarvo(Sheet v‰lilehti, int rivi, Harrastaja harrastaja, Tuontitulos tulos)

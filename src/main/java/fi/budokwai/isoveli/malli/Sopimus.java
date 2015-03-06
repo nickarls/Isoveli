@@ -78,6 +78,17 @@ public class Sopimus
    @Type(type = "Kyll‰Ei")
    private boolean arkistoitu;
 
+   public Sopimus(Sopimustyyppi sopimustyyppi)
+   {
+      tyyppi = sopimustyyppi;
+      maksuv‰li = tyyppi.getOletusMaksuv‰li();
+      treenikertoja = tyyppi.getOletusTreenikerrat();
+   }
+
+   public Sopimus()
+   {
+   }
+
    public int getId()
    {
       return id;

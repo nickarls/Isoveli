@@ -3,6 +3,7 @@ package fi.budokwai.isoveli.test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -20,6 +21,8 @@ import com.google.common.io.ByteStreams;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Perhe;
+import fi.budokwai.isoveli.malli.Sopimus;
+import fi.budokwai.isoveli.malli.Sopimustarkistukset;
 import fi.budokwai.isoveli.util.Tuonti;
 import fi.budokwai.isoveli.util.Tuontitulos;
 
@@ -54,6 +57,17 @@ public class TuontitallenusTest extends Perustesti
       List<Perhe> perheet = entityManager.createQuery("select p from Perhe p", Perhe.class).getResultList();
       Assert.assertEquals(247, harrastajat.size());
       Assert.assertEquals(126, perheet.size());
+      harrastajat.stream().forEach(h -> {
+         if (!h.isSopimuksetOK())
+         {
+            tarkistaTiskihuomautus(h, "sopimukset");
+         }
+      });
    }
 
+   private void tarkistaTiskihuomautus(Harrastaja harrastaja, String viesti)
+   {
+      Assert.assertTrue(harrastaja.isInfotiskille());
+      Assert.assertTrue(harrastaja.getHuomautus() != null && harrastaja.getHuomautus().contains(viesti));
+   }
 }

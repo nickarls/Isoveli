@@ -471,9 +471,10 @@ public class Harrastaja extends Henkilö
       infotiskille = true;
    }
 
-   public void lisääSopimus(Sopimus sopimus)
+   public Sopimus lisääSopimus(Sopimus sopimus)
    {
       sopimus.setHarrastaja(this);
       sopimukset.add(sopimus);
+      return sopimus;
    }
 }

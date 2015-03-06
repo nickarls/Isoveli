@@ -5,6 +5,7 @@ import java.util.List;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.mail.MethodNotSupportedException;
 import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
@@ -16,10 +17,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import fi.budokwai.isoveli.admin.HarrastajaAdmin;
+import fi.budokwai.isoveli.admin.PerustietoAdmin;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Perhe;
+import fi.budokwai.isoveli.malli.Sopimus;
+import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.malli.Sukupuoli;
 import fi.budokwai.isoveli.malli.Yhteystieto;
 import fi.budokwai.isoveli.util.DateUtil;
@@ -29,6 +33,9 @@ public class HarrastajaTest extends Perustesti
 {
    @Inject
    private HarrastajaAdmin harrastajaAdmin;
+
+   @Inject
+   private PerustietoAdmin perustietoAdmin;
 
    @Inject
    private EntityManager entityManager;
@@ -258,6 +265,92 @@ public class HarrastajaTest extends Perustesti
    { "cleanup.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testArkistoiHarrastaja()
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testLisaaSopimus()
+   {
+      Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
+      Sopimustyyppi jäsenmaksu = perustietoAdmin.getSopimustyypit().stream().filter(s -> s.isJäsenmaksutyyppi())
+         .findFirst().get();
+      Sopimus sopimus = new Sopimus(jäsenmaksu);
+      harrastaja.lisääSopimus(sopimus);
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      harrastaja = entityManager.find(Harrastaja.class, 1);
+      Assert.assertEquals(1, harrastaja.getSopimukset().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql", "nicklassopimus.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testMuokkaaSopimus()
+   {
+      Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
+      harrastaja.getSopimukset().iterator().next().setUmpeutuu(DateUtil.silloinD("31.12.2105"));
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      harrastaja = entityManager.find(Harrastaja.class, 1);
+      Assert.assertNotNull(harrastaja.getSopimukset().iterator().next().getUmpeutuu());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testUusiOletusSopimusOnJasenmaksu()
+   {
+      Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      harrastajaAdmin.lisääSopimus();
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      harrastaja = entityManager.find(Harrastaja.class, 1);
+      Assert.assertEquals(1, harrastaja.getSopimukset().size());
+      Assert.assertTrue(harrastaja.getSopimukset().iterator().next().getTyyppi().isJäsenmaksutyyppi());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testSeuraavaSopimusOnHarrastusmaksu()
+   {
+      Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      harrastajaAdmin.lisääSopimus();
+      harrastajaAdmin.lisääSopimus();
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      harrastaja = entityManager.find(Harrastaja.class, 1);
+      Assert.assertEquals(2, harrastaja.getSopimukset().size());
+      Assert.assertTrue(harrastaja.getSopimukset().get(0).getTyyppi().isJäsenmaksutyyppi());
+      Assert.assertTrue(harrastaja.getSopimukset().get(1).getTyyppi().isHarjoittelumaksutyyppi());
+      Assert.assertTrue(harrastaja.getSopimukset().get(1).getTyyppi().getNimi().contains("18+"));
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql", "nicklassopimus.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testPoistaSopimusEiKäytössä()
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql", "nicklassopimuskäytössä.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testPoistaSopimusKäytössä()
    {
       throw new UnsupportedOperationException();
    }

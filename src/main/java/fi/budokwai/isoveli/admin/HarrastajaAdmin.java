@@ -442,10 +442,8 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void lis‰‰Sopimus()
    {
-      sopimus = new Sopimus();
-      sopimus.setHarrastaja(harrastaja);
       sopimusRSM.setAllSelected(false);
-      sopimus.setTyyppi(ehdotaSopimusTyyppi‰());
+      Sopimus sopimus = harrastaja.lis‰‰Sopimus(new Sopimus(ehdotaSopimusTyyppi‰()));
       if (sopimus.getTyyppi() != null)
       {
          sopimus.asetaP‰‰ttymisp‰iv‰();

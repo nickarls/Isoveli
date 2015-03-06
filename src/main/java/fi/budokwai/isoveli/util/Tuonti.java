@@ -22,6 +22,7 @@ import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Perhe;
+import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.malli.Sukupuoli;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Vyökoe;
@@ -35,6 +36,9 @@ public class Tuonti
    @Inject
    private List<Vyöarvo> vyöarvot;
 
+   @Inject
+   private List<Sopimustyyppi> sopimustyypit;
+   
    private boolean tyhjä(String s)
    {
       return s == null || "".equals(s);
@@ -199,6 +203,21 @@ public class Tuonti
       osoite.setPostinumero(välilehti.getCell(5, rivi).getContents().trim());
       osoite.setKaupunki(välilehti.getCell(6, rivi).getContents().trim());
       harrastaja.setOsoite(osoite);
+      if (!harrastaja.isAlaikäinen() && harrastaja.getPerhe() == null)
+      {
+         if (osoite.getOsoite().length() < 5)
+         {
+            harrastaja.lisääHuomautus("Tarkista oma osoite");
+         }
+         if (osoite.getPostinumero().length() < 5)
+         {
+            harrastaja.lisääHuomautus("Tarkista oma postinumero");
+         }
+         if (osoite.getKaupunki().length() < 3)
+         {
+            harrastaja.lisääHuomautus("Tarkista oma kaupunki");
+         }
+      }
    }
 
    private void valitsePerhe(String perheId, Map<Integer, Perhe> perheet, Harrastaja harrastaja, Tuontitulos tulos)

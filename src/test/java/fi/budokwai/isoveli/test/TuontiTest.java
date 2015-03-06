@@ -55,10 +55,6 @@ public class TuontiTest
          Assert.assertNotNull(p.getNimi());
          Assert.assertNotEquals("", p.getNimi());
          Assert.assertTrue(Character.isUpperCase(p.getNimi().charAt(0)));
-         Assert.assertNotNull(p.getOsoite());
-         Assert.assertTrue(p.getOsoite().getOsoite().length() > 5);
-         Assert.assertTrue(p.getOsoite().getPostinumero().length() == 5);
-         Assert.assertTrue(p.getOsoite().getKaupunki().length() > 3);
          Assert.assertTrue(p.getPerheenjäsenet().size() >= 2);
          Assert.assertTrue(p.getHuoltajat().size() >= 1);
          p.getHuoltajat().forEach(h -> {
@@ -134,6 +130,19 @@ public class TuontiTest
             tarkistaTiskihuomautus(harr, "sähköposti");
          }
          Assert.assertTrue(harr.getYhteystiedot().isSähköpostilistalla());
+         Assert.assertNotNull(harr.getOsoite());
+         if (harr.getOsoite().getOsoite().length() < 5)
+         {
+            tarkistaTiskihuomautus(harr, "osoite");
+         }
+         if (harr.getOsoite().getPostinumero().length() < 5)
+         {
+            tarkistaTiskihuomautus(harr, "postinumero");
+         }
+         if (harr.getOsoite().getKaupunki().length() < 3)
+         {
+            tarkistaTiskihuomautus(harr, "kaupunki");
+         }
       });
    }
 

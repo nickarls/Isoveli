@@ -3,7 +3,6 @@ package fi.budokwai.isoveli.test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -21,8 +20,6 @@ import com.google.common.io.ByteStreams;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Perhe;
-import fi.budokwai.isoveli.malli.Sopimus;
-import fi.budokwai.isoveli.malli.Sopimustarkistukset;
 import fi.budokwai.isoveli.util.Tuonti;
 import fi.budokwai.isoveli.util.Tuontitulos;
 

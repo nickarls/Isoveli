@@ -8,8 +8,9 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.persistence.ApplyScriptAfter;
 import org.jboss.arquillian.persistence.ApplyScriptBefore;
+import org.jboss.arquillian.persistence.Cleanup;
+import org.jboss.arquillian.persistence.TestExecutionPhase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +42,9 @@ public class HarrastajaTest extends Perustesti
    private Instance<List<Perhe>> perheet;
 
    @Test
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testLisaaTaysiikainenPerheetonHarrastaja()
    {
       Harrastaja harrastaja = new Harrastaja();
@@ -69,7 +72,9 @@ public class HarrastajaTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testLisaaTaysiikainenYhdenHengenPerheenHarrastaja()
    {
       harrastajaAdmin.lis‰‰Harrastaja();
@@ -80,7 +85,6 @@ public class HarrastajaTest extends Perustesti
       harrastaja.setSukupuoli(Sukupuoli.M);
       harrastaja.setSyntynyt(DateUtil.silloinD("28.06.1975"));
 
-      Assert.assertEquals(0, perheet.get().size());
       harrastajaAdmin.lis‰‰Perhe();
       Assert.assertEquals(1, perheet.get().size());
       harrastaja.getOsoite().setOsoite("Vaakunatie 10 as7");
@@ -88,7 +92,6 @@ public class HarrastajaTest extends Perustesti
       harrastaja.getOsoite().setKaupunki("Kaarina");
 
       harrastajaAdmin.setHarrastaja(harrastaja);
-      Assert.assertEquals(0, harrastajat.get().size());
       harrastajaAdmin.tallennaHarrastaja();
       entityManager.clear();
       Assert.assertEquals(1, harrastajat.get().size());
@@ -101,7 +104,9 @@ public class HarrastajaTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testLisaaAlaikainenHarrastaja()
    {
       harrastajaAdmin.lis‰‰Harrastaja();
@@ -127,7 +132,6 @@ public class HarrastajaTest extends Perustesti
       harrastaja.getOsoite().setKaupunki("Kaarina");
 
       harrastajaAdmin.setHarrastaja(harrastaja);
-      Assert.assertEquals(0, harrastajat.get().size());
       harrastajaAdmin.tallennaHarrastaja();
       entityManager.clear();
       Assert.assertEquals(1, harrastajat.get().size());
@@ -147,8 +151,9 @@ public class HarrastajaTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("nicklas.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "nicklas.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testOrvotOsoitteetSiivotaan()
    {
       Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
@@ -165,8 +170,9 @@ public class HarrastajaTest extends Perustesti
    }
 
    @Test
-   @ApplyScriptBefore("nicklas.sql")
-   @ApplyScriptAfter("cleanup.sql")
+   @ApplyScriptBefore(
+   { "cleanup.sql", "nicklas.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testOrvotYhteystiedotSiivotaan()
    {
       Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
@@ -183,21 +189,27 @@ public class HarrastajaTest extends Perustesti
    }
 
    @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testHuoltajanPuhelinMuutosPaivittaaICEn()
    {
-
-   }
-
-   @Test
-   public void testHuoltajaMuuttuu()
-   {
-      // ICE p‰ivittyy
+      throw new UnsupportedOperationException();
    }
 
    @Test
    @ApplyScriptBefore(
-   { "karlsson.sql", "rosqvist.sql" })
-   @ApplyScriptAfter("cleanup.sql")
+   { "cleanup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testHuoltajaMuuttuu()
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "karlsson.sql", "rosqvist.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPerheMuuttuu()
    {
       Assert.assertEquals(2, perheet.get().size());
@@ -206,33 +218,48 @@ public class HarrastajaTest extends Perustesti
    }
 
    @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testOrpoPerhePoistuu()
    {
-
+      throw new UnsupportedOperationException();
    }
 
    @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testOrpoOsoitePoistuu()
    {
-
+      throw new UnsupportedOperationException();
    }
 
    @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistaHarrastajaEiKaytossa()
    {
-      // cascading delete
+      throw new UnsupportedOperationException();
    }
 
    @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistaHarrastajaKaytossa()
    {
-
+      throw new UnsupportedOperationException();
    }
 
    @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testArkistoiHarrastaja()
    {
-
+      throw new UnsupportedOperationException();
    }
 
 }

@@ -13,8 +13,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
-import com.google.common.base.MoreObjects;
-
 @Entity
 @DynamicInsert
 @DynamicUpdate

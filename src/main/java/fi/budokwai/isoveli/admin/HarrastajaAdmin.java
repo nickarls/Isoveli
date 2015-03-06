@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.StringJoiner;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
@@ -31,6 +32,7 @@ import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Sopimus;
+import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.malli.Sopimustarkistus;
 import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.malli.Sukupuoli;
@@ -365,11 +367,28 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void poistaSopimus()
    {
-      sopimus = entityManager.merge(sopimus);
+      tarkistaSopimuskäyttö();
       harrastaja.getSopimukset().remove(sopimus);
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       info("Sopimus poistettu");
+   }
+
+   private void tarkistaSopimuskäyttö()
+   {
+      List<Sopimuslasku> käyttö = entityManager
+         .createQuery("select sl from Sopimuslasku sl where sl.sopimus=:sopimus", Sopimuslasku.class)
+         .setParameter("sopimus", sopimus).getResultList();
+      if (!käyttö.isEmpty())
+      {
+         StringJoiner stringJoiner = new StringJoiner(", ");
+         käyttö.forEach(sl -> {
+            stringJoiner.add(sl.getJakso());
+         });
+         String viesti = String.format("Sopimuksella on sopimuslaskuja ja sitä ei voi poistaa (%dkpl: %s...)",
+            käyttö.size(), stringJoiner.toString());
+         throw new IsoveliPoikkeus(viesti);
+      }
    }
 
    public void piilotaSopimus()

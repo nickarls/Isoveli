@@ -5,7 +5,6 @@ import java.util.List;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.mail.MethodNotSupportedException;
 import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
@@ -16,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.admin.HarrastajaAdmin;
 import fi.budokwai.isoveli.admin.PerustietoAdmin;
 import fi.budokwai.isoveli.malli.Harrastaja;
@@ -359,9 +359,24 @@ public class HarrastajaTest extends Perustesti
    @ApplyScriptBefore(
    { "cleanup.sql", "seed.sql", "nicklas.sql", "nicklassopimuskaytossa.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
-   public void testPoistaSopimusKäytössä()
+   public void testPoistaSopimusKaytossa()
    {
-      throw new UnsupportedOperationException();
+      Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      Sopimus sopimus = entityManager.find(Sopimus.class, 1);
+      harrastajaAdmin.setSopimus(sopimus);
+      try
+      {
+         harrastajaAdmin.poistaSopimus();
+      } catch (IsoveliPoikkeus e)
+      {
+         Assert.assertEquals("Sopimuksella on sopimuslaskuja ja sitä ei voi poistaa (1kpl: 01.01.2013-30.05.2013...)", e.getMessage());
+      }
+      entityManager.clear();
+      harrastaja = entityManager.find(Harrastaja.class, 1);
+      Assert.assertEquals(1, harrastaja.getSopimukset().size());
+      sopimus = entityManager.find(Sopimus.class, 1);
+      Assert.assertNotNull(sopimus);
    }
 
 }

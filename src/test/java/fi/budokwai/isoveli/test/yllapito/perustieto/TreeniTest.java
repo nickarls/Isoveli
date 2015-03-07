@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli.test.perustieto;
+package fi.budokwai.isoveli.test.yllapito.perustieto;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

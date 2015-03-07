@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli.test.harrastaja;
+package fi.budokwai.isoveli.test.yllapito.harrastaja;
 
 import java.util.List;
 

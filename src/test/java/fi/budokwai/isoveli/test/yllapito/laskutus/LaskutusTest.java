@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli.test.laskutus;
+package fi.budokwai.isoveli.test.yllapito.laskutus;
 
 import java.util.List;
 

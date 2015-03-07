@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli.test.harrastaja;
+package fi.budokwai.isoveli.test.yllapito.harrastaja;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

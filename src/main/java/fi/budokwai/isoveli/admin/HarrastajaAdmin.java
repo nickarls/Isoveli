@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
@@ -19,8 +18,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 
-import org.hibernate.FlushMode;
-import org.hibernate.Session;
 import org.icefaces.ace.component.datetimeentry.DateTimeEntry;
 import org.icefaces.ace.component.tabset.TabSet;
 import org.icefaces.ace.event.SelectEvent;
@@ -170,14 +167,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       perheet = null;
    }
 
-   @PostConstruct
-   public void init()
-   {
-      ((Session) entityManager.getDelegate()).setFlushMode(FlushMode.MANUAL);
-      haePerheet();
-      haeHarrastajat();
-   }
-
    @Produces
    @Named
    public List<Perhe> getPerheet()
@@ -283,32 +272,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       return harrastaja.isTallentamaton() && vanhat.size() > 0;
    }
 
-   public void peruutaPerustietomuutos()
-   {
-      if (harrastaja.isPoistettavissa())
-      {
-         harrastaja.siivoa();
-         harrastaja = entityManager.merge(harrastaja);
-         entityManager.refresh(harrastaja);
-      } else
-      {
-         harrastaja = null;
-      }
-      virhe("Muutokset peruttu");
-   }
-
-   public void peruutaVyökoemuutos()
-   {
-      if (vyökoe.isPoistettavissa())
-      {
-         entityManager.refresh(vyökoe);
-      } else
-      {
-         vyökoe = null;
-      }
-      virhe("Muutokset peruttu");
-   }
-
    public void poistaHarrastaja()
    {
       harrastaja = entityManager.merge(harrastaja);
@@ -323,18 +286,8 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void tallennaVyökoe()
    {
       harrastaja = entityManager.merge(harrastaja);
-      if (!vyökoe.isTallennettu())
-      {
-         vyökoe.setHarrastaja(harrastaja);
-         harrastaja.getVyökokeet().add(vyökoe);
-         entityManager.persist(harrastaja);
-      }
-      vyökoe = entityManager.merge(vyökoe);
       entityManager.flush();
       vyökoeRSM.get(vyökoe).setSelected(true);
-      harrastaja.getVyökokeet().sort(
-         (v1, v2) -> Integer.valueOf(v1.getVyöarvo().getJärjestys()).compareTo(
-            Integer.valueOf(v2.getVyöarvo().getJärjestys())));
       info("Vyökoe tallennettu");
       harrastajat = null;
    }
@@ -342,13 +295,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void tallennaSopimus()
    {
       harrastaja = entityManager.merge(harrastaja);
-      if (!sopimus.isTallennettu())
-      {
-         sopimus.setHarrastaja(harrastaja);
-         harrastaja.getSopimukset().add(sopimus);
-         entityManager.persist(harrastaja);
-      }
-      sopimus = entityManager.merge(sopimus);
       entityManager.flush();
       sopimusRSM.get(sopimus).setSelected(true);
       harrastajat = null;
@@ -357,7 +303,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void poistaVyökoe()
    {
-      vyökoe = entityManager.merge(vyökoe);
       harrastaja.getVyökokeet().remove(vyökoe);
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
@@ -371,6 +316,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastaja.getSopimukset().remove(sopimus);
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
+      harrastajat = null;
       info("Sopimus poistettu");
    }
 
@@ -447,7 +393,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void lisääHarrastaja()
    {
       resetoi();
-      // tabi.setSelectedIndex(0);
+      tabi.setSelectedIndex(0);
       harrastaja = new Harrastaja();
       info("Uusi harrastaja alustettu");
       fokusoi("form:etunimi");

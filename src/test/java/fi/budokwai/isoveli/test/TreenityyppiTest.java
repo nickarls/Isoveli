@@ -7,15 +7,12 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.persistence.ApplyScriptAfter;
 import org.jboss.arquillian.persistence.ApplyScriptBefore;
 import org.jboss.arquillian.persistence.Cleanup;
 import org.jboss.arquillian.persistence.TestExecutionPhase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.google.inject.Exposed;
 
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.admin.PerustietoAdmin;

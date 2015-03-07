@@ -28,6 +28,9 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortComparator;
+import org.hibernate.annotations.SortType;
 import org.hibernate.annotations.Type;
 
 import com.google.common.base.MoreObjects;
@@ -56,8 +59,8 @@ public class Harrastaja extends Henkilö
    private Henkilö huoltaja;
 
    @OneToMany(mappedBy = "harrastaja", cascade =
-   { CascadeType.PERSIST }, orphanRemoval = true)
-   @OrderBy("päivä asc")
+   { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
+   @SortComparator(value = VyökoeComparator.class)
    private List<Vyökoe> vyökokeet = new ArrayList<Vyökoe>();
 
    @OneToMany(mappedBy = "harrastaja")
@@ -65,7 +68,7 @@ public class Harrastaja extends Henkilö
    private List<Kisatulos> kisatulokset = new ArrayList<Kisatulos>();
 
    @OneToMany(mappedBy = "harrastaja", cascade =
-   { CascadeType.PERSIST }, orphanRemoval = true)
+   { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
    @OrderBy("umpeutuu desc")
    private List<Sopimus> sopimukset = new ArrayList<Sopimus>();
 

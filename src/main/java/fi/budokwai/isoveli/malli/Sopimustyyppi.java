@@ -328,4 +328,10 @@ public class Sopimustyyppi
       this.arkistoitu = arkistoitu;
    }
 
+   @Override
+   public String toString()
+   {
+      return nimi;
+   }
+
 }

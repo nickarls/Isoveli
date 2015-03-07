@@ -194,11 +194,18 @@ public class HarrastajaTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "cleanup.sql" })
+   { "cleanup.sql", "karlsson.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testHuoltajanPuhelinMuutosPaivittaaICEn()
    {
-      throw new UnsupportedOperationException();
+      Harrastaja emil = entityManager.find(Harrastaja.class, 2);
+      harrastajaAdmin.setHarrastaja(emil);
+      emil.getHuoltaja().getYhteystiedot().setPuhelinnumero("666");
+      harrastajaAdmin.huoltajanPuhelinMuuttui(null);
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      emil = entityManager.find(Harrastaja.class, 2);
+      Assert.assertEquals("666", emil.getIce());
    }
 
    @Test
@@ -276,10 +283,9 @@ public class HarrastajaTest extends Perustesti
       List<Sopimustyyppi> sopimustyypit = entityManager.createNamedQuery("sopimustyypit", Sopimustyyppi.class)
          .getResultList();
       Sopimustyyppi jäsenmaksu = sopimustyypit.stream().filter(s -> s.isJäsenmaksutyyppi()).findFirst().get();
-      Sopimus sopimus = new Sopimus(jäsenmaksu);
-      harrastaja.lisääSopimus(sopimus);
+      harrastaja.lisääSopimus(new Sopimus(jäsenmaksu));
       harrastajaAdmin.setHarrastaja(harrastaja);
-      harrastajaAdmin.tallennaHarrastaja();
+      harrastajaAdmin.tallennaSopimus();
       entityManager.clear();
       harrastaja = entityManager.find(Harrastaja.class, 1);
       Assert.assertEquals(1, harrastaja.getSopimukset().size());
@@ -294,7 +300,7 @@ public class HarrastajaTest extends Perustesti
       Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
       harrastaja.getSopimukset().iterator().next().setUmpeutuu(DateUtil.silloinD("31.12.2105"));
       harrastajaAdmin.setHarrastaja(harrastaja);
-      harrastajaAdmin.tallennaHarrastaja();
+      harrastajaAdmin.tallennaSopimus();
       entityManager.clear();
       harrastaja = entityManager.find(Harrastaja.class, 1);
       Assert.assertNotNull(harrastaja.getSopimukset().iterator().next().getUmpeutuu());
@@ -309,7 +315,7 @@ public class HarrastajaTest extends Perustesti
       Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
       harrastajaAdmin.setHarrastaja(harrastaja);
       harrastajaAdmin.lisääSopimus();
-      harrastajaAdmin.tallennaHarrastaja();
+      harrastajaAdmin.tallennaSopimus();
       entityManager.clear();
       harrastaja = entityManager.find(Harrastaja.class, 1);
       Assert.assertEquals(1, harrastaja.getSopimukset().size());
@@ -326,7 +332,7 @@ public class HarrastajaTest extends Perustesti
       harrastajaAdmin.setHarrastaja(harrastaja);
       harrastajaAdmin.lisääSopimus();
       harrastajaAdmin.lisääSopimus();
-      harrastajaAdmin.tallennaHarrastaja();
+      harrastajaAdmin.tallennaSopimus();
       entityManager.clear();
       harrastaja = entityManager.find(Harrastaja.class, 1);
       Assert.assertEquals(2, harrastaja.getSopimukset().size());
@@ -387,7 +393,7 @@ public class HarrastajaTest extends Perustesti
       Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
       harrastajaAdmin.setHarrastaja(harrastaja);
       harrastajaAdmin.lisääVyökoe();
-      harrastajaAdmin.tallennaHarrastaja();
+      harrastajaAdmin.tallennaVyökoe();
       entityManager.clear();
       harrastaja = entityManager.find(Harrastaja.class, 1);
       Assert.assertEquals(1, harrastaja.getVyökokeet().size());
@@ -403,7 +409,26 @@ public class HarrastajaTest extends Perustesti
       Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
       harrastajaAdmin.setHarrastaja(harrastaja);
       harrastajaAdmin.lisääVyökoe();
-      harrastajaAdmin.tallennaHarrastaja();
+      harrastajaAdmin.tallennaVyökoe();
+      entityManager.clear();
+      harrastaja = entityManager.find(Harrastaja.class, 1);
+      Assert.assertEquals(2, harrastaja.getVyökokeet().size());
+      Assert.assertEquals("8.kup", harrastaja.getVyökokeet().get(0).getVyöarvo().getNimi());
+      Assert.assertEquals("7.kup", harrastaja.getVyökokeet().get(1).getVyöarvo().getNimi());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql", "nicklas7kup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testLisatynVyokokeenJarjestys()
+   {
+      Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      harrastajaAdmin.lisääVyökoe();
+      Vyöarvo vyöarvo = entityManager.find(Vyöarvo.class, 1);
+      harrastajaAdmin.getVyökoe().setVyöarvo(vyöarvo);
+      harrastajaAdmin.tallennaVyökoe();
       entityManager.clear();
       harrastaja = entityManager.find(Harrastaja.class, 1);
       Assert.assertEquals(2, harrastaja.getVyökokeet().size());
@@ -422,7 +447,7 @@ public class HarrastajaTest extends Perustesti
       Vyöarvo kup7 = entityManager.find(Vyöarvo.class, 2);
       harrastajaAdmin.setVyökoe(harrastaja.getVyökokeet().iterator().next());
       harrastajaAdmin.getVyökoe().setVyöarvo(kup7);
-      harrastajaAdmin.tallennaHarrastaja();
+      harrastajaAdmin.tallennaVyökoe();
       entityManager.clear();
       harrastaja = entityManager.find(Harrastaja.class, 1);
       Assert.assertEquals(1, harrastaja.getVyökokeet().size());
@@ -439,7 +464,6 @@ public class HarrastajaTest extends Perustesti
       harrastajaAdmin.setHarrastaja(harrastaja);
       harrastajaAdmin.setVyökoe(harrastaja.getVyökokeet().iterator().next());
       harrastajaAdmin.poistaVyökoe();
-      harrastajaAdmin.tallennaHarrastaja();
       entityManager.clear();
       harrastaja = entityManager.find(Harrastaja.class, 1);
       Assert.assertEquals(0, harrastaja.getVyökokeet().size());

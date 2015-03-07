@@ -141,4 +141,10 @@ public class Vyökoe
       return id > 0;
    }
 
+   @Override
+   public String toString()
+   {
+      return String.format("%s@%s", vyöarvo.getNimi(), DateUtil.päiväTekstiksi(päivä));
+   }
+
 }

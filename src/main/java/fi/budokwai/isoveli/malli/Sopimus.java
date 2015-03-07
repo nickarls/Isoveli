@@ -418,4 +418,10 @@ public class Sopimus
       return id > 0;
    }
 
+   @Override
+   public String toString()
+   {
+      return String.format("%s:%s", harrastaja.getNimi(), tyyppi);
+   }
+
 }

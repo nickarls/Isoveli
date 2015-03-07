@@ -275,11 +275,19 @@ public class HarrastajaTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "cleanup.sql" })
+   { "cleanup.sql", "karlsson.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testArkistoiHarrastaja()
    {
-      throw new UnsupportedOperationException();
+      Assert.assertEquals(1, harrastajat.get().size());
+      Harrastaja emil = entityManager.find(Harrastaja.class, 2);
+      emil.setArkistoitu(true);
+      harrastajaAdmin.setHarrastaja(emil);
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      Assert.assertEquals(0, harrastajat.get().size());
+      List<Harrastaja> arq = entityManager.createNamedQuery("harrastajatArq", Harrastaja.class).getResultList();
+      Assert.assertEquals(1, arq.size());
    }
 
    @Test

@@ -266,11 +266,16 @@ public class HarrastajaTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "cleanup.sql" })
+   { "cleanup.sql", "karlsson.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistaHarrastajaKaytossa()
    {
-      throw new UnsupportedOperationException();
+      Harrastaja emil = entityManager.find(Harrastaja.class, 2);
+      harrastajaAdmin.setHarrastaja(emil);
+      harrastajaAdmin.poistaHarrastaja();
+      entityManager.clear();
+      emil = entityManager.find(Harrastaja.class, 2);
+      Assert.assertNull(emil);
    }
 
    @Test

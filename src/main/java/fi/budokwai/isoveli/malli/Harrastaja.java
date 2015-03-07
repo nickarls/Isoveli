@@ -28,9 +28,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortComparator;
-import org.hibernate.annotations.SortType;
 import org.hibernate.annotations.Type;
 
 import com.google.common.base.MoreObjects;

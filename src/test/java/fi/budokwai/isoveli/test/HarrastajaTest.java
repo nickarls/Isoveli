@@ -257,18 +257,9 @@ public class HarrastajaTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "cleanup.sql" })
-   @Cleanup(phase = TestExecutionPhase.NONE)
-   public void testPoistaHarrastajaEiKaytossa()
-   {
-      throw new UnsupportedOperationException();
-   }
-
-   @Test
-   @ApplyScriptBefore(
    { "cleanup.sql", "karlsson.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
-   public void testPoistaHarrastajaKaytossa()
+   public void testPoistaHarrastajaEiKaytossa()
    {
       Harrastaja emil = entityManager.find(Harrastaja.class, 2);
       harrastajaAdmin.setHarrastaja(emil);
@@ -276,6 +267,26 @@ public class HarrastajaTest extends Perustesti
       entityManager.clear();
       emil = entityManager.find(Harrastaja.class, 2);
       Assert.assertNull(emil);
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql", "nicklassopimus.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testPoistaHarrastajaKaytossa()
+   {
+      Harrastaja nicklas = entityManager.find(Harrastaja.class, 1);
+      harrastajaAdmin.setHarrastaja(nicklas);
+      try
+      {
+         harrastajaAdmin.poistaHarrastaja();
+      } catch (IsoveliPoikkeus e)
+      {
+         Assert.assertEquals("Harrastajalla on sopimuksia ja häntä ei voi poistaa (1kpl: Harjoittelu (18+v)...)", e.getMessage());
+      }
+      entityManager.clear();
+      nicklas = entityManager.find(Harrastaja.class, 1);
+      Assert.assertNotNull(nicklas);
    }
 
    @Test

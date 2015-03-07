@@ -274,6 +274,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void poistaHarrastaja()
    {
+      tarkistaHarrastajaKäyttö();
       harrastaja = entityManager.merge(harrastaja);
       entityManager.remove(harrastaja);
       entityManager.flush();
@@ -281,6 +282,25 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastajat = null;
       harrastajaRSM.setAllSelected(false);
       info("Harrastaja poistettu");
+   }
+
+   private void tarkistaHarrastajaKäyttö()
+   {
+      List<Sopimus> käyttö = entityManager
+         .createQuery("select s from Sopimus s where s.harrastaja=:harrastaja", Sopimus.class)
+         .setParameter("harrastaja", harrastaja).getResultList();
+      if (!käyttö.isEmpty())
+      {
+         StringJoiner stringJoiner = new StringJoiner(", ");
+         käyttö.forEach(h -> {
+            stringJoiner.add(h.getTyyppi().getNimi());
+         });
+         String viesti = String.format("Harrastajalla on sopimuksia ja häntä ei voi poistaa (%dkpl: %s...)",
+            käyttö.size(), stringJoiner.toString());
+         throw new IsoveliPoikkeus(viesti);
+      }
+
+      throw new IsoveliPoikkeus("asdf");
    }
 
    public void tallennaVyökoe()

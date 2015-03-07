@@ -210,11 +210,20 @@ public class HarrastajaTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "cleanup.sql" })
+   { "cleanup.sql", "huoltajaperhe.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testHuoltajaMuuttuu()
    {
-      throw new UnsupportedOperationException();
+      Harrastaja emil = entityManager.find(Harrastaja.class, 3);
+      Henkilö heidi = entityManager.find(Henkilö.class, 2);
+      harrastajaAdmin.setHarrastaja(emil);
+      emil.setHuoltaja(heidi);
+      harrastajaAdmin.huoltajaMuuttui(null);
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      emil = entityManager.find(Harrastaja.class, 3);
+      Assert.assertEquals("0407218809", emil.getIce());
+      Assert.assertEquals("Heidi", emil.getHuoltaja().getEtunimi());
    }
 
    @Test

@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli.test;
+package fi.budokwai.isoveli.test.laskutus;
 
 import java.util.List;
 
@@ -18,6 +18,7 @@ import fi.budokwai.isoveli.malli.Lasku;
 import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.malli.TilausTila;
+import fi.budokwai.isoveli.test.Perustesti;
 
 @RunWith(Arquillian.class)
 public class LaskutusTest extends Perustesti

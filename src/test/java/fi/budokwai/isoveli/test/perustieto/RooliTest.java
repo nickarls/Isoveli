@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli.test;
+package fi.budokwai.isoveli.test.perustieto;
 
 import java.util.List;
 
@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.admin.PerustietoAdmin;
 import fi.budokwai.isoveli.malli.Rooli;
+import fi.budokwai.isoveli.test.Perustesti;
 
 @RunWith(Arquillian.class)
 public class RooliTest extends Perustesti

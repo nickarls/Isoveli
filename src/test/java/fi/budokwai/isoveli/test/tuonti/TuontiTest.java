@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli.test;
+package fi.budokwai.isoveli.test.tuonti;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;

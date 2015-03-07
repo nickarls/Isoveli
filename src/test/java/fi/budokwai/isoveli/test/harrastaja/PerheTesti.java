@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli.test;
+package fi.budokwai.isoveli.test.harrastaja;
 
 import java.util.List;
 
@@ -8,6 +8,7 @@ import org.junit.Test;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Perhe;
+import fi.budokwai.isoveli.test.Perustesti;
 
 public class PerheTesti extends Perustesti
 {

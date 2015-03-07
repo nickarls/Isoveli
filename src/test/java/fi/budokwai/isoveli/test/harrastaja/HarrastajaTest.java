@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli.test;
+package fi.budokwai.isoveli.test.harrastaja;
 
 import java.util.List;
 
@@ -26,6 +26,7 @@ import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.malli.Sukupuoli;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Yhteystieto;
+import fi.budokwai.isoveli.test.Perustesti;
 import fi.budokwai.isoveli.util.DateUtil;
 
 @RunWith(Arquillian.class)

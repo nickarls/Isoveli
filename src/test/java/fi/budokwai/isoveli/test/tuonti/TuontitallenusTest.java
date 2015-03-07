@@ -1,4 +1,4 @@
-package fi.budokwai.isoveli.test;
+package fi.budokwai.isoveli.test.tuonti;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -20,6 +20,7 @@ import com.google.common.io.ByteStreams;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Perhe;
+import fi.budokwai.isoveli.test.Perustesti;
 import fi.budokwai.isoveli.util.Tuonti;
 import fi.budokwai.isoveli.util.Tuontitulos;
 

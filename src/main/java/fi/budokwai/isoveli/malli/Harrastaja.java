@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.StringJoiner;
 
 import javax.enterprise.inject.Typed;
 import javax.persistence.CascadeType;
@@ -33,6 +34,7 @@ import org.hibernate.annotations.Type;
 
 import com.google.common.base.MoreObjects;
 
+import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.util.DateUtil;
 
 @Entity
@@ -45,8 +47,7 @@ import fi.budokwai.isoveli.util.DateUtil;
       @NamedQuery(name = "treenivetäjät", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi"),
       @NamedQuery(name = "sama_syntymäpäivä", query = "select h from Harrastaja h where h.syntynyt = :päivä"),
       @NamedQuery(name = "harrastajat", query = "select h from Harrastaja h where h.arkistoitu='E' order by h.sukunimi, h.etunimi"),
-      @NamedQuery(name = "harrastajatArq", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi")
-})
+      @NamedQuery(name = "harrastajatArq", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi") })
 @Typed(
 {})
 public class Harrastaja extends Henkilö
@@ -485,5 +486,58 @@ public class Harrastaja extends Henkilö
    {
       vyökoe.setHarrastaja(this);
       vyökokeet.add(vyökoe);
+   }
+
+   public void poistotarkistus()
+   {
+      tarkistaVyökoekäyttö();
+      tarkistaSopimuskäyttö();
+      tarkistaTreenikäyntikäyttö();
+   }
+
+   private void tarkistaTreenikäyntikäyttö()
+   {
+      if (treenikäynnit.isEmpty())
+      {
+         return;
+      }
+      StringJoiner stringJoiner = new StringJoiner(", ");
+      treenikäynnit.forEach(t -> {
+         stringJoiner.add(t.getAikaleimaString());
+      });
+      String viesti = String.format("Harrastajalla on treenikäyntejä ja häntä ei voi poistaa (%dkpl: %s...)",
+         treenikäynnit.size(), stringJoiner.toString());
+      throw new IsoveliPoikkeus(viesti);
+   }
+
+   private void tarkistaSopimuskäyttö()
+   {
+      if (sopimukset.isEmpty())
+      {
+         return;
+      }
+      StringJoiner stringJoiner = new StringJoiner(", ");
+      sopimukset.forEach(h -> {
+         stringJoiner.add(h.getTyyppi().getNimi());
+      });
+      String viesti = String.format("Harrastajalla on sopimuksia ja häntä ei voi poistaa (%dkpl: %s...)",
+         sopimukset.size(), stringJoiner.toString());
+      throw new IsoveliPoikkeus(viesti);
+   }
+
+   private void tarkistaVyökoekäyttö()
+   {
+      if (vyökokeet.isEmpty())
+      {
+         return;
+      }
+      StringJoiner stringJoiner = new StringJoiner(", ");
+      vyökokeet.forEach(v -> {
+         stringJoiner.add(v.getVyöarvo().getNimi());
+      });
+      String viesti = String.format("Harrastajalla on vyökokeita ja häntä ei voi poistaa (%dkpl: %s...)",
+         vyökokeet.size(), stringJoiner.toString());
+      throw new IsoveliPoikkeus(viesti);
+
    }
 }

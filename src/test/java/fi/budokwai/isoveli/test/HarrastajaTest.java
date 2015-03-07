@@ -273,7 +273,7 @@ public class HarrastajaTest extends Perustesti
    @ApplyScriptBefore(
    { "cleanup.sql", "seed.sql", "nicklas.sql", "nicklassopimus.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
-   public void testPoistaHarrastajaKaytossa()
+   public void testPoistaHarrastajaKaytossaSopimus()
    {
       Harrastaja nicklas = entityManager.find(Harrastaja.class, 1);
       harrastajaAdmin.setHarrastaja(nicklas);
@@ -283,6 +283,46 @@ public class HarrastajaTest extends Perustesti
       } catch (IsoveliPoikkeus e)
       {
          Assert.assertEquals("Harrastajalla on sopimuksia ja häntä ei voi poistaa (1kpl: Harjoittelu (18+v)...)", e.getMessage());
+      }
+      entityManager.clear();
+      nicklas = entityManager.find(Harrastaja.class, 1);
+      Assert.assertNotNull(nicklas);
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql", "nicklas7kup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testPoistaHarrastajaKaytossaVyokoe()
+   {
+      Harrastaja nicklas = entityManager.find(Harrastaja.class, 1);
+      harrastajaAdmin.setHarrastaja(nicklas);
+      try
+      {
+         harrastajaAdmin.poistaHarrastaja();
+      } catch (IsoveliPoikkeus e)
+      {
+         Assert.assertEquals("Harrastajalla on vyökokeita ja häntä ei voi poistaa (1kpl: 7.kup...)", e.getMessage());
+      }
+      entityManager.clear();
+      nicklas = entityManager.find(Harrastaja.class, 1);
+      Assert.assertNotNull(nicklas);
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql", "treenikaytossa.sql", "treenikaynti.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testPoistaHarrastajaKaytossaTreenikaynti()
+   {
+      Harrastaja nicklas = entityManager.find(Harrastaja.class, 1);
+      harrastajaAdmin.setHarrastaja(nicklas);
+      try
+      {
+         harrastajaAdmin.poistaHarrastaja();
+      } catch (IsoveliPoikkeus e)
+      {
+         Assert.assertEquals("Harrastajalla on treenikäyntejä ja häntä ei voi poistaa (1kpl: 12.12.2012 12:12...)", e.getMessage());
       }
       entityManager.clear();
       nicklas = entityManager.find(Harrastaja.class, 1);

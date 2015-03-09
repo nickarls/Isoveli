@@ -108,13 +108,9 @@ public class VyoarvoTest extends Perustesti
    {
       Vyöarvo vyöarvo = entityManager.find(Vyöarvo.class, 1);
       perustietoAdmin.setVyöarvo(vyöarvo);
-      try
-      {
-         perustietoAdmin.poistaVyöarvo();
-      } catch (IsoveliPoikkeus e)
-      {
-         Assert.assertEquals("Vyöarvo on käytössä ja sitä ei voi poistaa (1kpl: Nicklas Karlsson...)", e.getMessage());
-      }
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("Vyöarvo on käytössä ja sitä ei voi poistaa (1kpl: Nicklas Karlsson...)");
+      perustietoAdmin.poistaVyöarvo();
       entityManager.clear();
       vyöarvo = entityManager.find(Vyöarvo.class, 1);
       Assert.assertNotNull(vyöarvo);

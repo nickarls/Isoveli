@@ -21,6 +21,7 @@ import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Perhe;
+import fi.budokwai.isoveli.malli.Rooli;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.malli.Sukupuoli;
@@ -258,16 +259,53 @@ public class HarrastajaTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "cleanup.sql", "karlsson.sql" })
+   { "cleanup.sql", "nicklas.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPoistaHarrastajaEiKaytossa()
    {
+      Harrastaja nicklas = entityManager.find(Harrastaja.class, 1);
+      harrastajaAdmin.setHarrastaja(nicklas);
+      harrastajaAdmin.poistaHarrastaja();
+      entityManager.clear();
+      nicklas = entityManager.find(Harrastaja.class, 1);
+      Assert.assertNull(nicklas);
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "nicklas.sql", "yllapitajarooli.sql", "nicklasyllapitaja.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testPoistaHarrastajaRoolilla()
+   {
+      Harrastaja nicklas = entityManager.find(Harrastaja.class, 1);
+      harrastajaAdmin.setHarrastaja(nicklas);
+      harrastajaAdmin.poistaHarrastaja();
+      entityManager.clear();
+      nicklas = entityManager.find(Harrastaja.class, 1);
+      Assert.assertNull(nicklas);
+      int rooleja = entityManager.createNativeQuery("select count(1) from henkilorooli", Integer.class)
+         .getFirstResult();
+      Assert.assertEquals(0, rooleja);
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "huoltajaharrastaja.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testPoistaHuoltajaHarrastaja()
+   {
       Harrastaja emil = entityManager.find(Harrastaja.class, 2);
-      harrastajaAdmin.setHarrastaja(emil);
+      Assert.assertNotNull(emil.getHuoltaja());
+      Harrastaja nicklas = entityManager.find(Harrastaja.class, 1);
+      harrastajaAdmin.setHarrastaja(nicklas);
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("Harrastaja on huoltaja ja häntä ei voi poistaa (1kpl: Emil...)");
       harrastajaAdmin.poistaHarrastaja();
       entityManager.clear();
       emil = entityManager.find(Harrastaja.class, 2);
-      Assert.assertNull(emil);
+      nicklas = entityManager.find(Harrastaja.class, 1);
+      Assert.assertNotNull(nicklas);
+      Assert.assertNotNull(emil.getHuoltaja());
    }
 
    @Test
@@ -278,13 +316,9 @@ public class HarrastajaTest extends Perustesti
    {
       Harrastaja nicklas = entityManager.find(Harrastaja.class, 1);
       harrastajaAdmin.setHarrastaja(nicklas);
-      try
-      {
-         harrastajaAdmin.poistaHarrastaja();
-      } catch (IsoveliPoikkeus e)
-      {
-         Assert.assertEquals("Harrastajalla on sopimuksia ja häntä ei voi poistaa (1kpl: Harjoittelu (18+v)...)", e.getMessage());
-      }
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("Harrastajalla on sopimuksia ja häntä ei voi poistaa (1kpl: Harjoittelu (18+v)...)");
+      harrastajaAdmin.poistaHarrastaja();
       entityManager.clear();
       nicklas = entityManager.find(Harrastaja.class, 1);
       Assert.assertNotNull(nicklas);
@@ -298,13 +332,9 @@ public class HarrastajaTest extends Perustesti
    {
       Harrastaja nicklas = entityManager.find(Harrastaja.class, 1);
       harrastajaAdmin.setHarrastaja(nicklas);
-      try
-      {
-         harrastajaAdmin.poistaHarrastaja();
-      } catch (IsoveliPoikkeus e)
-      {
-         Assert.assertEquals("Harrastajalla on vyökokeita ja häntä ei voi poistaa (1kpl: 7.kup...)", e.getMessage());
-      }
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("Harrastajalla on vyökokeita ja häntä ei voi poistaa (1kpl: 7.kup...)");
+      harrastajaAdmin.poistaHarrastaja();
       entityManager.clear();
       nicklas = entityManager.find(Harrastaja.class, 1);
       Assert.assertNotNull(nicklas);
@@ -318,13 +348,9 @@ public class HarrastajaTest extends Perustesti
    {
       Harrastaja nicklas = entityManager.find(Harrastaja.class, 1);
       harrastajaAdmin.setHarrastaja(nicklas);
-      try
-      {
-         harrastajaAdmin.poistaHarrastaja();
-      } catch (IsoveliPoikkeus e)
-      {
-         Assert.assertEquals("Harrastajalla on treenikäyntejä ja häntä ei voi poistaa (1kpl: 12.12.2012 12:12...)", e.getMessage());
-      }
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("Harrastajalla on treenikäyntejä ja häntä ei voi poistaa (1kpl: 12.12.2012 12:12...)");
+      harrastajaAdmin.poistaHarrastaja();
       entityManager.clear();
       nicklas = entityManager.find(Harrastaja.class, 1);
       Assert.assertNotNull(nicklas);
@@ -443,14 +469,9 @@ public class HarrastajaTest extends Perustesti
       harrastajaAdmin.setHarrastaja(harrastaja);
       Sopimus sopimus = entityManager.find(Sopimus.class, 1);
       harrastajaAdmin.setSopimus(sopimus);
-      try
-      {
-         harrastajaAdmin.poistaSopimus();
-      } catch (IsoveliPoikkeus e)
-      {
-         Assert.assertEquals("Sopimuksella on sopimuslaskuja ja sitä ei voi poistaa (1kpl: 01.01.2013-30.05.2013...)",
-            e.getMessage());
-      }
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("Sopimuksella on sopimuslaskuja ja sitä ei voi poistaa (1kpl: 01.01.2013-30.05.2013...)");
+      harrastajaAdmin.poistaSopimus();
       entityManager.clear();
       harrastaja = entityManager.find(Harrastaja.class, 1);
       Assert.assertEquals(1, harrastaja.getSopimukset().size());
@@ -541,6 +562,22 @@ public class HarrastajaTest extends Perustesti
       entityManager.clear();
       harrastaja = entityManager.find(Harrastaja.class, 1);
       Assert.assertEquals(0, harrastaja.getVyökokeet().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "nicklas.sql", "yllapitajarooli.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testLisaaRooli()
+   {
+      Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
+      Rooli admin = entityManager.find(Rooli.class, 1);
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      harrastaja.getRoolit().add(admin);
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      harrastaja = entityManager.find(Harrastaja.class, 1);
+      Assert.assertEquals(1, harrastaja.getRoolit().size());
    }
 
 }

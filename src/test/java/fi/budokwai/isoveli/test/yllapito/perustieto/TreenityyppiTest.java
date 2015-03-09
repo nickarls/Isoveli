@@ -106,13 +106,9 @@ public class TreenityyppiTest extends Perustesti
    {
       Treenityyppi treenityyppi = entityManager.find(Treenityyppi.class, 1);
       perustietoAdmin.setTreenityyppi(treenityyppi);
-      try
-      {
-         perustietoAdmin.poistaTreenityyppi();
-      } catch (IsoveliPoikkeus e)
-      {
-         Assert.assertEquals("Treenityyppi on käytössä ja sitä ei voi poistaa (1kpl: reeni...)", e.getMessage());
-      }
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("Treenityyppi on käytössä ja sitä ei voi poistaa (1kpl: reeni...)");
+      perustietoAdmin.poistaTreenityyppi();
       entityManager.clear();
       treenityyppi = entityManager.find(Treenityyppi.class, 1);
       Assert.assertNotNull(treenityyppi);

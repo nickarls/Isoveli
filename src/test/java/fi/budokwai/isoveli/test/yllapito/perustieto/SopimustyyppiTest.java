@@ -107,14 +107,9 @@ public class SopimustyyppiTest extends Perustesti
    {
       Sopimustyyppi sopimustyyppi = entityManager.find(Sopimustyyppi.class, 1);
       perustietoAdmin.setSopimustyyppi(sopimustyyppi);
-      try
-      {
-         perustietoAdmin.poistaSopimustyyppi();
-      } catch (IsoveliPoikkeus e)
-      {
-         Assert.assertEquals("Sopimustyyppi on käytössä ja sitä ei voi poistaa (1kpl: Nicklas Karlsson...)",
-            e.getMessage());
-      }
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("Sopimustyyppi on käytössä ja sitä ei voi poistaa (1kpl: Nicklas Karlsson...)");
+      perustietoAdmin.poistaSopimustyyppi();
       entityManager.clear();
       sopimustyyppi = entityManager.find(Sopimustyyppi.class, 1);
       Assert.assertNotNull(sopimustyyppi);

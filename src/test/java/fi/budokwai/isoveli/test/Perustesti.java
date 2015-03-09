@@ -8,6 +8,8 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
@@ -22,6 +24,9 @@ import fi.budokwai.isoveli.malli.Vyökoe;
 
 public class Perustesti
 {
+   @Rule
+   public ExpectedException exception = ExpectedException.none();
+   
    @Deployment
    public static WebArchive createDeployment()
    {

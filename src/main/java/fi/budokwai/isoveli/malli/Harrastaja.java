@@ -493,6 +493,22 @@ public class Harrastaja extends Henkilö
       tarkistaVyökoekäyttö();
       tarkistaSopimuskäyttö();
       tarkistaTreenikäyntikäyttö();
+      tarkistaHuoltajakäyttö();
+   }
+
+   private void tarkistaHuoltajakäyttö()
+   {
+      if (perhe == null || perhe.getHuollettavat(this).isEmpty())
+      {
+         return;
+      }
+      StringJoiner stringJoiner = new StringJoiner(", ");
+      perhe.getHuollettavat(this).forEach(h -> {
+         stringJoiner.add(h.getEtunimi());
+      });
+      String viesti = String.format("Harrastaja on huoltaja ja häntä ei voi poistaa (%dkpl: %s...)",
+         perhe.getHuollettavat(this).size(), stringJoiner.toString());
+      throw new IsoveliPoikkeus(viesti);
    }
 
    private void tarkistaTreenikäyntikäyttö()

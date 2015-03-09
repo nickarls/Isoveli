@@ -93,14 +93,9 @@ public class IlmoittautumisTest extends Perustesti
    {
       Treenisessio sessio = treenisessiot.get().iterator().next();
       ilmoittautumisAdmin.setTreenisessio(sessio);
-      try
-      {
-         ilmoittautumisAdmin.poistaTreenisessio();
-      } catch (IsoveliPoikkeus e)
-      {
-         Assert.assertEquals("Treenisessiolla on treenikäyntejä ja sitä ei voi poistaa (1kpl: Nicklas Karlsson...)",
-            e.getMessage());
-      }
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("Treenisessiolla on treenikäyntejä ja sitä ei voi poistaa (1kpl: Nicklas Karlsson...)");
+      ilmoittautumisAdmin.poistaTreenisessio();
       entityManager.clear();
       sessio = entityManager.find(Treenisessio.class, 1);
       Assert.assertNotNull(sessio);

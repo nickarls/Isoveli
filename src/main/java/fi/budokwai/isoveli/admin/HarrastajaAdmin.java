@@ -394,7 +394,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void lisääHarrastaja()
    {
       resetoi();
-      tabi.setSelectedIndex(0);
+//      tabi.setSelectedIndex(0);
       harrastaja = new Harrastaja();
       info("Uusi harrastaja alustettu");
       fokusoi("form:etunimi");

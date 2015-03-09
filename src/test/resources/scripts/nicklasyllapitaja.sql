@@ -1,0 +1,1 @@
+insert into henkilorooli(henkilo, rooli) values (1, 1);

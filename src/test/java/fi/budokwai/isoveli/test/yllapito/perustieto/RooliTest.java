@@ -106,13 +106,9 @@ public class RooliTest extends Perustesti
    {
       Rooli rooli = entityManager.find(Rooli.class, 1);
       perustietoAdmin.setRooli(rooli);
-      try
-      {
-         perustietoAdmin.poistaRooli();
-      } catch (IsoveliPoikkeus e)
-      {
-         Assert.assertEquals("Rooli on käytössä ja sitä ei voi poistaa (1kpl: Nicklas Karlsson...)", e.getMessage());
-      }
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("Rooli on käytössä ja sitä ei voi poistaa (1kpl: Nicklas Karlsson...)");
+      perustietoAdmin.poistaRooli();
       entityManager.clear();
       rooli = entityManager.find(Rooli.class, 1);
       Assert.assertNotNull(rooli);

@@ -117,14 +117,10 @@ public class TreeniTest extends Perustesti
    public void testPoistaTreeniKaytossa()
    {
       Treeni treeni = entityManager.find(Treeni.class, 1);
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("Treeni on käytössä ja sitä ei voi poistaa (1kpl: 12.12.2012...)");
       perustietoAdmin.setTreeni(treeni);
-      try
-      {
-         perustietoAdmin.poistaTreeni();
-      } catch (IsoveliPoikkeus e)
-      {
-         Assert.assertEquals("Treeni on käytössä ja sitä ei voi poistaa (1kpl: 12.12.2012...)", e.getMessage());
-      }
+      perustietoAdmin.poistaTreeni();
       entityManager.clear();
       treeni = entityManager.find(Treeni.class, 1);
       Assert.assertNotNull(treeni);

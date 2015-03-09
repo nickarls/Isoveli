@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.StringJoiner;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +24,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import fi.budokwai.isoveli.IsoveliPoikkeus;
 
 @Entity
 @DynamicInsert
@@ -151,5 +154,24 @@ public class Treenisessio
       }
       Treenisessio toinenTreenisessio = (Treenisessio) toinen;
       return id == toinenTreenisessio.getId();
+   }
+
+   public void tarkistaKäyttö()
+   {
+      if (treenikäynnit.isEmpty())
+      {
+         return;
+      }
+      if (treenikäynnit.isEmpty())
+      {
+         return;
+      }
+      StringJoiner stringJoiner = new StringJoiner(", ");
+      treenikäynnit.forEach(t -> {
+         stringJoiner.add(t.getHarrastaja().getNimi());
+      });
+      String viesti = String.format("Treenisessiolla on treenikäyntejä ja sitä ei voi poistaa (%dkpl: %s...)",
+         treenikäynnit.size(), stringJoiner.toString());
+      throw new IsoveliPoikkeus(viesti);
    }
 }

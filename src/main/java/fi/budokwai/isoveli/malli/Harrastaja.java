@@ -538,6 +538,5 @@ public class Harrastaja extends Henkilö
       String viesti = String.format("Harrastajalla on vyökokeita ja häntä ei voi poistaa (%dkpl: %s...)",
          vyökokeet.size(), stringJoiner.toString());
       throw new IsoveliPoikkeus(viesti);
-
    }
 }

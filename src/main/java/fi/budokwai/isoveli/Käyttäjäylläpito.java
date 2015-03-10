@@ -49,10 +49,10 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
 
    @Inject
    private List<Vyöarvo> vyöarvot;
-   
+
    @Inject
    private Vyökoehelper vyökoehelper;
-   
+
    private Henkilö ylläpidettävä;
 
    private RowStateMap vyökoeRSM = new RowStateMap();
@@ -99,18 +99,6 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    public Vyökoe getOmaVyökoe()
    {
       return vyökoe;
-   }
-
-   public void peruutaVyökoemuutos()
-   {
-      if (vyökoe.isPoistettavissa())
-      {
-         entityManager.refresh(vyökoe);
-      } else
-      {
-         vyökoe = null;
-      }
-      virhe("Muutokset peruttu");
    }
 
    public void tallennaVyökoe()

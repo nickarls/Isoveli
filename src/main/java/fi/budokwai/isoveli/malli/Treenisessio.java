@@ -126,11 +126,6 @@ public class Treenisessio
       return String.format("%s: %s", treeni.getNimi(), sdf.format(päivä));
    }
 
-   public boolean isPoistettavissa()
-   {
-      return id > 0;
-   }
-
    public Date getAikaleima()
    {
       Calendar päivä = Calendar.getInstance();

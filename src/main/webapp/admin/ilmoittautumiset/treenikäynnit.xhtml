@@ -9,10 +9,16 @@
 			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').hide()" />
 		</h:panelGrid>
 	</ace:confirmationDialog>
-	<h:commandButton action="#{ilmoittautumisAdmin.lisääTreenikäynti}" value="x" styleClass="ikoni"
-		image="/kuvat/lisää.png" immediate="true">
-		<ace:ajax render="@form" />
-	</h:commandButton>
+	<h:panelGrid columns="3">
+		<h:commandButton action="#{ilmoittautumisAdmin.lisääTreenikäynti}" styleClass="ikoni"
+			image="/kuvat/lisää.png" immediate="true">
+			<ace:ajax render="@form" />
+		</h:commandButton>
+		<h:commandButton rendered="#{treenikäynti != null}" styleClass="ikoni"
+			action="#{ilmoittautumisAdmin.tallennaTreenikäynti}" image="/kuvat/tallenna.jpg" />
+		<h:commandButton rendered="#{treenikäynti != null}" styleClass="ikoni"
+			onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').show();" image="/kuvat/poista.png" immediate="true" />
+	</h:panelGrid>
 	<ace:dataTable value="#{treenikäynnit}" var="_treenikäynti" selectionMode="single"
 		stateMap="#{ilmoittautumisAdmin.treenikäyntiRSM}" rows="10" paginator="true" paginatorPosition="bottom"
 		paginatorAlwaysVisible="false" rowSelectListener="#{ilmoittautumisAdmin.treenikäyntiValittu}">
@@ -59,22 +65,19 @@
 						<f:selectItems value="#{kaikkiTreenisessiot}" var="_treenisessio" itemValue="#{_treenisessio}"
 							itemLabel="#{_treenisessio.kuvaus}" />
 						<f:converter converterId="objectConverter" />
-						<f:ajax execute="form:treenikäynti" render="form:treenikäynti" listener="#{ilmoittautumisAdmin.treenisessioMuuttui}" />
+						<f:ajax execute="form:treenikäynti" render="form:treenikäynti"
+							listener="#{ilmoittautumisAdmin.treenisessioMuuttui}" />
 					</h:selectOneMenu>
 				</h:panelGrid>
 				<h:outputText value="Aikaleima" />
 				<h:panelGrid>
 					<ace:message for="form:aikaleima" />
 					<h:inputText value="#{treenikäynti.aikaleima}">
-						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="EET"/>
+						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="EET" />
 					</h:inputText>
 				</h:panelGrid>
 			</h:panelGrid>
 		</ace:panel>
 	</h:panelGrid>
 
-	<h:commandButton rendered="#{treenikäynti != null}" value="x" styleClass="ikoni"
-		action="#{ilmoittautumisAdmin.tallennaTreenikäynti}" image="/kuvat/tallenna.jpg" />
-	<h:commandButton rendered="#{treenikäynti.poistettavissa}" value="x" styleClass="ikoni"
-		onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').show();" image="/kuvat/poista.png" immediate="true" />
 </ui:composition>

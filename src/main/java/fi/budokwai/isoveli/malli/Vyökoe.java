@@ -91,12 +91,6 @@ public class Vyökoe
       return harrastaja.getTuoreinVyöarvo() == vyöarvo;
    }
 
-   @Transient
-   public boolean isPoistettavissa()
-   {
-      return id > 0;
-   }
-
    public LocalDate getKoska()
    {
       return DateUtil.Date2LocalDate(päivä);

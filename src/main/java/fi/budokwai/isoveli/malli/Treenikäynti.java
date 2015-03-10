@@ -112,11 +112,6 @@ public class Treenik‰ynti
       return id == toinenTreenik‰ynti.getId();
    }
 
-   public boolean isPoistettavissa()
-   {
-      return id > 0;
-   }
-
    public void p‰ivit‰Aikaleima()
    {
       aikaleima = treenisessio.getAikaleima();

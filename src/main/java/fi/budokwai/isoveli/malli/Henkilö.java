@@ -267,11 +267,6 @@ public class Henkilö implements Serializable
       return id == 0;
    }
 
-   public boolean isPoistettavissa()
-   {
-      return id > 0;
-   }
-
    public void setKuva(BlobData kuva)
    {
       this.kuva = kuva;

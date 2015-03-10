@@ -1,7 +1,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:ace="http://www.icefaces.org/icefaces/components" xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-	<h:commandButton value="X" image="/kuvat/laskuta.png" action="#{laskutusAdmin.laskutaSopimukset}" styleClass="ikoni"
+	<h:commandButton image="/kuvat/laskuta.png" action="#{laskutusAdmin.laskutaSopimukset}" styleClass="ikoni"
 		rendered="#{fn:length(laskuttamattomat) != 0}" />
 	<ace:dataTable value="#{laskuttamattomat}" var="_sopimus" selectionMode="single" paginator="true"
 		paginatorPosition="bottom" paginatorAlwaysVisible="false" stateMap="#{laskutusAdmin.laskuttamattomatRSM}" rows="10"

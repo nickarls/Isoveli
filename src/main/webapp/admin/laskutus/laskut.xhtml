@@ -71,9 +71,6 @@
 				<h:graphicImage value="/kuvat/pdf.png" style="width:24px" />
 			</h:outputLink>
 		</ace:column>
-		<ace:column headerText="Laskutettu">
-			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_lasku.laskutettu}" />
-		</ace:column>
 		<ace:column>
 			<h:graphicImage value="/kuvat/alivalikko.png" style="width:24px" id="alivalikko" />
 			<ace:contextMenu for="alivalikko">
@@ -161,7 +158,7 @@
 			</h:commandButton>
 		</ace:column>
 	</ace:dataTable>
-	<h:commandButton rendered="#{lasku != null}" value="x" styleClass="ikoni"
+	<h:commandButton rendered="#{lasku != null}" styleClass="ikoni"
 		onclick="ice.ace.instance('form:vahvistaLaskunPoisto').show();" image="/kuvat/poista.png" immediate="true" />
 	<h:commandButton value="+" action="#{laskutusAdmin.lisääRivi}" immediate="true" />
 	<h:commandButton rendered="#{lasku != null}" value="S" styleClass="ikoni" action="#{laskutusAdmin.tallennaLasku}">

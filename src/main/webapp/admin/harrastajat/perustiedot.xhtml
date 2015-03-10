@@ -20,7 +20,7 @@
 					</h:selectBooleanCheckbox>
 					<h:outputText value="Etunimi" />
 					<h:panelGrid>
-						<ace:message for="form:etunimi"/>
+						<ace:message for="form:etunimi" />
 						<h:inputText value="#{harrastaja.etunimi}" id="etunimi" styleClass="capitalized" />
 					</h:panelGrid>
 					<h:outputText value="Sukunimi" />
@@ -39,7 +39,7 @@
 					<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
 						<ace:message for="form:syntymäaika" />
 						<ace:dateTimeEntry value="#{harrastaja.syntynyt}" renderAsPopup="true" pattern="dd.MM.yyyy" id="syntymäaika">
-							<ace:ajax event="dateSelect" execute="@this" render="form:huoltajapanel form:numeropanel" 
+							<ace:ajax event="dateSelect" execute="@this" render="form:huoltajapanel form:numeropanel"
 								listener="#{harrastajaAdmin.syntymäaikaMuuttui}" />
 							<ace:ajax event="dateTextChange" execute="@this" render="form:huoltajapanel form:numeropanel"
 								listener="#{harrastajaAdmin.syntymäaikaMuuttui}" />
@@ -110,9 +110,10 @@
 							<f:ajax execute="@this form:henkilötietopanel"
 								render="form:osoitepanel form:huoltajapanel form:henkilötietopanel" listener="#{harrastajaAdmin.perheMuuttui}" />
 						</h:selectOneMenu>
-						<h:commandButton action="#{harrastajaAdmin.lisääPerhe}" value="x" image="/kuvat/lisää_perhe.jpg"
+						<h:commandButton action="#{harrastajaAdmin.lisääPerhe}" image="/kuvat/lisää_perhe.jpg"
 							style="height:50px; width:50px; margin-left:15px">
-							<f:ajax execute="form:henkilötietopanel" render="form:henkilötietopanel form:perhepanel form:sukunimigrid form:huoltajapanel" />
+							<f:ajax execute="form:henkilötietopanel"
+								render="form:henkilötietopanel form:perhepanel form:sukunimigrid form:huoltajapanel" />
 						</h:commandButton>
 					</h:panelGrid>
 				</ace:panel>
@@ -132,7 +133,7 @@
 									listener="#{harrastajaAdmin.huoltajaMuuttui}" />
 							</h:selectOneMenu>
 						</h:panelGrid>
-						<h:commandButton action="#{harrastajaAdmin.lisääHuoltaja}" value="x" image="/kuvat/lisää_huoltaja.jpg"
+						<h:commandButton action="#{harrastajaAdmin.lisääHuoltaja}" image="/kuvat/lisää_huoltaja.jpg"
 							style="height:50px; width:50px; margin-left:15px">
 							<f:ajax execute="form:sukunimi" render="form:huoltajapanel form:perhepanel" />
 						</h:commandButton>
@@ -206,18 +207,10 @@
 				</h:panelGrid>
 			</ace:panel>
 			<h:panelGroup id="map">
-				<ace:gMap style="width: 400px; height: 400px" zoomLevel="12" id="kartta" locateAddress="true" rendered="#{!harrastaja.tilapäinen}"
-					address="#{harrastaja.osoite.osoiteString}" />
+				<ace:gMap style="width: 400px; height: 400px" zoomLevel="12" id="kartta" locateAddress="true"
+					rendered="#{!harrastaja.tilapäinen}" address="#{harrastaja.osoite.osoiteString}" />
 			</h:panelGroup>
 		</h:panelGrid>
 	</h:panelGrid>
-	<h:commandButton rendered="#{harrastaja != null}" value="x" styleClass="ikoni"
-		action="#{harrastajaAdmin.tallennaHarrastaja}" image="/kuvat/tallenna.jpg" />
-	<h:commandButton rendered="#{harrastaja != null}" value="x" styleClass="ikoni" immediate="true"
-		action="#{harrastajaAdmin.peruutaPerustietomuutos}" image="/kuvat/peruuta_muutos.png">
-		<f:ajax render="@form" />
-	</h:commandButton>
-	<h:commandButton rendered="#{harrastaja.poistettavissa}" value="x" styleClass="ikoni"
-		onclick="ice.ace.instance('form:vahvistaHarrastajanPoisto').show();" image="/kuvat/poista.png" immediate="true" />
 
 </ui:composition>

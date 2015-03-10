@@ -103,11 +103,6 @@ public class Sopimustyyppi
       this.nimi = nimi;
    }
 
-   public boolean isPoistettavissa()
-   {
-      return id > 0;
-   }
-
    public boolean isJäsenmaksu()
    {
       return jäsenmaksu;

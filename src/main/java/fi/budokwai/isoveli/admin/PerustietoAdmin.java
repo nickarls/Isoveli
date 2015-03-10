@@ -162,27 +162,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       return tulos;
    }
 
-   // @Produces
-   // @Named
-   // public List<Rooli> getKaikkiRoolit()
-   // {
-   // return roolit;
-   // }
-   //
-   // @Produces
-   // @Named
-   // public List<Treenityyppi> getKaikkiTreenityypit()
-   // {
-   // return treenityypit;
-   // }
-   //
-   // @Produces
-   // @Named
-   // public List<Sopimustyyppi> getKaikkiSopimustyypit()
-   // {
-   // return sopimustyypit;
-   // }
-
    @Produces
    @Named
    public Sopimustyyppi getSopimustyyppi()
@@ -209,18 +188,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public Treenityyppi getTreenityyppi()
    {
       return treenityyppi;
-   }
-
-   public void peruutaRoolimuutos()
-   {
-      if (rooli.isPoistettavissa())
-      {
-         entityManager.refresh(rooli);
-      } else
-      {
-         rooli = null;
-      }
-      virhe("Muutokset peruttu");
    }
 
    public void piilotaRooli()
@@ -291,6 +258,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       rooliRSM.get(rooli).setSelected(true);
       roolit = null;
       info("Rooli tallennettu");
+      loggaaja.loggaa("Tallensi roolin '%s'", rooli);
    }
 
    public void tallennaSopimustyyppi()
@@ -300,6 +268,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       rooliRSM.get(sopimustyyppi).setSelected(true);
       sopimustyypit = null;
       info("Sopimustyyppi tallennettu");
+      loggaaja.loggaa("Tallensi sopimustyypin '%s'", sopimustyyppi);
    }
 
    public void tallennaTreeni()
@@ -325,7 +294,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       treeniRSM.get(treeni).setSelected(true);
       treenit = null;
       info("Treeni tallennettu");
-      loggaaja.loggaa(String.format("Tallensi treenin %s", treeni));
+      loggaaja.loggaa("Tallensi treenin '%s'", treeni);
    }
 
    public void tallennaVyöarvo()
@@ -335,6 +304,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       vyöarvoRSM.get(vyöarvo).setSelected(true);
       vyöarvoMuuttui.fire(vyöarvo);
       info("Vyöarvo tallennettu");
+      loggaaja.loggaa("Tallensi vyöarvon '%s'", vyöarvo);
    }
 
    public void tallennaTreenityyppi()
@@ -344,6 +314,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       treenityyppiRSM.get(treenityyppi).setSelected(true);
       treenityypit = null;
       info("Treenityyppi tallennettu");
+      loggaaja.loggaa("Tallensi treenityyin '%s'", treenityyppi);
    }
 
    private void haeTreenit()
@@ -374,6 +345,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       entityManager.flush();
       roolit = null;
       info("Rooli poistettu");
+      loggaaja.loggaa("Poisti roolin '%s'", rooli);
    }
 
    private void tarkistaRoolikäyttö()
@@ -399,6 +371,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       entityManager.flush();
       treenit = null;
       info("Treeni poistettu");
+      loggaaja.loggaa("Poisti treenin '%s'", treeni);
    }
 
    private void tarkistaTreenikäyttö()
@@ -424,6 +397,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       entityManager.flush();
       vyöarvoMuuttui.fire(vyöarvo);
       info("Vyöarvo poistettu");
+      loggaaja.loggaa("Poisti vyöarvon '%s'", vyöarvo);
    }
 
    private void tarkistaVyöarvoKäyttö()
@@ -449,6 +423,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       entityManager.flush();
       treenityypit = null;
       info("Treenityyppi poistettu");
+      loggaaja.loggaa("Poisti treenityypin '%s'", treenityyppi);
    }
 
    private void tarkistaTreenityyppiKäyttö()
@@ -473,6 +448,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       entityManager.flush();
       sopimustyypit = null;
       info("Sopimustyyppi poistettu");
+      loggaaja.loggaa("Poisti sopimustyypin '%s'", sopimustyyppi);
    }
 
    private void tarkistaSopimustyyppikäyttö()

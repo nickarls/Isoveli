@@ -54,11 +54,6 @@ public class Treenityyppi
       this.nimi = nimi;
    }
 
-   public boolean isPoistettavissa()
-   {
-      return id > 0;
-   }
-
    public boolean isArkistoitu()
    {
       return arkistoitu;
@@ -67,5 +62,11 @@ public class Treenityyppi
    public void setArkistoitu(boolean arkistoitu)
    {
       this.arkistoitu = arkistoitu;
+   }
+
+   @Override
+   public String toString()
+   {
+      return nimi;
    }
 }

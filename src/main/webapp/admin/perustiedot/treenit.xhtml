@@ -186,13 +186,12 @@
 			</ace:listControl>
 		</ace:panel>
 	</h:panelGrid>
-	<h:panelGrid columns="3">
-		<h:commandButton rendered="#{treeni != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
-			action="#{perustietoAdmin.tallennaTreeni}">
+	<h:panelGrid columns="2" rendered="#{treeni != null}">
+		<h:commandButton styleClass="ikoni" image="/kuvat/tallenna.jpg" action="#{perustietoAdmin.tallennaTreeni}">
 			<f:ajax execute="@form" render="@form" />
 		</h:commandButton>
-		<h:commandButton rendered="#{treeni.poistettavissa and fn:length(treeniKäyttö) == 0}" value="x" styleClass="ikoni"
-			onclick="ice.ace.instance('form:vahvistaTreeninPoisto').show();" image="/kuvat/poista.png" immediate="true" />
+		<h:commandButton styleClass="ikoni" onclick="ice.ace.instance('form:vahvistaTreeninPoisto').show();"
+			image="/kuvat/poista.png" immediate="true" />
 	</h:panelGrid>
 
 </ui:composition>

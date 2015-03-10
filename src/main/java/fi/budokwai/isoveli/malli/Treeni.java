@@ -221,11 +221,6 @@ public class Treeni
       this.vetäjät = vetäjät;
    }
 
-   public boolean isPoistettavissa()
-   {
-      return id > 0;
-   }
-
    public Date getVoimassaAlkaa()
    {
       return voimassaAlkaa;
@@ -365,5 +360,11 @@ public class Treeni
    public void setArkistoitu(boolean arkistoitu)
    {
       this.arkistoitu = arkistoitu;
+   }
+
+   @Override
+   public String toString()
+   {
+      return nimi;
    }
 }

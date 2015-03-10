@@ -118,11 +118,6 @@ public class Vyöarvo
       return id == toinenVyöarvo.getId();
    }
 
-   public boolean isPoistettavissa()
-   {
-      return id > 0;
-   }
-
    public int getJärjestys()
    {
       return järjestys;

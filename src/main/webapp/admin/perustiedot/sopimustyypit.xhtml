@@ -15,7 +15,7 @@
 			<ace:ajax render="@form" />
 		</h:commandButton>
 		<h:panelGrid columns="2" columnClasses="tabletop, tabletop">
-			<ace:dataTable value="#{kaikkiSopimustyypit}" var="_sopimustyyppi" selectionMode="single" rows="10" paginator="true"
+			<ace:dataTable value="#{sopimustyypit}" var="_sopimustyyppi" selectionMode="single" rows="10" paginator="true"
 				paginatorPosition="bottom" paginatorAlwaysVisible="false"
 				rowSelectListener="#{perustietoAdmin.sopimustyyppiValittu}" stateMap="#{perustietoAdmin.sopimustyyppiRSM}">
 				<ace:column headerText="Nimi" styleClass="lefttext">
@@ -68,20 +68,10 @@
 				</ace:column>
 				<ace:column headerText="Hinta">
 					<h:outputText value="#{_sopimustyyppi.hinta}">
-						<f:convertNumber pattern="0.00"/>
+						<f:convertNumber pattern="0.00" />
 					</h:outputText>
 				</ace:column>
 			</ace:dataTable>
-			<ace:panel header="Käyttö (#{fn:length(sopimustyyppiKäyttö)})" style="width:200px"
-				rendered="#{sopimustyyppi != null and sopimustyyppi.poistettavissa}">
-				<ace:dataTable value="#{sopimustyyppiKäyttö}" var="_sopimus" rows="10" paginator="true" paginatorPosition="bottom"
-					paginatorAlwaysVisible="false" rendered="#{fn:length(sopimustyyppiKäyttö) > 0}">
-					<ace:column>
-						<h:outputText value="#{_sopimus.tyyppi.nimi}" />
-					</ace:column>
-				</ace:dataTable>
-				<h:outputText value="Ei käytössä" rendered="#{fn:length(sopimustyyppiKäyttö) == 0}" />
-			</ace:panel>
 		</h:panelGrid>
 		<h:panelGrid columns="2" columnClasses="tabletop, tabletop">
 			<h:panelGrid style="margin-left:20px">
@@ -140,32 +130,30 @@
 						<h:outputText value="Oletus-kk voim" />
 						<h:panelGrid>
 							<ace:message for="form:oletuskk" />
-							<h:inputText value="#{sopimustyyppi.oletusKuukaudetVoimassa}" id="oletuskk" size="3"/>
+							<h:inputText value="#{sopimustyyppi.oletusKuukaudetVoimassa}" id="oletuskk" size="3" />
 						</h:panelGrid>
 						<h:outputText value="Oletuskertoja" />
 						<h:panelGrid>
 							<ace:message for="form:oleuskerrrat" />
-							<h:inputText value="#{sopimustyyppi.oletusTreenikerrat}" id="oletuskerrat" size="3"/>
+							<h:inputText value="#{sopimustyyppi.oletusTreenikerrat}" id="oletuskerrat" size="3" />
 						</h:panelGrid>
 						<h:outputText value="Alaikäraja" />
 						<h:panelGrid>
 							<ace:message for="form:alaikäraja" />
-							<h:inputText value="#{sopimustyyppi.alaikäraja}" id="alaikäraja" size="3"/>
+							<h:inputText value="#{sopimustyyppi.alaikäraja}" id="alaikäraja" size="3" />
 						</h:panelGrid>
 						<h:outputText value="Yläikäraja" />
 						<h:panelGrid>
 							<ace:message for="form:yläikäraja" />
-							<h:inputText value="#{sopimustyyppi.yläikäraja}" id="yläikäraja" size="3"/>
+							<h:inputText value="#{sopimustyyppi.yläikäraja}" id="yläikäraja" size="3" />
 						</h:panelGrid>
 					</h:panelGrid>
 				</ace:panel>
-				<h:panelGrid columns="3">
-					<h:commandButton rendered="#{sopimustyyppi != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
-						action="#{perustietoAdmin.tallennaSopimustyyppi}">
+				<h:panelGrid columns="2" rendered="#{sopimustyyppi != null}">
+					<h:commandButton styleClass="ikoni" image="/kuvat/tallenna.jpg" action="#{perustietoAdmin.tallennaSopimustyyppi}">
 						<f:ajax execute="@form" render="@form" />
 					</h:commandButton>
-					<h:commandButton rendered="#{sopimustyyppi.poistettavissa and fn:length(sopimustyyppiKäyttö) == 0}" value="x"
-						styleClass="ikoni" onclick="ice.ace.instance('form:vahvistaSopimustyypinPoisto').show();"
+					<h:commandButton styleClass="ikoni" onclick="ice.ace.instance('form:vahvistaSopimustyypinPoisto').show();"
 						image="/kuvat/poista.png" immediate="true" />
 				</h:panelGrid>
 			</h:panelGrid>
@@ -180,7 +168,7 @@
 					<h:panelGrid>
 						<ace:message for="form:hinta" />
 						<h:inputText value="#{sopimustyyppi.hinta}" id="hinta">
-							<f:convertNumber pattern="0.00"/>
+							<f:convertNumber pattern="0.00" />
 						</h:inputText>
 					</h:panelGrid>
 					<h:outputText value="Oletusmaksuväli" />

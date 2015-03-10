@@ -71,11 +71,6 @@ public class Rooli
       return id == toinenRooli.getId();
    }
 
-   public boolean isPoistettavissa()
-   {
-      return id > 0;
-   }
-
    public boolean isArkistoitu()
    {
       return arkistoitu;
@@ -84,5 +79,11 @@ public class Rooli
    public void setArkistoitu(boolean arkistoitu)
    {
       this.arkistoitu = arkistoitu;
+   }
+
+   @Override
+   public String toString()
+   {
+      return nimi;
    }
 }

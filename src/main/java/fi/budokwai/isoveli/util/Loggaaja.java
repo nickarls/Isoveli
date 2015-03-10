@@ -32,12 +32,12 @@ public class Loggaaja
       return entityManager.createNamedQuery("lokitapahtumat", Loki.class).getResultList();
    }
 
-   public void loggaa(String mitä)
+   public void loggaa(String teksti, Object... parametrit)
    {
       Loki loki = new Loki();
       loki.setKuka(käyttäjä.get().getNimi());
       loki.setKoska(new Date());
-      loki.setMitä(mitä);
+      loki.setMitä(String.format(teksti, parametrit));
       entityManager.persist(loki);
    }
 }

@@ -165,6 +165,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastaja.setPerhe(perhe);
       entityManager.persist(perhe);
       perheet = null;
+      loggaaja.loggaa("Lisäsi perheen harrastajalle '%s'", harrastaja);
    }
 
    @Produces
@@ -250,7 +251,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       {
          throw new IsoveliPoikkeus("Tauko ei voi loppua ennen kun se alkaa");
       }
-      loggaaja.loggaa(String.format("Tallensi harrastajan %s", harrastaja));
       harrastaja.siivoa();
       if (harrastaja.getPerhe() != null)
       {
@@ -262,6 +262,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastajaRSM.get(harrastaja).setSelected(true);
       harrastajat = null;
       info("Harrastaja tallennettu");
+      loggaaja.loggaa("Tallensi harrastajan '%s'", harrastaja);
    }
 
    private boolean löytyySamanniminenHarrastaja()
@@ -282,6 +283,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastajat = null;
       harrastajaRSM.setAllSelected(false);
       info("Harrastaja poistettu");
+      loggaaja.loggaa("Poisti harrastajan '%s'", harrastaja);
    }
 
    public void tallennaVyökoe()
@@ -291,6 +293,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       vyökoeRSM.get(vyökoe).setSelected(true);
       info("Vyökoe tallennettu");
       harrastajat = null;
+      loggaaja.loggaa("Tallensi harrastajan '%s' vyökokeen '%s'", harrastaja, vyökoe);
    }
 
    public void tallennaSopimus()
@@ -300,6 +303,8 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       sopimusRSM.get(sopimus).setSelected(true);
       harrastajat = null;
       info("Sopimus tallennettu");
+      loggaaja.loggaa("Tallensi harrastajan '%s' sopimuksen '%s'", harrastaja);
+      
    }
 
    public void poistaVyökoe()
@@ -309,6 +314,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       entityManager.flush();
       harrastajat = null;
       info("Vyökoe poistettu");
+      loggaaja.loggaa("Poisti harrastajan '%s' vyökokeen '%s'", harrastaja, vyökoe);
    }
 
    public void poistaSopimus()
@@ -319,6 +325,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       entityManager.flush();
       harrastajat = null;
       info("Sopimus poistettu");
+      loggaaja.loggaa("Poisti harrastajan '%s' sopimuksen '%s'", harrastaja, sopimus);
    }
 
    private void tarkistaSopimuskäyttö()
@@ -389,6 +396,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       entityManager.persist(perhe);
       perheet = null;
       fokusoi("form:huoltajan_etunimi");
+      loggaaja.loggaa("Lisäsi harrastajalle '%s' huoltajan", harrastaja);
    }
 
    public void lisääHarrastaja()
@@ -398,6 +406,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastaja = new Harrastaja();
       info("Uusi harrastaja alustettu");
       fokusoi("form:etunimi");
+      loggaaja.loggaa("Lisäsi harrastajan");
    }
 
    public void lisääSopimus()
@@ -410,6 +419,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       }
       sopimus.setMaksuväli(sopimus.getTyyppi().getOletusMaksuväli());
       info("Uusi sopimus alustettu");
+      loggaaja.loggaa("Lisäsi harrastajalle '%s' sopimuksen", harrastaja);
    }
 
    private Sopimustyyppi ehdotaSopimusTyyppiä()
@@ -435,6 +445,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastaja.lisääVyökoe(vyökoe);
       vyökoeRSM.setAllSelected(false);
       info("Uusi vyökoe alustettu");
+      loggaaja.loggaa("Lisäsi harrastajalle '%s' vyökokeen", harrastaja);
    }
 
    public void sopimustyyppiMuuttui()

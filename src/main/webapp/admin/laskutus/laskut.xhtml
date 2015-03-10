@@ -85,7 +85,7 @@
 			</ace:contextMenu>
 		</ace:column>
 	</ace:dataTable>
-	<ace:dataTable rows="10" value="#{laskut[0].laskurivit}" var="_laskurivi" paginator="true" paginatorPosition="bottom"
+	<ace:dataTable rows="10" value="#{lasku.laskurivit}" var="_laskurivi" paginator="true" paginatorPosition="bottom"
 		id="laskurivit" paginatorAlwaysVisible="false" rendered="#{lasku != null}" stateMap="#{laskutusAdmin.laskuriviRSM}">
 		<ace:ajax event="editSubmit" render="@all" listener="#{laskutusAdmin.tallennaRivi}" />
 		<ace:column headerText="#" styleClass="lefttext">

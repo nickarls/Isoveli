@@ -172,7 +172,7 @@ public class Lasku2PDF
    private PdfPTable teeLaskurivit()
    {
       PdfPTable taulu = new PdfPTable(new float[]
-      { 1, 10, 6, 3, 2, 3});
+      { 1, 10, 6, 3, 2, 2, 3});
       taulu.setWidthPercentage(100);
       taulu.setTotalWidth(550);
       teeRiviotsikot(taulu);
@@ -234,6 +234,8 @@ public class Lasku2PDF
       format.withHorizontalAlignment(Element.ALIGN_LEFT);
       lis‰‰Solu(taulu, laskurivi.getYksikkˆ(), format);
       format.withHorizontalAlignment(Element.ALIGN_RIGHT);
+      lis‰‰Solu(taulu, hintaformaatti.format(laskurivi.getYksikkˆhinta()), format);
+      format.withHorizontalAlignment(Element.ALIGN_RIGHT);
       lis‰‰Solu(taulu, hintaformaatti.format(laskurivi.getRivihinta()), format);
    }
 
@@ -248,6 +250,8 @@ public class Lasku2PDF
       lis‰‰Solu(taulu, "M‰‰r‰", format);
       format.withHorizontalAlignment(Element.ALIGN_LEFT);
       lis‰‰Solu(taulu, "Yks", format);
+      format.withHorizontalAlignment(Element.ALIGN_RIGHT);
+      lis‰‰Solu(taulu, "·", format);
       format.withHorizontalAlignment(Element.ALIGN_RIGHT);
       lis‰‰Solu(taulu, "Hinta", format);
    }

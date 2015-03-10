@@ -18,6 +18,8 @@ import org.icefaces.ace.model.table.RowStateMap;
 
 import fi.budokwai.isoveli.admin.Perustoiminnallisuus;
 import fi.budokwai.isoveli.malli.Harrastaja;
+import fi.budokwai.isoveli.malli.Ilmoittautumistulos;
+import fi.budokwai.isoveli.malli.Ilmoittautumistulos.Tila;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimustarkistukset;
 import fi.budokwai.isoveli.malli.Treeni;
@@ -94,11 +96,11 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
    @Named
    public List<Treeni> getTulevatTreenit()
    {
-      if (harrastaja == null)
+      if (harrastaja == null || !treenioikeus)
       {
          return new ArrayList<Treeni>();
       }
-      if (tulevatTreenit == null && treenioikeus)
+      if (tulevatTreenit == null)
       {
          haeTulevatTreenit();
       }
@@ -127,52 +129,73 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
       return new Aikaraja(p‰iv‰, kalenteri.getTime());
    }
 
-   public void lueKortti()
+   private Ilmoittautumistulos tarkistaKortti(String korttinumero)
    {
-      harrastaja = haeHarrastaja();
-      if (harrastaja == null)
+      List<Harrastaja> omistaja = entityManager.createNamedQuery("kortti", Harrastaja.class)
+         .setParameter("kortti", korttinumero).getResultList();
+      if (omistaja.isEmpty())
       {
-         virhe("Tuntematon kortti %s", korttinumero);
+         return new Ilmoittautumistulos(null, Tila.KƒYTTƒJƒ_EI_L÷YTYNYT, String.format("Tuntematon korttinumero '%s'",
+            korttinumero));
+      }
+      Harrastaja harrastaja = omistaja.iterator().next();
+      if (harrastaja.isTauolla())
+      {
+         return new Ilmoittautumistulos(harrastaja, Tila.TAUOLLA,
+            "Voisitko tulla infotiskille tarkistamaan treenitaukosi?");
+      }
+      Sopimustarkistukset tarkistukset = harrastaja.getSopimusTarkistukset();
+      if (!tarkistukset.isOK())
+      {
+         return new Ilmoittautumistulos(harrastaja, Tila.SOPIMUSVIRHE,
+            "Voisitko tulla infotiskille tarkistamaan sopimukset/maksut?");
+      }
+      return new Ilmoittautumistulos(harrastaja, Tila.OK, String.format("Tervetuloa %s, valitse treeni",
+         harrastaja.getEtunimi()));
+   }
+
+   public Ilmoittautumistulos lueKortti()
+   {
+      harrastaja = null;
+      Ilmoittautumistulos tulos = tarkistaKortti(korttinumero);
+      switch (tulos.getTila())
+      {
+      case KƒYTTƒJƒ_EI_L÷YTYNYT:
+         virhe(tulos.getViesti());
          fokusoi("formi:korttinumero");
          korttinumero = null;
-         return;
+         return tulos;
+      case SOPIMUSVIRHE:
+         virhe(tulos.getViesti());
+         tulos.getSopimusvirheet().forEach(v -> virhe(v));
+         break;
+      case TAUOLLA:
+         virhe(tulos.getViesti());
+         break;
+      case OK:
+         break;
+      default:
+         break;
       }
-      if (harrastaja.isInfotiskille())
+      harrastaja = tulos.getHarrastaja();
+      treenioikeus = tulos.treenioikeus();
+      if (!tulos.OK())
+      {
+         return tulos;
+      }
+      if (tulos.infotiskille())
       {
          virhe("Voisitko tulla infotiskille k‰ym‰‰n?");
       }
-      Sopimustarkistukset sopimustarkistukset = harrastaja.getSopimusTarkistukset();
-      treenioikeus = sopimustarkistukset.isOK();
-      if (!treenioikeus)
-      {
-         sopimustarkistukset.getViestit().forEach(v -> virhe(v));
-         virhe("Voisitko tulla infotiskille tarkistamaan maksut?");
-         return;
-      }
-      if (harrastaja.isTauolla())
-      {
-         virhe("Voisitko tulla infotiskille tarkistamaan treenitauon?");
-         return;
-      }
       haeTulevatTreenit();
-      String nimi = harrastaja.getNimi();
       if (tulevatTreenit.isEmpty())
       {
-         virhe("Tervetuloa %s, valitettavasti t‰n‰‰n ei en‰‰ ole treenej‰", nimi);
-         return;
-      }
-      info("Tervetuloa %s, valitse treeni", nimi);
-   }
-
-   private Harrastaja haeHarrastaja()
-   {
-      List<Harrastaja> kortinOmistaja = entityManager.createNamedQuery("kortti", Harrastaja.class)
-         .setParameter("kortti", korttinumero).getResultList();
-      if (kortinOmistaja.isEmpty())
+         virhe("Tervetuloa %s, valitettavasti t‰n‰‰n ei en‰‰ ole treenej‰", harrastaja.getEtunimi());
+      } else
       {
-         return null;
+         info("Tervetuloa %s, valitse treeni", harrastaja.getEtunimi());
       }
-      return kortinOmistaja.iterator().next();
+      return tulos;
    }
 
    public void valitseTreeni(Treeni treeni)
@@ -198,16 +221,17 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
          {
             treenisessio.getVet‰j‰t().add(h);
          }
-         treenisessio = entityManager.merge(treenisessio);
       }
-      Treenik‰ynti treenikaynti = new Treenik‰ynti(harrastaja, treenisessio);
-      harrastaja.getTreenik‰ynnit().add(treenikaynti);
+      Treenik‰ynti treenik‰ynti = new Treenik‰ynti();
+      treenisessio.lis‰‰Treenik‰ynti(treenik‰ynti);
+      harrastaja.lis‰‰Treenik‰ynti(treenik‰ynti);
       Sopimus sopimus = harrastaja.getHarjoitteluoikeusSopimus();
       if (sopimus.getTyyppi().isTreenikertoja())
       {
          sopimus.k‰yt‰Treenikerta();
          sopimus = entityManager.merge(sopimus);
       }
+      treenisessio = entityManager.merge(treenisessio);
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       nollaa();

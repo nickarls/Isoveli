@@ -555,4 +555,10 @@ public class Harrastaja extends Henkilö
          vyökokeet.size(), stringJoiner.toString());
       throw new IsoveliPoikkeus(viesti);
    }
+
+   public void lisääTreenikäynti(Treenikäynti treenikäynti)
+   {
+      treenikäynti.setHarrastaja(this);
+      treenikäynnit.add(treenikäynti);
+   }
 }

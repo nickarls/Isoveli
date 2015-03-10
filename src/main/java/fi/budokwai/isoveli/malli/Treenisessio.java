@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.StringJoiner;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -53,13 +54,15 @@ public class Treenisessio
    @NotNull
    private Date p‰iv‰ = new Date();
 
-   @ManyToMany
+   @ManyToMany(cascade =
+   { CascadeType.MERGE })
    @JoinTable(name = "treenisessiovetaja", joinColumns =
    { @JoinColumn(name = "treenisessio", referencedColumnName = "id") }, inverseJoinColumns =
    { @JoinColumn(name = "harrastaja", referencedColumnName = "id") })
    private List<Harrastaja> vet‰j‰t = new ArrayList<Harrastaja>();
 
-   @OneToMany(mappedBy = "treenisessio")
+   @OneToMany(mappedBy = "treenisessio", cascade =
+   { CascadeType.MERGE })
    private List<Treenik‰ynti> treenik‰ynnit = new ArrayList<Treenik‰ynti>();
 
    public int getId()
@@ -173,5 +176,11 @@ public class Treenisessio
       String viesti = String.format("Treenisessiolla on treenik‰yntej‰ ja sit‰ ei voi poistaa (%dkpl: %s...)",
          treenik‰ynnit.size(), stringJoiner.toString());
       throw new IsoveliPoikkeus(viesti);
+   }
+
+   public void lis‰‰Treenik‰ynti(Treenik‰ynti treenik‰ynti)
+   {
+      treenik‰ynti.setTreenisessio(this);
+      treenik‰ynnit.add(treenik‰ynti);
    }
 }

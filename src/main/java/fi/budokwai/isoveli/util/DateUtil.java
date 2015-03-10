@@ -35,8 +35,7 @@ public class DateUtil
       return Date2LocalDateTime(p‰iv‰m‰‰r‰).toLocalTime();
    }
 
-   @SuppressWarnings("unused")
-   private static Date LocalDateTime2Date(LocalDateTime p‰iv‰m‰‰r‰)
+   public static Date LocalDateTime2Date(LocalDateTime p‰iv‰m‰‰r‰)
    {
       Instant instant = p‰iv‰m‰‰r‰.atZone(ZoneId.systemDefault()).toInstant();
       Date res = Date.from(instant);

@@ -47,13 +47,6 @@ public class Treenikäynti
 
    public Treenikäynti()
    {
-
-   }
-
-   public Treenikäynti(Harrastaja harrastaja, Treenisessio treenisessio)
-   {
-      this.harrastaja = harrastaja;
-      this.treenisessio = treenisessio;
    }
 
    public int getId()

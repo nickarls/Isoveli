@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -103,7 +104,8 @@ public class Treeni
    @Type(type = "Kyll‰Ei")
    private boolean arkistoitu;
 
-   @ManyToMany
+   @ManyToMany(cascade =
+   { CascadeType.PERSIST })
    @JoinTable(name = "treenivetaja", joinColumns =
    { @JoinColumn(name = "treeni", referencedColumnName = "id") }, inverseJoinColumns =
    { @JoinColumn(name = "harrastaja", referencedColumnName = "id") })

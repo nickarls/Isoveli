@@ -14,6 +14,7 @@ import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.malli.Sopimustarkistukset;
+import fi.budokwai.isoveli.malli.Treenik‰ynti;
 import fi.budokwai.isoveli.test.Perustesti;
 import fi.budokwai.isoveli.util.DateUtil;
 
@@ -53,6 +54,14 @@ public class HarrastajaOlioTest extends Perustesti
       Assert.assertTrue(tarkistukset.getViestit().get(1).startsWith("J‰senmaksu: sopimus umpeutui"));
    }
 
+   @Test
+   public void testTreenikerratSiirtotreeneill‰() {
+      Harrastaja harrastaja = new Harrastaja();
+      harrastaja.setSiirtotreenej‰(10);
+      harrastaja.lis‰‰Treenik‰ynti(new Treenik‰ynti());
+      Assert.assertEquals(11, harrastaja.getTreenej‰Yhteens‰());
+   }
+   
    @Test
    public void testLaskuMaksamatta() throws ParseException
    {

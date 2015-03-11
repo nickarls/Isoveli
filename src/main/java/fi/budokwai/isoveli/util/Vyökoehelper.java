@@ -69,7 +69,7 @@ public class Vyökoehelper implements Serializable
       {
          return JäljelläVyökokeeseen.EI_OOTA;
       }
-      long tarvittavaTreenimäärä = seuraavaVyöarvo.getMinimitreenit() - harrastaja.getTreenejäViimeVyökokeesta();
+      long tarvittavaTreenimäärä = seuraavaVyöarvo.getMinimitreenit() - harrastaja.getTreenejäViimeVyökokeesta() - harrastaja.getSiirtotreenejä();
       LocalDate koskaViimeisinKoe = null;
       if (harrastaja.getTuoreinVyökoe() == Vyökoe.EI_OOTA)
       {

@@ -98,6 +98,9 @@ public class Harrastaja extends Henkilö
    @Size(max = 1000)
    private String huomautus;
 
+   @Column(name = "siirtotreeneja")
+   private int siirtotreenejä;
+
    @Type(type = "KylläEi")
    private boolean infotiskille;
 
@@ -407,7 +410,7 @@ public class Harrastaja extends Henkilö
 
    public int getTreenejäYhteensä()
    {
-      return treenikäynnit.size();
+      return treenikäynnit.size() + siirtotreenejä;
    }
 
    private Sopimus getAktiivinenKertakortti()
@@ -506,8 +509,8 @@ public class Harrastaja extends Henkilö
       perhe.getHuollettavat(this).forEach(h -> {
          stringJoiner.add(h.getEtunimi());
       });
-      String viesti = String.format("Harrastaja on huoltaja ja häntä ei voi poistaa (%dkpl: %s...)",
-         perhe.getHuollettavat(this).size(), stringJoiner.toString());
+      String viesti = String.format("Harrastaja on huoltaja ja häntä ei voi poistaa (%dkpl: %s...)", perhe
+         .getHuollettavat(this).size(), stringJoiner.toString());
       throw new IsoveliPoikkeus(viesti);
    }
 
@@ -560,5 +563,15 @@ public class Harrastaja extends Henkilö
    {
       treenikäynti.setHarrastaja(this);
       treenikäynnit.add(treenikäynti);
+   }
+
+   public int getSiirtotreenejä()
+   {
+      return siirtotreenejä;
+   }
+
+   public void setSiirtotreenejä(int siirtotreenejä)
+   {
+      this.siirtotreenejä = siirtotreenejä;
    }
 }

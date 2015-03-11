@@ -29,6 +29,7 @@ import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Yhteystieto;
 import fi.budokwai.isoveli.test.Perustesti;
 import fi.budokwai.isoveli.util.DateUtil;
+import fi.budokwai.isoveli.util.Vyökoehelper;
 
 @RunWith(Arquillian.class)
 public class HarrastajaTest extends Perustesti
@@ -46,6 +47,38 @@ public class HarrastajaTest extends Perustesti
    @Inject
    @Named("perheet")
    private Instance<List<Perhe>> perheet;
+
+   @Inject
+   private Vyökoehelper vyökoehelper;
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testTreenikertojaJaljellaEiTreeneja()
+   {
+      Harrastaja nicklas = entityManager.find(Harrastaja.class, 1);
+      Assert.assertEquals(15, vyökoehelper.getJäljelläVyökokeeseen(nicklas).getTreenikertoja());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+      { "cleanup.sql", "seed.sql", "vanhanicklas.sql", "treenisessiokaytossa.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testTreenikertojaJaljellaTreeneja()
+   {
+      Harrastaja nicklas = entityManager.find(Harrastaja.class, 1);
+      Assert.assertEquals(10, vyökoehelper.getJäljelläVyökokeeseen(nicklas).getTreenikertoja());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testTreenikertojaJaljellaSiirtokertoja()
+   {
+
+   }
 
    @Test
    @ApplyScriptBefore(

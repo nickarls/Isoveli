@@ -50,34 +50,44 @@
 						<ace:message for="form:ice" />
 						<h:inputText value="#{harrastaja.ice}" id="ice" />
 					</h:panelGrid>
-					<h:outputText value="Tauko alkaa" rendered="#{!harrastaja.tilapäinen}" />
-					<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
-						<ace:message for="form:taukoAlkaa" />
-						<ace:dateTimeEntry value="#{harrastaja.tauko.alkaa}" renderAsPopup="true" pattern="dd.MM.yyyy" id="taukoAlkaa">
-						</ace:dateTimeEntry>
-					</h:panelGrid>
-					<h:outputText value="Tauko päättyy" rendered="#{!harrastaja.tilapäinen}" />
-					<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
-						<ace:message for="form:taukoPäättyy" />
-						<ace:dateTimeEntry value="#{harrastaja.tauko.päättyy}" renderAsPopup="true" pattern="dd.MM.yyyy" id="taukoPäättyy">
-						</ace:dateTimeEntry>
+					<h:outputText value="Tauko" rendered="#{!harrastaja.tilapäinen}" />
+					<h:panelGrid columns="2" rendered="#{!harrastaja.tilapäinen}">
+						<h:panelGrid>
+							<ace:message for="form:taukoAlkaa" />
+							<ace:dateTimeEntry value="#{harrastaja.tauko.alkaa}" renderAsPopup="true" pattern="dd.MM.yyyy" id="taukoAlkaa">
+							</ace:dateTimeEntry>
+						</h:panelGrid>
+						<h:panelGrid>
+							<ace:message for="form:taukoPäättyy" />
+							<ace:dateTimeEntry value="#{harrastaja.tauko.päättyy}" renderAsPopup="true" pattern="dd.MM.yyyy"
+								id="taukoPäättyy">
+							</ace:dateTimeEntry>
+						</h:panelGrid>
 					</h:panelGrid>
 					<h:outputText value="Huomautus" rendered="#{!harrastaja.tilapäinen}" />
 					<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
 						<ace:message for="form:huomautus" />
 						<h:inputTextarea value="#{harrastaja.huomautus}" id="huomautus" />
 					</h:panelGrid>
-					<h:outputText value="Arkistoitu" rendered="#{!harrastaja.tilapäinen}" />
-					<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
-						<ace:message for="form:arkistoitu" />
-						<h:selectBooleanCheckbox value="#{harrastaja.arkistoitu}" id="arkistoitu" />
-					</h:panelGrid>
-					<h:outputText value="Infotiskille" />
-					<h:panelGrid>
-						<ace:message for="form:infotiskille" />
-						<h:selectBooleanCheckbox value="#{harrastaja.infotiskille}" id="infotiskille" />
-					</h:panelGrid>
 				</h:panelGrid>
+				<f:facet name="footer">
+					<h:panelGrid columns="2" style="width:100%">
+						<h:panelGrid columns="2" style="float:left">
+							<h:outputText value="Infotiskille" />
+							<h:panelGrid>
+								<ace:message for="form:infotiskille" />
+								<h:selectBooleanCheckbox value="#{harrastaja.infotiskille}" id="infotiskille" />
+							</h:panelGrid>
+						</h:panelGrid>
+						<h:panelGrid columns="2" style="float:right">
+							<h:outputText value="Arkistoitu" rendered="#{!harrastaja.tilapäinen}" />
+							<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
+								<ace:message for="form:arkistoitu" />
+								<h:selectBooleanCheckbox value="#{harrastaja.arkistoitu}" id="arkistoitu" />
+							</h:panelGrid>
+						</h:panelGrid>
+					</h:panelGrid>
+				</f:facet>
 			</ace:panel>
 			<ace:panel header="Yhteystiedot" styleClass="panel" id="yhteystietopanel" rendered="#{!harrastaja.tilapäinen}">
 				<h:panelGrid columns="2">

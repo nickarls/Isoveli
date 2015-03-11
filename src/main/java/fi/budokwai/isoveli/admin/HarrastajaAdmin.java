@@ -303,7 +303,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       sopimusRSM.get(sopimus).setSelected(true);
       harrastajat = null;
       info("Sopimus tallennettu");
-      loggaaja.loggaa("Tallensi harrastajan '%s' sopimuksen '%s'", harrastaja);
+      loggaaja.loggaa("Tallensi harrastajan '%s' sopimuksen '%s'", harrastaja, sopimus);
       
    }
 

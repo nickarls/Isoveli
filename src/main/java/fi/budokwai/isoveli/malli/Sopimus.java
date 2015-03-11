@@ -36,6 +36,8 @@ import fi.budokwai.isoveli.util.DateUtil;
 {
       @NamedQuery(name = "uudet_sopimukset", query = "select s from Sopimus s, Harrastaja h "
          + "where s.harrastaja=h and s.sopimuslaskut is empty " + "and s.tyyppi.laskutettava='K' and h.arkistoitu='E' "
+         + "and (siirtomaksuvoimassa is null or siirtomaksuvoimassa < :nyt) "
+         + " and s.tyyppi.treenikertoja = 'E' "
          + "and not exists (select 1 from Sopimus s2 where s2.tyyppi.vapautus='K' and s2.harrastaja=h)"),
       @NamedQuery(name = "laskuttamattomat_sopimukset", query = "select s from Sopimus s, Harrastaja h, Sopimuslasku sl "
          + "where s.harrastaja=h and sl.sopimus=s "
@@ -78,6 +80,8 @@ public class Sopimus
    @Type(type = "KylläEi")
    private boolean arkistoitu;
 
+   private Date siirtomaksuVoimassa;
+   
    public Sopimus(Sopimustyyppi sopimustyyppi)
    {
       tyyppi = sopimustyyppi;
@@ -422,6 +426,16 @@ public class Sopimus
    public String toString()
    {
       return String.format("%s:%s", harrastaja.getNimi(), tyyppi);
+   }
+
+   public Date getSiirtomaksuVoimassa()
+   {
+      return siirtomaksuVoimassa;
+   }
+
+   public void setSiirtomaksuVoimassa(Date siirtomaksuVoimassa)
+   {
+      this.siirtomaksuVoimassa = siirtomaksuVoimassa;
    }
 
 }

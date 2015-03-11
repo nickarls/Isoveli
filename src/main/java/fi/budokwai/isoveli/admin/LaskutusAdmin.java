@@ -255,7 +255,8 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    {
       laskuttamattomat = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class)
          .setParameter("nyt", DateUtil.t‰n‰‰nDate()).getResultList();
-      laskuttamattomat.addAll(entityManager.createNamedQuery("uudet_sopimukset", Sopimus.class).getResultList());
+      laskuttamattomat.addAll(entityManager.createNamedQuery("uudet_sopimukset", Sopimus.class)
+         .setParameter("nyt", DateUtil.t‰n‰‰nDate()).getResultList());
       laskuttamattomat.addAll(entityManager.createNamedQuery("laskuttamattomat_kymppikerrat", Sopimus.class)
          .getResultList());
       return laskuttamattomat;

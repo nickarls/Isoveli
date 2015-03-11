@@ -1,5 +1,7 @@
 package fi.budokwai.isoveli.test.yllapito.harrastaja;
 
+import static org.junit.Assert.fail;
+
 import java.util.List;
 
 import javax.enterprise.inject.Instance;
@@ -63,23 +65,24 @@ public class HarrastajaTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-      { "cleanup.sql", "seed.sql", "vanhanicklas.sql", "treenisessiokaytossa.sql" })
+      { "cleanup.sql", "seed.sql", "nicklas.sql", "treenisessiokaytossa.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testTreenikertojaJaljellaTreeneja()
    {
       Harrastaja nicklas = entityManager.find(Harrastaja.class, 1);
-      Assert.assertEquals(10, vyökoehelper.getJäljelläVyökokeeseen(nicklas).getTreenikertoja());
+      Assert.assertEquals(14, vyökoehelper.getJäljelläVyökokeeseen(nicklas).getTreenikertoja());
    }
 
    @Test
    @ApplyScriptBefore(
-   { "cleanup.sql" })
+      { "cleanup.sql", "seed.sql", "vanhanicklas.sql", "treenisessiokaytossa.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testTreenikertojaJaljellaSiirtokertoja()
    {
-
+      Harrastaja nicklas = entityManager.find(Harrastaja.class, 1);
+      Assert.assertEquals(10, vyökoehelper.getJäljelläVyökokeeseen(nicklas).getTreenikertoja());
    }
-
+   
    @Test
    @ApplyScriptBefore(
    { "cleanup.sql" })
@@ -278,7 +281,7 @@ public class HarrastajaTest extends Perustesti
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testOrpoPerhePoistuu()
    {
-      throw new UnsupportedOperationException();
+      fail("todo");
    }
 
    @Test
@@ -287,7 +290,7 @@ public class HarrastajaTest extends Perustesti
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testOrpoOsoitePoistuu()
    {
-      throw new UnsupportedOperationException();
+      fail("todo");
    }
 
    @Test

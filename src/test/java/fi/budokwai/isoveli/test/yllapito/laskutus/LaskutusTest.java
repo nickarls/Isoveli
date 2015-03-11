@@ -160,4 +160,14 @@ public class LaskutusTest extends Perustesti
       Assert.assertEquals(-36.4, tauko.getRivihinta(), 0.0001);
    }
 
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "nicklas.sql", "nicklassiirtosopimus.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testEiLaskutustaSiirtoajalla()
+   {
+      laskutusAdmin.laskutaSopimukset();
+      List<Lasku> laskut = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList();
+      Assert.assertEquals(0, laskut.size());
+   }
 }

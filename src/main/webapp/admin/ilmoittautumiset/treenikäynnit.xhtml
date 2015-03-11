@@ -5,13 +5,13 @@
 		height="200" closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
 			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').hide()"
-				action="#{ilmoittautumisAdmin.piilotaTreenikäynti}" actionListener="#{ilmoittautumisAdmin.poistaTreenikäynti}" immediate="true"/>
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').hide()" immediate="true"/>
+				actionListener="#{ilmoittautumisAdmin.poistaTreenikäynti}" immediate="true" />
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').hide()" immediate="true" />
 		</h:panelGrid>
 	</ace:confirmationDialog>
 	<h:panelGrid columns="3">
-		<h:commandButton action="#{ilmoittautumisAdmin.lisääTreenikäynti}" styleClass="ikoni"
-			image="/kuvat/lisää.png" immediate="true">
+		<h:commandButton action="#{ilmoittautumisAdmin.lisääTreenikäynti}" styleClass="ikoni" image="/kuvat/lisää.png"
+			immediate="true">
 			<ace:ajax render="@form" />
 		</h:commandButton>
 		<h:commandButton rendered="#{treenikäynti != null}" styleClass="ikoni"

@@ -185,6 +185,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       entityManager.flush();
       treenikäynnit = null;
       treenisessiot = null;
+      treenikäynti = null;
       info("Treenikäynti poistettu");
    }
 
@@ -197,19 +198,8 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       treenisessio = null;
       treenisessiot = null;
       treenikäynnit = null;
-      info("Treenisessio poistettu");
-   }
-
-   public void piilotaTreenikäynti()
-   {
       treenikäynti = null;
-      entityManager.createNamedQuery("poista_tyhjät_treenisessiot").executeUpdate();
-      entityManager.flush();
-   }
-
-   public void piilotaTreenisessio()
-   {
-      treenisessio = null;
+      info("Treenisessio poistettu");
    }
 
    public void tallennaTreenikäynti()

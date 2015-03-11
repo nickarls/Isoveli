@@ -5,13 +5,12 @@
 		closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
 			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaTreeninPoisto').hide()"
-				action="#{perustietoAdmin.piilotaTreeni}" actionListener="#{perustietoAdmin.poistaTreeni}" />
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreeninPoisto').hide()" />
+				actionListener="#{perustietoAdmin.poistaTreeni}" immediate="true" />
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreeninPoisto').hide()" immediate="true" />
 		</h:panelGrid>
 	</ace:confirmationDialog>
 	<h:panelGrid columns="3">
-		<h:commandButton action="#{perustietoAdmin.lisääTreeni}" styleClass="ikoni" image="/kuvat/lisää.png"
-			immediate="true">
+		<h:commandButton action="#{perustietoAdmin.lisääTreeni}" styleClass="ikoni" image="/kuvat/lisää.png" immediate="true">
 			<ace:ajax render="@form" />
 		</h:commandButton>
 		<h:commandButton rendered="#{treeni != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"

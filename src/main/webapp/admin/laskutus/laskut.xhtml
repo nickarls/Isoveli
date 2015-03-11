@@ -5,8 +5,8 @@
 		closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
 			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaLaskunPoisto').hide()"
-				action="#{laskutusAdmin.piilotaLasku}" actionListener="#{laskutusAdmin.poistaLasku}" />
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaLaskunPoisto').hide()" />
+				action="#{laskutusAdmin.piilotaLasku}" actionListener="#{laskutusAdmin.poistaLasku}" immediate="true"/>
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaLaskunPoisto').hide()" immediate="true"/>
 		</h:panelGrid>
 	</ace:confirmationDialog>
 	<h:outputLink value="../API/laskut/zippaaLaskuttamattomat" target="_blank">

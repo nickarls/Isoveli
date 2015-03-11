@@ -435,7 +435,7 @@ public class Harrastaja extends Henkilö
    public int getTreenikertojaJäljellä()
    {
       Sopimus sopimus = getAktiivinenKertakortti();
-      return sopimus == null ? 0 : sopimus.getTreenikertoja();
+      return sopimus == null ? 0 : sopimus.getTreenikertojaJäljellä();
    }
 
    public Sopimus getHarjoitteluoikeusSopimus()

@@ -5,8 +5,8 @@
 		closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
 			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaRoolinPoisto').hide()"
-				action="#{perustietoAdmin.piilotaRooli}" actionListener="#{perustietoAdmin.poistaRooli}" />
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaRoolinPoisto').hide()" />
+				actionListener="#{perustietoAdmin.poistaRooli}" immediate="true"/>
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaRoolinPoisto').hide()" immediate="true"/>
 		</h:panelGrid>
 	</ace:confirmationDialog>
 	<h:panelGrid>

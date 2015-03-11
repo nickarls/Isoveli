@@ -158,7 +158,7 @@ public class Perustesti
       sopimustyyppi.setNimi("Kertamaksu");
       sopimustyyppi.setTreenikertoja(true);
       sopimus.setTyyppi(sopimustyyppi);
-      sopimus.setTreenikertoja(10);
+      sopimus.setTreenikertojaJäljellä(10);
       try
       {
          sopimus.setLuotu(new SimpleDateFormat("dd.MM.yyyy").parse(luotu));

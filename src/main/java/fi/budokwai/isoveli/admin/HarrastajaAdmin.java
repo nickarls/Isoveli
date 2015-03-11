@@ -120,7 +120,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       Sopimustyyppi koeaikaSopimustyyppi = (Sopimustyyppi) entityManager.createNamedQuery("koeaikasopimus")
          .getSingleResult();
       koeaika.setTyyppi(koeaikaSopimustyyppi);
-      koeaika.setTreenikertoja(koeaikaSopimustyyppi.getOletusTreenikerrat());
+      koeaika.setTreenikertojaJäljellä(koeaikaSopimustyyppi.getOletusTreenikerrat());
       koeaika.setUmpeutuu(DateUtil.kuukausienPäästä(koeaikaSopimustyyppi.getOletusKuukaudetVoimassa()));
       return koeaika;
    }
@@ -288,6 +288,10 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void tallennaVyökoe()
    {
+      if (!vyökoe.isTallennettu())
+      {
+         harrastaja.lisääVyökoe(vyökoe);
+      }
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       vyökoeRSM.get(vyökoe).setSelected(true);
@@ -298,13 +302,17 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void tallennaSopimus()
    {
+      if (!sopimus.isTallennettu())
+      {
+         harrastaja.lisääSopimus(sopimus);
+      }
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       sopimusRSM.get(sopimus).setSelected(true);
       harrastajat = null;
       info("Sopimus tallennettu");
       loggaaja.loggaa("Tallensi harrastajan '%s' sopimuksen '%s'", harrastaja, sopimus);
-      
+
    }
 
    public void poistaVyökoe()
@@ -402,7 +410,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void lisääHarrastaja()
    {
       resetoi();
-//      tabi.setSelectedIndex(0);
+      // tabi.setSelectedIndex(0);
       harrastaja = new Harrastaja();
       info("Uusi harrastaja alustettu");
       fokusoi("form:etunimi");
@@ -412,7 +420,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void lisääSopimus()
    {
       sopimusRSM.setAllSelected(false);
-      Sopimus sopimus = harrastaja.lisääSopimus(new Sopimus(ehdotaSopimusTyyppiä()));
+      sopimus = new Sopimus(harrastaja, ehdotaSopimusTyyppiä());
       if (sopimus.getTyyppi() != null)
       {
          sopimus.asetaPäättymispäivä();
@@ -442,7 +450,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       vyökoe = new Vyökoe();
       Vyöarvo seuraavaVyöarvo = vyökoehelper.haeSeuraavaVyöarvo(harrastaja.getTuoreinVyöarvo());
       vyökoe.setVyöarvo(seuraavaVyöarvo);
-      harrastaja.lisääVyökoe(vyökoe);
       vyökoeRSM.setAllSelected(false);
       info("Uusi vyökoe alustettu");
       loggaaja.loggaa("Lisäsi harrastajalle '%s' vyökokeen", harrastaja);
@@ -450,7 +457,8 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void sopimustyyppiMuuttui()
    {
-      sopimus.setTreenikertoja(sopimus.getTyyppi().getOletusTreenikerrat());
+      sopimus.setTreenikertojaTilattu(sopimus.getTyyppi().getOletusTreenikerrat());
+      sopimus.setTreenikertojaJäljellä(sopimus.getTreenikertojaTilattu());
       sopimus.setMaksuväli(sopimus.getTyyppi().getOletusMaksuväli());
       sopimus.asetaPäättymispäivä();
       List<Sopimustarkistus> tarkistukset = sopimus.tarkista();

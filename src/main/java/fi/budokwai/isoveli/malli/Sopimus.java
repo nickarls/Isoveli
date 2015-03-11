@@ -36,8 +36,7 @@ import fi.budokwai.isoveli.util.DateUtil;
 {
       @NamedQuery(name = "uudet_sopimukset", query = "select s from Sopimus s, Harrastaja h "
          + "where s.harrastaja=h and s.sopimuslaskut is empty " + "and s.tyyppi.laskutettava='K' and h.arkistoitu='E' "
-         + "and (siirtomaksuvoimassa is null or siirtomaksuvoimassa < :nyt) "
-         + " and s.tyyppi.treenikertoja = 'E' "
+         + "and (siirtomaksuvoimassa is null or siirtomaksuvoimassa < :nyt) " + " and s.tyyppi.treenikertoja = 'E' "
          + "and not exists (select 1 from Sopimus s2 where s2.tyyppi.vapautus='K' and s2.harrastaja=h)"),
       @NamedQuery(name = "laskuttamattomat_sopimukset", query = "select s from Sopimus s, Harrastaja h, Sopimuslasku sl "
          + "where s.harrastaja=h and sl.sopimus=s "
@@ -45,7 +44,7 @@ import fi.budokwai.isoveli.util.DateUtil;
          + "and not exists (select 1 from Sopimus s2 where s2.tyyppi.vapautus='K' and s2.harrastaja=h) "
          + "and sl.päättyy < :nyt "
          + "and sl.päättyy = (select max(sl2.päättyy) from Sopimuslasku sl2 where sl2.sopimus=s)"),
-      @NamedQuery(name = "laskuttamattomat_kymppikerrat", query = "select s from Sopimus s, Harrastaja h where s.harrastaja = h and s.tyyppi.treenikertoja='K' and s.treenikertoja = 0 and h.arkistoitu = 'E' and s.sopimuslaskut is not empty") })
+      @NamedQuery(name = "laskuttamattomat_kymppikerrat", query = "select s from Sopimus s, Harrastaja h where s.harrastaja = h and s.tyyppi.treenikertoja='K' and s.treenikertojaJäljellä = 0 and h.arkistoitu = 'E' and s.sopimuslaskut is not empty") })
 public class Sopimus
 {
    public static final Sopimus EI_OOTA = new Sopimus();
@@ -72,7 +71,10 @@ public class Sopimus
    @Temporal(TemporalType.DATE)
    private Date luotu = new Date();
 
-   private int treenikertoja;
+   private int treenikertojaTilattu;
+
+   @Column(name = "treenikertojajaljella")
+   private int treenikertojaJäljellä;
 
    @Column(name = "maksuvali")
    private int maksuväli;
@@ -81,16 +83,24 @@ public class Sopimus
    private boolean arkistoitu;
 
    private Date siirtomaksuVoimassa;
-   
-   public Sopimus(Sopimustyyppi sopimustyyppi)
+
+   public Sopimus(Harrastaja harrastaja, Sopimustyyppi sopimustyyppi)
    {
+      this.harrastaja = harrastaja;
       tyyppi = sopimustyyppi;
       maksuväli = tyyppi.getOletusMaksuväli();
-      treenikertoja = tyyppi.getOletusTreenikerrat();
+      treenikertojaTilattu = tyyppi.getOletusTreenikerrat();
+      treenikertojaJäljellä = treenikertojaTilattu;
    }
 
    public Sopimus()
    {
+      // TODO Auto-generated constructor stub
+   }
+
+   public Sopimus(Sopimustyyppi sopimustyyppi)
+   {
+      tyyppi = sopimustyyppi;
    }
 
    public int getId()
@@ -121,16 +131,6 @@ public class Sopimus
    public void setUmpeutuu(Date umpeutuu)
    {
       this.umpeutuu = umpeutuu;
-   }
-
-   public int getTreenikertoja()
-   {
-      return treenikertoja;
-   }
-
-   public void setTreenikertoja(int treenikertoja)
-   {
-      this.treenikertoja = treenikertoja;
    }
 
    public int getMaksuväli()
@@ -237,18 +237,18 @@ public class Sopimus
          String viesti = String.format("%s: sopimus umpeutui %s", tyyppi.getNimi(), pvm);
          tulos.add(new Sopimustarkistus(viesti, false));
       }
-      if (tyyppi.isKoeaika() && treenikertoja <= 0)
+      if (tyyppi.isKoeaika() && treenikertojaJäljellä <= 0)
       {
-         String viesti = String.format("Koeajan treenikertoja jäljellä %d", treenikertoja);
+         String viesti = String.format("Koeajan treenikertoja jäljellä %d", treenikertojaJäljellä);
          tulos.add(new Sopimustarkistus(viesti, false));
       }
       if (tyyppi.isTreenikertoja())
       {
          int perheKertoja = harrastaja.getPerhe() == null ? 0 : harrastaja.getPerhe().getPerheenTreenikerrat();
-         int yhteensä = perheKertoja + treenikertoja;
+         int yhteensä = perheKertoja + treenikertojaJäljellä;
          if (yhteensä <= 0)
          {
-            String viesti = String.format("Treenikertoja jäljellä %d", treenikertoja);
+            String viesti = String.format("Treenikertoja jäljellä %d", treenikertojaJäljellä);
             tulos.add(new Sopimustarkistus(viesti, false));
          }
       }
@@ -306,7 +306,7 @@ public class Sopimus
 
    public void lisääTreenikertoja()
    {
-      treenikertoja += tyyppi.getOletusTreenikerrat();
+      treenikertojaJäljellä += treenikertojaTilattu;
    }
 
    public boolean isArkistoitu()
@@ -336,7 +336,7 @@ public class Sopimus
 
    public void käytäTreenikerta()
    {
-      treenikertoja--;
+      treenikertojaJäljellä--;
    }
 
    public Laskutuskausi getLaskutuskausi()
@@ -436,6 +436,26 @@ public class Sopimus
    public void setSiirtomaksuVoimassa(Date siirtomaksuVoimassa)
    {
       this.siirtomaksuVoimassa = siirtomaksuVoimassa;
+   }
+
+   public int getTreenikertojaTilattu()
+   {
+      return treenikertojaTilattu;
+   }
+
+   public void setTreenikertojaTilattu(int treenikertojaTilattu)
+   {
+      this.treenikertojaTilattu = treenikertojaTilattu;
+   }
+
+   public int getTreenikertojaJäljellä()
+   {
+      return treenikertojaJäljellä;
+   }
+
+   public void setTreenikertojaJäljellä(int treenikertojaJäljellä)
+   {
+      this.treenikertojaJäljellä = treenikertojaJäljellä;
    }
 
 }

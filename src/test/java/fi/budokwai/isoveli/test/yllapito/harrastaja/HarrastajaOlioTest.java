@@ -170,7 +170,7 @@ public class HarrastajaOlioTest extends Perustesti
       Harrastaja harrastaja = new Harrastaja();
       teeJäsenmaksusopimus(harrastaja, "01.01.2015");
       teeKertamaksusopimus(harrastaja, "01.01.2015");
-      harrastaja.getSopimukset().get(1).setTreenikertoja(0);
+      harrastaja.getSopimukset().get(1).setTreenikertojaJäljellä(0);
       Assert.assertFalse(harrastaja.isSopimuksetOK());
       Sopimustarkistukset tarkistukset = harrastaja.getSopimusTarkistukset();
       Assert.assertEquals(1, tarkistukset.getViestit().size());
@@ -202,7 +202,7 @@ public class HarrastajaOlioTest extends Perustesti
       teeHarjoittelusopimus(harrastaja, "01.01.2015", 6);
       teeKertamaksusopimus(harrastaja, "01.01.2015");
       Sopimus sopimus = harrastaja.getHarjoitteluoikeusSopimus();
-      Assert.assertEquals(0, sopimus.getTreenikertoja());
+      Assert.assertEquals(0, sopimus.getTreenikertojaJäljellä());
    }
 
    @Test
@@ -219,7 +219,7 @@ public class HarrastajaOlioTest extends Perustesti
       vanhempi.setPerhe(perhe);
       harrastaja.setPerhe(perhe);
       Sopimus sopimus = harrastaja.getHarjoitteluoikeusSopimus();
-      Assert.assertEquals(0, sopimus.getTreenikertoja());
+      Assert.assertEquals(0, sopimus.getTreenikertojaJäljellä());
    }
 
    @Test
@@ -230,14 +230,14 @@ public class HarrastajaOlioTest extends Perustesti
       Harrastaja harrastaja = new Harrastaja();
       teeJäsenmaksusopimus(harrastaja, "01.01.2015");
       teeKertamaksusopimus(harrastaja, "01.01.2015");
-      harrastaja.getSopimukset().get(1).setTreenikertoja(6);
+      harrastaja.getSopimukset().get(1).setTreenikertojaJäljellä(6);
       Perhe perhe = new Perhe();
       perhe.getPerheenjäsenet().add(vanhempi);
       perhe.getPerheenjäsenet().add(harrastaja);
       vanhempi.setPerhe(perhe);
       harrastaja.setPerhe(perhe);
       Sopimus sopimus = harrastaja.getHarjoitteluoikeusSopimus();
-      Assert.assertEquals(6, sopimus.getTreenikertoja());
+      Assert.assertEquals(6, sopimus.getTreenikertojaJäljellä());
    }
 
    @Test

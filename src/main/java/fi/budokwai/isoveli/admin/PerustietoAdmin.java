@@ -190,31 +190,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       return treenityyppi;
    }
 
-   public void piilotaRooli()
-   {
-      rooli = null;
-   }
-
-   public void piilotaSopimustyyppi()
-   {
-      sopimustyyppi = null;
-   }
-
-   public void piilotaVyöarvo()
-   {
-      vyöarvo = null;
-   }
-
-   public void piilotaTreenityyppi()
-   {
-      treenityyppi = null;
-   }
-
-   public void piilotaTreeni()
-   {
-      treeni = null;
-   }
-
    public void lisääRooli()
    {
       rooli = new Rooli();
@@ -344,6 +319,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       entityManager.remove(rooli);
       entityManager.flush();
       roolit = null;
+      rooli = null;
       info("Rooli poistettu");
       loggaaja.loggaa("Poisti roolin '%s'", rooli);
    }
@@ -370,6 +346,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       entityManager.remove(treeni);
       entityManager.flush();
       treenit = null;
+      treeni = null;
       info("Treeni poistettu");
       loggaaja.loggaa("Poisti treenin '%s'", treeni);
    }
@@ -396,6 +373,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       entityManager.remove(vyöarvo);
       entityManager.flush();
       vyöarvoMuuttui.fire(vyöarvo);
+      vyöarvo = null;
       info("Vyöarvo poistettu");
       loggaaja.loggaa("Poisti vyöarvon '%s'", vyöarvo);
    }
@@ -422,6 +400,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       entityManager.remove(treenityyppi);
       entityManager.flush();
       treenityypit = null;
+      treenityyppi = null;
       info("Treenityyppi poistettu");
       loggaaja.loggaa("Poisti treenityypin '%s'", treenityyppi);
    }
@@ -447,6 +426,7 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       entityManager.remove(sopimustyyppi);
       entityManager.flush();
       sopimustyypit = null;
+      sopimustyyppi = null;
       info("Sopimustyyppi poistettu");
       loggaaja.loggaa("Poisti sopimustyypin '%s'", sopimustyyppi);
    }

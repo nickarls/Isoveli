@@ -5,8 +5,8 @@
 		closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
 			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaVyöarvonPoisto').hide()"
-				action="#{perustietoAdmin.piilotaVyöarvo}" actionListener="#{perustietoAdmin.poistaVyöarvo}" />
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaVyöarvonPoisto').hide()" />
+				actionListener="#{perustietoAdmin.poistaVyöarvo}" immediate="true" />
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaVyöarvonPoisto').hide()" immediate="true" />
 		</h:panelGrid>
 	</ace:confirmationDialog>
 	<h:panelGrid>

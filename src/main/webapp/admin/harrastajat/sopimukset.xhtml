@@ -5,8 +5,8 @@
 		height="200" closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
 			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaSopimuksenPoisto').hide()"
-				action="#{harrastajaAdmin.piilotaSopimus}" actionListener="#{harrastajaAdmin.poistaSopimus}" />
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaSopimuksenPoisto').hide()" />
+				action="#{harrastajaAdmin.piilotaSopimus}" actionListener="#{harrastajaAdmin.poistaSopimus}" immediate="true" />
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaSopimuksenPoisto').hide()" immediate="true" />
 		</h:panelGrid>
 	</ace:confirmationDialog>
 	<h:panelGrid columns="3">
@@ -36,7 +36,7 @@
 			</h:outputText>
 		</ace:column>
 		<ace:column headerText="Treenikertoja" styleClass="lefttext">
-			<h:outputText value="#{_sopimus.treenikertoja}" rendered="#{_sopimus.tyyppi.treenikertoja}" />
+			<h:outputText value="#{_sopimus.treenikertojaJäljellä}" rendered="#{_sopimus.tyyppi.treenikertoja}" />
 		</ace:column>
 		<ace:column headerText="Luotu" styleClass="lefttext">
 			<h:outputText value="#{_sopimus.luotu}">
@@ -57,7 +57,7 @@
 				<ace:message for="form:sopimustyyppi" />
 				<h:selectOneMenu value="#{sopimus.tyyppi}" id="sopimustyyppi" hideNoSelectionOption="true">
 					<f:selectItem itemLabel="Valitse" itemValue="" noSelectionOption="true" />
-					<f:selectItems value="#{kaikkiSopimustyypit}" var="_sopimustyyppi" itemValue="#{_sopimustyyppi}"
+					<f:selectItems value="#{sopimustyypit}" var="_sopimustyyppi" itemValue="#{_sopimustyyppi}"
 						itemLabel="#{_sopimustyyppi.nimi}" />
 					<f:converter converterId="objectConverter" />
 					<f:ajax execute="@this" render="form:sopimuspanel" listener="#{harrastajaAdmin.sopimustyyppiMuuttui}" />
@@ -68,11 +68,17 @@
 				<ace:message for="form:umpeutuu" />
 				<ace:dateTimeEntry value="#{sopimus.umpeutuu}" renderAsPopup="true" pattern="dd.MM.yyyy" id="umpeutuu" />
 			</h:panelGrid>
-			<h:outputText value="Treenikertoja" rendered="#{sopimus.tyyppi.treenikertoja}" />
+			<h:outputText value="Treenikrt tilattu" rendered="#{sopimus.tyyppi.treenikertoja}" />
 			<h:panelGrid rendered="#{sopimus.tyyppi.treenikertoja}">
-				<ace:message for="form:a_treenikertoja" />
-				<h:inputText value="#{sopimus.treenikertoja}" id="a_treenikertoja" size="5" />
+				<ace:message for="form:a_treenikertoja_tilattu" />
+				<h:inputText value="#{sopimus.treenikertojaTilattu}" id="a_treenikertoja_tilattu" size="5" />
 			</h:panelGrid>
+			<h:outputText value="Treenikrt jäljellä" rendered="#{sopimus.tyyppi.treenikertoja}" />
+			<h:panelGrid rendered="#{sopimus.tyyppi.treenikertoja}">
+				<ace:message for="form:a_treenikertoja_jäljellä" />
+				<h:inputText value="#{sopimus.treenikertojaJäljellä}" id="a_treenikertoja_jäljellä" size="5" />
+			</h:panelGrid>
+
 			<h:outputText value="Maksuväli" rendered="#{sopimus.tyyppi.kuukausilaskutus}" />
 			<h:panelGrid rendered="#{sopimus.tyyppi.kuukausilaskutus}">
 				<ace:message for="form:maksuväli" />

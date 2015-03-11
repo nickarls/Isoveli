@@ -193,7 +193,7 @@ public class Perhe
       Optional<Sopimus> sopimus = perheenjäsenet.stream().filter(h -> h.isHarrastaja())
          .map(h -> Harrastaja.class.cast(h)).flatMap(h -> h.getSopimukset().stream())
          .filter(s -> s.getTyyppi().isTreenikertoja()).sorted((s1, s2) -> {
-            return Integer.valueOf(s1.getTreenikertoja()).compareTo(Integer.valueOf(s2.getTreenikertoja()));
+            return Integer.valueOf(s1.getTreenikertojaJäljellä()).compareTo(Integer.valueOf(s2.getTreenikertojaJäljellä()));
          }).findFirst();
       return sopimus.isPresent() ? sopimus.get() : null;
    }
@@ -201,7 +201,7 @@ public class Perhe
    public int getPerheenTreenikerrat()
    {
       Sopimus perheenKertakortti = getPerheenKertakortti();
-      return perheenKertakortti == null ? 0 : perheenKertakortti.getTreenikertoja();
+      return perheenKertakortti == null ? 0 : perheenKertakortti.getTreenikertojaJäljellä();
    }
 
    public boolean isTallennettu()

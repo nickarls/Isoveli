@@ -5,8 +5,8 @@
 		height="200" closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
 			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaTreenityypinPoisto').hide()"
-				action="#{perustietoAdmin.piilotaTreenityyppi}" actionListener="#{perustietoAdmin.poistaTreenityyppi}" />
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreenityypinPoisto').hide()" />
+				actionListener="#{perustietoAdmin.poistaTreenityyppi}" immediate="true" />
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreenityypinPoisto').hide()" immediate="true" />
 		</h:panelGrid>
 	</ace:confirmationDialog>
 	<h:panelGrid>

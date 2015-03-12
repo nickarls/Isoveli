@@ -465,7 +465,7 @@ public class HarrastajaTest extends Perustesti
       List<Sopimustyyppi> sopimustyypit = entityManager.createNamedQuery("sopimustyypit", Sopimustyyppi.class)
          .getResultList();
       Sopimustyyppi jäsenmaksu = sopimustyypit.stream().filter(s -> s.isJäsenmaksutyyppi()).findFirst().get();
-      harrastaja.lisääSopimus(new Sopimus(jäsenmaksu));
+      harrastajaAdmin.setSopimus(new Sopimus(jäsenmaksu));
       harrastajaAdmin.setHarrastaja(harrastaja);
       harrastajaAdmin.tallennaSopimus();
       entityManager.clear();
@@ -480,7 +480,9 @@ public class HarrastajaTest extends Perustesti
    public void testMuokkaaSopimus()
    {
       Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
-      harrastaja.getSopimukset().iterator().next().setUmpeutuu(DateUtil.silloinD("31.12.2105"));
+      Sopimus sopimus = harrastaja.getSopimukset().iterator().next();
+      sopimus.setUmpeutuu(DateUtil.silloinD("31.12.2105"));
+      harrastajaAdmin.setSopimus(sopimus);
       harrastajaAdmin.setHarrastaja(harrastaja);
       harrastajaAdmin.tallennaSopimus();
       entityManager.clear();

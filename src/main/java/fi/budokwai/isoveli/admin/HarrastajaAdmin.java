@@ -302,11 +302,11 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void tallennaSopimus()
    {
+      harrastaja = entityManager.merge(harrastaja);
       if (!sopimus.isTallennettu())
       {
          harrastaja.lisääSopimus(sopimus);
       }
-      harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       sopimusRSM.get(sopimus).setSelected(true);
       harrastajat = null;

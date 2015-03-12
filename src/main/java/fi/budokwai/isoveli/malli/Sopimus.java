@@ -44,7 +44,7 @@ import fi.budokwai.isoveli.util.DateUtil;
          + "and not exists (select 1 from Sopimus s2 where s2.tyyppi.vapautus='K' and s2.harrastaja=h) "
          + "and sl.p‰‰ttyy < :nyt "
          + "and sl.p‰‰ttyy = (select max(sl2.p‰‰ttyy) from Sopimuslasku sl2 where sl2.sopimus=s)"),
-      @NamedQuery(name = "laskuttamattomat_kymppikerrat", query = "select s from Sopimus s, Harrastaja h where s.harrastaja = h and s.tyyppi.treenikertoja='K' and s.treenikertojaJ‰ljell‰ = 0 and h.arkistoitu = 'E' and s.sopimuslaskut is not empty") })
+      @NamedQuery(name = "laskuttamattomat_kymppikerrat", query = "select s from Sopimus s, Harrastaja h where s.harrastaja = h and s.tyyppi.treenikertoja='K' and s.treenikertojaJ‰ljell‰ = 0 and h.arkistoitu = 'E'") })
 public class Sopimus
 {
    public static final Sopimus EI_OOTA = new Sopimus();

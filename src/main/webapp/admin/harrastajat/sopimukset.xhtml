@@ -5,7 +5,7 @@
 		height="200" closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
 			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaSopimuksenPoisto').hide()"
-				action="#{harrastajaAdmin.piilotaSopimus}" actionListener="#{harrastajaAdmin.poistaSopimus}" immediate="true" />
+				actionListener="#{harrastajaAdmin.poistaSopimus}" immediate="true" />
 			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaSopimuksenPoisto').hide()" immediate="true" />
 		</h:panelGrid>
 	</ace:confirmationDialog>

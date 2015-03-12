@@ -266,6 +266,52 @@ public class HarrastajaTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
+   { "cleanup.sql", "huoltajaperhe.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testHuoltajanNimiMuuttuu()
+   {
+      Harrastaja emil = entityManager.find(Harrastaja.class, 3);
+      harrastajaAdmin.setHarrastaja(emil);
+      emil.getHuoltaja().setEtunimi("Nix");
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      emil = entityManager.find(Harrastaja.class, 3);
+      Assert.assertEquals("Nix", emil.getHuoltaja().getEtunimi());
+   }
+   
+   
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "huoltajaperhe.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testHuoltajanYhteystiedotMuuttuu()
+   {
+      Harrastaja emil = entityManager.find(Harrastaja.class, 3);
+      harrastajaAdmin.setHarrastaja(emil);
+      emil.getHuoltaja().getYhteystiedot().setPuhelinnumero("123");
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      emil = entityManager.find(Harrastaja.class, 3);
+      Assert.assertEquals("123", emil.getHuoltaja().getYhteystiedot().getPuhelinnumero());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "huoltajaperhe.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testPerheenOsoiteMuuttuu()
+   {
+      Harrastaja emil = entityManager.find(Harrastaja.class, 3);
+      harrastajaAdmin.setHarrastaja(emil);
+      emil.getPerhe().getOsoite().setKaupunki("foo");
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      emil = entityManager.find(Harrastaja.class, 3);
+      Assert.assertEquals("foo", emil.getPerhe().getOsoite().getKaupunki());
+   }
+
+   @Test
+   @ApplyScriptBefore(
    { "cleanup.sql", "karlsson.sql", "rosqvist.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPerheMuuttuu()
@@ -467,6 +513,7 @@ public class HarrastajaTest extends Perustesti
       Harrastaja harrastaja = entityManager.find(Harrastaja.class, 1);
       harrastajaAdmin.setHarrastaja(harrastaja);
       harrastajaAdmin.lisääSopimus();
+      harrastajaAdmin.tallennaSopimus();
       harrastajaAdmin.lisääSopimus();
       harrastajaAdmin.tallennaSopimus();
       entityManager.clear();

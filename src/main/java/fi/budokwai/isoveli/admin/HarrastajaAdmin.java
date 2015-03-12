@@ -321,6 +321,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       harrastajat = null;
+      vyökoe = null;
       info("Vyökoe poistettu");
       loggaaja.loggaa("Poisti harrastajan '%s' vyökokeen '%s'", harrastaja, vyökoe);
    }
@@ -332,6 +333,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       harrastajat = null;
+      sopimus = null;
       info("Sopimus poistettu");
       loggaaja.loggaa("Poisti harrastajan '%s' sopimuksen '%s'", harrastaja, sopimus);
    }
@@ -351,21 +353,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
             käyttö.size(), stringJoiner.toString());
          throw new IsoveliPoikkeus(viesti);
       }
-   }
-
-   public void piilotaSopimus()
-   {
-      sopimus = null;
-   }
-
-   public void piilotaVyökoe()
-   {
-      vyökoe = null;
-   }
-
-   public void piilotaHarrastaja()
-   {
-      harrastaja = null;
    }
 
    public void syntymäaikaMuuttui(AjaxBehaviorEvent e)
@@ -393,15 +380,16 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void lisääHuoltaja()
    {
+      Perhe perhe = entityManager.merge(harrastaja.getPerhe());
       Henkilö huoltaja = new Henkilö();
-      Perhe perhe = harrastaja.getPerhe();
-      perhe.getPerheenjäsenet().add(huoltaja);
       huoltaja.setSukunimi(harrastaja.getSukunimi());
       huoltaja.setEtunimi("Huoltaja");
       huoltaja.setPerhe(perhe);
-      harrastaja.setHuoltaja(huoltaja);
       entityManager.persist(huoltaja);
-      entityManager.persist(perhe);
+      perhe.getPerheenjäsenet().add(huoltaja);
+      harrastaja = entityManager.merge(harrastaja);
+      harrastaja.setHuoltaja(huoltaja);
+      entityManager.flush();
       perheet = null;
       fokusoi("form:huoltajan_etunimi");
       loggaaja.loggaa("Lisäsi harrastajalle '%s' huoltajan", harrastaja);

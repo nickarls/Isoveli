@@ -55,7 +55,7 @@ public class Harrastaja extends Henkilö
    private static final long serialVersionUID = 1L;
 
    @OneToOne(cascade =
-   { CascadeType.PERSIST })
+   { CascadeType.PERSIST})
    @JoinColumn(name = "huoltaja")
    private Henkilö huoltaja;
 
@@ -573,5 +573,13 @@ public class Harrastaja extends Henkilö
    public void setSiirtotreenejä(int siirtotreenejä)
    {
       this.siirtotreenejä = siirtotreenejä;
+   }
+
+   public void lisääHuoltaja()
+   {
+      huoltaja = new Henkilö();
+      huoltaja.setSukunimi(sukunimi);
+      huoltaja.setEtunimi("Huoltaja");
+      perhe.lisääPerheenjäsen(huoltaja);
    }
 }

@@ -42,7 +42,7 @@ public class Perhe
    private List<Henkilö> perheenjäsenet = new ArrayList<Henkilö>();
 
    @OneToOne(cascade =
-   { CascadeType.PERSIST })
+   { CascadeType.PERSIST, CascadeType.MERGE })
    @JoinColumn(name = "osoite")
    private Osoite osoite = new Osoite();
 

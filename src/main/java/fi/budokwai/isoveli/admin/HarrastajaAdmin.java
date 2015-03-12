@@ -252,15 +252,15 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          throw new IsoveliPoikkeus("Tauko ei voi loppua ennen kun se alkaa");
       }
       harrastaja.siivoa();
-      if (harrastaja.getPerhe() != null)
+      if (harrastaja.getHuoltaja() != null)
       {
-         entityManager.merge(harrastaja.getPerhe().getOsoite());
-         perheet = null;
+         entityManager.merge(harrastaja.getHuoltaja());
       }
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       harrastajaRSM.get(harrastaja).setSelected(true);
       harrastajat = null;
+      perheet = null;
       info("Harrastaja tallennettu");
       loggaaja.loggaa("Tallensi harrastajan '%s'", harrastaja);
    }
@@ -380,15 +380,9 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void lisääHuoltaja()
    {
-      Perhe perhe = entityManager.merge(harrastaja.getPerhe());
-      Henkilö huoltaja = new Henkilö();
-      huoltaja.setSukunimi(harrastaja.getSukunimi());
-      huoltaja.setEtunimi("Huoltaja");
-      huoltaja.setPerhe(perhe);
-      entityManager.persist(huoltaja);
-      perhe.getPerheenjäsenet().add(huoltaja);
       harrastaja = entityManager.merge(harrastaja);
-      harrastaja.setHuoltaja(huoltaja);
+      harrastaja.lisääHuoltaja();
+      entityManager.persist(harrastaja);
       entityManager.flush();
       perheet = null;
       fokusoi("form:huoltajan_etunimi");

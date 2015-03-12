@@ -81,7 +81,7 @@ public class Henkilö implements Serializable
    protected List<Rooli> roolit = new ArrayList<Rooli>();
 
    @ManyToOne(cascade =
-   { CascadeType.PERSIST })
+   { CascadeType.PERSIST, CascadeType.MERGE })
    @JoinColumn(name = "perhe")
    protected Perhe perhe;
 

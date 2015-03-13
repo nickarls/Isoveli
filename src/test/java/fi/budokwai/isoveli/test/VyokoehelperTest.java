@@ -1,5 +1,8 @@
 package fi.budokwai.isoveli.test;
 
+import java.util.List;
+
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
@@ -11,7 +14,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import fi.budokwai.isoveli.admin.HarrastajaAdmin;
+import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Vyöarvo;
+import fi.budokwai.isoveli.malli.Vyökoe;
+import fi.budokwai.isoveli.util.DateUtil;
+import fi.budokwai.isoveli.util.Harrastajan;
 import fi.budokwai.isoveli.util.Vyökoehelper;
 
 @RunWith(Arquillian.class)
@@ -24,12 +32,52 @@ public class VyokoehelperTest extends Perustesti
    private Vyökoehelper vyökoehelper;
 
    @Inject
+   private HarrastajaAdmin harrastajaAdmin;
+
+   @Inject
+   @Harrastajan
+   private Instance<List<Vyöarvo>> harrastajanVyöarvot;
+
+   @Inject
    private EntityManager entityManager;
 
    @Test
    public void testVyoarvotOlemassa()
    {
       Assert.assertEquals(18, vyökoehelper.getVyöarvot().size());
+   }
+
+   @Test
+   public void testEiPoomArvojaYli16Vuotiaalle()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      harrastaja.setSyntynyt(DateUtil.silloinD("01.01.1970"));
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      harrastajanVyöarvot.get().forEach(v -> {
+         Assert.assertFalse(v.isPoom());
+      });
+   }
+
+   @Test
+   public void testEiDanArvojaAlle16Vuotiaalle()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      harrastaja.setSyntynyt(DateUtil.silloinD("01.01.2010"));
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      harrastajanVyöarvot.get().forEach(v -> {
+         Assert.assertFalse(v.isDan());
+      });
+   }
+
+   @Test
+   public void testVyoarvojenSuodatus()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      harrastaja.setSyntynyt(DateUtil.silloinD("01.01.1970"));
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      Vyöarvo vihreä = entityManager.find(Vyöarvo.class, 3);
+      harrastaja.lisääVyökoe(new Vyökoe(vihreä));
+      Assert.assertFalse(harrastajanVyöarvot.get().contains(vihreä));
    }
 
    @Test

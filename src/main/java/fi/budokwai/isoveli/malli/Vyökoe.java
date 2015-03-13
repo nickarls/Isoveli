@@ -45,6 +45,15 @@ public class Vyökoe
    @Column(name = "paiva")
    private Date päivä = new Date();
 
+   public Vyökoe(Vyöarvo vyöarvo)
+   {
+      this.vyöarvo = vyöarvo;
+   }
+
+   public Vyökoe()
+   {
+   }
+
    public Date getPäivä()
    {
       return päivä;

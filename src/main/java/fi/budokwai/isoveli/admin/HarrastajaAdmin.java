@@ -318,6 +318,11 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void poistaVyökoe()
    {
       harrastaja.getVyökokeet().remove(vyökoe);
+      if (!vyökoe.isTallennettu())
+      {
+         vyökoe = null;
+         return;
+      }
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       harrastajat = null;
@@ -328,6 +333,11 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void poistaSopimus()
    {
+      if (!sopimus.isTallennettu())
+      {
+         sopimus = null;
+         return;
+      }
       tarkistaSopimuskäyttö();
       harrastaja.getSopimukset().remove(sopimus);
       harrastaja = entityManager.merge(harrastaja);

@@ -4,12 +4,15 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -30,6 +33,10 @@ public class Vyökoehelper implements Serializable
 
    @Inject
    private EntityManager entityManager;
+
+   @Inject
+   @Named("harrastaja")
+   private Instance<Harrastaja> harrastaja;
 
    @PostConstruct
    public void init()
@@ -54,6 +61,24 @@ public class Vyökoehelper implements Serializable
       return vyöarvot;
    }
 
+   @Produces
+   @Named
+   @Harrastajan
+   public List<Vyöarvo> getHarrastajanMahdollisetVyöarvot()
+   {
+      List<Vyöarvo> tulokset = new ArrayList<>();
+      if (harrastaja.get().isAlaikäinen())
+      {
+         tulokset = vyöarvot.stream().filter(v -> !v.isDan()).collect(Collectors.toList());
+      } else
+      {
+         tulokset = vyöarvot.stream().filter(v -> !v.isPoom()).collect(Collectors.toList());
+      }
+      List<Vyöarvo> nykyisetVyöarvot = harrastaja.get().getVyökokeet().stream().map(v -> v.getVyöarvo())
+         .collect(Collectors.toList());
+      return tulokset.stream().filter(v -> !nykyisetVyöarvot.contains(v)).collect(Collectors.toList());
+   }
+
    public JäljelläVyökokeeseen getJäljelläVyökokeeseen(Harrastaja harrastaja)
    {
       Vyöarvo nykyinenVyöarvo = harrastaja.getTuoreinVyöarvo();
@@ -69,7 +94,8 @@ public class Vyökoehelper implements Serializable
       {
          return JäljelläVyökokeeseen.EI_OOTA;
       }
-      long tarvittavaTreenimäärä = seuraavaVyöarvo.getMinimitreenit() - harrastaja.getTreenejäViimeVyökokeesta() - harrastaja.getSiirtotreenejä();
+      long tarvittavaTreenimäärä = seuraavaVyöarvo.getMinimitreenit() - harrastaja.getTreenejäViimeVyökokeesta()
+         - harrastaja.getSiirtotreenejä();
       LocalDate koskaViimeisinKoe = null;
       if (harrastaja.getTuoreinVyökoe() == Vyökoe.EI_OOTA)
       {

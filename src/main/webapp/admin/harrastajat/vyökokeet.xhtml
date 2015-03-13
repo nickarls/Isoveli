@@ -53,7 +53,7 @@
 			<h:panelGrid>
 				<ace:message for="form:vyöarvo" />
 				<h:selectOneMenu value="#{vyökoe.vyöarvo}" id="vyöarvo">
-					<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}" />
+					<f:selectItems value="#{harrastajanMahdollisetVyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}" />
 					<f:converter converterId="objectConverter" />
 				</h:selectOneMenu>
 			</h:panelGrid>

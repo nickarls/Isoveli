@@ -52,6 +52,13 @@ public class Vyöarvo
    @Type(type = "KylläEi")
    private boolean arkistoitu;
 
+   @Type(type = "KylläEi")
+   private boolean poom;
+
+   @Type(type = "KylläEi")
+   private boolean dan;
+
+   
    public Vyöarvo(String nimi)
    {
       this.nimi = nimi;
@@ -152,6 +159,26 @@ public class Vyöarvo
    public void setArkistoitu(boolean arkistoitu)
    {
       this.arkistoitu = arkistoitu;
+   }
+
+   public boolean isPoom()
+   {
+      return poom;
+   }
+
+   public void setPoom(boolean poom)
+   {
+      this.poom = poom;
+   }
+
+   public boolean isDan()
+   {
+      return dan;
+   }
+
+   public void setDan(boolean dan)
+   {
+      this.dan = dan;
    }
 
 }

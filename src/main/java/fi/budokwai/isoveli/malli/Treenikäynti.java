@@ -10,11 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -42,8 +45,18 @@ public class Treenikäynti
    @Valid
    private Treenisessio treenisessio = new Treenisessio();
 
+   @Transient
+   @Size(min = 1)
+   private String harrastajaHaku;
+
    @Temporal(TemporalType.TIMESTAMP)
    private Date aikaleima = new Date();
+
+   @PostLoad
+   public void alusta()
+   {
+      harrastajaHaku = harrastaja.getNimi();
+   }
 
    public Treenikäynti()
    {
@@ -127,4 +140,15 @@ public class Treenikäynti
    {
       return id == 0;
    }
+
+   public String getHarrastajaHaku()
+   {
+      return harrastajaHaku;
+   }
+
+   public void setHarrastajaHaku(String harrastajaHaku)
+   {
+      this.harrastajaHaku = harrastajaHaku;
+   }
+
 }

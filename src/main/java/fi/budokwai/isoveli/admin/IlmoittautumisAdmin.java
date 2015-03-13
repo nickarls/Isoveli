@@ -2,11 +2,12 @@ package fi.budokwai.isoveli.admin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
@@ -14,8 +15,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 
-import org.hibernate.FlushMode;
-import org.hibernate.Session;
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
@@ -35,7 +34,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
 
    @Inject
    private Loggaaja loggaaja;
-   
+
    private List<Treenik‰ynti> treenik‰ynnit;
    private Treenik‰ynti treenik‰ynti;
    private Treenisessio treenisessio;
@@ -50,6 +49,10 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
    {
       treenik‰ynti.p‰ivit‰Aikaleima();
    }
+
+   @Inject
+   @Named("harrastajat")
+   private Instance<List<Harrastaja>> harrastajat;
 
    @Produces
    @Named
@@ -75,13 +78,6 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
    public Treenisessio getTreenisessio()
    {
       return treenisessio;
-   }
-
-   @PostConstruct
-   public void init()
-   {
-      ((Session) entityManager.getDelegate()).setFlushMode(FlushMode.MANUAL);
-      // PushRenderer.addCurrentSession("ilmoittautuminen");
    }
 
    @Produces
@@ -115,6 +111,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
    public void treenik‰yntiValittu(SelectEvent e)
    {
       treenik‰ynti = (Treenik‰ynti) e.getObject();
+      treenik‰ynti.alusta();
    }
 
    public void tabiMuuttui(ValueChangeEvent e)
@@ -238,6 +235,16 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       treenisessiot = null;
       loggaaja.loggaa("Tallensi treenisession '%s'", treenisessio);
       info("Treenisessio tallennettu");
+   }
+
+   public void harrastajaMuuttui(AjaxBehaviorEvent e)
+   {
+      Optional<Harrastaja> harrastaja = harrastajat.get().stream()
+         .filter(h -> h.getNimi().equals(treenik‰ynti.getHarrastajaHaku())).findFirst();
+      if (harrastaja.isPresent())
+      {
+         treenik‰ynti.setHarrastaja(harrastaja.get());
+      }
    }
 
    public RowStateMap getTreenik‰yntiRSM()

@@ -52,10 +52,11 @@
 				<h:outputText value="Harrastaja" />
 				<h:panelGrid>
 					<ace:message for="form:harrastaja" />
-					<h:selectOneMenu id="harrastaja" value="#{treenikäynti.harrastaja}" style="width:350px">
-						<f:selectItems value="#{harrastajat}" var="_harrastaja" itemLabel="#{_harrastaja.nimi}" itemValue="#{_harrastaja}" />
-						<f:converter converterId="objectConverter" />
-					</h:selectOneMenu>
+					<ace:autoCompleteEntry id="harrastaja" value="#{treenikäynti.harrastajaHaku}" rows="10" width="250"
+						filterMatchMode="contains" required="true" requiredMessage="arvo on pakollinen">
+						<ace:ajax event="valueChange" listener="#{ilmoittautumisAdmin.harrastajaMuuttui}" />
+						<f:selectItems value="#{harrastajatSI}" />
+					</ace:autoCompleteEntry>
 				</h:panelGrid>
 				<h:outputText value="Sessio" />
 				<h:panelGrid>

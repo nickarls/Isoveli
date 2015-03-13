@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
@@ -195,6 +196,13 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          haeHarrastajat();
       }
       return harrastajat;
+   }
+
+   @Produces
+   @Named
+   public List<SelectItem> getHarrastajatSI()
+   {
+      return getHarrastajat().stream().map(h -> new SelectItem(h.getNimi())).collect(Collectors.toList());
    }
 
    @Produces

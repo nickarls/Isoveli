@@ -48,7 +48,7 @@ public class Laskurivi
 
    @Size(max = 50)
    @NotNull
-   private String tuotenimi;
+   private String tuotenimi = "";
 
    @Size(max = 200)
    private String infotieto;

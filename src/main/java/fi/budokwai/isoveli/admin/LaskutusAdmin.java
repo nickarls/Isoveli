@@ -343,6 +343,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    {
       Lasku lasku = (Lasku) laskuRSM.getSelected().iterator().next();
       lasku = entityManager.merge(lasku);
+      entityManager.flush();
       info("Rivi muokattu ja lasku tallennettu");
    }
 

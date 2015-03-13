@@ -47,7 +47,7 @@ public class Lasku
    private int id;
 
    @OneToMany(mappedBy = "lasku", cascade =
-   { CascadeType.PERSIST })
+   { CascadeType.PERSIST, CascadeType.PERSIST })
    private List<Laskurivi> laskurivit = new ArrayList<Laskurivi>();
 
    @Enumerated(EnumType.STRING)

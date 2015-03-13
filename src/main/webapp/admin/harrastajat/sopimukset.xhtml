@@ -35,7 +35,10 @@
 				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Treenikertoja" styleClass="lefttext">
+		<ace:column headerText="Treenikrt til." styleClass="lefttext">
+			<h:outputText value="#{_sopimus.treenikertojaTilattu}" rendered="#{_sopimus.tyyppi.treenikertoja}" />
+		</ace:column>
+		<ace:column headerText="Treenikrt jäl." styleClass="lefttext">
 			<h:outputText value="#{_sopimus.treenikertojaJäljellä}" rendered="#{_sopimus.tyyppi.treenikertoja}" />
 		</ace:column>
 		<ace:column headerText="Luotu" styleClass="lefttext">

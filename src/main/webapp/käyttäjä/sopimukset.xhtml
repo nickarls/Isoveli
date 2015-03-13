@@ -21,8 +21,11 @@
 					<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET"/>
 				</h:outputText>
 			</ace:column>
-			<ace:column headerText="Treenikertoja" styleClass="lefttext">
-				<h:outputText value="#{_sopimus.treenikertoja}" />
+			<ace:column headerText="Treenikrt til." styleClass="lefttext">
+				<h:outputText value="#{_sopimus.treenikertojaTilattu}" />
+			</ace:column>
+			<ace:column headerText="Treenikrt jäl." styleClass="lefttext">
+				<h:outputText value="#{_sopimus.treenikertojaJäljellä}" />
 			</ace:column>
 			<ace:panelExpansion>
 				<ace:dataTable rows="10" value="#{_sopimus.sopimuslaskut}" var="_sopimuslasku" paginator="true"

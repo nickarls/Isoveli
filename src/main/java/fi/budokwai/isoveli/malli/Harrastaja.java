@@ -32,8 +32,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SortComparator;
 import org.hibernate.annotations.Type;
 
-import com.google.common.base.MoreObjects;
-
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.util.DateUtil;
 

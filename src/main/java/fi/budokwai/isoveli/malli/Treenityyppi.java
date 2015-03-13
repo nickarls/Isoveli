@@ -69,4 +69,9 @@ public class Treenityyppi
    {
       return nimi;
    }
+
+   public boolean isTallentamaton()
+   {
+      return id == 0;
+   }
 }

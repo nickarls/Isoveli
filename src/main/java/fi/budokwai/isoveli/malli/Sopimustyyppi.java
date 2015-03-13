@@ -329,4 +329,9 @@ public class Sopimustyyppi
       return nimi;
    }
 
+   public boolean isTallentamaton()
+   {
+      return id == 0;
+   }
+
 }

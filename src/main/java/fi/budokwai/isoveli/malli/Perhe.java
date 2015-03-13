@@ -190,11 +190,17 @@ public class Perhe
 
    public Sopimus getPerheenKertakortti()
    {
-      Optional<Sopimus> sopimus = perheenjäsenet.stream().filter(h -> h.isHarrastaja())
-         .map(h -> Harrastaja.class.cast(h)).flatMap(h -> h.getSopimukset().stream())
-         .filter(s -> s.getTyyppi().isTreenikertoja()).sorted((s1, s2) -> {
-            return Integer.valueOf(s1.getTreenikertojaJäljellä()).compareTo(Integer.valueOf(s2.getTreenikertojaJäljellä()));
-         }).findFirst();
+      Optional<Sopimus> sopimus = perheenjäsenet
+         .stream()
+         .filter(h -> h.isHarrastaja())
+         .map(h -> Harrastaja.class.cast(h))
+         .flatMap(h -> h.getSopimukset().stream())
+         .filter(s -> s.getTyyppi().isTreenikertoja())
+         .sorted(
+            (s1, s2) -> {
+               return Integer.valueOf(s1.getTreenikertojaJäljellä()).compareTo(
+                  Integer.valueOf(s2.getTreenikertojaJäljellä()));
+            }).findFirst();
       return sopimus.isPresent() ? sopimus.get() : null;
    }
 
@@ -204,15 +210,15 @@ public class Perhe
       return perheenKertakortti == null ? 0 : perheenKertakortti.getTreenikertojaJäljellä();
    }
 
-   public boolean isTallennettu()
-   {
-      return id > 0;
-   }
-
    @Override
    public String toString()
    {
       return getKuvaus();
+   }
+
+   public boolean isTallentamaton()
+   {
+      return id == 0;
    }
 
 }

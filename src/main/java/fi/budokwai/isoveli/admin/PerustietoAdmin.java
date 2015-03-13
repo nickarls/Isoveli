@@ -314,6 +314,11 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void poistaRooli()
    {
+      if (rooli.isTallentamaton())
+      {
+         rooli = null;
+         return;
+      }
       tarkistaRoolikäyttö();
       rooli = entityManager.merge(rooli);
       entityManager.remove(rooli);
@@ -341,6 +346,11 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void poistaTreeni()
    {
+      if (treeni.isTallentamaton())
+      {
+         treeni = null;
+         return;
+      }
       tarkistaTreenikäyttö();
       treeni = entityManager.merge(treeni);
       entityManager.remove(treeni);
@@ -368,6 +378,11 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void poistaVyöarvo()
    {
+      if (vyöarvo.isTallentamaton())
+      {
+         vyöarvo = null;
+         return;
+      }
       tarkistaVyöarvoKäyttö();
       vyöarvo = entityManager.merge(vyöarvo);
       entityManager.remove(vyöarvo);
@@ -395,6 +410,11 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void poistaTreenityyppi()
    {
+      if (treenityyppi.isTallentamaton())
+      {
+         treenityyppi = null;
+         return;
+      }
       tarkistaTreenityyppiKäyttö();
       treenityyppi = entityManager.merge(treenityyppi);
       entityManager.remove(treenityyppi);
@@ -421,6 +441,11 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void poistaSopimustyyppi()
    {
+      if (sopimustyyppi.isTallentamaton())
+      {
+         sopimustyyppi = null;
+         return;
+      }
       tarkistaSopimustyyppikäyttö();
       sopimustyyppi = entityManager.merge(sopimustyyppi);
       entityManager.remove(sopimustyyppi);

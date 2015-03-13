@@ -367,4 +367,9 @@ public class Treeni
    {
       return nimi;
    }
+
+   public boolean isTallentamaton()
+   {
+      return id == 0;
+   }
 }

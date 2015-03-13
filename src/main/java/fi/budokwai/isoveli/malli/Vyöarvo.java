@@ -58,7 +58,6 @@ public class Vyöarvo
    @Type(type = "KylläEi")
    private boolean dan;
 
-   
    public Vyöarvo(String nimi)
    {
       this.nimi = nimi;
@@ -179,6 +178,11 @@ public class Vyöarvo
    public void setDan(boolean dan)
    {
       this.dan = dan;
+   }
+
+   public boolean isTallentamaton()
+   {
+      return id == 0;
    }
 
 }

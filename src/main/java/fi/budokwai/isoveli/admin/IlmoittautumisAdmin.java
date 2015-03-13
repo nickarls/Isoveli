@@ -186,7 +186,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
 
    public void poistaTreenikäynti()
    {
-      if (!treenikäynti.isTallennettu())
+      if (treenikäynti.isTallentamaton())
       {
          treenikäynti = null;
          return;

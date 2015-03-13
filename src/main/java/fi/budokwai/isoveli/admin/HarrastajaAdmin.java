@@ -231,7 +231,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    private void haePerheet()
    {
       perheet = entityManager.createNamedQuery("perheet", Perhe.class).getResultList();
-      if (harrastaja != null && harrastaja.getPerhe() != null && !harrastaja.getPerhe().isTallennettu())
+      if (harrastaja != null && harrastaja.getPerhe() != null && harrastaja.getPerhe().isTallentamaton())
       {
          perheet.add(harrastaja.getPerhe());
       }
@@ -288,7 +288,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void tallennaVyökoe()
    {
-      if (!vyökoe.isTallennettu())
+      if (vyökoe.isTallentamaton())
       {
          harrastaja.lisääVyökoe(vyökoe);
       }
@@ -303,7 +303,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void tallennaSopimus()
    {
       harrastaja = entityManager.merge(harrastaja);
-      if (!sopimus.isTallennettu())
+      if (sopimus.isTallentamaton())
       {
          harrastaja.lisääSopimus(sopimus);
       }
@@ -318,7 +318,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void poistaVyökoe()
    {
       harrastaja.getVyökokeet().remove(vyökoe);
-      if (!vyökoe.isTallennettu())
+      if (vyökoe.isTallentamaton())
       {
          vyökoe = null;
          return;
@@ -333,7 +333,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void poistaSopimus()
    {
-      if (!sopimus.isTallennettu())
+      if (sopimus.isTallentamaton())
       {
          sopimus = null;
          return;

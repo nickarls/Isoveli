@@ -417,11 +417,6 @@ public class Sopimus
       return laskurivit;
    }
 
-   public boolean isTallennettu()
-   {
-      return id > 0;
-   }
-
    @Override
    public String toString()
    {
@@ -456,6 +451,11 @@ public class Sopimus
    public void setTreenikertojaJäljellä(int treenikertojaJäljellä)
    {
       this.treenikertojaJäljellä = treenikertojaJäljellä;
+   }
+
+   public boolean isTallentamaton()
+   {
+      return id == 0;
    }
 
 }

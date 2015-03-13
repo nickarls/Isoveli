@@ -138,15 +138,15 @@ public class Vyökoe
       return Integer.valueOf(id).hashCode();
    }
 
-   public boolean isTallennettu()
-   {
-      return id > 0;
-   }
-
    @Override
    public String toString()
    {
       return String.format("%s@%s", vyöarvo.getNimi(), DateUtil.päiväTekstiksi(päivä));
+   }
+
+   public boolean isTallentamaton()
+   {
+      return id == 0;
    }
 
 }

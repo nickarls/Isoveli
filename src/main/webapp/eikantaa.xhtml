@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+</h:head>
+<h:body>
+	<f:view>
+		<h:form>
+			<h:panelGrid style="width:80%; margin-left:auto; margin-right:auto">
+				<h:outputText value="Pistäppäs se tietokanta käyntiin ensin" />
+				<h:commandLink action="#{exceptionHandler.tapaSessio}" value="Ota vauhtia" />
+				<p />
+				<h:graphicImage value="/kuvat/eikantaa.png" />
+			</h:panelGrid>
+		</h:form>
+	</f:view>
+</h:body>
+
+</html>

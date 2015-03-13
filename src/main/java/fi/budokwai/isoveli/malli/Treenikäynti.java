@@ -116,4 +116,15 @@ public class Treenikäynti
    {
       aikaleima = treenisessio.getAikaleima();
    }
+
+   public boolean isTallennettu()
+   {
+      return id > 0;
+   }
+
+   @Override
+   public String toString()
+   {
+      return String.format("%s@%s", harrastaja, treenisessio);
+   }
 }

@@ -155,7 +155,7 @@ public class Kirjautuminen extends Perustoiminnallisuus
    private boolean salliKirjautumatta(String näkymä)
    {
       return näkymä.endsWith("kirjautuminen.xhtml") || näkymä.endsWith("virhe.xhtml")
-         || näkymä.endsWith("ilmoittautuminen.xhtml");
+         || näkymä.endsWith("eikantaa.xhtml") || näkymä.endsWith("ilmoittautuminen.xhtml");
    }
 
    private void loginSivulle(FacesContext facesContext)

@@ -23,6 +23,7 @@ import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Järjestelmätilasto;
 import fi.budokwai.isoveli.malli.Treenikäynti;
 import fi.budokwai.isoveli.malli.Treenisessio;
+import fi.budokwai.isoveli.util.Loggaaja;
 
 @Stateful
 @Named
@@ -32,6 +33,9 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
    @Inject
    private EntityManager entityManager;
 
+   @Inject
+   private Loggaaja loggaaja;
+   
    private List<Treenikäynti> treenikäynnit;
    private Treenikäynti treenikäynti;
    private Treenisessio treenisessio;
@@ -167,6 +171,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       treenikäynti = new Treenikäynti();
       info("Uusi treenikäynti alustettu");
       treenikäyntiRSM.setAllSelected(false);
+      loggaaja.loggaa("Lisäsi uuden treenikäynnin");
       return treenikäynti;
    }
 
@@ -175,22 +180,34 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       treenisessio = new Treenisessio();
       info("Uusi treenisessio alustettu");
       treenisessioRSM.setAllSelected(false);
+      loggaaja.loggaa("Lisäsi uuden treenisession");
       return treenisessio;
    }
 
    public void poistaTreenikäynti()
    {
+      if (!treenikäynti.isTallennettu())
+      {
+         treenikäynti = null;
+         return;
+      }
       treenikäynti = entityManager.merge(treenikäynti);
       entityManager.remove(treenikäynti);
       entityManager.flush();
       treenikäynnit = null;
       treenisessiot = null;
       treenikäynti = null;
+      loggaaja.loggaa("Poisti treenikäynnin '%s'", treenikäynti);
       info("Treenikäynti poistettu");
    }
 
    public void poistaTreenisessio()
    {
+      if (treenisessio.isTallentamaton())
+      {
+         treenisessio = null;
+         return;
+      }
       treenisessio.tarkistaKäyttö();
       treenisessio = entityManager.merge(treenisessio);
       entityManager.remove(treenisessio);
@@ -199,6 +216,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       treenisessiot = null;
       treenikäynnit = null;
       treenikäynti = null;
+      loggaaja.loggaa("Poisti treenisession '%s'", treenisessio);
       info("Treenisessio poistettu");
    }
 
@@ -208,6 +226,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       entityManager.flush();
       treenikäyntiRSM.get(treenikäynti).setSelected(true);
       haeTreenikäynnit();
+      loggaaja.loggaa("Tallensi treenikäynnin '%s'", treenikäynti);
       info("Treenikäynti tallennettu");
    }
 
@@ -217,6 +236,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       entityManager.flush();
       treenisessioRSM.get(treenisessio).setSelected(true);
       treenisessiot = null;
+      loggaaja.loggaa("Tallensi treenisession '%s'", treenisessio);
       info("Treenisessio tallennettu");
    }
 

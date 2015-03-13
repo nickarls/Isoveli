@@ -252,7 +252,7 @@ public class Harrastaja extends Henkilö
    @Override
    public String toString()
    {
-      return MoreObjects.toStringHelper(Harrastaja.class).add("Nimi", getNimi()).toString();
+      return getNimi();
    }
 
    public boolean isSopimuksetOK()

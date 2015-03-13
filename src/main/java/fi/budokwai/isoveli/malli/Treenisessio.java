@@ -27,6 +27,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import fi.budokwai.isoveli.IsoveliPoikkeus;
+import fi.budokwai.isoveli.util.DateUtil;
 
 @Entity
 @DynamicInsert
@@ -177,5 +178,11 @@ public class Treenisessio
    {
       treenik‰ynti.setTreenisessio(this);
       treenik‰ynnit.add(treenik‰ynti);
+   }
+
+   @Override
+   public String toString()
+   {
+      return String.format("%s@%s", treeni, DateUtil.p‰iv‰Tekstiksi(p‰iv‰));
    }
 }

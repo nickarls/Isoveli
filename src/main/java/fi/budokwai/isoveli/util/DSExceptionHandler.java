@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.ConnectException;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.ViewExpiredException;
@@ -56,6 +57,16 @@ public class DSExceptionHandler extends Perustoiminnallisuus implements Serializ
       e.handled();
    }
 
+   void handleNoDB(@Handles ExceptionEvent<ConnectException> e) {
+      e.handled();
+      try
+      {
+         FacesContext.getCurrentInstance().getExternalContext().redirect("/Isoveli/eikantaa.xhtml");
+      } catch (IOException x)
+      {
+      }
+   }
+
    void handleException(@Handles ExceptionEvent<Throwable> e)
    {
       logger.error("Virhe", e.getException());
@@ -76,7 +87,6 @@ public class DSExceptionHandler extends Perustoiminnallisuus implements Serializ
       if (e.getException().getMessage().startsWith("Unique"))
       {
          e.handled();
-         virhe("Samanniminen tietue oli jo olemassa, tarkista tiedot");
       }
    }
 

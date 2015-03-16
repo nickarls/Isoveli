@@ -65,16 +65,15 @@ public class Kirjautuminen extends Perustoiminnallisuus
       String[] nimiosat = tunnukset.get().getNimiosat();
       if (nimiosat.length != 2)
       {
-         virhe(String.format("Nimi '%s' ei ole oikeassa muodossa, käytä 'etunimi sukunimi'-muotoa", tunnukset.get()
-            .getNimi()));;
-         return;
+         throw new IsoveliPoikkeus(String.format("Nimi '%s' ei ole oikeassa muodossa, käytä 'etunimi sukunimi'-muotoa",
+            tunnukset.get().getNimi()));
       }
       List<Henkilö> henkilöt = entityManager.createNamedQuery("nimetty_henkilö", Henkilö.class)
          .setParameter("etunimi", nimiosat[0]).setParameter("sukunimi", nimiosat[1]).getResultList();
       if (henkilöt.isEmpty())
       {
-         virhe(String.format("Käyttäjä '%s' ei löytynyt, ota yhteyttä salipäivystäjään", tunnukset.get().getNimi()));
-         return;
+         throw new IsoveliPoikkeus(String.format("Käyttäjä '%s' ei löytynyt, ota yhteyttä salipäivystäjään", tunnukset
+            .get().getNimi()));
       }
       Henkilö henkilö = henkilöt.iterator().next();
       if (henkilö.isLöytyySähköposti())
@@ -82,8 +81,7 @@ public class Kirjautuminen extends Perustoiminnallisuus
          lähetäSalasananResetointivahvistus(henkilö);
       } else
       {
-         virhe("Käyttäjällä ei ole sähköpostiosoitetta, ota yhteyttä salipäivystäjään");
-         return;
+         throw new IsoveliPoikkeus("Käyttäjällä ei ole sähköpostiosoitetta, ota yhteyttä salipäivystäjään");
       }
    }
 
@@ -93,7 +91,7 @@ public class Kirjautuminen extends Perustoiminnallisuus
       String apiUrl = haeApiUrl(avain);
       String teksti = String
          .format(
-            "Olet ilmeisesti tehnyt salasanan resetointipyynnön? Jos klikkaat linkkiä <a href=\"%s\" target=\"_blank\">%s</a> niin sinulle lähetetään uusi salasana. Jos et ole tehnyt pyynntöä niin voit jättää tämän viestin huomiomatta",
+            "Olet ilmeisesti tehnyt salasanan resetointipyynnön?</p> Jos klikkaat linkkiä <a href=\"%s\" target=\"_blank\">%s</a> niin sinulle lähetetään uusi salasana.</p> Jos et ole tehnyt pyynntöä niin voit jättää tämän viestin huomiomatta",
             apiUrl, apiUrl);
       mailManager.lähetäSähköposti(henkilö.getYhteystiedot().getSähköposti(), "Isoveli - salasanan resetointipyyntö",
          teksti);

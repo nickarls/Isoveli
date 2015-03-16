@@ -22,7 +22,7 @@ import fi.budokwai.isoveli.malli.BlobData;
 @RequestScoped
 public class MailManager
 {
-   private static final String LÄHETTÄJÄ = "nicklas.karlsson@affecto.com";
+   private static final String LÄHETTÄJÄ = "nickarls@gmail.com";
 
    @Resource(name = "java:jboss/mail/Isoveli")
    private Session mailiSessio;
@@ -36,6 +36,7 @@ public class MailManager
          viesti.setFrom(new InternetAddress(LÄHETTÄJÄ));
          viesti.setSubject(otsikko);
          viesti.setSentDate(new java.util.Date());
+         viesti.setText(teksti, "iso-8859-1", "html");
          Transport.send(viesti);
       } catch (MessagingException e)
       {

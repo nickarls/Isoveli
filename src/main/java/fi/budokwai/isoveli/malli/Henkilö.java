@@ -300,9 +300,9 @@ public class Henkilö implements Serializable
 
    public String luoUusiSalasana()
    {
-      salasana = Util.MD5(UUID.randomUUID().toString()).substring(0, 6);
-      setSalasana(salasana);
-      return salasana;
+      String uusiSalasana = Util.MD5(UUID.randomUUID().toString()).substring(0, 6);
+      salasana = Util.MD5(uusiSalasana);
+      return uusiSalasana;
    }
 
    public String getInfo()

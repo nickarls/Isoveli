@@ -113,16 +113,14 @@ public class Kirjautuminen extends Perustoiminnallisuus
       String[] nimiosat = tunnukset.get().getNimiosat();
       if (nimiosat.length != 2)
       {
-         virhe("Käyttäjänimi on 'etunimi sukunimi'");
-         return null;
+         throw new IsoveliPoikkeus("Käyttäjänimi oltava muotoa 'etunimi sukunimi'");
       }
       List<Henkilö> henkilöt = entityManager.createNamedQuery("henkilö", Henkilö.class)
          .setParameter("salasana", tunnukset.get().getMD5Salasana()).setParameter("etunimi", nimiosat[0])
          .setParameter("sukunimi", nimiosat[1]).getResultList();
       if (henkilöt.isEmpty())
       {
-         virhe("Väärä nimi tai salasana");
-         return null;
+         throw new IsoveliPoikkeus("Tuntematon käyttäjä tai väärä salasana");
       }
       kirjautunutHenkilö = henkilöt.iterator().next();
       loggaaja.loggaa("Sisäänkirjautuminen");

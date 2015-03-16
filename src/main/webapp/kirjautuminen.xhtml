@@ -12,7 +12,7 @@
 }
 
 .kenttä {
-	padding:3px;
+	padding: 3px;
 }
 
 .nappi {
@@ -31,12 +31,42 @@
 	border: 1px solid #e0e0e0;
 }
 </style>
-<link rel="stylesheet" type="text/css" href="jquery.toastmessage.css"/>
-<script src="jquery-1.4.4.min.js"/>
-<script src="jquery.toastmessage.js"/>
+	<link rel="stylesheet" type="text/css" href="jquery.toastmessage.css" />
+	<script src="jquery-1.4.4.min.js" />
+	<script src="jquery.toastmessage.js" />
 </h:head>
 <h:body onload="document.getElementById('form:käyttäjänimi').focus();">
 	<f:view>
+		<h:form id="vaihtoform">
+			<ace:dialog id="salasanavaihto" header="Vaihda salasana" width="400" modal="true">
+				<h:panelGrid columns="2">
+					<h:outputText value="Käyttäjänimi" />
+					<h:panelGrid>
+						<ace:message for="vaihtokäyttäjänimi" />
+						<h:inputText value="#{salasananvaihto.tunnusvaihto.nimi}" id="vaihtokäyttäjänimi" />
+					</h:panelGrid>
+					<h:outputText value="Vanha salasana" />
+					<h:panelGrid>
+						<ace:message for="vaihtosalasana" />
+						<h:inputText value="#{salasananvaihto.tunnusvaihto.salasana}" id="vaihtosalasana" />
+					</h:panelGrid>
+					<h:outputText value="Uusi salasana" />
+					<h:panelGrid>
+						<ace:message for="vaihtouusisalasana" />
+						<h:inputText value="#{salasananvaihto.tunnusvaihto.uusiSalasana}" id="vaihtouusisalasana" />
+					</h:panelGrid>
+					<h:outputText value="Toistettu salasana" />
+					<h:panelGrid>
+						<ace:message for="vaihtotoistettusalasana" />
+						<h:inputText value="#{salasananvaihto.tunnusvaihto.toistettuSalasana}" id="vaihtotoistettusalasana" />
+					</h:panelGrid>
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<h:commandButton action="#{salasananvaihto.vaihda()}" value="Vaihda" />
+					<h:commandButton onclick="ice.ace.instance('vaihtoform:salasanavaihto').hide();" value="Palaa" />
+				</h:panelGrid>
+			</ace:dialog>
+		</h:form>
 		<h:form id="form">
 			<ace:panel header="Kirjaudu" styleClass="taulu">
 				<h:panelGrid columns="2">
@@ -58,10 +88,15 @@
 						<h:commandButton image="/kuvat/kirjaudu.png" action="#{kirjautuminen.kirjaudu}" styleClass="nappi" id="kirjaudu" />
 					</h:panelGrid>
 				</h:panelGrid>
-				<h:commandLink action="#{kirjautuminen.lähetäResetointipyyntö}">
-					<h:outputText value="Salasana unohtunut?"/>
-					<ace:ajax execute="form:käyttäjänimi" render="@all"/>
-				</h:commandLink>
+				<h:panelGrid columns="2" style="width:100%">
+					<h:commandLink action="#{kirjautuminen.lähetäResetointipyyntö}">
+						<h:outputText value="Salasana unohtunut?" />
+						<ace:ajax execute="form:käyttäjänimi" render="@all" />
+					</h:commandLink>
+					<h:commandLink onclick="ice.ace.instance('vaihtoform:salasanavaihto').show();" immediate="true" style="float:right">
+						<h:outputText value="Vaihda salasana" />
+					</h:commandLink>
+				</h:panelGrid>
 			</ace:panel>
 		</h:form>
 	</f:view>

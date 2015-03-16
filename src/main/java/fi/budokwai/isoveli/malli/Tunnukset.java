@@ -13,7 +13,7 @@ public class Tunnukset
 
    @NotNull
    private String salasana;
-
+   
    public String getNimi()
    {
       return nimi;

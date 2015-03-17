@@ -2,6 +2,7 @@ package fi.budokwai.isoveli.admin;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,6 +19,8 @@ import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.validation.constraints.NotNull;
 
 import org.icefaces.ace.component.column.Column;
 import org.icefaces.ace.component.datatable.DataTable;
@@ -58,11 +61,14 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    private RowStateMap laskuRSM = new RowStateMap();
    private RowStateMap laskuttamattomatRSM = new RowStateMap();
    private RowStateMap laskuriviRSM = new RowStateMap();
+
    private List<Sopimus> laskuttamattomat;
    private List<Lasku> laskut;
    private Lasku lasku;
    private Sopimus sopimus;
    private List<SelectItem> tilasuodatukset;
+
+   private String kuitattavatLaskut;
 
    @PostConstruct
    public void init()
@@ -101,6 +107,44 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public List<SelectItem> getTilasuodatukset()
    {
       return tilasuodatukset;
+   }
+
+   public void kuittaaLaskut()
+   {
+      if (kuitattavatLaskut == null)
+      {
+         return;
+      }
+      int virheitä = 0;
+      int kuitattuja = 0;
+      String[] viitenumerot = kuitattavatLaskut.split("\n");
+      loggaaja.loggaa("Kuittaa %d laskua", viitenumerot.length);
+      for (String viitenumero : viitenumerot)
+      {
+         Lasku lasku = null;
+         try
+         {
+            lasku = entityManager.createNamedQuery("lasku_viitenumero", Lasku.class)
+               .setParameter("viitenumero", viitenumero).getSingleResult();
+         } catch (NoResultException e)
+         {
+            loggaaja.loggaa("Kuitattavaa laskua viitenumerolla '%s' ei löytynyt", viitenumero);
+            virheitä++;
+         }
+         if (lasku == null)
+         {
+            continue;
+         }
+         lasku.setMaksettu(new Date());
+         lasku.setTila(TilausTila.K);
+         entityManager.persist(lasku);
+         entityManager.flush();
+         kuitattuja++;
+         loggaaja.loggaa("Lasku viitenumerolla '%s' kuitattu", viitenumero);
+      }
+      info("Kuittaus on suoritettu, onnistuneita on %d ja epäonnistuineita %d. Katso mahdolliset virheet logista",
+         kuitattuja, virheitä);
+      kuitattavatLaskut = null;
    }
 
    public void lähetäLaskut()
@@ -386,6 +430,16 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public void setLaskuriviRSM(RowStateMap laskuriviRSM)
    {
       this.laskuriviRSM = laskuriviRSM;
+   }
+
+   public String getKuitattavatLaskut()
+   {
+      return kuitattavatLaskut;
+   }
+
+   public void setKuitattavatLaskut(String kuitattavatLaskut)
+   {
+      this.kuitattavatLaskut = kuitattavatLaskut;
    }
 
 }

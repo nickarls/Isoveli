@@ -39,6 +39,7 @@ import fi.budokwai.isoveli.util.DateUtil;
 @Table(name = "lasku")
 @NamedQueries(
 { @NamedQuery(name = "laskut", query = "select l from Lasku l order by l.luotu asc"),
+      @NamedQuery(name = "lasku_viitenumero", query = "select l from Lasku l where l.viitenumero=:viitenumero"),
       @NamedQuery(name = "laskuttamattomat_laskut", query = "select l from Lasku l where l.laskutettu='E'") })
 public class Lasku
 {

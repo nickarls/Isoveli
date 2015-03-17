@@ -147,6 +147,11 @@ public class DateUtil
       return DateUtil.Date2LocalDate(p‰iv‰m‰‰r‰).until(t‰n‰‰n(), ChronoUnit.YEARS);
    }
 
+   public static long vuosiaV‰liss‰(Date syntynyt, Date tarkistus)
+   {
+      return ChronoUnit.YEARS.between(Date2LocalDate(syntynyt), Date2LocalDate(tarkistus));
+   }
+
    public static Period aikav‰li(Date p‰iv‰m‰‰r‰)
    {
       return Period.between(t‰n‰‰n(), DateUtil.Date2LocalDate(p‰iv‰m‰‰r‰));

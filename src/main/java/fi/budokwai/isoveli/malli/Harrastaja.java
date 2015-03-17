@@ -2,9 +2,13 @@ package fi.budokwai.isoveli.malli;
 
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.StringJoiner;
 
 import javax.enterprise.inject.Typed;
@@ -53,7 +57,7 @@ public class Harrastaja extends Henkilö
    private static final long serialVersionUID = 1L;
 
    @OneToOne(cascade =
-   { CascadeType.PERSIST})
+   { CascadeType.PERSIST })
    @JoinColumn(name = "huoltaja")
    private Henkilö huoltaja;
 
@@ -487,6 +491,16 @@ public class Harrastaja extends Henkilö
    {
       vyökoe.setHarrastaja(this);
       vyökokeet.add(vyökoe);
+      Collections.sort(vyökokeet, new Comparator<Vyökoe>()
+      {
+
+         @Override
+         public int compare(Vyökoe v1, Vyökoe v2)
+         {
+            return Integer.valueOf(v1.getVyöarvo().getJärjestys()).compareTo(
+               Integer.valueOf(v2.getVyöarvo().getJärjestys()));
+         }
+      });
    }
 
    public void poistotarkistus()
@@ -579,5 +593,28 @@ public class Harrastaja extends Henkilö
       huoltaja.setSukunimi(sukunimi);
       huoltaja.setEtunimi("Huoltaja");
       perhe.lisääPerheenjäsen(huoltaja);
+   }
+
+   public void tarkistaVyökokeet()
+   {
+      Set<Vyöarvo> vyöarvot = new HashSet<Vyöarvo>();
+      vyökokeet.forEach(v -> {
+         if (vyöarvot.contains(v.getVyöarvo()))
+         {
+            throw new IsoveliPoikkeus(String.format("Harrastajalla on jo vyöarvo %s", v.getVyöarvo().getNimi()));
+         }
+         vyöarvot.add(v.getVyöarvo());
+      });
+      Vyökoe edellinenKoe = Vyökoe.EI_OOTA;
+      for (Vyökoe vyökoe : vyökokeet)
+      {
+         if (edellinenKoe != Vyökoe.EI_OOTA && !DateUtil.onkoAiemmin(edellinenKoe.getPäivä(), vyökoe.getPäivä()))
+         {
+            throw new IsoveliPoikkeus(String.format("%s (%s) ei voi olla suoritettuna aikaisemmin kun %s (%s)", vyökoe
+               .getVyöarvo().getNimi(), DateUtil.päiväTekstiksi(vyökoe.getPäivä()),
+               edellinenKoe.getVyöarvo().getNimi(), DateUtil.päiväTekstiksi(edellinenKoe.getPäivä())));
+         }
+         edellinenKoe = vyökoe;
+      }
    }
 }

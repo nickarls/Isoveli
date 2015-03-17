@@ -4,10 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -61,24 +59,6 @@ public class Vyökoehelper implements Serializable
       return vyöarvot;
    }
 
-   @Produces
-   @Named
-   @Harrastajan
-   public List<Vyöarvo> getHarrastajanMahdollisetVyöarvot()
-   {
-      List<Vyöarvo> tulokset = new ArrayList<>();
-      if (harrastaja.get().isAlaikäinen())
-      {
-         tulokset = vyöarvot.stream().filter(v -> !v.isDan()).collect(Collectors.toList());
-      } else
-      {
-         tulokset = vyöarvot.stream().filter(v -> !v.isPoom()).collect(Collectors.toList());
-      }
-      List<Vyöarvo> nykyisetVyöarvot = harrastaja.get().getVyökokeet().stream().map(v -> v.getVyöarvo())
-         .collect(Collectors.toList());
-      return tulokset.stream().filter(v -> !nykyisetVyöarvot.contains(v)).collect(Collectors.toList());
-   }
-
    public JäljelläVyökokeeseen getJäljelläVyökokeeseen(Harrastaja harrastaja)
    {
       Vyöarvo nykyinenVyöarvo = harrastaja.getTuoreinVyöarvo();
@@ -118,7 +98,8 @@ public class Vyökoehelper implements Serializable
          return haeEnsimmäinenVyöarvo();
       }
       Optional<Vyöarvo> seuraavaVyöarvo = vyöarvot.stream()
-         .filter(va -> va.getJärjestys() == nykyinenVyöarvo.getJärjestys() + 1).findFirst();
+         .filter(va -> harrastaja.get().getIkä() < 16 ? va.isPoom() : va.isDan())
+         .filter(va -> va.getJärjestys() > nykyinenVyöarvo.getJärjestys()).findFirst();
       if (seuraavaVyöarvo.isPresent())
       {
          return seuraavaVyöarvo.get();

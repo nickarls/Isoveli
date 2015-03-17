@@ -296,6 +296,8 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void tallennaVyökoe()
    {
+      vyökoe.validoi(harrastaja);
+      harrastaja.tarkistaVyökokeet();
       if (vyökoe.isTallentamaton())
       {
          harrastaja.lisääVyökoe(vyökoe);

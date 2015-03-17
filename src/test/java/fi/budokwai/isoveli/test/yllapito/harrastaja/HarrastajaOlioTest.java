@@ -9,12 +9,14 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 
+import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.malli.Sopimustarkistukset;
 import fi.budokwai.isoveli.malli.Treenikäynti;
+import fi.budokwai.isoveli.malli.Vyökoe;
 import fi.budokwai.isoveli.test.Perustesti;
 import fi.budokwai.isoveli.util.DateUtil;
 
@@ -55,13 +57,14 @@ public class HarrastajaOlioTest extends Perustesti
    }
 
    @Test
-   public void testTreenikerratSiirtotreeneillä() {
+   public void testTreenikerratSiirtotreeneillä()
+   {
       Harrastaja harrastaja = new Harrastaja();
       harrastaja.setSiirtotreenejä(10);
       harrastaja.lisääTreenikäynti(new Treenikäynti());
       Assert.assertEquals(11, harrastaja.getTreenejäYhteensä());
    }
-   
+
    @Test
    public void testLaskuMaksamatta() throws ParseException
    {
@@ -302,6 +305,84 @@ public class HarrastajaOlioTest extends Perustesti
       Assert.assertEquals(väli.getYears(), aikaväli.getYears());
       Assert.assertEquals(väli.getMonths(), aikaväli.getMonths());
       Assert.assertEquals(väli.getDays(), aikaväli.getDays());
+   }
+
+   @Test
+   public void lisääVyökokeitaOK()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      teeVyökoe(harrastaja, "1.1.2015", "8kup", 1);
+      teeVyökoe(harrastaja, "1.2.2015", "7kup", 2);
+      teeVyökoe(harrastaja, "1.3.2015", "6kup", 3);
+      harrastaja.tarkistaVyökokeet();
+   }
+
+   @Test
+   public void lisääVyökokeitaJärjestys()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      teeVyökoe(harrastaja, "1.2.2015", "7kup", 2);
+      teeVyökoe(harrastaja, "1.1.2015", "8kup", 1);
+      teeVyökoe(harrastaja, "1.3.2015", "6kup", 3);
+      Assert.assertEquals(1, harrastaja.getVyökokeet().get(0).getVyöarvo().getJärjestys());
+      Assert.assertEquals(2, harrastaja.getVyökokeet().get(1).getVyöarvo().getJärjestys());
+      Assert.assertEquals(3, harrastaja.getVyökokeet().get(2).getVyöarvo().getJärjestys());
+   }
+
+   @Test
+   public void lisääVyökokeitaEnnenSyntymää()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      harrastaja.setSyntynyt(DateUtil.silloinD("1.1.2015"));
+      Vyökoe vyökoe = teeVyökoe(harrastaja, "1.2.2014", "7kup", 2);
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("Harrastaja on syntynyt 01.01.2015, hän ei ole voinut suorittaa vyöarvon 7kup 01.02.2014");
+      vyökoe.validoi(harrastaja);
+      harrastaja.tarkistaVyökokeet();
+   }
+
+   @Test
+   public void lisääTuplaVyökoe()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      teeVyökoe(harrastaja, "1.1.2015", "8kup", 1);
+      teeVyökoe(harrastaja, "1.1.2015", "8kup", 1);
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("Harrastajalla on jo vyöarvo 8kup");
+      harrastaja.tarkistaVyökokeet();
+   }
+
+   @Test
+   public void lisääVyökokeitaVääräJärjestys()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      teeVyökoe(harrastaja, "1.1.2015", "8kup", 1);
+      teeVyökoe(harrastaja, "1.1.2014", "7kup", 2);
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("7kup (01.01.2014) ei voi olla suoritettuna aikaisemmin kun 8kup (01.01.2015)");
+      harrastaja.tarkistaVyökokeet();
+   }
+
+   @Test
+   public void lisääVyökokeitaDanAlaikaiselle()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      harrastaja.setSyntynyt(DateUtil.silloinD("1.1.2010"));
+      Vyökoe vyökoe = teeVyökoe(harrastaja, "1.1.2015", "8kup", 1, false, true);
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("Harrastaja oli 01.01.2015 5 vuotta, tarkoitit varmaan poom-arvoa?");
+      vyökoe.validoi(harrastaja);
+   }
+
+   @Test
+   public void lisääVyökokeitaPoomYliikaiselle()
+   {
+      Harrastaja harrastaja = new Harrastaja();
+      harrastaja.setSyntynyt(DateUtil.silloinD("1.1.1970"));
+      Vyökoe vyökoe = teeVyökoe(harrastaja, "1.1.2015", "8kup", 1, true, false);
+      exception.expect(IsoveliPoikkeus.class);
+      exception.expectMessage("Harrastaja oli 01.01.2015 45 vuotta, tarkoitit varmaan dan-arvoa?");
+      vyökoe.validoi(harrastaja);
    }
 
 }

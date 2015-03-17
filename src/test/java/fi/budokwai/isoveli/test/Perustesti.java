@@ -26,7 +26,7 @@ public class Perustesti
 {
    @Rule
    public ExpectedException exception = ExpectedException.none();
-   
+
    @Deployment
    public static WebArchive createDeployment()
    {
@@ -60,12 +60,16 @@ public class Perustesti
       return sopimuslasku;
    }
 
-   protected void teeVyökoe(Harrastaja harrastaja, String koska, String vyöarvoNimi, int järjestys)
+   protected Vyökoe teeVyökoe(Harrastaja harrastaja, String koska, String vyöarvoNimi, int järjestys, boolean poom,
+      boolean dan)
    {
       Vyökoe vyökoe = new Vyökoe();
       Vyöarvo vyöarvo = new Vyöarvo();
+      vyöarvo.setId(järjestys);
       vyöarvo.setNimi(vyöarvoNimi);
       vyöarvo.setJärjestys(järjestys);
+      vyöarvo.setPoom(poom);
+      vyöarvo.setDan(dan);
       vyökoe.setVyöarvo(vyöarvo);
       vyökoe.setHarrastaja(harrastaja);
       try
@@ -76,7 +80,13 @@ public class Perustesti
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
-      harrastaja.getVyökokeet().add(vyökoe);
+      harrastaja.lisääVyökoe(vyökoe);
+      return vyökoe;
+   }
+
+   protected Vyökoe teeVyökoe(Harrastaja harrastaja, String koska, String vyöarvoNimi, int järjestys)
+   {
+      return teeVyökoe(harrastaja, koska, vyöarvoNimi, järjestys, false, false);
    }
 
    protected Henkilö teeHenkilö(String nimi)

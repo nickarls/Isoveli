@@ -180,13 +180,7 @@ public class Henkilö implements Serializable
 
    public void setSalasana(String salasana)
    {
-      if (!salasana.equals(this.salasana))
-      {
-         this.salasana = Util.MD5(salasana);
-      } else
-      {
-         this.salasana = salasana;
-      }
+      this.salasana = salasana;
    }
 
    public List<Rooli> getRoolit()

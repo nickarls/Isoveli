@@ -13,6 +13,7 @@ import org.icefaces.util.JavaScriptRunner;
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Tunnusvaihto;
+import fi.budokwai.isoveli.util.Util;
 
 @Model
 @Stateful
@@ -26,6 +27,12 @@ public class Salasananvaihto extends Perustoiminnallisuus
    public Tunnusvaihto getTunnusvaihto()
    {
       return tunnusvaihto;
+   }
+
+   public static void main(String... x)
+   {
+      System.out.println(Util.MD5("x"));
+      System.out.println(Util.MD5("y"));
    }
 
    public void vaihda()

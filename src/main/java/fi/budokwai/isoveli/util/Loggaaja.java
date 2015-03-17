@@ -35,7 +35,15 @@ public class Loggaaja
    public void loggaa(String teksti, Object... parametrit)
    {
       Loki loki = new Loki();
-      loki.setKuka(käyttäjä.get().getNimi());
+      String kuka = null;
+      try
+      {
+         kuka = käyttäjä.get().getNimi();
+      } catch (Exception e)
+      {
+         kuka = "Isoveli";
+      }
+      loki.setKuka(kuka);
       loki.setKoska(new Date());
       loki.setMitä(String.format(teksti, parametrit));
       entityManager.persist(loki);

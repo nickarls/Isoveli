@@ -6,10 +6,16 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.ejb.Schedule;
+import javax.ejb.Startup;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import jxl.Workbook;
@@ -22,11 +28,14 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 import fi.budokwai.isoveli.IsoveliPoikkeus;
+import fi.budokwai.isoveli.malli.BlobData;
 
+@Stateless
+@Startup
 public class DBExport
 {
 
-   @Resource
+   @Resource(lookup = "java:jboss/datasources/IsoveliDSXA")
    private DataSource tietolähde;
 
    private class Saraketieto
@@ -43,7 +52,23 @@ public class DBExport
       private String nimi;
    }
 
-   public byte[] dumppaaKanta()
+   @Inject
+   private MailManager mailManager;
+
+   @Inject
+   private Loggaaja loggaja;
+
+//   @Schedule(minute = "*/1", hour = "*", persistent = false)
+   public void teeVarmuuskopio()
+   {
+//      loggaja.loggaa("Tekee varmuuskopioinnin");
+      byte[] xls = dumppaaKanta();
+      String otsikko = String.format("Varmuuskopio %s", new SimpleDateFormat("dd.MM.yyyy").format(new Date()));
+      BlobData tiedosto = BlobData.ZIP("isoveli.xls", xls);
+      mailManager.lähetäSähköposti("nickarls@gmail.com", otsikko, "Liitteenä", tiedosto);
+   }
+
+   private byte[] dumppaaKanta()
    {
       Connection kanta = null;
       ByteArrayOutputStream ulos = new ByteArrayOutputStream();
@@ -158,7 +183,7 @@ public class DBExport
    {
       List<String> nimet = new ArrayList<>();
       ResultSet tulos = kanta.prepareStatement(
-         "select table_name  from information_schema.tables where table_catalog ='ISOVELI' and table_type='TABLE'")
+         "select table_name from information_schema.tables where table_catalog ='ISOVELI' and table_type='TABLE'")
          .executeQuery();
       while (tulos.next())
       {

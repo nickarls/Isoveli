@@ -19,6 +19,7 @@ import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.malli.TilausTila;
 import fi.budokwai.isoveli.test.Perustesti;
+import fi.budokwai.isoveli.util.DateUtil;
 
 @RunWith(Arquillian.class)
 public class LaskutusTest extends Perustesti
@@ -39,6 +40,20 @@ public class LaskutusTest extends Perustesti
       laskutusAdmin.laskutaSopimukset();
       Lasku lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
       Assert.assertEquals("Nicklas Karlsson", lasku.getHenkilö().getNimi());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "huoltajaperhe.sql", "emilsopimus.sql", "emillasku.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testKuittaaLasku()
+   {
+      laskutusAdmin.setKuitattavatLaskut("12345");
+      laskutusAdmin.kuittaaLaskut();
+      entityManager.clear();
+      Lasku lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
+      Assert.assertEquals(TilausTila.K, lasku.getTila());
+      Assert.assertTrue(DateUtil.samat(lasku.getMaksettu(), DateUtil.tänään()));
    }
 
    @Test

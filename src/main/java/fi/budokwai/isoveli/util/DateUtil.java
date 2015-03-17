@@ -242,11 +242,11 @@ public class DateUtil
       }
    }
 
-   public static boolean samat(Date alkaa, LocalDate loppu)
+   public static boolean samat(Date ensimmäinen, LocalDate toinen)
    {
-      LocalDate alkaaPvm = Date2LocalDate(alkaa);
-      return alkaaPvm.getYear() == loppu.getYear() && alkaaPvm.getMonthValue() == loppu.getMonthValue()
-         && alkaaPvm.getDayOfMonth() == loppu.getDayOfMonth();
+      LocalDate alkaaPvm = Date2LocalDate(ensimmäinen);
+      return alkaaPvm.getYear() == toinen.getYear() && alkaaPvm.getMonthValue() == toinen.getMonthValue()
+         && alkaaPvm.getDayOfMonth() == toinen.getDayOfMonth();
    }
 
    public static boolean onkoAiemmin(Date alkaa, LocalDate loppu)

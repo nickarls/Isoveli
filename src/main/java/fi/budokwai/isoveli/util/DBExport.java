@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.ejb.Schedule;
 import javax.ejb.Startup;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -35,7 +34,7 @@ import fi.budokwai.isoveli.malli.BlobData;
 public class DBExport
 {
 
-   @Resource(lookup = "java:jboss/datasources/IsoveliDSXA")
+   @Resource//(lookup = "java:jboss/datasources/IsoveliDSXA")
    private DataSource tietolähde;
 
    private class Saraketieto

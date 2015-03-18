@@ -13,6 +13,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
+import javax.validation.ConstraintViolationException;
 
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
@@ -50,6 +51,12 @@ public class DSExceptionHandler extends Perustoiminnallisuus implements Serializ
       }
    }
 
+   void handleValidationException(@Handles ExceptionEvent<ConstraintViolationException> e)
+   {
+      virhe(e.getException().getMessage());
+      e.handled();
+   }
+
    void handleIsovelipoikkeus(@Handles ExceptionEvent<IsoveliPoikkeus> e)
    {
       logger.error("Virhe", e.getException());
@@ -57,7 +64,8 @@ public class DSExceptionHandler extends Perustoiminnallisuus implements Serializ
       e.handled();
    }
 
-   void handleNoDB(@Handles ExceptionEvent<ConnectException> e) {
+   void handleNoDB(@Handles ExceptionEvent<ConnectException> e)
+   {
       e.handled();
       try
       {

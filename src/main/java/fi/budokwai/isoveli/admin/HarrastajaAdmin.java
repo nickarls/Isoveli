@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,8 @@ import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 
 import org.icefaces.ace.component.datetimeentry.DateTimeEntry;
 import org.icefaces.ace.component.tabset.TabSet;
@@ -247,17 +250,13 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    public void tallennaHarrastaja()
    {
+      if (!validointiOK())
+      {
+         return;
+      }
       if (löytyySamanniminenHarrastaja())
       {
          throw new IsoveliPoikkeus("Samanniminen harrastaja/henkilö löytyy jo");
-      }
-      if (harrastaja.getTauko().isAvoin())
-      {
-         throw new IsoveliPoikkeus("Sekä tauon alkamis- että päättymispäivämäärä annettava");
-      }
-      if (harrastaja.getTauko().isRajatRistissä())
-      {
-         throw new IsoveliPoikkeus("Tauko ei voi loppua ennen kun se alkaa");
       }
       harrastaja.siivoa();
       if (harrastaja.getHuoltaja() != null)
@@ -294,13 +293,18 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       loggaaja.loggaa("Poisti harrastajan '%s'", harrastaja);
    }
 
+   @Inject
+   private Validator validator;
+
    public void tallennaVyökoe()
    {
-      vyökoe.validoi(harrastaja);
-      harrastaja.tarkistaVyökokeet();
       if (vyökoe.isTallentamaton())
       {
          harrastaja.lisääVyökoe(vyökoe);
+      }
+      if (!validointiOK())
+      {
+         return;
       }
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
@@ -308,6 +312,15 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       info("Vyökoe tallennettu");
       harrastajat = null;
       loggaaja.loggaa("Tallensi harrastajan '%s' vyökokeen '%s'", harrastaja, vyökoe);
+   }
+
+   private boolean validointiOK()
+   {
+      Set<ConstraintViolation<Harrastaja>> validointivirheet = validator.validate(harrastaja);
+      validointivirheet.forEach(v -> {
+         virhe(v.getMessage());
+      });
+      return validointivirheet.isEmpty();
    }
 
    public void tallennaSopimus()

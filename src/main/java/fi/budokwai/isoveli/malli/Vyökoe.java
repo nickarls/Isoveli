@@ -15,17 +15,21 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Past;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import fi.budokwai.isoveli.IsoveliPoikkeus;
+import fi.budokwai.isoveli.malli.validointi.DanPoomArvoIkä;
+import fi.budokwai.isoveli.malli.validointi.VyökoeSyntymänJälkeen;
 import fi.budokwai.isoveli.util.DateUtil;
 
 @Entity
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "vyokoe")
+@VyökoeSyntymänJälkeen
+@DanPoomArvoIkä
 public class Vyökoe
 {
    public static final Vyökoe EI_OOTA = new Vyökoe();
@@ -44,6 +48,7 @@ public class Vyökoe
 
    @Temporal(TemporalType.DATE)
    @Column(name = "paiva")
+   @Past
    private Date päivä = new Date();
 
    public Vyökoe(Vyöarvo vyöarvo)
@@ -148,27 +153,6 @@ public class Vyökoe
    public boolean isTallentamaton()
    {
       return id == 0;
-   }
-
-   public void validoi(Harrastaja harrastaja)
-   {
-      if (DateUtil.onkoAiemmin(päivä, harrastaja.getSyntynyt()))
-      {
-         throw new IsoveliPoikkeus(String.format(
-            "Harrastaja on syntynyt %s, hän ei ole voinut suorittaa vyöarvon %s %s",
-            DateUtil.päiväTekstiksi(harrastaja.getSyntynyt()), vyöarvo.getNimi(), DateUtil.päiväTekstiksi(päivä)));
-      }
-      long ikäVyökokeessa = DateUtil.vuosiaVälissä(harrastaja.getSyntynyt(), päivä);
-      if (ikäVyökokeessa < 16 && vyöarvo.isDan())
-      {
-         throw new IsoveliPoikkeus(String.format("Harrastaja oli %s %d vuotta, tarkoitit varmaan poom-arvoa?",
-            DateUtil.päiväTekstiksi(päivä), ikäVyökokeessa));
-      }
-      if (ikäVyökokeessa > 16 && vyöarvo.isPoom())
-      {
-         throw new IsoveliPoikkeus(String.format("Harrastaja oli %s %d vuotta, tarkoitit varmaan dan-arvoa?",
-            DateUtil.päiväTekstiksi(päivä), ikäVyökokeessa));
-      }
    }
 
 }

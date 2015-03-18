@@ -19,6 +19,7 @@ import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.malli.Sopimustyyppi;
+import fi.budokwai.isoveli.malli.Sukupuoli;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Vyökoe;
 
@@ -116,13 +117,14 @@ public class Perustesti
       return teeHarrastaja(nimi, "01.01.2010");
    }
 
-   protected Harrastaja teeHarrastaja(String nimi, String pvm)
+   protected Harrastaja teeHarrastaja(String nimi, String syntynyt)
    {
       Harrastaja harrastaja = new Harrastaja();
       asetaNimi(harrastaja, nimi);
+      harrastaja.setSukupuoli(Sukupuoli.M);
       try
       {
-         harrastaja.setSyntynyt(new SimpleDateFormat("dd.MM.yyyy").parse(pvm));
+         harrastaja.setSyntynyt(new SimpleDateFormat("dd.MM.yyyy").parse(syntynyt));
       } catch (ParseException e)
       {
          e.printStackTrace();

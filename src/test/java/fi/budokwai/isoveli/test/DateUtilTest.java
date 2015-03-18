@@ -479,6 +479,14 @@ public class DateUtilTest
    }
 
    @Test
+   public void testOnkoAiemminSamaPäivä()
+   {
+      Date d1 = DateUtil.silloinD("01.01.2015");
+      LocalDate d2 = DateUtil.silloin("01.01.2015");
+      Assert.assertFalse(DateUtil.onkoAiemmin(d1, d2));
+   }
+
+   @Test
    public void testOnkoEiAiemmin()
    {
       Date d1 = DateUtil.silloinD("01.01.2016");

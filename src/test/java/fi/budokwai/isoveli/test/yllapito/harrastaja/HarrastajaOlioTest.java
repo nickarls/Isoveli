@@ -5,23 +5,38 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Perhe;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.malli.Sopimustarkistukset;
 import fi.budokwai.isoveli.malli.Treenikäynti;
-import fi.budokwai.isoveli.malli.Vyökoe;
 import fi.budokwai.isoveli.test.Perustesti;
 import fi.budokwai.isoveli.util.DateUtil;
 
 public class HarrastajaOlioTest extends Perustesti
 {
+   private static Validator validator;
+
+   @BeforeClass
+   public static void init()
+   {
+      ValidatorFactory f = Validation.buildDefaultValidatorFactory();
+      validator = f.getValidator();
+   }
+
    @Test
    public void testEiSopimuksia()
    {
@@ -310,79 +325,96 @@ public class HarrastajaOlioTest extends Perustesti
    @Test
    public void lisääVyökokeitaOK()
    {
-      Harrastaja harrastaja = new Harrastaja();
+      Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "01.01.1970");
       teeVyökoe(harrastaja, "1.1.2015", "8kup", 1);
       teeVyökoe(harrastaja, "1.2.2015", "7kup", 2);
       teeVyökoe(harrastaja, "1.3.2015", "6kup", 3);
-      harrastaja.tarkistaVyökokeet();
+      Set<ConstraintViolation<Harrastaja>> virheet = validator.validate(harrastaja);
+      Assert.assertEquals(0, virheet.size());
    }
 
    @Test
    public void lisääVyökokeitaJärjestys()
    {
-      Harrastaja harrastaja = new Harrastaja();
+      Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "01.01.1970");
       teeVyökoe(harrastaja, "1.2.2015", "7kup", 2);
       teeVyökoe(harrastaja, "1.1.2015", "8kup", 1);
       teeVyökoe(harrastaja, "1.3.2015", "6kup", 3);
       Assert.assertEquals(1, harrastaja.getVyökokeet().get(0).getVyöarvo().getJärjestys());
       Assert.assertEquals(2, harrastaja.getVyökokeet().get(1).getVyöarvo().getJärjestys());
       Assert.assertEquals(3, harrastaja.getVyökokeet().get(2).getVyöarvo().getJärjestys());
+      Set<ConstraintViolation<Harrastaja>> virheet = validator.validate(harrastaja);
+      Assert.assertEquals(0, virheet.size());
    }
 
    @Test
    public void lisääVyökokeitaEnnenSyntymää()
    {
-      Harrastaja harrastaja = new Harrastaja();
-      harrastaja.setSyntynyt(DateUtil.silloinD("1.1.2015"));
-      Vyökoe vyökoe = teeVyökoe(harrastaja, "1.2.2014", "7kup", 2);
-      exception.expect(IsoveliPoikkeus.class);
-      exception.expectMessage("Harrastaja on syntynyt 01.01.2015, hän ei ole voinut suorittaa vyöarvon 7kup 01.02.2014");
-      vyökoe.validoi(harrastaja);
-      harrastaja.tarkistaVyökokeet();
+      Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "1.1.2015");
+      teeVyökoe(harrastaja, "1.2.2014", "7kup", 2);
+      Set<ConstraintViolation<Harrastaja>> virheet = validator.validate(harrastaja);
+      Assert.assertEquals(1, virheet.size());
+      Assert.assertEquals("Harrastaja on syntynyt 01.01.2015, hän ei ole voinut suorittaa vyöarvon 7kup 01.02.2014",
+         virheet.iterator().next().getMessage());
    }
 
    @Test
    public void lisääTuplaVyökoe()
    {
-      Harrastaja harrastaja = new Harrastaja();
+      Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "01.01.1970");
       teeVyökoe(harrastaja, "1.1.2015", "8kup", 1);
       teeVyökoe(harrastaja, "1.1.2015", "8kup", 1);
-      exception.expect(IsoveliPoikkeus.class);
-      exception.expectMessage("Harrastajalla on jo vyöarvo 8kup");
-      harrastaja.tarkistaVyökokeet();
+      Set<ConstraintViolation<Harrastaja>> virheet = validator.validate(harrastaja);
+      Assert.assertEquals(2, virheet.size());
+      Iterator<ConstraintViolation<Harrastaja>> i = virheet.iterator();
+      Assert.assertEquals("Harrastajalla on jo vyöarvo 8kup", i.next().getMessage());
+      Assert.assertEquals("8kup (01.01.2015) ei voi olla suoritettuna aikaisemmin kun 8kup (01.01.2015)", i.next().getMessage());
    }
 
    @Test
    public void lisääVyökokeitaVääräJärjestys()
    {
-      Harrastaja harrastaja = new Harrastaja();
+      Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "28.06.1975");
       teeVyökoe(harrastaja, "1.1.2015", "8kup", 1);
       teeVyökoe(harrastaja, "1.1.2014", "7kup", 2);
-      exception.expect(IsoveliPoikkeus.class);
-      exception.expectMessage("7kup (01.01.2014) ei voi olla suoritettuna aikaisemmin kun 8kup (01.01.2015)");
-      harrastaja.tarkistaVyökokeet();
+      Set<ConstraintViolation<Harrastaja>> virheet = validator.validate(harrastaja);
+      Assert.assertEquals(1, virheet.size());
+      Assert.assertEquals("7kup (01.01.2014) ei voi olla suoritettuna aikaisemmin kun 8kup (01.01.2015)", virheet
+         .iterator().next().getMessage());
    }
 
    @Test
    public void lisääVyökokeitaDanAlaikaiselle()
    {
-      Harrastaja harrastaja = new Harrastaja();
-      harrastaja.setSyntynyt(DateUtil.silloinD("1.1.2010"));
-      Vyökoe vyökoe = teeVyökoe(harrastaja, "1.1.2015", "8kup", 1, false, true);
-      exception.expect(IsoveliPoikkeus.class);
-      exception.expectMessage("Harrastaja oli 01.01.2015 5 vuotta, tarkoitit varmaan poom-arvoa?");
-      vyökoe.validoi(harrastaja);
+      Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "28.06.2005");
+      teeVyökoe(harrastaja, "1.1.2015", "8kup", 1, false, true);
+      Set<ConstraintViolation<Harrastaja>> virheet = validator.validate(harrastaja);
+      Assert.assertEquals(1, virheet.size());
+      Assert.assertEquals("Harrastaja oli 01.01.2015 9 vuotta, tarkoitit varmaan poom-arvoa etkä 8kup?", virheet
+         .iterator().next().getMessage());
    }
 
    @Test
    public void lisääVyökokeitaPoomYliikaiselle()
    {
-      Harrastaja harrastaja = new Harrastaja();
-      harrastaja.setSyntynyt(DateUtil.silloinD("1.1.1970"));
-      Vyökoe vyökoe = teeVyökoe(harrastaja, "1.1.2015", "8kup", 1, true, false);
-      exception.expect(IsoveliPoikkeus.class);
-      exception.expectMessage("Harrastaja oli 01.01.2015 45 vuotta, tarkoitit varmaan dan-arvoa?");
-      vyökoe.validoi(harrastaja);
+      Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "28.06.1970");
+      teeVyökoe(harrastaja, "1.1.2015", "8kup", 1, true, false);
+      Set<ConstraintViolation<Harrastaja>> virheet = validator.validate(harrastaja);
+      Assert.assertEquals(1, virheet.size());
+      Assert.assertEquals("Harrastaja oli 01.01.2015 44 vuotta, tarkoitit varmaan dan-arvoa etkä 8kup?", virheet
+         .iterator().next().getMessage());
+   }
+
+   @Test
+   public void testTaukoAlkaaEnnenSyntymaa()
+   {
+      Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "28.06.1970");
+      harrastaja.getTauko().setAlkaa(DateUtil.silloinD("01.01.1960"));
+      harrastaja.getTauko().setPäättyy(DateUtil.silloinD("01.01.1961"));
+      Set<ConstraintViolation<Harrastaja>> virheet = validator.validate(harrastaja);
+      Assert.assertEquals(1, virheet.size());
+      Assert
+         .assertEquals("Tauko ei voi alkaa ennen kun harrastaja on syntynyt", virheet.iterator().next().getMessage());
    }
 
 }

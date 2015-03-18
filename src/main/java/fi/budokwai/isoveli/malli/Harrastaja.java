@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.StringJoiner;
 
 import javax.enterprise.inject.Typed;
@@ -28,7 +26,9 @@ import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -37,6 +37,9 @@ import org.hibernate.annotations.SortComparator;
 import org.hibernate.annotations.Type;
 
 import fi.budokwai.isoveli.IsoveliPoikkeus;
+import fi.budokwai.isoveli.malli.validointi.Taukotarkistus;
+import fi.budokwai.isoveli.malli.validointi.UniikitVyökokeet;
+import fi.budokwai.isoveli.malli.validointi.Vyökoejärjestys;
 import fi.budokwai.isoveli.util.DateUtil;
 
 @Entity
@@ -52,6 +55,9 @@ import fi.budokwai.isoveli.util.DateUtil;
       @NamedQuery(name = "harrastajatArq", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi") })
 @Typed(
 {})
+@UniikitVyökokeet
+@Vyökoejärjestys
+@Taukotarkistus
 public class Harrastaja extends Henkilö
 {
    private static final long serialVersionUID = 1L;
@@ -64,6 +70,7 @@ public class Harrastaja extends Henkilö
    @OneToMany(mappedBy = "harrastaja", cascade =
    { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
    @SortComparator(value = VyökoeComparator.class)
+   @Valid
    private List<Vyökoe> vyökokeet = new ArrayList<Vyökoe>();
 
    @OneToMany(mappedBy = "harrastaja")
@@ -88,6 +95,7 @@ public class Harrastaja extends Henkilö
 
    @Temporal(TemporalType.DATE)
    @NotNull
+   @Past(message = "Ei voi olla tulevaisuudessa")
    private Date syntynyt;
 
    @NotNull
@@ -593,28 +601,5 @@ public class Harrastaja extends Henkilö
       huoltaja.setSukunimi(sukunimi);
       huoltaja.setEtunimi("Huoltaja");
       perhe.lisääPerheenjäsen(huoltaja);
-   }
-
-   public void tarkistaVyökokeet()
-   {
-      Set<Vyöarvo> vyöarvot = new HashSet<Vyöarvo>();
-      vyökokeet.forEach(v -> {
-         if (vyöarvot.contains(v.getVyöarvo()))
-         {
-            throw new IsoveliPoikkeus(String.format("Harrastajalla on jo vyöarvo %s", v.getVyöarvo().getNimi()));
-         }
-         vyöarvot.add(v.getVyöarvo());
-      });
-      Vyökoe edellinenKoe = Vyökoe.EI_OOTA;
-      for (Vyökoe vyökoe : vyökokeet)
-      {
-         if (edellinenKoe != Vyökoe.EI_OOTA && !DateUtil.onkoAiemmin(edellinenKoe.getPäivä(), vyökoe.getPäivä()))
-         {
-            throw new IsoveliPoikkeus(String.format("%s (%s) ei voi olla suoritettuna aikaisemmin kun %s (%s)", vyökoe
-               .getVyöarvo().getNimi(), DateUtil.päiväTekstiksi(vyökoe.getPäivä()),
-               edellinenKoe.getVyöarvo().getNimi(), DateUtil.päiväTekstiksi(edellinenKoe.getPäivä())));
-         }
-         edellinenKoe = vyökoe;
-      }
    }
 }

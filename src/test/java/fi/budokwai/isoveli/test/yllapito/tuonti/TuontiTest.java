@@ -5,6 +5,11 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -21,20 +26,24 @@ import fi.budokwai.isoveli.util.Tuontitulos;
 public class TuontiTest
 {
    private static Tuontitulos tuontitulos = new Tuontitulos();
+   private static Validator validator;
 
    @AfterClass
    public static void output()
    {
       // Assert.assertTrue(tuontitulos.isOK());
       // Assert.assertEquals(247, tuontitulos.getHarrastajat().size());
-      tuontitulos.getVirheet().stream().forEach(v -> System.out.println(v));
-      tuontitulos.getHarrastajat().stream().filter(h -> h.isInfotiskille())
-         .forEach(h -> System.out.println(String.format("%s:\t%s", h.getNimi(), h.getHuomautus())));
+      // tuontitulos.getVirheet().stream().forEach(v -> System.out.println(v));
+      // tuontitulos.getHarrastajat().stream().filter(h -> h.isInfotiskille())
+      // .forEach(h -> System.out.println(String.format("%s:\t%s", h.getNimi(),
+      // h.getHuomautus())));
    }
 
    @BeforeClass
    public static void tuo()
    {
+      ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+      validator = validatorFactory.getValidator();
       Tuonti tuonti = new Tuonti();
       try
       {
@@ -46,6 +55,15 @@ public class TuontiTest
          e.printStackTrace();
          tuontitulos.lisääVirhe(e.getMessage());
       }
+   }
+
+   @Test
+   public void testValidointi()
+   {
+      tuontitulos.getHarrastajat().forEach(h -> {
+         Set<ConstraintViolation<Harrastaja>> virheet = validator.validate(h);
+         Assert.assertEquals(0, virheet.size());
+      });
    }
 
    @Test
@@ -204,10 +222,6 @@ public class TuontiTest
       tuontitulos.getHarrastajat().stream().filter(h -> h.getPerhe() != null).map(h -> h.getPerhe()).forEach(p -> {
          Set<String> nimet = new HashSet<>();
          p.getPerheenjäsenet().forEach(h -> {
-            if (nimet.contains(h.getNimi()))
-            {
-               System.out.println("!");
-            }
             Assert.assertFalse(nimet.contains(h.getNimi()));
             nimet.add(h.getNimi());
          });

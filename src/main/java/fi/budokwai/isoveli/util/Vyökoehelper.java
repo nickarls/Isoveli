@@ -6,11 +6,11 @@ import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -31,10 +31,6 @@ public class Vyökoehelper implements Serializable
 
    @Inject
    private EntityManager entityManager;
-
-   @Inject
-   @Named("harrastaja")
-   private Instance<Harrastaja> harrastaja;
 
    @PostConstruct
    public void init()
@@ -68,7 +64,7 @@ public class Vyökoehelper implements Serializable
          seuraavaVyöarvo = haeEnsimmäinenVyöarvo();
       } else
       {
-         seuraavaVyöarvo = haeSeuraavaVyöarvo(nykyinenVyöarvo);
+         seuraavaVyöarvo = haeSeuraavaVyöarvo(harrastaja);
       }
       if (seuraavaVyöarvo == Vyöarvo.EI_OOTA)
       {
@@ -91,15 +87,22 @@ public class Vyökoehelper implements Serializable
       return new JäljelläVyökokeeseen(tarvittavaAika, tarvittavaTreenimäärä, tarvittavatPäivät, seuraavaVyöarvo);
    }
 
-   public Vyöarvo haeSeuraavaVyöarvo(Vyöarvo nykyinenVyöarvo)
+   public Vyöarvo haeSeuraavaVyöarvo(Harrastaja harrastaja)
    {
-      if (nykyinenVyöarvo == Vyöarvo.EI_OOTA)
+      if (harrastaja.getTuoreinVyöarvo() == Vyöarvo.EI_OOTA)
       {
          return haeEnsimmäinenVyöarvo();
       }
-      Optional<Vyöarvo> seuraavaVyöarvo = vyöarvot.stream()
-         .filter(va -> harrastaja.get().getIkä() < 16 ? va.isPoom() : va.isDan())
-         .filter(va -> va.getJärjestys() > nykyinenVyöarvo.getJärjestys()).findFirst();
+      List<Vyöarvo> vyöt = null;
+      if (harrastaja.getIkä() < 16)
+      {
+         vyöt = vyöarvot.stream().filter(v -> !v.isDan()).collect(Collectors.toList());
+      } else
+      {
+         vyöt = vyöarvot.stream().filter(v -> !v.isPoom()).collect(Collectors.toList());
+      }
+      Optional<Vyöarvo> seuraavaVyöarvo = vyöt.stream()
+         .filter(va -> va.getJärjestys() > harrastaja.getTuoreinVyöarvo().getJärjestys()).findFirst();
       if (seuraavaVyöarvo.isPresent())
       {
          return seuraavaVyöarvo.get();

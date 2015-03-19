@@ -410,7 +410,7 @@ public class Harrastaja extends Henkilö
 
    public boolean isTauolla()
    {
-      return tauko.isNytVälissä();
+      return getTauko().isNytVälissä();
    }
 
    public Date getViimeisinTreeni()

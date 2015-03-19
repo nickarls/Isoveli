@@ -2,14 +2,10 @@ package fi.budokwai.isoveli.malli.validointi;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
-import org.apache.deltaspike.core.api.provider.BeanProvider;
 
 import fi.budokwai.isoveli.malli.Henkilö;
 
@@ -27,6 +23,10 @@ public class UniikkiHenkilöValidator implements ConstraintValidator<UniikkiHenki
    @Override
    public boolean isValid(Henkilö henkilö, ConstraintValidatorContext context)
    {
+      if (emf == null)
+      {
+         return true;
+      }
       List<Henkilö> h = emf
          .createEntityManager()
          .createQuery("select h from Henkilö h where h.etunimi=:etunimi and h.sukunimi=:sukunimi and h.id <> :id",
@@ -35,7 +35,7 @@ public class UniikkiHenkilöValidator implements ConstraintValidator<UniikkiHenki
       if (!h.isEmpty())
       {
          context.disableDefaultConstraintViolation();
-         context.buildConstraintViolationWithTemplate(String.format("Samanniminen henkilö on jo olemassa"))
+         context.buildConstraintViolationWithTemplate(String.format("Samanniminen henkilö '%s' on jo olemassa", henkilö.getNimi()))
             .addConstraintViolation();
          return false;
       }

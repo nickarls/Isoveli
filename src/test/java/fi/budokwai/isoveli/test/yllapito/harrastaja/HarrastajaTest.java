@@ -608,6 +608,7 @@ public class HarrastajaTest extends Perustesti
       harrastajaAdmin.lisääVyökoe();
       Vyöarvo vyöarvo = entityManager.find(Vyöarvo.class, 1);
       harrastajaAdmin.getVyökoe().setVyöarvo(vyöarvo);
+      harrastajaAdmin.getVyökoe().setPäivä(DateUtil.silloinD("01.01.2005"));
       harrastajaAdmin.tallennaVyökoe();
       entityManager.clear();
       harrastaja = entityManager.find(Harrastaja.class, 1);

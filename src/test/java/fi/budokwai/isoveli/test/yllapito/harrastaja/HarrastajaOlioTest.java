@@ -366,10 +366,22 @@ public class HarrastajaOlioTest extends Perustesti
       teeVyökoe(harrastaja, "1.1.2015", "8kup", 1);
       Set<ConstraintViolation<Harrastaja>> virheet = validator.validate(harrastaja);
       Assert.assertEquals(2, virheet.size());
-      Iterator<ConstraintViolation<Harrastaja>> i = virheet.iterator();
-      Assert.assertEquals("Harrastajalla on jo vyöarvo 8kup", i.next().getMessage());
-      Assert.assertEquals("8kup (01.01.2015) ei voi olla suoritettuna aikaisemmin kun 8kup (01.01.2015)", i.next()
-         .getMessage());
+      Assert.assertTrue(löytyyVirhe("Harrastajalla on jo vyöarvo 8kup", virheet));
+      Assert.assertTrue(löytyyVirhe("8kup (01.01.2015) ei voi olla suoritettuna aikaisemmin kun 8kup (01.01.2015)",
+         virheet));
+   }
+
+   private boolean löytyyVirhe(String virhe, Set<ConstraintViolation<Harrastaja>> virheet)
+   {
+      for (ConstraintViolation<Harrastaja> v : virheet)
+      {
+
+         if (v.getMessage().contains(virhe))
+         {
+            return true;
+         }
+      }
+      return false;
    }
 
    @Test
@@ -426,10 +438,10 @@ public class HarrastajaOlioTest extends Perustesti
       teeJäsenmaksusopimus(harrastaja, "01.01.2000");
       Set<ConstraintViolation<Harrastaja>> virheet = validator.validate(harrastaja);
       Assert.assertEquals(1, virheet.size());
-      Assert
-         .assertEquals("Harrastajalla on jo aktiivinen sopimustyyppi Jäsenmaksu", virheet.iterator().next().getMessage());
+      Assert.assertEquals("Harrastajalla on jo aktiivinen sopimustyyppi Jäsenmaksu", virheet.iterator().next()
+         .getMessage());
    }
-   
+
    @Test
    public void testTuplaHarrastusmaksuEiOK()
    {
@@ -438,10 +450,9 @@ public class HarrastajaOlioTest extends Perustesti
       teeHarjoittelusopimus(harrastaja, "01.01.2000", 6);
       Set<ConstraintViolation<Harrastaja>> virheet = validator.validate(harrastaja);
       Assert.assertEquals(1, virheet.size());
-      Assert
-         .assertEquals("Harrastajalla on jo aktiivinen sopimustyyppi Harjoittelumaksu", virheet.iterator().next().getMessage());
+      Assert.assertEquals("Harrastajalla on jo aktiivinen sopimustyyppi Harjoittelumaksu", virheet.iterator().next()
+         .getMessage());
    }
-   
 
    @Test
    public void testTuplaAktiiviJäsenmaksuJosPassiivinenToinenOK()

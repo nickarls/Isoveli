@@ -29,12 +29,6 @@ public class Salasananvaihto extends Perustoiminnallisuus
       return tunnusvaihto;
    }
 
-   public static void main(String... x)
-   {
-      System.out.println(Util.MD5("x"));
-      System.out.println(Util.MD5("y"));
-   }
-
    public void vaihda()
    {
       String[] nimiosat = tunnusvaihto.getNimiosat();

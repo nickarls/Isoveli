@@ -268,14 +268,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       loggaaja.loggaa("Tallensi harrastajan '%s'", harrastaja);
    }
 
-   private boolean löytyySamanniminenHarrastaja()
-   {
-      List<Henkilö> vanhat = entityManager.createNamedQuery("samanniminen_käyttäjä", Henkilö.class)
-         .setParameter("etunimi", harrastaja.getEtunimi()).setParameter("sukunimi", harrastaja.getSukunimi())
-         .setParameter("id", harrastaja.getId()).getResultList();
-      return harrastaja.isTallentamaton() && vanhat.size() > 0;
-   }
-
    public void poistaHarrastaja()
    {
       harrastaja.poistotarkistus();
@@ -459,7 +451,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void lisääVyökoe()
    {
       vyökoe = new Vyökoe();
-      Vyöarvo seuraavaVyöarvo = vyökoehelper.haeSeuraavaVyöarvo(harrastaja.getTuoreinVyöarvo());
+      Vyöarvo seuraavaVyöarvo = vyökoehelper.haeSeuraavaVyöarvo(harrastaja);
       vyökoe.setVyöarvo(seuraavaVyöarvo);
       vyökoeRSM.setAllSelected(false);
       info("Uusi vyökoe alustettu");

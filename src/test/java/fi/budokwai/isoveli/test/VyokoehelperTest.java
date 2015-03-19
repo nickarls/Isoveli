@@ -19,7 +19,6 @@ import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Vyökoe;
 import fi.budokwai.isoveli.util.DateUtil;
-import fi.budokwai.isoveli.util.Harrastajan;
 import fi.budokwai.isoveli.util.Vyökoehelper;
 
 @RunWith(Arquillian.class)
@@ -35,8 +34,7 @@ public class VyokoehelperTest extends Perustesti
    private HarrastajaAdmin harrastajaAdmin;
 
    @Inject
-   @Harrastajan
-   private Instance<List<Vyöarvo>> harrastajanVyöarvot;
+   private Instance<List<Vyöarvo>> vyöarvot;
 
    @Inject
    private EntityManager entityManager;
@@ -47,29 +45,26 @@ public class VyokoehelperTest extends Perustesti
       Assert.assertEquals(18, vyökoehelper.getVyöarvot().size());
    }
 
-   @Test
    public void testEiPoomArvojaYli16Vuotiaalle()
    {
       Harrastaja harrastaja = new Harrastaja();
       harrastaja.setSyntynyt(DateUtil.silloinD("01.01.1970"));
       harrastajaAdmin.setHarrastaja(harrastaja);
-      harrastajanVyöarvot.get().forEach(v -> {
+      vyöarvot.get().forEach(v -> {
          Assert.assertFalse(v.isPoom());
       });
    }
 
-   @Test
    public void testEiDanArvojaAlle16Vuotiaalle()
    {
       Harrastaja harrastaja = new Harrastaja();
       harrastaja.setSyntynyt(DateUtil.silloinD("01.01.2010"));
       harrastajaAdmin.setHarrastaja(harrastaja);
-      harrastajanVyöarvot.get().forEach(v -> {
+      vyöarvot.get().forEach(v -> {
          Assert.assertFalse(v.isDan());
       });
    }
 
-   @Test
    public void testVyoarvojenSuodatus()
    {
       Harrastaja harrastaja = new Harrastaja();
@@ -77,30 +72,45 @@ public class VyokoehelperTest extends Perustesti
       harrastajaAdmin.setHarrastaja(harrastaja);
       Vyöarvo vihreä = entityManager.find(Vyöarvo.class, 3);
       harrastaja.lisääVyökoe(new Vyökoe(vihreä));
-      Assert.assertFalse(harrastajanVyöarvot.get().contains(vihreä));
+      Assert.assertFalse(vyöarvot.get().contains(vihreä));
    }
 
    @Test
    public void testSeuraavaVyoarvoEiVyota()
    {
-      Vyöarvo seuraava = vyökoehelper.haeSeuraavaVyöarvo(Vyöarvo.EI_OOTA);
+      Harrastaja harrastaja = teeHarrastaja("N K", "1.1.1970");
+      Vyöarvo seuraava = vyökoehelper.haeSeuraavaVyöarvo(harrastaja);
       Assert.assertEquals(seuraava.getNimi(), "8.kup");
    }
 
    @Test
    public void testSeuraavaVyoarvoVihrea()
    {
-      Vyöarvo vihreä = entityManager.find(Vyöarvo.class, 3);
-      Vyöarvo seuraava = vyökoehelper.haeSeuraavaVyöarvo(vihreä);
-      Assert.assertEquals(seuraava.getNimi(), "5.kup");
+      Harrastaja harrastaja = teeHarrastaja("N K", "1.1.2000");
+      teeVyökoe(harrastaja, "1.1.1980", "4.kup", 5);
+      Vyöarvo seuraava = vyökoehelper.haeSeuraavaVyöarvo(harrastaja);
+      Assert.assertEquals(seuraava.getNimi(), "3.kup");
    }
 
    @Test
    public void testSeuraavaVyoarvo3dan()
    {
-      Vyöarvo dan6 = entityManager.find(Vyöarvo.class, 18);
-      Vyöarvo seuraava = vyökoehelper.haeSeuraavaVyöarvo(dan6);
-      Assert.assertEquals(Vyöarvo.EI_OOTA, seuraava);
+      Harrastaja harrastaja = teeHarrastaja("N K", "1.1.1970");
+      teeVyökoe(harrastaja, "1.1.1980", "2.dan", 12);
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      Vyöarvo seuraava = vyökoehelper.haeSeuraavaVyöarvo(harrastaja);
+      Assert.assertEquals(seuraava.getNimi(), "3.dan");
    }
+   
+   @Test
+   public void testSeuraavaVyoarvo3poom()
+   {
+      Harrastaja harrastaja = teeHarrastaja("N K", "1.1.2010");
+      teeVyökoe(harrastaja, "1.1.2011", "2.poom", 12);
+      harrastajaAdmin.setHarrastaja(harrastaja);
+      Vyöarvo seuraava = vyökoehelper.haeSeuraavaVyöarvo(harrastaja);
+      Assert.assertEquals(seuraava.getNimi(), "3.poom");
+   }
+   
 
 }

@@ -35,15 +35,16 @@
 		<ace:column headerText="Päivä" styleClass="lefttext">
 			<h:outputText value="#{_treeni.päivä}" />
 		</ace:column>
-		<ace:column headerText="Alkaa" styleClass="lefttext">
-			<h:outputText value="#{_treeni.alkaa}">
-				<f:convertDateTime pattern="HH:mm" timeZone="EET" />
-			</h:outputText>
-		</ace:column>
-		<ace:column headerText="Päättyy" styleClass="lefttext">
-			<h:outputText value="#{_treeni.päättyy}">
-				<f:convertDateTime pattern="HH:mm" timeZone="EET" />
-			</h:outputText>
+		<ace:column headerText="Aika" styleClass="lefttext">
+			<h:panelGrid columns="3">
+				<h:outputText value="#{_treeni.alkaa}">
+					<f:convertDateTime pattern="HH:mm" timeZone="EET" />
+				</h:outputText>
+				<h:outputText value="-"/>
+				<h:outputText value="#{_treeni.päättyy}">
+					<f:convertDateTime pattern="HH:mm" timeZone="EET" />
+				</h:outputText>
+			</h:panelGrid>
 		</ace:column>
 		<ace:column headerText="Kesto" styleClass="lefttext">
 			<h:outputText value="#{_treeni.kesto}" />
@@ -54,32 +55,34 @@
 				<br />
 			</ui:repeat>
 		</ace:column>
-		<ace:column headerText="Power">
+		<ace:column headerText="Pwr">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_treeni.power}" />
 		</ace:column>
 		<ace:column headerText="VK">
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_treeni.valmennuskeskus}" />
 		</ace:column>
-		<ace:column headerText="Vyöalaraja" styleClass="lefttext">
-			<h:graphicImage value="/kuvat/vyöt/#{_treeni.vyöAlaraja.id}.png" style="height:40px"
-				rendered="#{_treeni.vyöAlaraja != null}" />
-		</ace:column>
-		<ace:column headerText="Vyöyläraja" styleClass="lefttext">
-			<h:graphicImage value="/kuvat/vyöt/#{_treeni.vyöYläraja.id}.png" style="height:40px"
-				rendered="#{_treeni.vyöYläraja != null}" />
+		<ace:column headerText="Vyöt" styleClass="lefttext">
+			<h:panelGrid columns="3">
+				<h:graphicImage value="/kuvat/vyöt/#{_treeni.vyöAlaraja.id}.png" style="height:40px"
+					rendered="#{_treeni.vyöAlaraja != null}" />
+				<h:outputText value="-" rendered="#{_treeni.vyöarvorajoitettu}"/>
+				<h:graphicImage value="/kuvat/vyöt/#{_treeni.vyöYläraja.id}.png" style="height:40px"
+					rendered="#{_treeni.vyöYläraja != null}" />
+			</h:panelGrid>
 		</ace:column>
 		<ace:column headerText="Ikärajat" styleClass="lefttext">
 			<h:outputText value="#{_treeni.ikärajat}" />
 		</ace:column>
-		<ace:column headerText="Voimassa alk" styleClass="lefttext">
-			<h:outputText value="#{_treeni.voimassaAlkaa}">
-				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
-			</h:outputText>
-		</ace:column>
-		<ace:column headerText="Voimassa lop" styleClass="lefttext">
-			<h:outputText value="#{_treeni.voimassaPäättyy}">
-				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
-			</h:outputText>
+		<ace:column headerText="Voimassa" styleClass="lefttext">
+			<h:panelGrid columns="3">
+				<h:outputText value="#{_treeni.voimassaAlkaa}">
+					<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
+				</h:outputText>
+				<h:outputText value="-" rendered="#{_treeni.voimassaolorajoitettu}"/>
+				<h:outputText value="#{_treeni.voimassaPäättyy}">
+					<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
+				</h:outputText>
+			</h:panelGrid>
 		</ace:column>
 	</ace:dataTable>
 	<p />

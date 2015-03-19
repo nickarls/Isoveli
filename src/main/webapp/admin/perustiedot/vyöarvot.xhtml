@@ -55,6 +55,16 @@
 							<ace:message for="form:kuvaus" />
 							<h:inputText value="#{vyöarvo.kuvaus}" id="kuvaus" size="20" />
 						</h:panelGrid>
+						<h:outputText value="Poom" />
+						<h:panelGrid>
+							<ace:message for="form:poom" />
+							<h:selectBooleanCheckbox value="#{vyöarvo.poom}" id="poom" />
+						</h:panelGrid>
+						<h:outputText value="Dan" />
+						<h:panelGrid>
+							<ace:message for="form:dan" />
+							<h:selectBooleanCheckbox value="#{vyöarvo.dan}" id="dan" />
+						</h:panelGrid>
 						<h:outputText value="Minimikuukaudet" />
 						<h:panelGrid>
 							<ace:message for="form:minimikuukaudet" />

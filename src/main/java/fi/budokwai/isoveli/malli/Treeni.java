@@ -372,4 +372,19 @@ public class Treeni
    {
       return id == 0;
    }
+
+   public boolean isVoimassaolorajoitettu()
+   {
+      return voimassaAlkaa != null || voimassaPäättyy != null;
+   }
+
+   public boolean isVyöarvorajoitettu()
+   {
+      return vyöAlaraja != null || vyöYläraja != null;
+   }
+
+   public boolean isIkärajoitettu()
+   {
+      return ikäAlaraja != null || ikäYläraja != null;
+   }
 }

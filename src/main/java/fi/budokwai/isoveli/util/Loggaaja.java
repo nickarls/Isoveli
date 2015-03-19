@@ -38,7 +38,14 @@ public class Loggaaja
       String kuka = null;
       try
       {
-         kuka = käyttäjä.get().getNimi();
+         Henkilö henkilö = käyttäjä.get();
+         if (henkilö == null || Henkilö.EI_KIRJAUTUNUT.equals(henkilö))
+         {
+            kuka = "Tuntematon";
+         } else
+         {
+            kuka = käyttäjä.get().getNimi();
+         }
       } catch (Exception e)
       {
          kuka = "Isoveli";

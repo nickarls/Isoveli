@@ -38,7 +38,9 @@ import org.hibernate.annotations.Type;
 
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.validointi.Taukotarkistus;
+import fi.budokwai.isoveli.malli.validointi.UniikitSopimukset;
 import fi.budokwai.isoveli.malli.validointi.UniikitVyökokeet;
+import fi.budokwai.isoveli.malli.validointi.UniikkiHenkilö;
 import fi.budokwai.isoveli.malli.validointi.Vyökoejärjestys;
 import fi.budokwai.isoveli.util.DateUtil;
 
@@ -56,6 +58,7 @@ import fi.budokwai.isoveli.util.DateUtil;
 @Typed(
 {})
 @UniikitVyökokeet
+@UniikitSopimukset
 @Vyökoejärjestys
 @Taukotarkistus
 public class Harrastaja extends Henkilö
@@ -124,10 +127,10 @@ public class Harrastaja extends Henkilö
    @PostLoad
    public void init()
    {
-      if (tauko == null)
-      {
-         tauko = new Jakso();
-      }
+      // if (tauko == null)
+      // {
+      // tauko = new Jakso();
+      // }
    }
 
    public Henkilö getHuoltaja()
@@ -461,7 +464,17 @@ public class Harrastaja extends Henkilö
 
    public Jakso getTauko()
    {
+      if (tauko == null)
+      {
+         tauko = new Jakso();
+      }
       return tauko;
+   }
+
+   @Override
+   public void siivoa()
+   {
+      super.siivoa();
    }
 
    public void setTauko(Jakso tauko)

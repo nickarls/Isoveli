@@ -32,6 +32,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
+import fi.budokwai.isoveli.malli.validointi.UniikkiHenkilö;
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
@@ -44,6 +45,7 @@ import fi.budokwai.isoveli.util.Util;
       @NamedQuery(name = "samanniminen_käyttäjä", query = "select h from Henkilö h where h.etunimi = :etunimi and h.sukunimi = :sukunimi and h.id <> :id"),
       @NamedQuery(name = "nimetty_henkilö", query = "select h from Henkilö h where h.etunimi = :etunimi and h.sukunimi = :sukunimi") })
 @Inheritance(strategy = InheritanceType.JOINED)
+@UniikkiHenkilö
 public class Henkilö implements Serializable
 {
    private static final long serialVersionUID = 1L;

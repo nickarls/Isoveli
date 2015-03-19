@@ -254,10 +254,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       {
          return;
       }
-      if (löytyySamanniminenHarrastaja())
-      {
-         throw new IsoveliPoikkeus("Samanniminen harrastaja/henkilö löytyy jo");
-      }
       harrastaja.siivoa();
       if (harrastaja.getHuoltaja() != null)
       {

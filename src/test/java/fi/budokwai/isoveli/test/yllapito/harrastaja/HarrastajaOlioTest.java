@@ -368,7 +368,8 @@ public class HarrastajaOlioTest extends Perustesti
       Assert.assertEquals(2, virheet.size());
       Iterator<ConstraintViolation<Harrastaja>> i = virheet.iterator();
       Assert.assertEquals("Harrastajalla on jo vyöarvo 8kup", i.next().getMessage());
-      Assert.assertEquals("8kup (01.01.2015) ei voi olla suoritettuna aikaisemmin kun 8kup (01.01.2015)", i.next().getMessage());
+      Assert.assertEquals("8kup (01.01.2015) ei voi olla suoritettuna aikaisemmin kun 8kup (01.01.2015)", i.next()
+         .getMessage());
    }
 
    @Test
@@ -415,6 +416,42 @@ public class HarrastajaOlioTest extends Perustesti
       Assert.assertEquals(1, virheet.size());
       Assert
          .assertEquals("Tauko ei voi alkaa ennen kun harrastaja on syntynyt", virheet.iterator().next().getMessage());
+   }
+
+   @Test
+   public void testTuplaAktiiviJäsenmaksuEiOK()
+   {
+      Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "28.06.1970");
+      teeJäsenmaksusopimus(harrastaja, "01.01.2000");
+      teeJäsenmaksusopimus(harrastaja, "01.01.2000");
+      Set<ConstraintViolation<Harrastaja>> virheet = validator.validate(harrastaja);
+      Assert.assertEquals(1, virheet.size());
+      Assert
+         .assertEquals("Harrastajalla on jo aktiivinen sopimustyyppi Jäsenmaksu", virheet.iterator().next().getMessage());
+   }
+   
+   @Test
+   public void testTuplaHarrastusmaksuEiOK()
+   {
+      Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "28.06.1970");
+      teeHarjoittelusopimus(harrastaja, "01.01.2000", 6);
+      teeHarjoittelusopimus(harrastaja, "01.01.2000", 6);
+      Set<ConstraintViolation<Harrastaja>> virheet = validator.validate(harrastaja);
+      Assert.assertEquals(1, virheet.size());
+      Assert
+         .assertEquals("Harrastajalla on jo aktiivinen sopimustyyppi Harjoittelumaksu", virheet.iterator().next().getMessage());
+   }
+   
+
+   @Test
+   public void testTuplaAktiiviJäsenmaksuJosPassiivinenToinenOK()
+   {
+      Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "28.06.1970");
+      Sopimus sopimus = teeJäsenmaksusopimus(harrastaja, "01.01.2000");
+      sopimus.setArkistoitu(true);
+      teeJäsenmaksusopimus(harrastaja, "01.01.2000");
+      Set<ConstraintViolation<Harrastaja>> virheet = validator.validate(harrastaja);
+      Assert.assertEquals(0, virheet.size());
    }
 
 }

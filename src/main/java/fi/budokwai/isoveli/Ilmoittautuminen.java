@@ -5,10 +5,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,6 +28,8 @@ import fi.budokwai.isoveli.malli.Treeni;
 import fi.budokwai.isoveli.malli.Treenikäynti;
 import fi.budokwai.isoveli.malli.Treenisessio;
 import fi.budokwai.isoveli.malli.Viikonpäivä;
+import fi.budokwai.isoveli.malli.Vyöarvo;
+import fi.budokwai.isoveli.util.Muuttui;
 
 @Named
 @SessionScoped
@@ -108,12 +112,29 @@ public class Ilmoittautuminen extends Perustoiminnallisuus
 
    }
 
+   public void treenimuutos(@Observes @Muuttui Treeni treeni)
+   {
+      tulevatTreenit = null;
+   }
+
    private void haeTulevatTreenit()
    {
       Aikaraja aikaraja = haeAikaraja();
       tulevatTreenit = entityManager.createNamedQuery("tulevat_treenit", Treeni.class)
          .setParameter("päivä", aikaraja.getPäivä()).setParameter("kello", aikaraja.getAika())
-         .setParameter("harrastaja", harrastaja).setParameter("tänään", haeTänäänPvm()).getResultList();
+         .setParameter("ikä", harrastaja.getIkä()).setParameter("harrastaja", harrastaja)
+         .setParameter("tänään", haeTänäänPvm()).getResultList();
+      tulevatTreenit = tulevatTreenit
+         .stream()
+         .filter(
+            t -> t.getVyöAlaraja() == null ? true : harrastaja.getTuoreinVyöarvo().getJärjestys() >= t.getVyöAlaraja()
+               .getJärjestys()).collect(Collectors.toList());
+      tulevatTreenit = tulevatTreenit
+         .stream()
+         .filter(
+            t -> t.getVyöYläraja() == null ? true : harrastaja.getTuoreinVyöarvo().getJärjestys() <= t.getVyöYläraja()
+               .getJärjestys()).collect(Collectors.toList());
+
    }
 
    private Aikaraja haeAikaraja()

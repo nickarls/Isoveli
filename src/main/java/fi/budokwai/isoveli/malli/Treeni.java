@@ -38,7 +38,7 @@ import fi.budokwai.isoveli.util.DateUtil;
 @Table(name = "treeni")
 @NamedQueries(
 {
-      @NamedQuery(name = "tulevat_treenit", query = "select t from Treeni t where t.arkistoitu='E' and t.p‰iv‰=:p‰iv‰ and t.p‰‰ttyy >= :kello and not exists(select tk from Treenik‰ynti tk, Treenisessio ts where tk.harrastaja=:harrastaja and tk.treenisessio=ts and ts.treeni=t and ts.p‰iv‰ = :t‰n‰‰n)"),
+      @NamedQuery(name = "tulevat_treenit", query = "select t from Treeni t where t.arkistoitu='E' and nvl(t.ik‰Alaraja, :ik‰) <= :ik‰ and nvl(t.ik‰Yl‰raja, :ik‰) >= :ik‰ and t.p‰iv‰=:p‰iv‰ and t.p‰‰ttyy >= :kello and not exists(select tk from Treenik‰ynti tk, Treenisessio ts where tk.harrastaja=:harrastaja and tk.treenisessio=ts and ts.treeni=t and ts.p‰iv‰ = :t‰n‰‰n)"),
       @NamedQuery(name = "treenit", query = "select t from Treeni t where t.arkistoitu='E' order by t.p‰iv‰, t.alkaa"),
       @NamedQuery(name = "treenitArq", query = "select t from Treeni t order by t.p‰iv‰, t.alkaa"), })
 public class Treeni

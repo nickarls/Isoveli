@@ -103,6 +103,7 @@ public class HarrastajanIlmoittautumisTest extends Perustesti
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testInfotiskille()
    {
+      fail("not yet");
    }
 
    @Test
@@ -123,7 +124,22 @@ public class HarrastajanIlmoittautumisTest extends Perustesti
 
    private void lis‰‰Treeni()
    {
+      lis‰‰Treeni(null, null, null, null);
+   }
+
+   private void lis‰‰Treeni(Integer alaIk‰, Integer yl‰Ik‰, String alaVyˆ, String yl‰Vyˆ)
+   {
       Treeni treeni = new Treeni();
+      treeni.setIk‰Alaraja(alaIk‰);
+      treeni.setIk‰Yl‰raja(yl‰Ik‰);
+      if (alaVyˆ != null)
+      {
+         treeni.setVyˆAlaraja(teeVyˆarvo(alaVyˆ));
+      }
+      if (yl‰Vyˆ != null)
+      {
+         treeni.setVyˆYl‰raja(teeVyˆarvo(yl‰Vyˆ));
+      }
       Treenityyppi tyyppi = entityManager.find(Treenityyppi.class, 1);
       LocalDateTime nyt = LocalDateTime.now();
       treeni.setAlkaa(DateUtil.LocalDateTime2Date(nyt.plus(1, ChronoUnit.HOURS)));
@@ -154,20 +170,34 @@ public class HarrastajanIlmoittautumisTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "cleanup.sql" })
+   { "cleanup.sql", "seed.sql", "nicklasok.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testPeruuta()
    {
-      fail("todo");
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      ilmoittautuminen.peruuta();
+      Assert.assertNull(ilmoittautuminen.getTreeniharrastaja());
+      Assert.assertEquals(0, treenit.get().size());
+      Assert.assertNull(ilmoittautuminen.getKorttinumero());
    }
 
    @Test
    @ApplyScriptBefore(
-   { "cleanup.sql" })
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testEiSamaanTreeniin()
    {
-      fail("todo");
+      lis‰‰Treeni();
+      ilmoittautuminen.peruuta();
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(1, treenit.get().size());
+      Treeni treeni = treenit.get().iterator().next();
+      ilmoittautuminen.setTreeni(treeni);
+      ilmoittautuminen.tallenna();
+      entityManager.clear();
+      Assert.assertEquals(0, treenit.get().size());
    }
 
    @Test
@@ -200,60 +230,6 @@ public class HarrastajanIlmoittautumisTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-   { "cleanup.sql" })
-   @Cleanup(phase = TestExecutionPhase.NONE)
-   public void testIkaalaraja()
-   {
-      fail("todo");
-   }
-
-   @Test
-   @ApplyScriptBefore(
-   { "cleanup.sql" })
-   @Cleanup(phase = TestExecutionPhase.NONE)
-   public void testIkaylaraja()
-   {
-      fail("todo");
-   }
-
-   @Test
-   @ApplyScriptBefore(
-   { "cleanup.sql" })
-   @Cleanup(phase = TestExecutionPhase.NONE)
-   public void testIkaalaylaraja()
-   {
-      fail("todo");
-   }
-
-   @Test
-   @ApplyScriptBefore(
-   { "cleanup.sql" })
-   @Cleanup(phase = TestExecutionPhase.NONE)
-   public void testVyoalaraja()
-   {
-      fail("todo");
-   }
-
-   @Test
-   @ApplyScriptBefore(
-   { "cleanup.sql" })
-   @Cleanup(phase = TestExecutionPhase.NONE)
-   public void testVyoylaraja()
-   {
-      fail("todo");
-   }
-
-   @Test
-   @ApplyScriptBefore(
-   { "cleanup.sql" })
-   @Cleanup(phase = TestExecutionPhase.NONE)
-   public void testVyoalaylaraja()
-   {
-      fail("todo");
-   }
-
-   @Test
-   @ApplyScriptBefore(
    { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testIlmoittauduTreeneihinUusiSessio()
@@ -276,6 +252,186 @@ public class HarrastajanIlmoittautumisTest extends Perustesti
       Assert.assertEquals(1, sessiot.size());
       Assert.assertEquals(1, nicklas.getTreenik‰ynnit().size());
       Assert.assertEquals(1, nicklas.getTreenik‰ynnit().iterator().next().getTreenisessio().getVet‰j‰t().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql", "nicklasdan.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testVyoalarajaOK()
+   {
+      lis‰‰Treeni(null, null, "1.kup", null);
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(1, treenit.get().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql", "nicklasdan.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testVyolarajaEiOK()
+   {
+      lis‰‰Treeni(null, null, "2.dan", null);
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(0, treenit.get().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql", "nicklasdan.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testVyoylarajaOK()
+   {
+      lis‰‰Treeni(null, null, null, "2.dan");
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(1, treenit.get().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql", "nicklasdan.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testVyoalarajaEiOK()
+   {
+      lis‰‰Treeni(null, null, "3.dan", null);
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(0, treenit.get().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql", "nicklasdan.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testVyorajatOK()
+   {
+      lis‰‰Treeni(null, null, "1.kup", "2.dan");
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(1, treenit.get().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testVyorajatEiOK()
+   {
+      lis‰‰Treeni(null, null, "1.kup", "2.dan");
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(0, treenit.get().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql", "nicklasdan.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testVyorajatEiOKAli()
+   {
+      lis‰‰Treeni(null, null, "2.dan", "3.dan");
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(0, treenit.get().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql", "nicklasdan.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testVyorajatEiOKYli()
+   {
+      lis‰‰Treeni(null, null, "8.kup", "7.kup");
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(0, treenit.get().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql", "nicklasdan.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testIkaalarajaOK()
+   {
+      lis‰‰Treeni(7, null, null, null);
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(1, treenit.get().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql", "nicklasdan.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testIkalarajaEiOK()
+   {
+      lis‰‰Treeni(50, null, null, null);
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(0, treenit.get().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql", "nicklasdan.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testIkaylarajaOK()
+   {
+      lis‰‰Treeni(null, 50, null, null);
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(1, treenit.get().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql", "nicklasdan.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testIkaalarajaEiOK()
+   {
+      lis‰‰Treeni(null, 20, null, null);
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(0, treenit.get().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql", "nicklasdan.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testIkarajatOK()
+   {
+      lis‰‰Treeni(30, 50, null, null);
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(1, treenit.get().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql", "nicklasdan.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testIkarajatEiOKAli()
+   {
+      lis‰‰Treeni(50, 60, null, null);
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(0, treenit.get().size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "perustekniikka.sql", "nicklasok.sql", "nicklasdan.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testIkarajatEiOKYli()
+   {
+      lis‰‰Treeni(20, 30, null, null);
+      ilmoittautuminen.setKorttinumero("19750628-1");
+      ilmoittautuminen.lueKortti();
+      Assert.assertEquals(0, treenit.get().size());
    }
 
 }

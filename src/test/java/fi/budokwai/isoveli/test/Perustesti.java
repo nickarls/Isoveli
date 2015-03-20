@@ -4,6 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -27,6 +30,9 @@ public class Perustesti
 {
    @Rule
    public ExpectedException exception = ExpectedException.none();
+
+   @PersistenceContext
+   protected EntityManager entityManager;
 
    @Deployment
    public static WebArchive createDeployment()
@@ -83,6 +89,12 @@ public class Perustesti
       }
       harrastaja.lisääVyökoe(vyökoe);
       return vyökoe;
+   }
+
+   protected Vyöarvo teeVyöarvo(String arvo)
+   {
+      return entityManager.createQuery("select v from Vyöarvo v where v.nimi=:nimi", Vyöarvo.class)
+         .setParameter("nimi", arvo).getSingleResult();
    }
 
    protected Vyökoe teeVyökoe(Harrastaja harrastaja, String koska, String vyöarvoNimi, int järjestys)

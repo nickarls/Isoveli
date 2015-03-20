@@ -1,0 +1,1 @@
+insert into laskurivi(id, lasku, rivinumero, sopimuslasku, tuotenimi, infotieto, maara, yksikko, yksikkohinta, luotu) values (1, 1, 1, 1, 'Harjoittelumaksu (Heidi)', '1.1.2012-1.6.2012', 1, 'kpl', 60.00, parsedatetime('14.1.2013', 'dd.MM.yyyy'));

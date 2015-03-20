@@ -48,11 +48,11 @@ public class Lasku
    private int id;
 
    @OneToMany(mappedBy = "lasku", cascade =
-   { CascadeType.PERSIST, CascadeType.PERSIST })
+   { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
    private List<Laskurivi> laskurivit = new ArrayList<Laskurivi>();
 
    @Enumerated(EnumType.STRING)
-   private TilausTila tila = TilausTila.M;
+   private LaskuTila tila = LaskuTila.M;
 
    @Temporal(TemporalType.DATE)
    @Column(name = "erapaiva")
@@ -161,37 +161,37 @@ public class Lasku
       this.eräpäivä = eräpäivä;
    }
 
-   public TilausTila getTila()
+   public LaskuTila getTila()
    {
       return tila;
    }
 
-   public void setTila(TilausTila tila)
+   public void setTila(LaskuTila tila)
    {
       this.tila = tila;
    }
 
    public void merkkaaMitätöidyksi()
    {
-      tila = TilausTila.X;
+      tila = LaskuTila.X;
    }
 
    public void merkkaaMaksetuksi()
    {
       maksettu = new Date();
-      tila = TilausTila.K;
+      tila = LaskuTila.K;
    }
 
    public void merkkaaMuodostetuksi()
    {
       maksettu = null;
-      tila = TilausTila.M;
+      tila = LaskuTila.M;
    }
 
    public void merkkaaLähetetyksi()
    {
       maksettu = null;
-      tila = TilausTila.L;
+      tila = LaskuTila.L;
    }
 
    public long getMaksuaikaa()
@@ -315,6 +315,12 @@ public class Lasku
    public void lisääRivit(List<Laskurivi> laskurivit)
    {
       laskurivit.forEach(lr -> lisääRivi(lr));
+   }
+
+   @Override
+   public String toString()
+   {
+      return String.format("%s: %d riviä, EUR%f", henkilö.getNimi(), laskurivit.size(), getYhteishinta());
    }
 
 }

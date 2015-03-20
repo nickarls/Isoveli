@@ -39,7 +39,7 @@ public class Laskurivi
    private int rivinumero;
 
    @OneToOne(cascade =
-   { CascadeType.PERSIST })
+   { CascadeType.PERSIST, CascadeType.REMOVE })
    @JoinColumn(name = "sopimuslasku")
    private Sopimuslasku sopimuslasku;
 
@@ -215,5 +215,16 @@ public class Laskurivi
       laskurivi.setYksikköhinta(hinta);
       laskurivi.setYksikkö("kpl");
       return laskurivi;
+   }
+
+   @Override
+   public String toString()
+   {
+      return String.format("%s %s, %d %s @EUR%f = EUR%f", tuotenimi, infotieto, määrä, yksikkö, yksikköhinta,
+         getRivihinta());
+   }
+   
+   public boolean isMuokattavissa() {
+      return lasku.getTila().equals(LaskuTila.M);
    }
 }

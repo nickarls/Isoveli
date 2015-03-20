@@ -9,6 +9,15 @@
 			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaLaskunPoisto').hide()" immediate="true" />
 		</h:panelGrid>
 	</ace:confirmationDialog>
+	<ace:confirmationDialog id="vahvistaLaskurivinPoisto" message="Oletko varma?" header="Vahvista" width="350"
+		height="200" closable="true" position="center">
+		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
+			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaLaskurivinPoisto').hide()"
+				actionListener="#{laskutusAdmin.poistaRivi(_laskurivi)}" immediate="true" />
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaLaskurivinPoisto').hide()" immediate="true" />
+		</h:panelGrid>
+	</ace:confirmationDialog>
+
 	<h:panelGrid columns="4">
 		<h:commandButton rendered="#{lasku != null}" styleClass="ikoni"
 			onclick="ice.ace.instance('form:vahvistaLaskunPoisto').show();" image="/kuvat/poista.png" immediate="true" />
@@ -99,7 +108,7 @@
 				</f:facet>
 				<f:facet name="input">
 					<h:panelGrid>
-						<ace:message for=":tuotenimi" />
+						<ace:message for="tuotenimi" />
 						<h:inputText value="#{_laskurivi.tuotenimi}" id="tuotenimi" />
 					</h:panelGrid>
 				</f:facet>
@@ -111,7 +120,10 @@
 					<h:outputText value="#{_laskurivi.infotieto}" />
 				</f:facet>
 				<f:facet name="input">
-					<h:inputText value="#{_laskurivi.infotieto}" />
+					<h:panelGrid>
+						<ace:message for="infotieto" />
+						<h:inputText value="#{_laskurivi.infotieto}" id="infotieto" />
+					</h:panelGrid>
 				</f:facet>
 			</ace:cellEditor>
 		</ace:column>
@@ -121,7 +133,10 @@
 					<h:outputText value="#{_laskurivi.määrä}" />
 				</f:facet>
 				<f:facet name="input">
-					<h:inputText value="#{_laskurivi.määrä}" size="4" />
+					<h:panelGrid>
+						<ace:message for="määrä" />
+						<h:inputText value="#{_laskurivi.määrä}" size="4" id="määrä" />
+					</h:panelGrid>
 				</f:facet>
 			</ace:cellEditor>
 		</ace:column>
@@ -131,7 +146,10 @@
 					<h:outputText value="#{_laskurivi.yksikkö}" />
 				</f:facet>
 				<f:facet name="input">
-					<h:inputText value="#{_laskurivi.yksikkö}" size="4" />
+					<h:panelGrid>
+						<ace:message for="yksikkö" />
+						<h:inputText value="#{_laskurivi.yksikkö}" size="4" id="yksikkö" />
+					</h:panelGrid>
 				</f:facet>
 			</ace:cellEditor>
 		</ace:column>
@@ -143,8 +161,10 @@
 					</h:outputText>
 				</f:facet>
 				<f:facet name="input">
-					<h:inputText value="#{_laskurivi.yksikköhinta}" size="4">
-					</h:inputText>
+					<h:panelGrid>
+						<ace:message for="yksikköhinta" />
+						<h:inputText value="#{_laskurivi.yksikköhinta}" size="4" id="yksikköhinta" />
+					</h:panelGrid>
 				</f:facet>
 			</ace:cellEditor>
 		</ace:column>
@@ -154,13 +174,15 @@
 			</h:outputText>
 		</ace:column>
 		<ace:column>
-			<ace:rowEditor />
+			<ace:rowEditor rendered="#{_laskurivi.muokattavissa}" />
 		</ace:column>
 		<ace:column>
-			<h:commandButton image="/kuvat/poista.png" action="#{laskutusAdmin.poistaRivi(_laskurivi)}" immediate="true" styleClass="pieniikoni">
+			<h:commandButton image="/kuvat/poista.png" onclick="ice.ace.instance('form:vahvistaLaskurivinPoisto').show();"
+				rendered="#{_laskurivi.muokattavissa}" immediate="true" styleClass="pieniikoni">
 				<f:ajax render="@form" />
 			</h:commandButton>
-			<h:commandButton image="/kuvat/lisää.png" action="#{laskutusAdmin.lisääRivi()}" immediate="true" styleClass="pieniikoni">
+			<h:commandButton image="/kuvat/lisää.png" action="#{laskutusAdmin.lisääRivi()}"
+				rendered="#{_laskurivi.muokattavissa}" immediate="true" styleClass="pieniikoni">
 				<f:ajax render="@form" />
 			</h:commandButton>
 		</ace:column>

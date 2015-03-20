@@ -37,7 +37,7 @@ import fi.budokwai.isoveli.malli.Lasku;
 import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Sopimus;
-import fi.budokwai.isoveli.malli.TilausTila;
+import fi.budokwai.isoveli.malli.LaskuTila;
 import fi.budokwai.isoveli.util.DateUtil;
 import fi.budokwai.isoveli.util.Lasku2PDF;
 import fi.budokwai.isoveli.util.Loggaaja;
@@ -75,13 +75,13 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    {
       tilasuodatukset = new ArrayList<SelectItem>();
       tilasuodatukset.add(new SelectItem("", "Kaikki", "Kaikki", false, false, true));
-      tilasuodatukset.add(new SelectItem(TilausTila.M.name(), TilausTila.M.getNimi(), TilausTila.M.getNimi(), false,
+      tilasuodatukset.add(new SelectItem(LaskuTila.M.name(), LaskuTila.M.getNimi(), LaskuTila.M.getNimi(), false,
          false, false));
-      tilasuodatukset.add(new SelectItem(TilausTila.L.name(), TilausTila.L.getNimi(), TilausTila.L.getNimi(), false,
+      tilasuodatukset.add(new SelectItem(LaskuTila.L.name(), LaskuTila.L.getNimi(), LaskuTila.L.getNimi(), false,
          false, false));
-      tilasuodatukset.add(new SelectItem(TilausTila.K.name(), TilausTila.K.getNimi(), TilausTila.K.getNimi(), false,
+      tilasuodatukset.add(new SelectItem(LaskuTila.K.name(), LaskuTila.K.getNimi(), LaskuTila.K.getNimi(), false,
          false, false));
-      tilasuodatukset.add(new SelectItem(TilausTila.X.name(), TilausTila.X.getNimi(), TilausTila.X.getNimi(), false,
+      tilasuodatukset.add(new SelectItem(LaskuTila.X.name(), LaskuTila.X.getNimi(), LaskuTila.X.getNimi(), false,
          false, false));
    }
 
@@ -136,7 +136,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
             continue;
          }
          lasku.setMaksettu(new Date());
-         lasku.setTila(TilausTila.K);
+         lasku.setTila(LaskuTila.K);
          entityManager.persist(lasku);
          entityManager.flush();
          kuitattuja++;
@@ -399,11 +399,8 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 
    public void poistaRivi(Laskurivi laskurivi)
    {
-      laskurivi = entityManager.merge(laskurivi);
-      lasku = entityManager.merge(laskurivi.getLasku());
-      laskurivi.setSopimuslasku(null);
       lasku.getLaskurivit().remove(laskurivi);
-      entityManager.persist(lasku);
+      lasku = entityManager.merge(lasku);
       entityManager.flush();
       info("Rivi poistettu ja lasku tallennettu");
    }
@@ -440,6 +437,11 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public void setKuitattavatLaskut(String kuitattavatLaskut)
    {
       this.kuitattavatLaskut = kuitattavatLaskut;
+   }
+
+   public void setLasku(Lasku lasku)
+   {
+      this.lasku = lasku;
    }
 
 }

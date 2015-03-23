@@ -20,7 +20,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.validation.constraints.NotNull;
 
 import org.icefaces.ace.component.column.Column;
 import org.icefaces.ace.component.datatable.DataTable;
@@ -34,10 +33,10 @@ import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.BlobData;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Lasku;
+import fi.budokwai.isoveli.malli.LaskuTila;
 import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Sopimus;
-import fi.budokwai.isoveli.malli.LaskuTila;
 import fi.budokwai.isoveli.util.DateUtil;
 import fi.budokwai.isoveli.util.Lasku2PDF;
 import fi.budokwai.isoveli.util.Loggaaja;
@@ -387,20 +386,28 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    {
       Lasku lasku = (Lasku) laskuRSM.getSelected().iterator().next();
       lasku = entityManager.merge(lasku);
+//      if (lasku.getPdf() == null)
+//      {
+//         lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), teePdfLasku(lasku)));
+//      } else
+//      {
+//         lasku.getPdf().setTieto(teePdfLasku(lasku));
+//      }
       entityManager.flush();
       info("Rivi muokattu ja lasku tallennettu");
-   }
-
-   public void tallennaLasku()
-   {
-      lasku = entityManager.merge(lasku);
-      info("Rivi ja lasku tallennettu");
    }
 
    public void poistaRivi(Laskurivi laskurivi)
    {
       lasku.getLaskurivit().remove(laskurivi);
       lasku = entityManager.merge(lasku);
+      if (lasku.getPdf() == null)
+      {
+         lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), teePdfLasku(lasku)));
+      } else
+      {
+         lasku.getPdf().setTieto(teePdfLasku(lasku));
+      }
       entityManager.flush();
       info("Rivi poistettu ja lasku tallennettu");
    }

@@ -1,4 +1,5 @@
 set referential_integrity false;
+delete from blobdata;
 delete from laskurivi;
 delete from sopimuslasku;
 delete from lasku;

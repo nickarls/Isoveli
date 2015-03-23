@@ -69,7 +69,7 @@ public class Lasku
    private Date luotu = new Date();
 
    @OneToOne(cascade =
-   { CascadeType.PERSIST })
+   { CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true)
    @JoinColumn(name = "pdf")
    private BlobData pdf;
 

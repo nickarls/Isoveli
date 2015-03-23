@@ -135,7 +135,9 @@
 				<f:facet name="input">
 					<h:panelGrid>
 						<ace:message for="määrä" />
-						<h:inputText value="#{_laskurivi.määrä}" size="4" id="määrä" />
+						<h:inputText value="#{_laskurivi.määrä}" size="4" id="määrä">
+							<f:ajax execute="@this" render="@form" />
+						</h:inputText>
 					</h:panelGrid>
 				</f:facet>
 			</ace:cellEditor>
@@ -163,7 +165,9 @@
 				<f:facet name="input">
 					<h:panelGrid>
 						<ace:message for="yksikköhinta" />
-						<h:inputText value="#{_laskurivi.yksikköhinta}" size="4" id="yksikköhinta" />
+						<h:inputText value="#{_laskurivi.yksikköhinta}" size="4" id="yksikköhinta">
+							<f:ajax execute="@this" render="@form" />
+						</h:inputText>
 					</h:panelGrid>
 				</f:facet>
 			</ace:cellEditor>

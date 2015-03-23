@@ -68,6 +68,7 @@ public class LaskutusTest extends Perustesti
          .getResultList();
       Assert.assertEquals(1, lasku.getLaskurivej‰());
       Assert.assertEquals(1, sopimuslaskut.size());
+      laskutusAdmin.setLasku(lasku);
       laskutusAdmin.poistaRivi(lasku.getLaskurivit().iterator().next());
       entityManager.refresh(lasku);
       Assert.assertEquals(0, lasku.getLaskurivej‰());
@@ -198,12 +199,12 @@ public class LaskutusTest extends Perustesti
       rivi.setInfotieto("infotieto");
       lasku.lis‰‰Rivi(rivi);
       laskutusAdmin.setLasku(lasku);
-      laskutusAdmin.tallennaLasku();
+      laskutusAdmin.getLaskuRSM().get(lasku).setSelected(true);
+      laskutusAdmin.tallennaRivi(null);
       entityManager.clear();
       lasku = entityManager.find(Lasku.class, 1);
       Assert.assertEquals(1, lasku.getLaskurivej‰());
    }
-
 
    @Test
    @ApplyScriptBefore(
@@ -217,6 +218,44 @@ public class LaskutusTest extends Perustesti
       entityManager.clear();
       lasku = entityManager.find(Lasku.class, 1);
       Assert.assertEquals(0, lasku.getLaskurivej‰());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "harrastajaperhe.sql", "harrastajasopimukset.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testRivinPoistoVirkistaaPDFn()
+   {
+      laskutusAdmin.laskutaSopimukset();
+      Lasku lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
+      long koko = lasku.getPdf().getTieto().length;
+      laskutusAdmin.setLasku(lasku);
+      laskutusAdmin.poistaRivi(lasku.getLaskurivit().iterator().next());
+      entityManager.clear();
+      lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
+      Assert.assertNotEquals(koko, lasku.getPdf().getTieto().length);
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "harrastajaperhe.sql", "harrastajasopimukset.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testLisaaLaskuriviVirkistaaPDFn()
+   {
+      laskutusAdmin.laskutaSopimukset();
+      Lasku lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
+      long koko = lasku.getPdf().getTieto().length;
+      laskutusAdmin.setLasku(lasku);
+      Laskurivi rivi = new Laskurivi();
+      rivi.setTuotenimi("tuote");
+      rivi.setInfotieto("infotieto");
+      lasku.lis‰‰Rivi(rivi);
+      laskutusAdmin.getLaskuRSM().get(lasku).setSelected(true);
+      laskutusAdmin.tallennaRivi(null);
+      entityManager.clear();
+      lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
+      Assert.assertEquals(4, lasku.getLaskurivej‰());
+      Assert.assertNotEquals(koko, lasku.getPdf().getTieto().length);
    }
 
 }

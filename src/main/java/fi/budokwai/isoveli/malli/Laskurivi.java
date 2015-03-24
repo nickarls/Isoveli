@@ -220,11 +220,12 @@ public class Laskurivi
    @Override
    public String toString()
    {
-      return String.format("%s %s, %d %s @EUR%f = EUR%f", tuotenimi, infotieto, määrä, yksikkö, yksikköhinta,
-         getRivihinta());
+      return String.format("%d: %s %s, %d %s @EUR%f = EUR%f", rivinumero, tuotenimi, infotieto, määrä, yksikkö,
+         yksikköhinta, getRivihinta());
    }
-   
-   public boolean isMuokattavissa() {
+
+   public boolean isMuokattavissa()
+   {
       return lasku.getTila().equals(LaskuTila.M);
    }
 }

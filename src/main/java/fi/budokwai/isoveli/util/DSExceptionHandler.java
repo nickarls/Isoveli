@@ -92,8 +92,13 @@ public class DSExceptionHandler extends Perustoiminnallisuus implements Serializ
 
    void handleUniqueConstraintViolatedExpired(@Handles ExceptionEvent<JdbcSQLException> e)
    {
-      if (e.getException().getMessage().startsWith("Unique"))
+      String viesti = e.getException().getMessage();
+      if (viesti.startsWith("Unique"))
       {
+         int a = viesti.indexOf(":") + 3;
+         int b = viesti.indexOf(" ", a);
+         String indeksi = viesti.substring(a, b);
+         virhe("Tietue on jo olemassa (%s)", indeksi);
          e.handled();
       }
    }

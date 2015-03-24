@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -49,6 +51,7 @@ public class Lasku
 
    @OneToMany(mappedBy = "lasku", cascade =
    { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
+   @OrderBy(value = "rivinumero")
    private List<Laskurivi> laskurivit = new ArrayList<Laskurivi>();
 
    @Enumerated(EnumType.STRING)
@@ -92,8 +95,15 @@ public class Lasku
    public void lisääRivi(Laskurivi laskurivi)
    {
       laskurivi.setLasku(this);
+      OptionalInt rivinumero = laskurivit.stream().mapToInt(l -> l.getRivinumero()).max();
+      if (rivinumero.isPresent())
+      {
+         laskurivi.setRivinumero(rivinumero.getAsInt() + 1);
+      } else
+      {
+         laskurivi.setRivinumero(1);
+      }
       laskurivit.add(laskurivi);
-      laskurivi.setRivinumero(laskurivit.size());
    }
 
    public int getLaskurivejä()

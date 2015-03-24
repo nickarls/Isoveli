@@ -87,11 +87,7 @@
 		<ace:column>
 			<h:graphicImage value="/kuvat/alivalikko.png" style="width:24px" id="alivalikko" />
 			<ace:contextMenu for="alivalikko">
-				<ace:menuItem value="Virkistä" action="#{laskutusAdmin.virkistäLasku(_lasku)}" />
-				<ace:menuItem value="Muodosta PDF" action="#{laskutusAdmin.virkistäLasku(_lasku)}" />
-				<ace:menuItem value="Lähetä" action="#{laskutusAdmin.virkistäLasku(_lasku)}" />
-				<ace:menuItem value="Tulosta" action="#{laskutusAdmin.virkistäLasku(_lasku)}" />
-				<ace:menuItem value="Peruuta" action="#{laskutusAdmin.virkistäLasku(_lasku)}" />
+				<ace:menuItem value="Lähetä" action="#{laskutusAdmin.lähetäLasku(_lasku)}" />
 			</ace:contextMenu>
 		</ace:column>
 	</ace:dataTable>
@@ -167,6 +163,7 @@
 						<ace:message for="yksikköhinta" />
 						<h:inputText value="#{_laskurivi.yksikköhinta}" size="4" id="yksikköhinta">
 							<f:ajax execute="@this" render="@form" />
+							<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 						</h:inputText>
 					</h:panelGrid>
 				</f:facet>
@@ -181,7 +178,7 @@
 			<ace:rowEditor rendered="#{_laskurivi.muokattavissa}" />
 		</ace:column>
 		<ace:column>
-			<h:commandButton image="/kuvat/poista.png" onclick="ice.ace.instance('form:vahvistaLaskurivinPoisto').show();"
+			<h:commandButton image="/kuvat/poista.png" action="#{laskutusAdmin.poistaRivi(_laskurivi)}"
 				rendered="#{_laskurivi.muokattavissa}" immediate="true" styleClass="pieniikoni">
 				<f:ajax render="@form" />
 			</h:commandButton>

@@ -384,15 +384,15 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 
    public void tallennaRivi(AjaxBehaviorEvent e)
    {
-      Lasku lasku = (Lasku) laskuRSM.getSelected().iterator().next();
       lasku = entityManager.merge(lasku);
-//      if (lasku.getPdf() == null)
-//      {
-//         lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), teePdfLasku(lasku)));
-//      } else
-//      {
-//         lasku.getPdf().setTieto(teePdfLasku(lasku));
-//      }
+      // if (lasku.getPdf() == null)
+      // {
+      // lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()),
+      // teePdfLasku(lasku)));
+      // } else
+      // {
+      // lasku.getPdf().setTieto(teePdfLasku(lasku));
+      // }
       entityManager.flush();
       info("Rivi muokattu ja lasku tallennettu");
    }
@@ -401,13 +401,14 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    {
       lasku.getLaskurivit().remove(laskurivi);
       lasku = entityManager.merge(lasku);
-      if (lasku.getPdf() == null)
-      {
-         lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), teePdfLasku(lasku)));
-      } else
-      {
-         lasku.getPdf().setTieto(teePdfLasku(lasku));
-      }
+      // if (lasku.getPdf() == null)
+      // {
+      // lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()),
+      // teePdfLasku(lasku)));
+      // } else
+      // {
+      // lasku.getPdf().setTieto(teePdfLasku(lasku));
+      // }
       entityManager.flush();
       info("Rivi poistettu ja lasku tallennettu");
    }
@@ -451,4 +452,9 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       this.lasku = lasku;
    }
 
+   public void l‰het‰Lasku(Lasku lasku)
+   {
+      loggaaja.loggaa("L‰hett‰‰ laskun %s osoitteeseen %s", lasku.getId(), "nickarls@gmail.com");
+      mailManager.l‰het‰S‰hkˆposti("nicklas@gmail.com", "Budokwai lasku", "Liitteen‰", lasku.getPdf());
+   }
 }

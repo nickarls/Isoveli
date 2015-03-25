@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import fi.budokwai.isoveli.admin.LaskutusAdmin;
+import fi.budokwai.isoveli.malli.BlobData;
 import fi.budokwai.isoveli.malli.Lasku;
 import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
@@ -56,26 +57,30 @@ public class LaskutusTest extends Perustesti
       Assert.assertTrue(DateUtil.samat(lasku.getMaksettu(), DateUtil.t‰n‰‰n()));
    }
 
-   @Test
-   @ApplyScriptBefore(
-   { "cleanup.sql", "seed.sql", "huoltajaperhe.sql", "emilsopimus.sql" })
-   @Cleanup(phase = TestExecutionPhase.NONE)
-   public void testPoistalaskurivi()
-   {
-      laskutusAdmin.laskutaSopimukset();
-      Lasku lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
-      List<Sopimuslasku> sopimuslaskut = entityManager.createQuery("select s from Sopimuslasku s", Sopimuslasku.class)
-         .getResultList();
-      Assert.assertEquals(1, lasku.getLaskurivej‰());
-      Assert.assertEquals(1, sopimuslaskut.size());
-      laskutusAdmin.setLasku(lasku);
-      laskutusAdmin.poistaRivi(lasku.getLaskurivit().iterator().next());
-      entityManager.refresh(lasku);
-      Assert.assertEquals(0, lasku.getLaskurivej‰());
-      entityManager.clear();
-      sopimuslaskut = entityManager.createQuery("select s from Sopimuslasku s", Sopimuslasku.class).getResultList();
-      Assert.assertEquals(0, sopimuslaskut.size());
-   }
+   // @Test
+   // @ApplyScriptBefore(
+   // { "cleanup.sql", "seed.sql", "huoltajaperhe.sql", "emilsopimus.sql" })
+   // @Cleanup(phase = TestExecutionPhase.NONE)
+   // public void testPoistalaskurivi()
+   // {
+   // laskutusAdmin.laskutaSopimukset();
+   // Lasku lasku = entityManager.createQuery("select l from Lasku l",
+   // Lasku.class).getResultList().iterator().next();
+   // List<Sopimuslasku> sopimuslaskut =
+   // entityManager.createQuery("select s from Sopimuslasku s",
+   // Sopimuslasku.class)
+   // .getResultList();
+   // Assert.assertEquals(1, lasku.getLaskurivej‰());
+   // Assert.assertEquals(1, sopimuslaskut.size());
+   // laskutusAdmin.setLasku(lasku);
+   // laskutusAdmin.poistaRivi(lasku.getLaskurivit().iterator().next());
+   // entityManager.refresh(lasku);
+   // Assert.assertEquals(0, lasku.getLaskurivej‰());
+   // entityManager.clear();
+   // sopimuslaskut = entityManager.createQuery("select s from Sopimuslasku s",
+   // Sopimuslasku.class).getResultList();
+   // Assert.assertEquals(0, sopimuslaskut.size());
+   // }
 
    @Test
    @ApplyScriptBefore(
@@ -224,6 +229,34 @@ public class LaskutusTest extends Perustesti
    @ApplyScriptBefore(
    { "cleanup.sql", "seed.sql", "harrastajaperhe.sql", "harrastajasopimukset.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testPoistaTilausSiivoaa()
+   {
+      laskutusAdmin.laskutaSopimukset();
+      entityManager.clear();
+      Assert.assertEquals(1, entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().size());
+      Assert.assertEquals(2, entityManager.createQuery("select sl from Sopimuslasku sl", Sopimuslasku.class)
+         .getResultList().size());
+      Assert.assertEquals(3, entityManager.createQuery("select lr from Laskurivi lr", Laskurivi.class).getResultList()
+         .size());
+      Assert.assertEquals(1, entityManager.createQuery("select b from BlobData b", BlobData.class).getResultList()
+         .size());
+      Lasku lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
+      laskutusAdmin.setLasku(lasku);
+      laskutusAdmin.poistaLasku();
+      entityManager.clear();
+      Assert.assertEquals(0, entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().size());
+      Assert.assertEquals(0, entityManager.createQuery("select sl from Sopimuslasku sl", Sopimuslasku.class)
+         .getResultList().size());
+      Assert.assertEquals(0, entityManager.createQuery("select lr from Laskurivi lr", Laskurivi.class).getResultList()
+         .size());
+      Assert.assertEquals(0, entityManager.createQuery("select b from BlobData b", BlobData.class).getResultList()
+         .size());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "harrastajaperhe.sql", "harrastajasopimukset.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
    public void testRivinPoistoVirkistaaPDFn()
    {
       laskutusAdmin.laskutaSopimukset();
@@ -255,6 +288,22 @@ public class LaskutusTest extends Perustesti
       entityManager.clear();
       lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
       Assert.assertEquals(4, lasku.getLaskurivej‰());
+      Assert.assertNotEquals(koko, lasku.getPdf().getTieto().length);
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "harrastajaperhe.sql", "harrastajasopimukset.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testPoistaLaskuriviVirkistaaPDFn()
+   {
+      laskutusAdmin.laskutaSopimukset();
+      Lasku lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
+      long koko = lasku.getPdf().getTieto().length;
+      laskutusAdmin.setLasku(lasku);
+      laskutusAdmin.poistaRivi(lasku.getLaskurivit().iterator().next());
+      entityManager.clear();
+      lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
       Assert.assertNotEquals(koko, lasku.getPdf().getTieto().length);
    }
 

@@ -87,6 +87,7 @@
 		<ace:column>
 			<h:graphicImage value="/kuvat/alivalikko.png" style="width:24px" id="alivalikko" />
 			<ace:contextMenu for="alivalikko">
+				<ace:menuItem value="Muodosta" action="#{laskutusAdmin.muodostaPDF(_lasku)}" />
 				<ace:menuItem value="Lähetä" action="#{laskutusAdmin.lähetäLasku(_lasku)}" />
 			</ace:contextMenu>
 		</ace:column>

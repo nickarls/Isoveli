@@ -340,15 +340,10 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 
    public void poistaLasku()
    {
-      // lasku.getLaskurivit().forEach(l -> {
-      // l.getSopimus().setLaskurivi(null);
-      // l.setSopimus(null);
-      // entityManager.persist(l);
-      // });
-      // entityManager.remove(lasku);
-      // info("Lasku poistettu");
-      // laskut = null;
-      // haeLaskut();
+      entityManager.remove(lasku);
+      entityManager.flush();
+      info("Lasku poistettu");
+      laskut = null;
    }
 
    public RowStateMap getLaskuRSM()
@@ -385,30 +380,40 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public void tallennaRivi(AjaxBehaviorEvent e)
    {
       lasku = entityManager.merge(lasku);
-      // if (lasku.getPdf() == null)
-      // {
-      // lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()),
-      // teePdfLasku(lasku)));
-      // } else
-      // {
-      // lasku.getPdf().setTieto(teePdfLasku(lasku));
-      // }
+      if (lasku.getPdf() == null)
+      {
+         lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), teePdfLasku(lasku)));
+      } else
+      {
+         lasku.getPdf().setTieto(teePdfLasku(lasku));
+      }
       entityManager.flush();
       info("Rivi muokattu ja lasku tallennettu");
+   }
+
+   public void muodostaPDF(Lasku lasku)
+   {
+      if (lasku.getPdf() == null)
+      {
+         lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), teePdfLasku(lasku)));
+      } else
+      {
+         lasku.getPdf().setTieto(teePdfLasku(lasku));
+      }
+      entityManager.merge(lasku);
    }
 
    public void poistaRivi(Laskurivi laskurivi)
    {
       lasku.getLaskurivit().remove(laskurivi);
       lasku = entityManager.merge(lasku);
-      // if (lasku.getPdf() == null)
-      // {
-      // lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()),
-      // teePdfLasku(lasku)));
-      // } else
-      // {
-      // lasku.getPdf().setTieto(teePdfLasku(lasku));
-      // }
+      if (lasku.getPdf() == null)
+      {
+         lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), teePdfLasku(lasku)));
+      } else
+      {
+         lasku.getPdf().setTieto(teePdfLasku(lasku));
+      }
       entityManager.flush();
       info("Rivi poistettu ja lasku tallennettu");
    }

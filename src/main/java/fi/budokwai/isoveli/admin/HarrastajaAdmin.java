@@ -157,6 +157,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          harrastaja.setIce(uusiPerhe.getOletusICE());
       }
       fokusoi("form:osoite");
+      perheet = null;
    }
 
    public void lisääPerhe()
@@ -178,7 +179,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    {
       if (perheet == null)
       {
-         haePerheet();
+         perheet = entityManager.createNamedQuery("perheet", Perhe.class).getResultList();
       }
       return perheet;
    }
@@ -196,7 +197,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    {
       if (harrastajat == null)
       {
-         haeHarrastajat();
+         harrastajat = entityManager.createNamedQuery("harrastajat", Harrastaja.class).getResultList();
       }
       return harrastajat;
    }
@@ -234,20 +235,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       return harrastaja;
    }
 
-   private void haeHarrastajat()
-   {
-      harrastajat = entityManager.createNamedQuery("harrastajat", Harrastaja.class).getResultList();
-   }
-
-   private void haePerheet()
-   {
-      perheet = entityManager.createNamedQuery("perheet", Perhe.class).getResultList();
-      if (harrastaja != null && harrastaja.getPerhe() != null && harrastaja.getPerhe().isTallentamaton())
-      {
-         perheet.add(harrastaja.getPerhe());
-      }
-   }
-
    public void tallennaHarrastaja()
    {
       if (!validointiOK())
@@ -255,9 +242,13 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          return;
       }
       harrastaja.siivoa();
-      if (harrastaja.getHuoltaja() != null)
+      // if (harrastaja.getHuoltaja() != null)
+      // {
+      // entityManager.merge(harrastaja.getHuoltaja());
+      // }
+      if (harrastaja.getPerhe() != null)
       {
-         entityManager.merge(harrastaja.getHuoltaja());
+         harrastaja.setPerhe(entityManager.merge(harrastaja.getPerhe()));
       }
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
@@ -399,6 +390,10 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       }
    }
 
+   @Inject
+   @Muuttui
+   private Event<EntityManager> x;
+
    public void lisääHuoltaja()
    {
       harrastaja = entityManager.merge(harrastaja);
@@ -406,6 +401,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       entityManager.persist(harrastaja);
       entityManager.flush();
       perheet = null;
+      x.fire(entityManager);
       fokusoi("form:huoltajan_etunimi");
       loggaaja.loggaa("Lisäsi harrastajalle '%s' huoltajan", harrastaja);
    }

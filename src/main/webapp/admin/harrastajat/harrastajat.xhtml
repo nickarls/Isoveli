@@ -1,16 +1,6 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:ace="http://www.icefaces.org/icefaces/components">
-	<h:panelGrid columns="3">
-		<h:commandButton action="#{harrastajaAdmin.lisääHarrastaja}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
-			immediate="true">
-			<f:ajax render="@form" />
-		</h:commandButton>
-		<h:commandButton rendered="#{harrastaja != null}" styleClass="ikoni" action="#{harrastajaAdmin.tallennaHarrastaja}"
-			image="/kuvat/tallenna.jpg" />
-		<h:commandButton rendered="#{harrastaja != null}" styleClass="ikoni"
-			onclick="ice.ace.instance('form:vahvistaHarrastajanPoisto').show();" image="/kuvat/poista.png" immediate="true" />
-	</h:panelGrid>
 	<ace:dataTable value="#{harrastajat}" var="_harrastaja" selectionMode="single" paginator="true"
 		paginatorPosition="bottom" paginatorAlwaysVisible="false" stateMap="#{harrastajaAdmin.harrastajaRSM}" rows="10"
 		rowSelectListener="#{harrastajaAdmin.harrastajaValittu}">
@@ -59,7 +49,16 @@
 			<h:graphicImage value="/kuvat/valittu.png" rendered="#{_harrastaja.arkistoitu}" />
 		</ace:column>
 	</ace:dataTable>
-	<p />
+	<h:panelGrid columns="3">
+		<h:commandButton action="#{harrastajaAdmin.lisääHarrastaja}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
+			immediate="true">
+			<f:ajax render="@form" />
+		</h:commandButton>
+		<h:commandButton rendered="#{harrastaja != null}" styleClass="ikoni" action="#{harrastajaAdmin.tallennaHarrastaja}"
+			image="/kuvat/tallenna.jpg" />
+		<h:commandButton rendered="#{harrastaja != null}" styleClass="ikoni"
+			onclick="ice.ace.instance('form:vahvistaHarrastajanPoisto').show();" image="/kuvat/poista.png" immediate="true" />
+	</h:panelGrid>
 	<ace:tabSet rendered="#{harrastaja != null}" binding="#{harrastajaAdmin.tabi}">
 		<ace:tabPane label="Perustiedot">
 			<ui:include src="perustiedot.xhtml" />

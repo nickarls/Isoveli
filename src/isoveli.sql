@@ -1,4 +1,4 @@
-﻿// LOKI
+// LOKI
 drop table if exists loki;
 create table loki(
 	id int not null auto_increment,

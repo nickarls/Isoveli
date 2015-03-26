@@ -66,7 +66,7 @@ public class Harrastaja extends Henkilö
    private static final long serialVersionUID = 1L;
 
    @OneToOne(cascade =
-   { CascadeType.PERSIST })
+   { CascadeType.PERSIST, CascadeType.MERGE })
    @JoinColumn(name = "huoltaja")
    private Henkilö huoltaja;
 

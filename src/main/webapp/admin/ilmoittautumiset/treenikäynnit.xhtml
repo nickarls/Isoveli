@@ -9,16 +9,6 @@
 			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').hide()" immediate="true" />
 		</h:panelGrid>
 	</ace:confirmationDialog>
-	<h:panelGrid columns="3">
-		<h:commandButton action="#{ilmoittautumisAdmin.lisääTreenikäynti}" styleClass="ikoni" image="/kuvat/lisää.png"
-			immediate="true">
-			<ace:ajax render="@form" />
-		</h:commandButton>
-		<h:commandButton rendered="#{treenikäynti != null}" styleClass="ikoni"
-			action="#{ilmoittautumisAdmin.tallennaTreenikäynti}" image="/kuvat/tallenna.jpg" />
-		<h:commandButton rendered="#{treenikäynti != null}" styleClass="ikoni"
-			onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').show();" image="/kuvat/poista.png" immediate="true" />
-	</h:panelGrid>
 	<ace:dataTable value="#{treenikäynnit}" var="_treenikäynti" selectionMode="single"
 		stateMap="#{ilmoittautumisAdmin.treenikäyntiRSM}" rows="10" paginator="true" paginatorPosition="bottom"
 		paginatorAlwaysVisible="false" rowSelectListener="#{ilmoittautumisAdmin.treenikäyntiValittu}">
@@ -45,7 +35,16 @@
 			<h:outputText value="#{_treenikäynti.treenisessio.treeni.tyyppi.nimi}" class="teksti" />
 		</ace:column>
 	</ace:dataTable>
-	<p />
+	<h:panelGrid columns="3">
+		<h:commandButton action="#{ilmoittautumisAdmin.lisääTreenikäynti}" styleClass="ikoni" image="/kuvat/lisää.png"
+			immediate="true">
+			<ace:ajax render="@form" />
+		</h:commandButton>
+		<h:commandButton rendered="#{treenikäynti != null}" styleClass="ikoni"
+			action="#{ilmoittautumisAdmin.tallennaTreenikäynti}" image="/kuvat/tallenna.jpg" />
+		<h:commandButton rendered="#{treenikäynti != null}" styleClass="ikoni"
+			onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').show();" image="/kuvat/poista.png" immediate="true" />
+	</h:panelGrid>
 	<h:panelGrid columnClasses="tabletop, tabletop" rendered="#{treenikäynti != null}" id="treenikäynti">
 		<ace:panel header="Treenikäynti" styleClass="panel" style="width: 500px">
 			<h:panelGrid columns="2" style="margin-left: 20px;">

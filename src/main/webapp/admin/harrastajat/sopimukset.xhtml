@@ -9,18 +9,6 @@
 			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaSopimuksenPoisto').hide()" immediate="true" />
 		</h:panelGrid>
 	</ace:confirmationDialog>
-	<h:panelGrid columns="3">
-		<h:commandButton action="#{harrastajaAdmin.lisääSopimus()}" styleClass="ikoni" image="/kuvat/lisää.png"
-			immediate="true" stateMap="#{harrastajaAdmin.sopimusRSM}">
-			<ace:ajax render="@form" />
-		</h:commandButton>
-		<h:commandButton rendered="#{sopimus != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
-			action="#{harrastajaAdmin.tallennaSopimus}">
-			<f:ajax execute="@form" render="@form" />
-		</h:commandButton>
-		<h:commandButton styleClass="ikoni" rendered="#{sopimus != null}"
-			onclick="ice.ace.instance('form:vahvistaSopimuksenPoisto').show();" image="/kuvat/poista.png" immediate="true" />
-	</h:panelGrid>
 	<ace:dataTable value="#{harrastaja.sopimukset}" var="_sopimus" selectionMode="single" rows="10" paginator="true"
 		paginatorPosition="bottom" paginatorAlwaysVisible="false" rowSelectListener="#{harrastajaAdmin.sopimusValittu}"
 		stateMap="#{harrastajaAdmin.sopimusRSM}">
@@ -52,7 +40,18 @@
 			</h:outputText>
 		</ace:column>
 	</ace:dataTable>
-	<p />
+	<h:panelGrid columns="3">
+		<h:commandButton action="#{harrastajaAdmin.lisääSopimus()}" styleClass="ikoni" image="/kuvat/lisää.png"
+			immediate="true" stateMap="#{harrastajaAdmin.sopimusRSM}">
+			<ace:ajax render="@form" />
+		</h:commandButton>
+		<h:commandButton rendered="#{sopimus != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
+			action="#{harrastajaAdmin.tallennaSopimus}">
+			<f:ajax execute="@form" render="@form" />
+		</h:commandButton>
+		<h:commandButton styleClass="ikoni" rendered="#{sopimus != null}"
+			onclick="ice.ace.instance('form:vahvistaSopimuksenPoisto').show();" image="/kuvat/poista.png" immediate="true" />
+	</h:panelGrid>
 	<ace:panel header="Sopimustiedot" rendered="#{sopimus != null}" style="width:450px" id="sopimuspanel">
 		<h:panelGrid columns="2">
 			<h:outputText value="Tyyppi" />

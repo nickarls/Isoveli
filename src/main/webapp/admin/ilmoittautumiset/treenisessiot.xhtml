@@ -9,16 +9,6 @@
 			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreenisessionPoisto').hide()" immediate="true"/>
 		</h:panelGrid>
 	</ace:confirmationDialog>
-	<h:panelGrid columns="3">
-		<h:commandButton action="#{ilmoittautumisAdmin.lisääTreenisessio}" styleClass="ikoni"
-			image="/kuvat/lisää.png" immediate="true">
-			<ace:ajax render="@form" />
-			<h:commandButton rendered="#{treenisessio != null}" styleClass="ikoni"
-				action="#{ilmoittautumisAdmin.tallennaTreenisessio}" image="/kuvat/tallenna.jpg" />
-			<h:commandButton rendered="#{treenisessio != null}" styleClass="ikoni"
-				onclick="ice.ace.instance('form:vahvistaTreenisessionPoisto').show();" image="/kuvat/poista.png" immediate="true" />
-		</h:commandButton>
-	</h:panelGrid>
 	<ace:dataTable value="#{kaikkiTreenisessiot}" var="_treenisessio" selectionMode="single"
 		stateMap="#{ilmoittautumisAdmin.treenisessioRSM}" rows="10" paginator="true" paginatorPosition="bottom"
 		paginatorAlwaysVisible="false" rowSelectListener="#{ilmoittautumisAdmin.treenisessioValittu}">
@@ -40,7 +30,16 @@
 			</ui:repeat>
 		</ace:column>
 	</ace:dataTable>
-	<p />
+	<h:panelGrid columns="3">
+		<h:commandButton action="#{ilmoittautumisAdmin.lisääTreenisessio}" styleClass="ikoni"
+			image="/kuvat/lisää.png" immediate="true">
+			<ace:ajax render="@form" />
+			<h:commandButton rendered="#{treenisessio != null}" styleClass="ikoni"
+				action="#{ilmoittautumisAdmin.tallennaTreenisessio}" image="/kuvat/tallenna.jpg" />
+			<h:commandButton rendered="#{treenisessio != null}" styleClass="ikoni"
+				onclick="ice.ace.instance('form:vahvistaTreenisessionPoisto').show();" image="/kuvat/poista.png" immediate="true" />
+		</h:commandButton>
+	</h:panelGrid>
 	<h:panelGrid columns="2" columnClasses="tabletop, tabletop" rendered="#{treenisessio != null}">
 		<ace:panel header="Treenisessio" styleClass="panel" style="width: 500px">
 			<h:panelGrid columns="2" style="margin-left: 20px;">

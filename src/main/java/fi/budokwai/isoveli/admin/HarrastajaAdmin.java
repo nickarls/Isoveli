@@ -390,10 +390,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       }
    }
 
-   @Inject
-   @Muuttui
-   private Event<EntityManager> x;
-
    public void lisääHuoltaja()
    {
       harrastaja = entityManager.merge(harrastaja);
@@ -401,7 +397,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       entityManager.persist(harrastaja);
       entityManager.flush();
       perheet = null;
-      x.fire(entityManager);
       fokusoi("form:huoltajan_etunimi");
       loggaaja.loggaa("Lisäsi harrastajalle '%s' huoltajan", harrastaja);
    }

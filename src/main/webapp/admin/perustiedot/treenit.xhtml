@@ -131,7 +131,7 @@
 					<h:panelGrid>
 						<ace:message for="form:vyöalaraja" />
 						<h:selectOneMenu value="#{treeni.vyöAlaraja}" id="vyöalaraja">
-							<f:selectItem noSelectionOption="true" itemValue="" itemLabel="" />
+							<f:selectItem noSelectionOption="true" itemValue="#{null}" itemLabel="Valitse" />
 							<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}" />
 							<f:converter converterId="objectConverter" />
 						</h:selectOneMenu>
@@ -140,7 +140,7 @@
 					<h:panelGrid>
 						<ace:message for="form:vyöyläraja" />
 						<h:selectOneMenu value="#{treeni.vyöYläraja}" id="vyöyläraja">
-							<f:selectItem noSelectionOption="true" itemValue="" itemLabel="" />
+							<f:selectItem noSelectionOption="true" itemValue="#{null}" itemLabel="Valitse" />
 							<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}" />
 							<f:converter converterId="objectConverter" />
 						</h:selectOneMenu>

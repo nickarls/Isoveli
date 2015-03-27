@@ -114,7 +114,7 @@
 				<ace:panel header="Perhe" styleClass="panel" style="width:450px" rendered="#{!harrastaja.tilapäinen}">
 					<h:panelGrid columns="2">
 						<h:selectOneMenu value="#{harrastaja.perhe}" style="width: 350px">
-							<f:selectItem itemValue="#{null}" itemLabel="" noSelectionItem="true" />
+							<f:selectItem itemValue="#{null}" itemLabel="Valitse" noSelectionItem="true" />
 							<f:selectItems value="#{perheet}" var="_perhe" itemValue="#{_perhe}" itemLabel="#{_perhe.kuvaus}" />
 							<f:converter converterId="objectConverter" />
 							<f:ajax execute="@this form:henkilötietopanel"
@@ -135,7 +135,7 @@
 						<h:panelGrid columns="2">
 							<ace:message for="huoltaja" />
 							<h:selectOneMenu value="#{harrastaja.huoltaja}" required="true" id="huoltaja" style="width: 350px">
-								<f:selectItem itemValue="#{null}" itemLabel="" noSelectionItem="true" />
+								<f:selectItem itemValue="#{null}" itemLabel="Valitse" noSelectionItem="true" />
 								<f:selectItems value="#{harrastaja.perhe.huoltajat}" var="_huoltaja" itemValue="#{_huoltaja}"
 									itemLabel="#{_huoltaja.nimi}" />
 								<f:converter converterId="objectConverter" />

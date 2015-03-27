@@ -58,7 +58,7 @@
 			<h:panelGrid>
 				<ace:message for="form:sopimustyyppi" />
 				<h:selectOneMenu value="#{sopimus.tyyppi}" id="sopimustyyppi" hideNoSelectionOption="true">
-					<f:selectItem itemLabel="Valitse" itemValue="" noSelectionOption="true" />
+					<f:selectItem itemLabel="Valitse" itemValue="#{null}" noSelectionOption="true" />
 					<f:selectItems value="#{sopimustyypit}" var="_sopimustyyppi" itemValue="#{_sopimustyyppi}"
 						itemLabel="#{_sopimustyyppi.nimi}" />
 					<f:converter converterId="objectConverter" />
@@ -85,7 +85,7 @@
 			<h:panelGrid rendered="#{sopimus.tyyppi.kuukausilaskutus}">
 				<ace:message for="form:maksuväli" />
 				<h:selectOneMenu value="#{sopimus.maksuväli}" required="true" id="maksuväli">
-					<f:selectItem itemValue="" itemLabel="" noSelectionOption="true" />
+					<f:selectItem itemValue="#{null}" itemLabel="Valitse" noSelectionOption="true" />
 					<f:selectItem itemValue="1" itemLabel="1kk" />
 					<f:selectItem itemValue="2" itemLabel="2kk" />
 					<f:selectItem itemValue="3" itemLabel="3kk" />

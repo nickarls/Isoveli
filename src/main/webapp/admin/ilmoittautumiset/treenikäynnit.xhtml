@@ -61,7 +61,7 @@
 				<h:panelGrid>
 					<ace:message for="form:treenisessio" />
 					<h:selectOneMenu value="#{treenikäynti.treenisessio}" id="treenisessio" style="width:350px">
-						<f:selectItem itemValue="#{null}" itemLabel="" noSelectionItem="true" />
+						<f:selectItem itemValue="#{null}" itemLabel="Valitse" noSelectionItem="true" />
 						<f:selectItems value="#{kaikkiTreenisessiot}" var="_treenisessio" itemValue="#{_treenisessio}"
 							itemLabel="#{_treenisessio.kuvaus}" />
 						<f:converter converterId="objectConverter" />

@@ -27,9 +27,11 @@ create table asetukset(
 	maksuaikaa number,
 	ylaotsikko varchar(20),
 	huomio varchar(300),
+	ghostscript varchar(100),
+	tulostin varchar(100),
 	constraint pk_asetukset primary key(installaatio)
 );
-insert into asetukset(installaatio, saaja, iban, bic, viitenumero, osoite, postinumero, kaupunki, ytunnus, alvtunnus, puhelin, sahkoposti, kotisivut, viivastysprosentti, maksuaikaa, huomio, ylaotsikko) values ('Budokwai', 'Budokwai ry Taekwondo', 'OKOYFIHH', 'FI04 5711 6140 0501 84', 1, 'Kirstinkatu 1', '20200', 'Turku', '1012368-8', 'FI10123688', '0405960298', 'laskut@budokwai.fi', 'www.budokwai.fi/taekwondo', 5, 14, 'KÄYTTÄKÄÄ AINA\nVIITENUMEROA MAKSAESSANNE', 'LASKU');
+insert into asetukset(installaatio, saaja, iban, bic, viitenumero, osoite, postinumero, kaupunki, ytunnus, alvtunnus, puhelin, sahkoposti, kotisivut, viivastysprosentti, maksuaikaa, huomio, ylaotsikko, ghostscript, tulostin) values ('Budokwai', 'Budokwai ry Taekwondo', 'OKOYFIHH', 'FI04 5711 6140 0501 84', 1, 'Kirstinkatu 1', '20200', 'Turku', '1012368-8', 'FI10123688', '0405960298', 'laskut@budokwai.fi', 'www.budokwai.fi/taekwondo', 5, 14, 'KÄYTTÄKÄÄ AINA\nVIITENUMEROA MAKSAESSANNE', 'LASKU', 'c:/Program Files/gs/gs9.15/bin/gswin64c.exe', '\\KUUTTI\TKU2-RATA-4250');
 
 // OSOITE
 drop table if exists osoite;

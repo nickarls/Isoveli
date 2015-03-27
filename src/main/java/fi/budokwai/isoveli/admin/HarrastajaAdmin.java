@@ -188,6 +188,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    @Named
    public Sopimus getSopimus()
    {
+      System.out.println("Returning " + sopimus);
       return sopimus;
    }
 

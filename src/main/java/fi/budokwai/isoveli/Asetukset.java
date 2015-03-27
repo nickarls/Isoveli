@@ -45,11 +45,9 @@ public class Asetukset implements Serializable
 
    private String puhelin;
 
-   @Transient
-   private String tulostin = "\\\\KUUTTI\\TKU2-RATA-4250";
+   private String tulostin;
 
-   @Transient
-   private String ghostScript = "c:/Program Files/gs/gs9.15/bin/gswin64c.exe";
+   private String ghostScript;
 
    @Column(name = "sahkoposti")
    private String sähköposti;

@@ -31,7 +31,6 @@ import fi.budokwai.isoveli.malli.Viikonpäivä;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Vyökoe;
 import fi.budokwai.isoveli.util.DateUtil;
-import fi.budokwai.isoveli.util.Loggaaja;
 import fi.budokwai.isoveli.util.Muuttui;
 
 @Named
@@ -60,9 +59,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    private RowStateMap rooliRSM = new RowStateMap();
    private RowStateMap treeniRSM = new RowStateMap();
    private RowStateMap sopimustyyppiRSM = new RowStateMap();
-
-   @Inject
-   private Loggaaja loggaaja;
 
    @Inject
    @Muuttui
@@ -569,12 +565,6 @@ public class PerustietoAdmin extends Perustoiminnallisuus
    public void setSopimustyyppi(Sopimustyyppi sopimustyyppi)
    {
       this.sopimustyyppi = sopimustyyppi;
-   }
-
-   public void tallennaAsetukset()
-   {
-      loggaaja.loggaa("Tallensi asetukset");
-      info("Asetukset tallennettu");
    }
 
 }

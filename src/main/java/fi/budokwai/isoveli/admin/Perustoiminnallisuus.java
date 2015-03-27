@@ -1,11 +1,18 @@
 package fi.budokwai.isoveli.admin;
 
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 
 import org.icefaces.util.JavaScriptRunner;
 
+import fi.budokwai.isoveli.util.Loggaaja;
+
 public class Perustoiminnallisuus
 {
+
+   @Inject
+   protected Loggaaja loggaaja;
+
    private String infoViesti = "$().toastmessage('showToast', { text : '%s', position : 'top-right', sticky: false, type : 'success'});";
    private String virheViesti = "$().toastmessage('showToast', { text : '%s', position : 'center', sticky: false, type : 'error', stayTime: 8000});";
 

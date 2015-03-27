@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -43,6 +44,12 @@ public class Asetukset implements Serializable
    private String ALVtunnus;
 
    private String puhelin;
+
+   @Transient
+   private String tulostin = "\\\\KUUTTI\\TKU2-RATA-4250";
+
+   @Transient
+   private String ghostScript = "c:/Program Files/gs/gs9.15/bin/gswin64c.exe";
 
    @Column(name = "sahkoposti")
    private String sähköposti;
@@ -229,8 +236,23 @@ public class Asetukset implements Serializable
       this.huomio = huomio;
    }
 
-   public static long getSerialversionuid()
+   public String getTulostin()
    {
-      return serialVersionUID;
+      return tulostin;
+   }
+
+   public void setTulostin(String tulostin)
+   {
+      this.tulostin = tulostin;
+   }
+
+   public String getGhostScript()
+   {
+      return ghostScript;
+   }
+
+   public void setGhostScript(String ghostScript)
+   {
+      this.ghostScript = ghostScript;
    }
 }

@@ -1,5 +1,6 @@
 package fi.budokwai.isoveli.test.yllapito.laskutus;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -13,14 +14,17 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.google.common.collect.Lists;
+
 import fi.budokwai.isoveli.admin.LaskutusAdmin;
 import fi.budokwai.isoveli.malli.BlobData;
 import fi.budokwai.isoveli.malli.Lasku;
+import fi.budokwai.isoveli.malli.LaskuTila;
 import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
-import fi.budokwai.isoveli.malli.LaskuTila;
 import fi.budokwai.isoveli.test.Perustesti;
 import fi.budokwai.isoveli.util.DateUtil;
+import fi.budokwai.isoveli.util.PrintManager;
 
 @RunWith(Arquillian.class)
 public class LaskutusTest extends Perustesti
@@ -267,6 +271,21 @@ public class LaskutusTest extends Perustesti
       entityManager.clear();
       lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
       Assert.assertNotEquals(koko, lasku.getPdf().getTieto().length);
+   }
+
+   @Inject
+   private PrintManager pm;
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql", "harrastajaperhe.sql", "harrastajasopimukset.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testTulostLasku()
+   {
+      laskutusAdmin.laskutaSopimukset();
+      Lasku lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
+      pm.tulostaPDFt(Arrays.asList(new BlobData[]
+      { lasku.getPdf() }));
    }
 
    @Test

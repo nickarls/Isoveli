@@ -1,11 +1,13 @@
 package fi.budokwai.isoveli.util;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+
+import org.apache.commons.beanutils.PropertyUtils;
 
 @SessionScoped
 public class ObjectStore implements Serializable
@@ -28,7 +30,9 @@ public class ObjectStore implements Serializable
       {
          return null;
       }
-      return entityManager.find(luokka, Integer.parseInt(id));
+      Object tulos = entityManager.find(luokka, Integer.parseInt(id));
+      System.out.println(String.format(">>> %s => %s", key, tulos));
+      return tulos;
    }
 
    public String object2String(Object object)
@@ -38,8 +42,10 @@ public class ObjectStore implements Serializable
          return null;
       }
       String luokkanimi = object.getClass().getName();
-      String id = getId(object).toString();
-      return String.format("%s/%s", luokkanimi, id);
+      int id = getId(object);
+      String result = String.format("%s/%s", luokkanimi, id);
+      System.out.println(String.format(">>> %s => %s", object, result));
+      return result;
    }
 
    private Integer getId(Object object)
@@ -50,12 +56,10 @@ public class ObjectStore implements Serializable
       }
       try
       {
-         Field idField = object.getClass().getDeclaredField("id");
-         idField.setAccessible(true);
-         return (Integer) idField.get(object);
-      } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
+         return (Integer) PropertyUtils.getProperty(object, "id");
+      } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e1)
       {
-         return 0;
+         return null;
       }
    }
 

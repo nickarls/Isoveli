@@ -571,4 +571,10 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       this.sopimustyyppi = sopimustyyppi;
    }
 
+   public void tallennaAsetukset()
+   {
+      loggaaja.loggaa("Tallensi asetukset");
+      info("Asetukset tallennettu");
+   }
+
 }

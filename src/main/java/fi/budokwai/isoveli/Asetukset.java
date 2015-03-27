@@ -7,7 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -25,43 +26,76 @@ public class Asetukset implements Serializable
    @Id
    private String installaatio;
 
+   @NotNull
+   @Size(max = 50)
    private String saaja;
 
+   @NotNull
+   @Size(max = 50)
    private String IBAN;
 
+   @NotNull
+   @Size(max = 50)
    private String BIC;
 
-   private String viitenumero;
+   @NotNull
+   private Integer viitenumero;
 
+   @NotNull
+   @Size(max = 50)
    private String osoite;
 
+   @NotNull
+   @Size(max = 10)
    private String postinumero;
 
+   @NotNull
+   @Size(max = 50)
    private String kaupunki;
 
+   @NotNull
+   @Size(max = 10)
    private String YTunnus;
 
+   @NotNull
+   @Size(max = 10)
    private String ALVtunnus;
 
+   @NotNull
+   @Size(max = 20)
    private String puhelin;
 
+   @NotNull
+   @Size(max = 100)
    private String tulostin;
 
+   @NotNull
+   @Size(max = 100)
    private String ghostScript;
 
    @Column(name = "sahkoposti")
+   @NotNull
+   @Size(max = 50)
    private String sähköposti;
 
+   @NotNull
+   @Size(max = 50)
    private String kotisivut;
 
    @Column(name = "viivastysprosentti")
-   private int viivästysprosentti;
+   @NotNull
+   private Integer viivästysprosentti;
 
-   private int maksuaikaa;
+   @NotNull
+   private Integer maksuaikaa;
 
    @Column(name = "ylaotsikko")
+   @NotNull
+   @Size(max = 20)
    private String yläotsikko;
 
+   @NotNull
+   @Size(max = 300)
    private String huomio;
 
    public String getInstallaatio()
@@ -104,12 +138,12 @@ public class Asetukset implements Serializable
       BIC = bIC;
    }
 
-   public String getViitenumero()
+   public Integer getViitenumero()
    {
       return viitenumero;
    }
 
-   public void setViitenumero(String viitenumero)
+   public void setViitenumero(Integer viitenumero)
    {
       this.viitenumero = viitenumero;
    }
@@ -194,22 +228,22 @@ public class Asetukset implements Serializable
       this.kotisivut = kotisivut;
    }
 
-   public int getViivästysprosentti()
+   public Integer getViivästysprosentti()
    {
       return viivästysprosentti;
    }
 
-   public void setViivästysprosentti(int viivästysprosentti)
+   public void setViivästysprosentti(Integer viivästysprosentti)
    {
       this.viivästysprosentti = viivästysprosentti;
    }
 
-   public int getMaksuaikaa()
+   public Integer getMaksuaikaa()
    {
       return maksuaikaa;
    }
 
-   public void setMaksuaikaa(int maksuaikaa)
+   public void setMaksuaikaa(Integer maksuaikaa)
    {
       this.maksuaikaa = maksuaikaa;
    }

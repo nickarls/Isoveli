@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:ace="http://www.icefaces.org/icefaces/components">
+	<h:panelGrid columns="2">
+		<h:outputText value="ALV-tunnus" />
+		<h:panelGrid>
+			<ace:message for="form:ypalvtunnus" />
+			<h:inputText value="#{asetukset.ALVtunnus}" size="30" id="ypalvtunnus" title="!" />
+		</h:panelGrid>
+		<h:outputText value="BIC" />
+		<h:panelGrid>
+			<ace:message for="form:ypbic" />
+			<h:inputText value="#{asetukset.BIC}" size="30" id="ypbic" />
+		</h:panelGrid>
+		<h:outputText value="Y-tunnus" />
+		<h:panelGrid>
+			<ace:message for="form:ypytunnus" />
+			<h:inputText value="#{asetukset.YTunnus}" size="30" id="ypytunnus" />
+		</h:panelGrid>
+		<h:outputText value="IBAN" />
+		<h:panelGrid>
+			<ace:message for="form:ypiban" />
+			<h:inputText value="#{asetukset.IBAN}" size="30" id="ypiban" />
+		</h:panelGrid>
+		<h:outputText value="GhostScript" />
+		<h:panelGrid>
+			<ace:message for="form:ypghostscript" />
+			<h:inputText value="#{asetukset.ghostScript}" size="30" id="ypghostscript" />
+		</h:panelGrid>
+		<h:outputText value="Huomio" />
+		<h:panelGrid>
+			<ace:message for="form:huomio" />
+			<h:inputText value="#{asetukset.huomio}" size="30" id="huomio" />
+		</h:panelGrid>
+		<h:outputText value="Kaupunki" />
+		<h:panelGrid>
+			<ace:message for="form:ypkaupunki" />
+			<h:inputText value="#{asetukset.kaupunki}" size="30" id="ypkaupunki" />
+		</h:panelGrid>
+		<h:outputText value="Kotisivut" />
+		<h:panelGrid>
+			<ace:message for="form:ypkotisivut" />
+			<h:inputText value="#{asetukset.kotisivut}" size="30" id="ypkotisivut" />
+		</h:panelGrid>
+		<h:outputText value="Maksuaikaa" />
+		<h:panelGrid>
+			<ace:message for="form:ypmaksuaikaa" />
+			<h:inputText value="#{asetukset.maksuaikaa}" size="30" id="ypmaksuaikaa" />
+		</h:panelGrid>
+		<h:outputText value="Osoite" />
+		<h:panelGrid>
+			<ace:message for="form:yposoite" />
+			<h:inputText value="#{asetukset.osoite}" size="30" id="yposoite" />
+		</h:panelGrid>
+		<h:outputText value="Postinumero" />
+		<h:panelGrid>
+			<ace:message for="form:yppostinumero" />
+			<h:inputText value="#{asetukset.postinumero}" size="30" id="yppostinumero" />
+		</h:panelGrid>
+		<h:outputText value="Puhelin" />
+		<h:panelGrid>
+			<ace:message for="form:yppuhelin" />
+			<h:inputText value="#{asetukset.puhelin}" size="30" id="yppuhelin" />
+		</h:panelGrid>
+		<h:outputText value="Puhelin" />
+		<h:panelGrid>
+			<ace:message for="form:ypsaaja" />
+			<h:inputText value="#{asetukset.saaja}" size="30" id="ypsaaja" />
+		</h:panelGrid>
+		<h:outputText value="Sähköposti" />
+		<h:panelGrid>
+			<ace:message for="form:ypsähköposti" />
+			<h:inputText value="#{asetukset.sähköposti}" size="30" id="ypsähköposti" />
+		</h:panelGrid>
+		<h:outputText value="Tulostin" />
+		<h:panelGrid>
+			<ace:message for="form:yptulostin" />
+			<h:inputText value="#{asetukset.tulostin}" size="30" id="yptulostin" />
+		</h:panelGrid>
+		<h:outputText value="Viitenumero" />
+		<h:panelGrid>
+			<ace:message for="form:ypviitenumero" />
+			<h:inputText value="#{asetukset.viitenumero}" size="30" id="ypviitenumero" />
+		</h:panelGrid>
+		<h:outputText value="Viivästysprosentti" />
+		<h:panelGrid>
+			<ace:message for="form:ypviivästysprosentti" />
+			<h:inputText value="#{asetukset.viivästysprosentti}" size="30" id="ypviivästysprosentti" />
+		</h:panelGrid>
+		<h:outputText value="Yläotsikko" />
+		<h:panelGrid>
+			<ace:message for="form:ypyläotsikko" />
+			<h:inputText value="#{asetukset.yläotsikko}" size="30" id="ypyläotsikko" />
+		</h:panelGrid>
+	</h:panelGrid>
+	<h:commandButton styleClass="ikoni" image="/kuvat/tallenna.jpg" action="#{perustietoAdmin.tallennaAsetukset}" />
+</ui:composition>

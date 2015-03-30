@@ -254,19 +254,29 @@ public class DateUtil
          && alkaaPvm.getDayOfMonth() == toinen.getDayOfMonth();
    }
 
-   public static boolean onkoAiemmin(Date alkaa, LocalDate loppu)
+   private static boolean onkoAiemmin(LocalDate alkaa, LocalDate loppuu)
    {
-      return Date2LocalDate(alkaa).isBefore(loppu);
+      return ChronoUnit.DAYS.between(alkaa, loppuu) >= 0;
+   }
+
+   public static boolean onkoAiemmin(Date alkaa, LocalDate loppuu)
+   {
+      return onkoAiemmin(Date2LocalDate(alkaa), loppuu);
    }
 
    public static boolean onkoAiemmin(Date alkaa, Date loppuu)
    {
-      return onkoAiemmin(alkaa, Date2LocalDate(loppuu));
+      return onkoAiemmin(Date2LocalDate(alkaa), Date2LocalDate(loppuu));
    }
 
    public static boolean onkoAikaAiemmin(Date alkaa, Date loppuu)
    {
-      return Date2LocalDateTime(alkaa).isBefore(Date2LocalDateTime(loppuu));
+      return onkoAikaAikaisemmin(Date2LocalDateTime(alkaa), Date2LocalDateTime(loppuu));
+   }
+
+   private static boolean onkoAikaAikaisemmin(LocalDateTime alkaa, LocalDateTime loppuu)
+   {
+      return ChronoUnit.MINUTES.between(alkaa, loppuu) >= 0;
    }
 
    public static String p‰iv‰Tekstiksi(Date p‰iv‰)

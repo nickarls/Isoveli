@@ -1,16 +1,11 @@
 package fi.budokwai.isoveli.malli.validointi;
 
-import java.lang.reflect.InvocationTargetException;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.apache.commons.beanutils.PropertyUtils;
-
 import fi.budokwai.isoveli.malli.Vyöarvo;
-import fi.budokwai.isoveli.malli.Vyökoetilaisuus;
 
-public class VyörajajärjestysValidator implements ConstraintValidator<Vyörajajärjestys, Vyökoetilaisuus>
+public class VyörajajärjestysValidator extends PerusValidator implements ConstraintValidator<Vyörajajärjestys, Object>
 {
    private String alaraja;
    private String yläraja;
@@ -23,11 +18,11 @@ public class VyörajajärjestysValidator implements ConstraintValidator<Vyörajajär
    }
 
    @Override
-   public boolean isValid(Vyökoetilaisuus vyökoetilaisuus, ConstraintValidatorContext context)
+   public boolean isValid(Object olio, ConstraintValidatorContext context)
    {
       context.disableDefaultConstraintViolation();
-      Vyöarvo alaVyö = lueRaja(vyökoetilaisuus, alaraja);
-      Vyöarvo yläVyö = lueRaja(vyökoetilaisuus, yläraja);
+      Vyöarvo alaVyö = lueRaja(olio, alaraja);
+      Vyöarvo yläVyö = lueRaja(olio, yläraja);
       if (alaVyö != null && yläVyö != null && (alaVyö.getJärjestys() < yläVyö.getJärjestys()))
       {
          String viesti = String.format("Ylävyöraja %s ei voi olla alempi kun alaraja %s", alaVyö.getNimi(),
@@ -36,17 +31,6 @@ public class VyörajajärjestysValidator implements ConstraintValidator<Vyörajajär
          return false;
       }
       return true;
-   }
-
-   private Vyöarvo lueRaja(Vyökoetilaisuus vyökoetilaisuus, String kenttä)
-   {
-      try
-      {
-         return (Vyöarvo) PropertyUtils.getProperty(vyökoetilaisuus, kenttä);
-      } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
-      {
-         return Vyöarvo.EI_OOTA;
-      }
    }
 
 }

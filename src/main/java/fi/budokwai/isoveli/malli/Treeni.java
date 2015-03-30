@@ -30,13 +30,21 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
-import fi.budokwai.isoveli.util.DateUtil;
+import fi.budokwai.isoveli.malli.validointi.Ik‰rajaj‰rjestys;
+import fi.budokwai.isoveli.malli.validointi.P‰iv‰m‰‰r‰j‰rjestys;
+import fi.budokwai.isoveli.malli.validointi.Vyˆrajaj‰rjestys;
 import fi.budokwai.isoveli.util.Util;
 
 @Entity
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "treeni")
+@Ik‰rajaj‰rjestys(alaraja = "ik‰Alaraja", yl‰raja = "ik‰Yl‰raja")
+@Vyˆrajaj‰rjestys(alaraja = "vyˆAlaraja", yl‰raja = "vyˆYl‰raja")
+@P‰iv‰m‰‰r‰j‰rjestys.List(
+{
+      @P‰iv‰m‰‰r‰j‰rjestys(alaraja = "alkaa", yl‰raja = "p‰‰ttyy", message = "Treeni ei voi p‰‰tty‰ ennen kun se alkaa", aika = true),
+      @P‰iv‰m‰‰r‰j‰rjestys(alaraja = "voimassaAlkaa", yl‰raja = "voimassaP‰‰ttyy", message = "Voimassaolo ei voi p‰‰tty‰ ennen kun se alkaa", aika = false) })
 @NamedQueries(
 {
       @NamedQuery(name = "tulevat_treenit", query = "select t from Treeni t where t.arkistoitu='E' and nvl(t.ik‰Alaraja, :ik‰) <= :ik‰ and nvl(t.ik‰Yl‰raja, :ik‰) >= :ik‰ and t.p‰iv‰=:p‰iv‰ and t.p‰‰ttyy >= :kello and not exists(select tk from Treenik‰ynti tk, Treenisessio ts where tk.harrastaja=:harrastaja and tk.treenisessio=ts and ts.treeni=t and ts.p‰iv‰ = :t‰n‰‰n)"),
@@ -319,26 +327,6 @@ public class Treeni
    public String getIk‰rajat()
    {
       return Util.getIk‰rajat(ik‰Alaraja, ik‰Yl‰raja);
-   }
-
-   public boolean isRajatRistiss‰()
-   {
-      return (ik‰Alaraja != null && ik‰Yl‰raja != null && (ik‰Alaraja > ik‰Yl‰raja));
-   }
-
-   public boolean isVyˆrajatRistiss‰()
-   {
-      return (vyˆAlaraja != null && vyˆYl‰raja != null && (vyˆAlaraja.getJ‰rjestys() > vyˆYl‰raja.getJ‰rjestys()));
-   }
-
-   public boolean isVoimassaoloRistiss‰()
-   {
-      return (voimassaAlkaa != null && voimassaP‰‰ttyy != null && DateUtil.onkoAiemmin(voimassaP‰‰ttyy, voimassaAlkaa));
-   }
-
-   public boolean isAjankohtaRistiss‰()
-   {
-      return (alkaa != null && p‰‰ttyy != null && DateUtil.onkoAikaAiemmin(p‰‰ttyy, alkaa));
    }
 
    public boolean isArkistoitu()

@@ -1,15 +1,9 @@
 package fi.budokwai.isoveli.malli.validointi;
 
-import java.lang.reflect.InvocationTargetException;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.apache.commons.beanutils.BeanUtils;
-
-import fi.budokwai.isoveli.malli.Vyökoetilaisuus;
-
-public class IkärajajärjestysValidator implements ConstraintValidator<Ikärajajärjestys, Vyökoetilaisuus>
+public class IkärajajärjestysValidator extends PerusValidator implements ConstraintValidator<Ikärajajärjestys, Object>
 {
    private String alaraja;
    private String yläraja;
@@ -22,11 +16,11 @@ public class IkärajajärjestysValidator implements ConstraintValidator<Ikärajajär
    }
 
    @Override
-   public boolean isValid(Vyökoetilaisuus vyökoetilaisuus, ConstraintValidatorContext context)
+   public boolean isValid(Object olio, ConstraintValidatorContext context)
    {
       context.disableDefaultConstraintViolation();
-      Integer alaIkä = lueRaja(vyökoetilaisuus, alaraja);
-      Integer yläIkä = lueRaja(vyökoetilaisuus, yläraja);
+      Integer alaIkä = lueRaja(olio, alaraja);
+      Integer yläIkä = lueRaja(olio, yläraja);
       if (alaIkä != null && yläIkä != null && (yläIkä > alaIkä))
       {
          context.buildConstraintViolationWithTemplate(
@@ -34,23 +28,6 @@ public class IkärajajärjestysValidator implements ConstraintValidator<Ikärajajär
          return false;
       }
       return true;
-   }
-
-   private Integer lueRaja(Vyökoetilaisuus vyökoetilaisuus, String kenttä)
-   {
-      String arvo = null;
-      try
-      {
-         arvo = BeanUtils.getProperty(vyökoetilaisuus, kenttä);
-      } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
-      {
-         return null;
-      }
-      if (arvo == null)
-      {
-         return null;
-      }
-      return Integer.parseInt(arvo);
    }
 
 }

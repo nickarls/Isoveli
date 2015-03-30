@@ -2,6 +2,7 @@ package fi.budokwai.isoveli.admin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,7 @@ import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.validation.ConstraintViolation;
 
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
@@ -244,21 +246,9 @@ public class PerustietoAdmin extends Perustoiminnallisuus
 
    public void tallennaTreeni()
    {
-      if (treeni.isRajatRistissä())
+      if (!validointiOK())
       {
-         throw new IsoveliPoikkeus("Alaikäraja ei voi olla korkeampi kun yläraja");
-      }
-      if (treeni.isVyörajatRistissä())
-      {
-         throw new IsoveliPoikkeus("Vyöalaraja ei voi olla korkeampi kun yläraja");
-      }
-      if (treeni.isVoimassaoloRistissä())
-      {
-         throw new IsoveliPoikkeus("Alkamispäivä ei voi olla päättymispäivän jälkeen");
-      }
-      if (treeni.isAjankohtaRistissä())
-      {
-         throw new IsoveliPoikkeus("Treeni ei voi päättyä ennen kun se alkaa");
+         return;
       }
       treeni = entityManager.merge(treeni);
       entityManager.flush();
@@ -266,6 +256,15 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       treenit = null;
       info("Treeni tallennettu");
       loggaaja.loggaa("Tallensi treenin '%s'", treeni);
+   }
+
+   private boolean validointiOK()
+   {
+      Set<ConstraintViolation<Treeni>> validointivirheet = validator.validate(treeni);
+      validointivirheet.forEach(v -> {
+         virhe(v.getMessage());
+      });
+      return validointivirheet.isEmpty();
    }
 
    public void tallennaVyöarvo()

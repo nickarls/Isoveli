@@ -74,4 +74,17 @@ public class Treenityyppi
    {
       return id == 0;
    }
+
+   @Override
+   public int hashCode()
+   {
+      return Integer.valueOf(id).hashCode();
+   }
+
+   @Override
+   public boolean equals(Object toinen)
+   {
+      Treenityyppi toinenTreenityyppi = (Treenityyppi) toinen;
+      return id == toinenTreenityyppi.getId();
+   }
 }

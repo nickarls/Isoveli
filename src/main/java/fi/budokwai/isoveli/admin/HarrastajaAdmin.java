@@ -20,7 +20,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
 
 import org.icefaces.ace.component.datetimeentry.DateTimeEntry;
 import org.icefaces.ace.component.tabset.TabSet;
@@ -243,10 +242,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
          return;
       }
       harrastaja.siivoa();
-      // if (harrastaja.getHuoltaja() != null)
-      // {
-      // entityManager.merge(harrastaja.getHuoltaja());
-      // }
       if (harrastaja.getPerhe() != null)
       {
          harrastaja.setPerhe(entityManager.merge(harrastaja.getPerhe()));
@@ -272,9 +267,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       info("Harrastaja poistettu");
       loggaaja.loggaa("Poisti harrastajan '%s'", harrastaja);
    }
-
-   @Inject
-   private Validator validator;
 
    public void tallennaVyökoe()
    {

@@ -31,6 +31,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import fi.budokwai.isoveli.util.DateUtil;
+import fi.budokwai.isoveli.util.Util;
 
 @Entity
 @DynamicInsert
@@ -317,19 +318,7 @@ public class Treeni
 
    public String getIk‰rajat()
    {
-      if (ik‰Alaraja == null && ik‰Yl‰raja == null)
-      {
-         return null;
-      } else if (ik‰Alaraja != null && ik‰Yl‰raja == null)
-      {
-         return String.format("%d+", ik‰Alaraja);
-      } else if (ik‰Alaraja == null && ik‰Yl‰raja != null)
-      {
-         return String.format("-%d", ik‰Yl‰raja);
-      } else
-      {
-         return String.format("%d-%d", ik‰Alaraja, ik‰Yl‰raja);
-      }
+      return Util.getIk‰rajat(ik‰Alaraja, ik‰Yl‰raja);
    }
 
    public boolean isRajatRistiss‰()

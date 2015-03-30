@@ -31,7 +31,7 @@ public class ObjectStore implements Serializable
          return null;
       }
       Object tulos = entityManager.find(luokka, Integer.parseInt(id));
-      System.out.println(String.format(">>> %s => %s", key, tulos));
+//      System.out.println(String.format(">>> %s => %s", key, tulos));
       return tulos;
    }
 
@@ -44,7 +44,7 @@ public class ObjectStore implements Serializable
       String luokkanimi = object.getClass().getName();
       int id = getId(object);
       String result = String.format("%s/%s", luokkanimi, id);
-      System.out.println(String.format(">>> %s => %s", object, result));
+//      System.out.println(String.format(">>> %s => %s", object, result));
       return result;
    }
 

@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	<ace:confirmationDialog id="vahvistaVyökoetilaisuudenPoisto" message="Oletko varma?" header="Vahvista" width="350"
+		height="200" closable="true" position="center">
+		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
+			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaHarrastajanPoisto').hide()"
+				actionListener="#{vyökoeAdmin.poistaVyökoetilaisuus}" immediate="true" />
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaVyökoetilaisuudenPoisto').hide()"
+				immediate="true" />
+		</h:panelGrid>
+	</ace:confirmationDialog>
+	<ace:dataTable value="#{vyökoetilaisuudet}" var="_vyökoetilaisuus" stateMap="#{vyökoeAdmin.vyökoetilaisuusRSM}"
+		selectionMode="single" paginator="true" paginatorAlwaysVisible="false"
+		rowSelectListener="#{vyökoeAdmin.vyökoetilaisuusValittu}">
+		<ace:column headerText="Koska">
+			<h:outputText value="#{_vyökoetilaisuus.koska}">
+				<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="EET" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Pitäjä">
+			<h:outputText value="#{_vyökoetilaisuus.vyökokeenPitäjä.nimi}" />
+		</ace:column>
+		<ace:column headerText="Ikäraja">
+			<h:outputText value="#{_vyökoetilaisuus.ikärajat}" />
+		</ace:column>
+		<ace:column headerText="Vyörajat">
+			<h:panelGrid columns="3">
+				<h:graphicImage value="/kuvat/vyöt/#{_vyökoetilaisuus.vyöAlaraja.id}.png" style="height:40px"
+					rendered="#{_vyökoetilaisuus.vyöAlaraja != null}" />
+				<h:outputText value="-" rendered="#{_vyökoetilaisuus.vyöarvorajoitettu}" />
+				<h:graphicImage value="/kuvat/vyöt/#{_vyökoetilaisuus.vyöYläraja.id}.png" style="height:40px"
+					rendered="#{_vyökoetilaisuus.vyöYläraja != null}" />
+			</h:panelGrid>
+		</ace:column>
+	</ace:dataTable>
+	<h:panelGrid columns="3">
+		<h:commandButton action="#{vyökoeAdmin.lisääVyökoetilaisuus}" styleClass="ikoni" image="/kuvat/lisää.png"
+			immediate="true">
+			<f:ajax render="@form" />
+		</h:commandButton>
+		<h:commandButton rendered="#{vyökoetilaisuus != null}" styleClass="ikoni"
+			action="#{vyökoeAdmin.tallennaVyökoetilaisuus}" image="/kuvat/tallenna.jpg" />
+		<h:commandButton rendered="#{vyökoetilaisuus != null}" styleClass="ikoni"
+			onclick="ice.ace.instance('form:vahvistaVyökoetilaisuudenPoisto').show();" image="/kuvat/poista.png" immediate="true" />
+	</h:panelGrid>
+	<ace:panel header="Vyökoetilaisuus" rendered="#{vyökoetilaisuus != null}" styleClass="panel" style="width:450px">
+		<h:panelGrid columns="2">
+			<h:outputText value="Koska" />
+			<h:panelGrid>
+				<ace:message for="form:vktkoska" />
+				<ace:dateTimeEntry value="#{vyökoetilaisuus.koska}" renderAsPopup="true" pattern="dd.MM.yyyy HH:mm" id="vktkoska" />
+			</h:panelGrid>
+			<h:outputText value="Pitäjä" />
+			<h:panelGrid>
+				<ace:message for="form:vktpitäjä" />
+				<h:selectOneMenu value="#{vyökoetilaisuus.vyökokeenPitäjä}" required="true" id="vktpitäjä" style="width: 350px">
+					<f:selectItem itemValue="#{null}" itemLabel="Valitse" noSelectionItem="true" />
+					<f:selectItems value="#{vyökoepitäjät}" var="_pitäjä" itemValue="#{_pitäjä}" itemLabel="#{_pitäjä.nimi}" />
+					<f:converter converterId="objectConverter" />
+				</h:selectOneMenu>
+			</h:panelGrid>
+			<h:outputText value="Vyörajat" />
+			<h:panelGrid columns="3">
+				<h:panelGrid>
+					<ace:message for="form:vktvyöalaraja" />
+					<h:selectOneMenu value="#{vyökoetilaisuus.vyöAlaraja}" id="vktvyöalaraja">
+						<f:selectItem noSelectionOption="true" itemValue="#{null}" itemLabel="Valitse" />
+						<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}" />
+						<f:converter converterId="objectConverter" />
+					</h:selectOneMenu>
+				</h:panelGrid>
+				<h:outputText value="-" />
+				<h:panelGrid>
+					<ace:message for="form:vktvyöyläraja" />
+					<h:selectOneMenu value="#{vyökoetilaisuus.vyöYläraja}" id="vktvyöyläraja">
+						<f:selectItem noSelectionOption="true" itemValue="#{null}" itemLabel="Valitse" />
+						<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}" />
+						<f:converter converterId="objectConverter" />
+					</h:selectOneMenu>
+				</h:panelGrid>
+			</h:panelGrid>
+			<h:outputText value="Ikärajat" />
+			<h:panelGrid columns="3">
+				<h:panelGrid>
+					<ace:message for="form:vktikäalaraja" />
+					<h:inputText value="#{vyökoetilaisuus.ikäAlaraja}" id="vktikäalaraja" size="3" />
+				</h:panelGrid>
+				<h:outputText value="-" />
+				<h:panelGrid>
+					<ace:message for="form:vktikayläraja" />
+					<h:inputText value="#{vyökoetilaisuus.ikäYläraja}" id="vktikäyläraja" size="3" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:panelGrid>
+	</ace:panel>
+</ui:composition>

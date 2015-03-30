@@ -154,6 +154,7 @@ create table rooli(
 insert into rooli(id, nimi) values (1, 'Ylläpitäjä');
 insert into rooli(id, nimi) values (2, 'Treenien vetäjä');
 insert into rooli(id, nimi) values (3, 'Päivystäjä');
+insert into rooli(id, nimi) values (4, 'Vyökokeen pitäjä');
 
 // HENKILOROOLI
 drop table if exists henkilorooli;
@@ -475,6 +476,8 @@ create table vyokoetilaisuus(
 	constraint pk_vyokoetilaisuus primary key(id),
 	constraint vyokoetilaisuus_pitaja_viittaus foreign key(pitaja) references harrastaja(id)
 );
+
+insert into vyokoetilaisuus(id, koska, vyoalaraja, vyoylaraja, ikaalaraja, ikaylaraja, pitaja) values (1, parsedatetime('10.06.2015 18:00', 'dd.MM.yyyy HH:mm'), 2, 6, 10, 14, 1);
 
 drop table if exists vyokokelas;
 create table vyokokelas(

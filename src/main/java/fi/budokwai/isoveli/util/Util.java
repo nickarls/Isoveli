@@ -21,4 +21,21 @@ public class Util
       return null;
    }
 
+   public static String getIkärajat(Integer alaraja, Integer yläraja)
+   {
+      if (alaraja == null && yläraja == null)
+      {
+         return null;
+      } else if (alaraja != null && yläraja == null)
+      {
+         return String.format("%d+", alaraja);
+      } else if (alaraja == null && yläraja != null)
+      {
+         return String.format("-%d", yläraja);
+      } else
+      {
+         return String.format("%d-%d", alaraja, yläraja);
+      }
+   }
+
 }

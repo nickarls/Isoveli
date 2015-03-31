@@ -118,8 +118,11 @@
 					<h:outputText value="#{_vyökokelas.harrastaja.nimi}" />
 				</ace:column>
 				<ace:column headerText="Tavoite">
-					<h:graphicImage value="/kuvat/vyöt/#{vyökoehelper.haeSeuraavaVyöarvo(_vyökokelas.harrastaja).id}.png"
-						style="height:30px" />
+					<h:selectOneMenu value="#{_vyökokelas.tavoite}" id="vkttavoite">
+						<f:selectItem noSelectionOption="true" itemValue="#{null}" itemLabel="Valitse" />
+						<f:selectItems value="#{vyöarvot}" var="_vyöarvo" itemValue="#{_vyöarvo}" itemLabel="#{_vyöarvo.nimi}" />
+						<f:converter converterId="objectConverter" />
+					</h:selectOneMenu>
 				</ace:column>
 				<ace:column headerText="Aika">
 					<h:outputText value="#{vyökoehelper.getJäljelläVyökokeeseen(_vyökokelas.harrastaja).päiviä}" />

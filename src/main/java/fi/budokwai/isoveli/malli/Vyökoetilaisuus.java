@@ -201,7 +201,7 @@ public class Vyökoetilaisuus
       this.harrastajaHaku = harrastajaHaku;
    }
 
-   public void lisääVyökokelas(Harrastaja harrastaja)
+   public void lisääVyökokelas(Harrastaja harrastaja, Vyöarvo uusiVyöarvo)
    {
       Optional<Harrastaja> olemassa = vyökokelaat.stream().map(v -> v.getHarrastaja())
          .filter(h -> h.getNimi().equals(harrastaja.getNimi())).findFirst();
@@ -211,6 +211,7 @@ public class Vyökoetilaisuus
       }
       Vyökokelas vyökokelas = new Vyökokelas(harrastaja);
       vyökokelas.setVyökoetilaisuus(this);
+      vyökokelas.setTavoite(uusiVyöarvo);
       vyökokelaat.add(vyökokelas);
    }
 
@@ -223,7 +224,7 @@ public class Vyökoetilaisuus
       String alaVyö = vyöAlaraja == null ? "" : vyöAlaraja.getNimi();
       String yläVyö = vyöYläraja == null ? "" : vyöYläraja.getNimi();
       return String.format("Vyökoetilaisuus %s (%d kpl), ikä [%s-%s], vyöt [%s-%s], pitäjä %s", pvm,
-         vyökokelaat.size(), alaIkä, yläIkä, alaVyö, yläVyö);
+         vyökokelaat.size(), alaIkä, yläIkä, alaVyö, yläVyö, vyökokeenPitäjä.getNimi());
    }
 
 }

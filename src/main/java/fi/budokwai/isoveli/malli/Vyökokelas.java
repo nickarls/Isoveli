@@ -31,6 +31,11 @@ public class Vyökokelas
    private Harrastaja harrastaja;
 
    @ManyToOne
+   @JoinColumn(name = "tavoite")
+   @NotNull
+   private Vyöarvo tavoite;
+
+   @ManyToOne
    @JoinColumn(name = "vyokoetilaisuus")
    @NotNull
    private Vyökoetilaisuus vyökoetilaisuus;
@@ -130,7 +135,7 @@ public class Vyökokelas
    @Override
    public String toString()
    {
-      return harrastaja.getNimi();
+      return String.format("%s: %s (%s)", harrastaja.getNimi(), tavoite.getNimi(), onnistui);
    }
 
    @Override
@@ -144,5 +149,15 @@ public class Vyökokelas
    {
       Vyökokelas toinenKokelas = (Vyökokelas) toinen;
       return id == toinenKokelas.getId();
+   }
+
+   public Vyöarvo getTavoite()
+   {
+      return tavoite;
+   }
+
+   public void setTavoite(Vyöarvo tavoite)
+   {
+      this.tavoite = tavoite;
    }
 }

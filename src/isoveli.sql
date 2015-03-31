@@ -470,10 +470,10 @@ drop table if exists vyokoetilaisuus;
 create table vyokoetilaisuus(
 	id int not null auto_increment,
 	koska datetime not null,
-	vyoalaraja int not null,
-	vyoylaraja int not null,
-	ikaalaraja int not null,
-	ikaylaraja int not null,
+	vyoalaraja int,
+	vyoylaraja int,
+	ikaalaraja int,
+	ikaylaraja int,
 	pitaja int not null,
 	constraint pk_vyokoetilaisuus primary key(id),
 	constraint vyokoetilaisuus_pitaja_viittaus foreign key(pitaja) references harrastaja(id)
@@ -486,16 +486,18 @@ create table vyokokelas(
 	id int not null auto_increment,
 	vyokoetilaisuus int not null,
 	harrastaja int not null,
+	tavoite int not null,
 	vetajahyvaksynta varchar(1) not null default 'K',
 	maksu varchar(1) not null default 'K',
 	passi varchar(1) not null default 'E',
 	onnistui varchar(1) not null default 'E',
 	constraint uniikki_kokelas unique (harrastaja, vyokoetilaisuus),
+	constraint vyokokelas_vyoarvo_viittaus foreign key(tavoite) references vyoarvo(id),
 	constraint vyokokelas_harrastaja_viittaus foreign key(harrastaja) references harrastaja(id),
 	constraint vyokokelas_tilaisuus_viittaus foreign key(vyokoetilaisuus) references vyokoetilaisuus(id)
 );
 
-insert into vyokokelas(id, vyokoetilaisuus, harrastaja) values (1, 1, 1);
+insert into vyokokelas(id, vyokoetilaisuus, harrastaja, tavoite) values (1, 1, 1, 13);
 
 	
 	

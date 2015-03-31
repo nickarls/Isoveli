@@ -91,7 +91,8 @@ public class VyökoeAdmin extends Perustoiminnallisuus
          .filter(h -> h.getNimi().equals(vyökoetilaisuus.getHarrastajaHaku())).findFirst();
       if (harrastaja.isPresent())
       {
-         vyökoetilaisuus.lisääVyökokelas(harrastaja.get());
+         Vyöarvo uusiVyöarvo = vyökoehelper.haeSeuraavaVyöarvo(harrastaja.get());
+         vyökoetilaisuus.lisääVyökokelas(harrastaja.get(), uusiVyöarvo);
       }
       vyökoetilaisuus = entityManager.merge(vyökoetilaisuus);
       info("Harrastaja %s lisätty ja tilaisuus tallennettu", harrastaja.get().getNimi());

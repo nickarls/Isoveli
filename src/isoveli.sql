@@ -167,6 +167,8 @@ create table henkilorooli(
 );
 insert into henkilorooli(henkilo, rooli) values (1, 1);
 insert into henkilorooli(henkilo, rooli) values (1, 2);
+insert into henkilorooli(henkilo, rooli) values (1, 3);
+insert into henkilorooli(henkilo, rooli) values (1, 4);
 
 // VYOARVO
 drop table if exists vyoarvo;
@@ -485,11 +487,15 @@ create table vyokokelas(
 	vyokoetilaisuus int not null,
 	harrastaja int not null,
 	vetajahyvaksynta varchar(1) not null default 'K',
-	maksukunnossa varchar(1) not null default 'K',
-	tulos varchar(1) not null default 'E',
+	maksu varchar(1) not null default 'K',
+	passi varchar(1) not null default 'E',
+	onnistui varchar(1) not null default 'E',
+	constraint uniikki_kokelas unique (harrastaja, vyokoetilaisuus),
 	constraint vyokokelas_harrastaja_viittaus foreign key(harrastaja) references harrastaja(id),
 	constraint vyokokelas_tilaisuus_viittaus foreign key(vyokoetilaisuus) references vyokoetilaisuus(id)
 );
+
+insert into vyokokelas(id, vyokoetilaisuus, harrastaja) values (1, 1, 1);
 
 	
 	

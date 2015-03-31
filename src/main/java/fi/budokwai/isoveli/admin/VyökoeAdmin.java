@@ -1,11 +1,14 @@
 package fi.budokwai.isoveli.admin;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -15,7 +18,11 @@ import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
 import fi.budokwai.isoveli.malli.Harrastaja;
+import fi.budokwai.isoveli.malli.Vyöarvo;
+import fi.budokwai.isoveli.malli.Vyökoe;
 import fi.budokwai.isoveli.malli.Vyökoetilaisuus;
+import fi.budokwai.isoveli.malli.Vyökokelas;
+import fi.budokwai.isoveli.util.Vyökoehelper;
 
 @Stateful
 @SessionScoped
@@ -44,7 +51,8 @@ public class VyökoeAdmin extends Perustoiminnallisuus
    @Named
    public List<Harrastaja> getVyökoepitäjät()
    {
-      return entityManager.createQuery("select h from Harrastaja h", Harrastaja.class).getResultList();
+      return entityManager.createNamedQuery("vyökokeiden_pitäjät", Harrastaja.class)
+         .setParameter("nimi", "Vyökokeen pitäjä").getResultList();
    }
 
    @Produces
@@ -52,6 +60,54 @@ public class VyökoeAdmin extends Perustoiminnallisuus
    public Vyökoetilaisuus getVyökoetilaisuus()
    {
       return vyökoetilaisuus;
+   }
+
+   @Inject
+   @Named(value = "harrastajat")
+   private Instance<List<Harrastaja>> harrastajat;
+
+   @Inject
+   private Vyökoehelper vyökoehelper;
+
+   public void myönnäVyöarvot()
+   {
+      vyökoetilaisuus = entityManager.merge(vyökoetilaisuus);
+      vyökoetilaisuus.getVyökokelaat().stream().filter(v -> v.isOnnistui()).forEach(v -> {
+         Harrastaja harrastaja = v.getHarrastaja();
+         Vyöarvo vyöarvo = vyökoehelper.haeSeuraavaVyöarvo(harrastaja);
+         Vyökoe vyökoe = new Vyökoe();
+         vyökoe.setHarrastaja(harrastaja);
+         vyökoe.setVyöarvo(vyöarvo);
+         vyökoe.setPäivä(v.getVyökoetilaisuus().getKoska());
+         harrastaja.lisääVyökoe(vyökoe);
+         harrastaja = entityManager.merge(harrastaja);
+      });
+      entityManager.flush();
+   }
+
+   public void harrastajaMuuttui(AjaxBehaviorEvent e)
+   {
+      Optional<Harrastaja> harrastaja = harrastajat.get().stream()
+         .filter(h -> h.getNimi().equals(vyökoetilaisuus.getHarrastajaHaku())).findFirst();
+      if (harrastaja.isPresent())
+      {
+         vyökoetilaisuus.lisääVyökokelas(harrastaja.get());
+      }
+      vyökoetilaisuus = entityManager.merge(vyökoetilaisuus);
+      info("Harrastaja %s lisätty ja tilaisuus tallennettu", harrastaja.get().getNimi());
+      loggaaja.loggaa("Harrastaja '%s' lisätty vyökoetilaisuuteen", harrastaja.get().getNimi());
+   }
+
+   public void poistaVyökokelas(Vyökokelas vyökokelas)
+   {
+      vyökokelas = entityManager.merge(vyökokelas);
+      entityManager.remove(vyökokelas);
+      vyökoetilaisuus.getVyökokelaat().remove(vyökokelas);
+      vyökoetilaisuus = entityManager.merge(vyökoetilaisuus);
+      entityManager.flush();
+      info("Vyökokelas %s poistettu", vyökokelas.getHarrastaja().getNimi());
+      fokusoi("form:etunimi");
+      loggaaja.loggaa("Poisti vyökokelaan '%s'", vyökokelas.getHarrastaja().getNimi());
    }
 
    public void vyökoetilaisuusValittu(SelectEvent e)
@@ -101,7 +157,7 @@ public class VyökoeAdmin extends Perustoiminnallisuus
       return validointivirheet.isEmpty();
    }
 
-   public void poistaVykoetilaisuus()
+   public void poistaVyökoetilaisuus()
    {
       vyökoetilaisuus.poistotarkistus();
       vyökoetilaisuus = entityManager.merge(vyökoetilaisuus);
@@ -121,4 +177,5 @@ public class VyökoeAdmin extends Perustoiminnallisuus
       vyökoetilaisuus = null;
       vyökoetilaisuusRSM = new RowStateMap();
    }
+
 }

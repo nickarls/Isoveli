@@ -48,7 +48,6 @@ public class Vyökoe
 
    @Temporal(TemporalType.DATE)
    @Column(name = "paiva")
-   @Past
    private Date päivä = new Date();
 
    public Vyökoe(Vyöarvo vyöarvo)

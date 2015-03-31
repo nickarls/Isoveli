@@ -1,10 +1,13 @@
 package fi.budokwai.isoveli.malli;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringJoiner;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -65,8 +69,12 @@ public class Vyökoetilaisuus
    @NotNull
    private Harrastaja vyökokeenPitäjä;
 
-   @OneToMany(mappedBy = "vyökoetilaisuus")
+   @OneToMany(mappedBy = "vyökoetilaisuus", cascade =
+   { CascadeType.MERGE }, orphanRemoval = true)
    private List<Vyökokelas> vyökokelaat = new ArrayList<Vyökokelas>();
+
+   @Transient
+   private String harrastajaHaku;
 
    public int getId()
    {
@@ -167,4 +175,55 @@ public class Vyökoetilaisuus
          vyökokelaat.size(), stringJoiner.toString());
       throw new IsoveliPoikkeus(viesti);
    }
+
+   public int getOsallistujia()
+   {
+      return vyökokelaat.size();
+   }
+
+   public List<Vyökokelas> getVyökokelaat()
+   {
+      return vyökokelaat;
+   }
+
+   public void setVyökokelaat(List<Vyökokelas> vyökokelaat)
+   {
+      this.vyökokelaat = vyökokelaat;
+   }
+
+   public String getHarrastajaHaku()
+   {
+      return harrastajaHaku;
+   }
+
+   public void setHarrastajaHaku(String harrastajaHaku)
+   {
+      this.harrastajaHaku = harrastajaHaku;
+   }
+
+   public void lisääVyökokelas(Harrastaja harrastaja)
+   {
+      Optional<Harrastaja> olemassa = vyökokelaat.stream().map(v -> v.getHarrastaja())
+         .filter(h -> h.getNimi().equals(harrastaja.getNimi())).findFirst();
+      if (olemassa.isPresent())
+      {
+         throw new IsoveliPoikkeus(String.format("Harrastaja %s on jo ilmoitettu kokeeseen", harrastaja.getNimi()));
+      }
+      Vyökokelas vyökokelas = new Vyökokelas(harrastaja);
+      vyökokelas.setVyökoetilaisuus(this);
+      vyökokelaat.add(vyökokelas);
+   }
+
+   @Override
+   public String toString()
+   {
+      String pvm = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(koska);
+      String alaIkä = ikäAlaraja == null ? "" : ikäAlaraja.toString();
+      String yläIkä = ikäYläraja == null ? "" : ikäYläraja.toString();
+      String alaVyö = vyöAlaraja == null ? "" : vyöAlaraja.getNimi();
+      String yläVyö = vyöYläraja == null ? "" : vyöYläraja.getNimi();
+      return String.format("Vyökoetilaisuus %s (%d kpl), ikä [%s-%s], vyöt [%s-%s], pitäjä %s", pvm,
+         vyökokelaat.size(), alaIkä, yläIkä, alaVyö, yläVyö);
+   }
+
 }

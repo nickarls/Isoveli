@@ -51,7 +51,8 @@ import fi.budokwai.isoveli.util.DateUtil;
 @NamedQueries(
 {
       @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.jäsennumero=:kortti"),
-      @NamedQuery(name = "treenivetäjät", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi"),
+      @NamedQuery(name = "treenivetäjät", query = "select h from Harrastaja h join h.roolit r where r.nimi=:nimi order by h.sukunimi, h.etunimi"),
+      @NamedQuery(name = "vyökokeiden_pitäjät", query = "select h from Harrastaja h join h.roolit r where r.nimi=:nimi order by h.sukunimi, h.etunimi"),
       @NamedQuery(name = "sama_syntymäpäivä", query = "select h from Harrastaja h where h.syntynyt = :päivä"),
       @NamedQuery(name = "harrastajat", query = "select h from Harrastaja h where h.arkistoitu='E' order by h.sukunimi, h.etunimi"),
       @NamedQuery(name = "harrastajatArq", query = "select h from Harrastaja h order by h.sukunimi, h.etunimi") })

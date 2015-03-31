@@ -3,7 +3,6 @@ package fi.budokwai.isoveli.admin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
@@ -91,7 +90,6 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       if (kaikkivetäjät == null)
       {
          kaikkivetäjät = entityManager.createNamedQuery("treenivetäjät", Harrastaja.class).getResultList();
-         kaikkivetäjät = kaikkivetäjät.stream().filter(h -> h.isTreenienVetäjä()).collect(Collectors.toList());
       }
       if (sessiovetäjät == null)
       {

@@ -59,6 +59,13 @@ public class Vyökoe
    {
    }
 
+   public Vyökoe(Harrastaja harrastaja, Vyöarvo vyöarvo, Date koska)
+   {
+      this.harrastaja = harrastaja;
+      this.vyöarvo = vyöarvo;
+      this.päivä = koska;
+   }
+
    public Date getPäivä()
    {
       return päivä;

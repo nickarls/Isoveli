@@ -75,12 +75,10 @@ public class VyökoeAdmin extends Perustoiminnallisuus
       vyökoetilaisuus.getVyökokelaat().stream().filter(v -> v.isOnnistui()).forEach(v -> {
          Harrastaja harrastaja = v.getHarrastaja();
          Vyöarvo vyöarvo = vyökoehelper.haeSeuraavaVyöarvo(harrastaja);
-         Vyökoe vyökoe = new Vyökoe();
-         vyökoe.setHarrastaja(harrastaja);
-         vyökoe.setVyöarvo(vyöarvo);
-         vyökoe.setPäivä(v.getVyökoetilaisuus().getKoska());
+         Vyökoe vyökoe = new Vyökoe(harrastaja, vyöarvo, v.getVyökoetilaisuus().getKoska());
          harrastaja.lisääVyökoe(vyökoe);
          harrastaja = entityManager.merge(harrastaja);
+         loggaaja.loggaa("Myönsi vyöarvon '%s' harrastajalle '%s'", harrastaja.getNimi(), vyöarvo.getNimi());
       });
       entityManager.flush();
    }

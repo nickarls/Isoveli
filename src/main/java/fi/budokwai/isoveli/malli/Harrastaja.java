@@ -118,6 +118,9 @@ public class Harrastaja extends Henkilö
    @Type(type = "KylläEi")
    private boolean infotiskille;
 
+   @Type(type = "KylläEi")
+   private boolean medialupa;
+   
    @Embedded
    private Jakso tauko = new Jakso();
 
@@ -615,5 +618,15 @@ public class Harrastaja extends Henkilö
       huoltaja.setSukunimi(sukunimi);
       huoltaja.setEtunimi("Huoltaja");
       perhe.lisääPerheenjäsen(huoltaja);
+   }
+
+   public boolean isMedialupa()
+   {
+      return medialupa;
+   }
+
+   public void setMedialupa(boolean medialupa)
+   {
+      this.medialupa = medialupa;
    }
 }

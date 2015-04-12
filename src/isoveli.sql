@@ -129,6 +129,7 @@ create table harrastaja(
 	taukopaattyy date,
 	infotiskille varchar(1) not null default 'E',
 	siirtotreeneja int default 0,
+	medialupa varchar(1) not null default 'K',
 	constraint pk_harrastaja primary key(id),
 	constraint uniikki_jasennumero unique(jasennumero),
 	constraint uniikki_lisenssinumero unique(lisenssinumero),

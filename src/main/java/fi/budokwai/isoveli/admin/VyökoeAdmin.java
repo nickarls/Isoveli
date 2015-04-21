@@ -3,6 +3,7 @@ package fi.budokwai.isoveli.admin;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
@@ -177,4 +178,15 @@ public class VyökoeAdmin extends Perustoiminnallisuus
       vyökoetilaisuusRSM = new RowStateMap();
    }
 
+   public void lisääKokelaita()
+   {
+      List<Harrastaja> kokelaat = entityManager.createNamedQuery("harrastajat", Harrastaja.class).getResultList()
+         .stream().filter(h -> vyökoehelper.onkoKokelas(h, vyökoetilaisuus)).collect(Collectors.toList());
+      kokelaat.forEach(h -> {
+         Vyöarvo vyöarvo = vyökoehelper.haeSeuraavaVyöarvo(h);
+         vyökoetilaisuus.lisääVyökokelas(h, vyöarvo);
+      });
+      vyökoetilaisuus = entityManager.merge(vyökoetilaisuus);
+      entityManager.flush();
+   }
 }

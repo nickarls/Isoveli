@@ -45,7 +45,7 @@
 			<h:outputText value="#{_vyökoetilaisuus.osallistujia}" />
 		</ace:column>
 	</ace:dataTable>
-	<h:panelGrid columns="4">
+	<h:panelGrid columns="5">
 		<h:commandButton action="#{vyökoeAdmin.lisääVyökoetilaisuus}" styleClass="ikoni" image="/kuvat/lisää.png"
 			immediate="true">
 			<f:ajax render="@form" />
@@ -54,6 +54,8 @@
 			action="#{vyökoeAdmin.tallennaVyökoetilaisuus}" image="/kuvat/tallenna.jpg" />
 		<h:commandButton rendered="#{vyökoetilaisuus != null}" styleClass="ikoni"
 			onclick="ice.ace.instance('form:vahvistaVyökoetilaisuudenPoisto').show();" image="/kuvat/poista.png" immediate="true" />
+		<h:commandButton rendered="#{vyökoetilaisuus != null}" styleClass="ikoni" action="#{vyökoeAdmin.lisääKokelaita}"
+			image="/kuvat/tuo.png" />
 		<h:commandButton rendered="#{vyökoetilaisuus != null}" styleClass="ikoni"
 			onclick="ice.ace.instance('form:vahvistaVyöarvomyöntö').show()" image="/kuvat/suorita.png" />
 	</h:panelGrid>

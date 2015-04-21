@@ -35,8 +35,8 @@
 							<f:selectItems value="#{sukupuolet}" />
 						</h:selectOneRadio>
 					</h:panelGrid>
-					<h:outputText value="Medialupa" />
-					<h:panelGrid>
+					<h:outputText value="Medialupa" rendered="#{!harrastaja.tilapäinen}" />
+					<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
 						<ace:message for="form:medialupa" />
 						<h:selectBooleanCheckbox value="#{harrastaja.medialupa}" id="medialupa" />
 					</h:panelGrid>

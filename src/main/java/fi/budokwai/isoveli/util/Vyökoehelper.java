@@ -20,6 +20,7 @@ import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.JäljelläVyökokeeseen;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Vyökoe;
+import fi.budokwai.isoveli.malli.Vyökoetilaisuus;
 
 @SessionScoped
 @Named
@@ -115,5 +116,21 @@ public class Vyökoehelper implements Serializable
    private Vyöarvo haeEnsimmäinenVyöarvo()
    {
       return vyöarvot.iterator().next();
+   }
+
+   public boolean onkoKokelas(Harrastaja harrastaja, Vyökoetilaisuus vyökoetilaisuus)
+   {
+      JäljelläVyökokeeseen jäljellä = getJäljelläVyökokeeseen(harrastaja);
+      boolean minimiajat = (jäljellä.getTreenikertoja() < 0 && jäljellä.getPäiviä() < 0);
+      boolean ikäAlaraja = vyökoetilaisuus.getIkäAlaraja() == null ? true : harrastaja.getIkä() >= vyökoetilaisuus
+         .getIkäAlaraja();
+      boolean ikäYläraja = vyökoetilaisuus.getIkäYläraja() == null ? true : harrastaja.getIkä() <= vyökoetilaisuus
+         .getIkäYläraja();
+      Vyöarvo uusiVyöarvo = haeSeuraavaVyöarvo(harrastaja);
+      boolean vyöAlaraja = vyökoetilaisuus.getVyöAlaraja() == null ? true
+         : uusiVyöarvo.getJärjestys() >= vyökoetilaisuus.getVyöAlaraja().getJärjestys();
+      boolean vyöYläraja = vyökoetilaisuus.getVyöYläraja() == null ? true
+         : uusiVyöarvo.getJärjestys() <= vyökoetilaisuus.getVyöYläraja().getJärjestys();
+      return minimiajat && ikäAlaraja && ikäYläraja && vyöAlaraja && vyöYläraja;
    }
 }

@@ -89,7 +89,7 @@ public class IlmoittautumisAdmin extends Perustoiminnallisuus
       }
       if (kaikkivetäjät == null)
       {
-         kaikkivetäjät = entityManager.createNamedQuery("treenivetäjät", Harrastaja.class).getResultList();
+         kaikkivetäjät = entityManager.createNamedQuery("harrastajat_roolissa", Harrastaja.class).setParameter("rooli", "Treenien vetäjä").getResultList();
       }
       if (sessiovetäjät == null)
       {

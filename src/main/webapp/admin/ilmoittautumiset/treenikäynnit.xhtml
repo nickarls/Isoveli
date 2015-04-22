@@ -52,7 +52,7 @@
 				<h:panelGrid>
 					<ace:message for="form:harrastaja" />
 					<ace:autoCompleteEntry id="harrastaja" value="#{treenikäynti.harrastajaHaku}" rows="10" width="250"
-						filterMatchMode="contains" required="true" requiredMessage="arvo on pakollinen">
+						filterMatchMode="contains">
 						<ace:ajax event="valueChange" listener="#{ilmoittautumisAdmin.harrastajaMuuttui}" />
 						<f:selectItems value="#{harrastajatSI}" />
 					</ace:autoCompleteEntry>

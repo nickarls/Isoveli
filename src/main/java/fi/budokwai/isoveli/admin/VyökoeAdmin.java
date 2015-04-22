@@ -52,7 +52,7 @@ public class VyökoeAdmin extends Perustoiminnallisuus
    @Named
    public List<Harrastaja> getVyökoepitäjät()
    {
-      return entityManager.createNamedQuery("vyökokeiden_pitäjät", Harrastaja.class)
+      return entityManager.createNamedQuery("harrastajat_roolissa", Harrastaja.class)
          .setParameter("nimi", "Vyökokeen pitäjä").getResultList();
    }
 

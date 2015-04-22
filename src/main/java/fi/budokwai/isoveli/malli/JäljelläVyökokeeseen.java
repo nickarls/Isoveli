@@ -54,4 +54,9 @@ public class JäljelläVyökokeeseen
       this.treenikertoja = treenikertoja;
    }
 
+   @Override
+   public String toString()
+   {
+      return String.format("Jäljellä kokeeseen %d päivää ja %d kertaa", päiviä, treenikertoja);
+   }
 }

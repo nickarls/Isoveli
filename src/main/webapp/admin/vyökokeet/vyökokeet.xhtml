@@ -131,7 +131,7 @@
 				</ace:column>
 				<ace:column headerText="Treenit">
 					<h:outputText
-						value="#{_vyökokelas.harrastaja.treenejäViimeVyökokeesta} (#{vyökoehelper.haeSeuraavaVyöarvo(_vyökokelas.harrastaja).minimitreenit})" />
+						value="#{vyökoehelper.getJäljelläVyökokeeseen(_vyökokelas.harrastaja).treenikertoja} (#{vyökoehelper.haeSeuraavaVyöarvo(_vyökokelas.harrastaja).minimitreenit})" />
 				</ace:column>
 				<ace:column headerText="Sop.">
 					<h:graphicImage value="/kuvat/valittu.png" rendered="#{_vyökokelas.harrastaja.sopimuksetOK}" />

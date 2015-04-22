@@ -91,11 +91,15 @@ public class VyökoeAdmin extends Perustoiminnallisuus
       if (harrastaja.isPresent())
       {
          Vyöarvo uusiVyöarvo = vyökoehelper.haeSeuraavaVyöarvo(harrastaja.get());
+         List<String> huomautukset = vyökoehelper.onkoKokelas(harrastaja.get(), vyökoetilaisuus);
+         huomautukset.forEach(h -> {
+            virhe(h);
+         });
          vyökoetilaisuus.lisääVyökokelas(harrastaja.get(), uusiVyöarvo);
+         vyökoetilaisuus = entityManager.merge(vyökoetilaisuus);
+         info("Harrastaja %s lisätty ja tilaisuus tallennettu", harrastaja.get().getNimi());
+         loggaaja.loggaa("Harrastaja '%s' lisätty vyökoetilaisuuteen", harrastaja.get().getNimi());
       }
-      vyökoetilaisuus = entityManager.merge(vyökoetilaisuus);
-      info("Harrastaja %s lisätty ja tilaisuus tallennettu", harrastaja.get().getNimi());
-      loggaaja.loggaa("Harrastaja '%s' lisätty vyökoetilaisuuteen", harrastaja.get().getNimi());
    }
 
    public void poistaVyökokelas(Vyökokelas vyökokelas)
@@ -181,12 +185,19 @@ public class VyökoeAdmin extends Perustoiminnallisuus
    public void lisääKokelaita()
    {
       List<Harrastaja> kokelaat = entityManager.createNamedQuery("harrastajat", Harrastaja.class).getResultList()
-         .stream().filter(h -> vyökoehelper.onkoKokelas(h, vyökoetilaisuus)).collect(Collectors.toList());
+         .stream().filter(h -> vyökoehelper.onkoKokelas(h, vyökoetilaisuus).isEmpty()).collect(Collectors.toList());
       kokelaat.forEach(h -> {
          Vyöarvo vyöarvo = vyökoehelper.haeSeuraavaVyöarvo(h);
          vyökoetilaisuus.lisääVyökokelas(h, vyöarvo);
       });
-      vyökoetilaisuus = entityManager.merge(vyökoetilaisuus);
-      entityManager.flush();
+      if (kokelaat.size() > 0)
+      {
+         vyökoetilaisuus = entityManager.merge(vyökoetilaisuus);
+         entityManager.flush();
+         info("%d kokelasta lisätty ja vyökoetilaisuus tallennettu", kokelaat.size());
+      } else
+      {
+         info("Kokelaita ei löytynyt");
+      }
    }
 }

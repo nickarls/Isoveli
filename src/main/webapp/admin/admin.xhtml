@@ -85,6 +85,12 @@
 				</ace:tabPane>
 			</ace:tabSet>
 			<h:outputText value="#{kirjautunutHenkilö.info}" />
+			<h:panelGrid columns="2" style="float:right">
+				<h:selectBooleanCheckbox value="#{harrastajaAdmin.arkiiviMoodi}">
+					<f:ajax />
+				</h:selectBooleanCheckbox>
+				<h:outputText value="arq" />
+			</h:panelGrid>
 		</h:form>
 	</f:view>
 </h:body>

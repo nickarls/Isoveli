@@ -54,6 +54,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    private Harrastaja harrastaja;
    private Sopimus sopimus;
    private Vyökoe vyökoe;
+   private boolean arkiiviMoodi;
 
    private RowStateMap harrastajaRSM = new RowStateMap();
    private RowStateMap vyökoeRSM = new RowStateMap();
@@ -524,6 +525,16 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void setVyökoe(Vyökoe vyökoe)
    {
       this.vyökoe = vyökoe;
+   }
+
+   public boolean isArkiiviMoodi()
+   {
+      return arkiiviMoodi;
+   }
+
+   public void setArkiiviMoodi(boolean arkiiviMoodi)
+   {
+      this.arkiiviMoodi = arkiiviMoodi;
    }
 
 }

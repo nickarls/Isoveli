@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,6 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SortComparator;
 import org.hibernate.annotations.Type;
 
 import fi.budokwai.isoveli.malli.validointi.UniikkiHenkilö;
@@ -364,6 +364,17 @@ public class Henkilö implements Serializable
    public void setViestilaatikot(List<Viestilaatikko> viestilaatikot)
    {
       this.viestilaatikot = viestilaatikot;
+   }
+
+   public List<Viesti> getSaapuvatViestit()
+   {
+      Optional<Viestilaatikko> saapuvat = viestilaatikot.stream()
+         .filter(v -> v.getTyyppi().equals(Viestilaatikkotyypi.I)).findFirst();
+      if (!saapuvat.isPresent())
+      {
+         return new ArrayList<>();
+      }
+      return saapuvat.get().getViestit().stream().map(v -> v.getViesti()).collect(Collectors.toList());
    }
 
 }

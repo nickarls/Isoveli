@@ -53,6 +53,7 @@
 			<h:commandLink action="#{exceptionHandler.tapaSessio()}" value="Kirjaudu ulos" />
 			<ace:tabSet binding="#{käyttäjäylläpito.tabi}">
 				<ui:include src="perustiedot.xhtml" />
+				<ui:include src="viestit.xhtml"/>
 				<c:if test="#{kohde.harrastaja}">
 					<ui:include src="treenikäynnit.xhtml" />
 				</c:if>

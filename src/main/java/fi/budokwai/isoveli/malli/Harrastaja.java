@@ -120,6 +120,10 @@ public class Harrastaja extends Henkilö
    @Type(type = "KylläEi")
    private boolean medialupa;
    
+   private String koulutus;
+   
+   private String tulokset;
+   
    @Embedded
    private Jakso tauko = new Jakso();
 
@@ -627,5 +631,25 @@ public class Harrastaja extends Henkilö
    public void setMedialupa(boolean medialupa)
    {
       this.medialupa = medialupa;
+   }
+
+   public String getKoulutus()
+   {
+      return koulutus;
+   }
+
+   public void setKoulutus(String koulutus)
+   {
+      this.koulutus = koulutus;
+   }
+
+   public String getTulokset()
+   {
+      return tulokset;
+   }
+
+   public void setTulokset(String tulokset)
+   {
+      this.tulokset = tulokset;
    }
 }

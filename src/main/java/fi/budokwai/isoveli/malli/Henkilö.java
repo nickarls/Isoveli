@@ -20,6 +20,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -30,6 +31,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SortComparator;
 import org.hibernate.annotations.Type;
 
 import fi.budokwai.isoveli.malli.validointi.UniikkiHenkilö;
@@ -83,7 +85,7 @@ public class Henkilö implements Serializable
    protected List<Rooli> roolit = new ArrayList<Rooli>();
 
    @ManyToOne(cascade =
-   { CascadeType.PERSIST})
+   { CascadeType.PERSIST })
    @JoinColumn(name = "perhe")
    protected Perhe perhe;
 
@@ -99,6 +101,10 @@ public class Henkilö implements Serializable
 
    @Temporal(TemporalType.DATE)
    protected Date luotu = new Date();
+
+   @OneToMany(mappedBy = "omistaja", cascade =
+   { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
+   private List<Viestilaatikko> viestilaatikot = new ArrayList<>();
 
    public void siivoa()
    {
@@ -348,6 +354,16 @@ public class Henkilö implements Serializable
    public int hashCode()
    {
       return Integer.valueOf(id).hashCode();
+   }
+
+   public List<Viestilaatikko> getViestilaatikot()
+   {
+      return viestilaatikot;
+   }
+
+   public void setViestilaatikot(List<Viestilaatikko> viestilaatikot)
+   {
+      this.viestilaatikot = viestilaatikot;
    }
 
 }

@@ -76,6 +76,12 @@
 			<ui:include src="roolit.xhtml" />
 		</ace:tabPane>
 		<ace:tabPane label="Tulokset">
+			<ace:textAreaEntry rows="20" cols="50" value="#{harrastaja.tulokset}">
+			</ace:textAreaEntry>
+		</ace:tabPane>
+		<ace:tabPane label="Koulutus">
+			<ace:textAreaEntry rows="20" cols="50" value="#{harrastaja.koulutus}" >
+			</ace:textAreaEntry>
 		</ace:tabPane>
 	</ace:tabSet>
 </ui:composition>

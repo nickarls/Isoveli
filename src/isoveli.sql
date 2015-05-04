@@ -130,6 +130,8 @@ create table harrastaja(
 	infotiskille varchar(1) not null default 'E',
 	siirtotreeneja int default 0,
 	medialupa varchar(1) not null default 'K',
+	koulutus varchar(4000),
+	tulokset varchar(4000),
 	constraint pk_harrastaja primary key(id),
 	constraint uniikki_jasennumero unique(jasennumero),
 	constraint uniikki_lisenssinumero unique(lisenssinumero),
@@ -492,6 +494,7 @@ create table vyokokelas(
 	maksu varchar(1) not null default 'K',
 	passi varchar(1) not null default 'E',
 	onnistui varchar(1) not null default 'E',
+	constraint pk_vyokokelas primary key(id),
 	constraint uniikki_kokelas unique (harrastaja, vyokoetilaisuus),
 	constraint vyokokelas_vyoarvo_viittaus foreign key(tavoite) references vyoarvo(id),
 	constraint vyokokelas_harrastaja_viittaus foreign key(harrastaja) references harrastaja(id),
@@ -500,5 +503,42 @@ create table vyokokelas(
 
 insert into vyokokelas(id, vyokoetilaisuus, harrastaja, tavoite) values (1, 1, 1, 13);
 
+drop table if exists viesti;
+create table viesti(
+	id int not null auto_increment,
+	otsikko varchar(100) not null,
+	sisalto varchar(4000) not null,
+	lahettaja int not null,
+	vastaanottajat varchar(4000) not null,
+	luotu datetime not null,
+	constraint pk_viesti primary key(id),
+	constraint viesti_lahettaja_viittaus foreign key(lahettaja) references harrastaja(id)
+);
+
+insert into viesti(id, otsikko, sisalto, lahettaja, vastaanottajat, luotu) values (1, 'otsikko', 'sisaltö', 1, 'Kaikki', parsedatetime('10.06.2015 18:00', 'dd.MM.yyyy HH:mm'));
+
+drop table if exists viestilaatikko;
+create table viestilaatikko (
+	id int not null auto_increment,
+	omistaja int not null,
+	tyyppi varchar(1) not null,
+	constraint pk_viestilaatikko primary key(id),
+	constraint uniikki_viestilaatikko unique (omistaja, tyyppi),
+	constraint henkiloviesti_omistaja_viittaus foreign key(omistaja) references henkilo(id)
+);
+
+insert into viestilaatikko (id, omistaja, tyyppi) values (1, 1, 'I');
+
+drop table if exists henkiloviesti;
+create table henkiloviesti(
+	id int not null auto_increment,
+	viesti int not null,
+	viestilaatikko int not null,
+	luettu varchar(1) not null default 'E',
+	arkistoitu varchar(1) not null default 'E',
+	constraint pk_henkiloviesti primary key(id),
+	constraint uniikki_viesti unique (viesti, viestilaatikko),
+	constraint henkiloviesti_viestilaatikko_viittaus foreign key(viestilaatikko) references viestilaatikko(id)
+);
 	
-	
+insert into henkiloviesti(id, viesti, viestilaatikko) values (1, 1, 1);	

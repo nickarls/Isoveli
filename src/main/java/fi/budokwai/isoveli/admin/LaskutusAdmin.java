@@ -322,7 +322,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    {
       lasku = (Lasku) e.getObject();
    }
-
+   
    public void sopimusValittu(SelectEvent e)
    {
       sopimus = (Sopimus) e.getObject();

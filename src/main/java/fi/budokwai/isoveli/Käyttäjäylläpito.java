@@ -28,8 +28,11 @@ import fi.budokwai.isoveli.admin.Perustoiminnallisuus;
 import fi.budokwai.isoveli.malli.BlobData;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
+import fi.budokwai.isoveli.malli.Henkilöviesti;
 import fi.budokwai.isoveli.malli.JäljelläVyökokeeseen;
 import fi.budokwai.isoveli.malli.Tiedostotyyppi;
+import fi.budokwai.isoveli.malli.Viestilaatikko;
+import fi.budokwai.isoveli.malli.Viestilaatikkotyypi;
 import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.malli.Vyökoe;
 import fi.budokwai.isoveli.util.Kirjautunut;
@@ -57,6 +60,10 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
 
    private RowStateMap vyökoeRSM = new RowStateMap();
    private Vyökoe vyökoe;
+
+   private RowStateMap viestiRSM = new RowStateMap();
+   private Henkilöviesti viesti;
+
    private TabSet tabi;
 
    @PostConstruct
@@ -64,6 +71,23 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    {
       itse = entityManager.merge(itse);
       ylläpidettävä = itse;
+   }
+
+   @Produces
+   @Named
+   public Henkilöviesti getViesti()
+   {
+      return viesti;
+   }
+
+   public void arkistoiViesti()
+   {
+      Viestilaatikko saapuvat = ylläpidettävä.getViestilaatikko(Viestilaatikkotyypi.I);
+      Viestilaatikko arkisto = ylläpidettävä.getViestilaatikko(Viestilaatikkotyypi.A);
+      saapuvat.poistaViesti(viesti);
+      arkisto.lisääViesti(viesti);
+      saapuvat = entityManager.merge(saapuvat);
+      arkisto = entityManager.merge(arkisto);
    }
 
    public void esifokus()
@@ -152,6 +176,13 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    public void vyökoeValittu(SelectEvent e)
    {
       vyökoe = (Vyökoe) e.getObject();
+   }
+
+   public void viestiValittu(SelectEvent e)
+   {
+      viesti = (Henkilöviesti) e.getObject();
+      viesti.setLuettu(true);
+      viesti = entityManager.merge(viesti);
    }
 
    public void kuvatallennus(FileEntryEvent event) throws IOException
@@ -254,6 +285,16 @@ public class Käyttäjäylläpito extends Perustoiminnallisuus
    public void setYlläpidettävä(Henkilö ylläpidettävä)
    {
       this.ylläpidettävä = ylläpidettävä;
+   }
+
+   public RowStateMap getViestiRSM()
+   {
+      return viestiRSM;
+   }
+
+   public void setViestiRSM(RowStateMap viestiRSM)
+   {
+      this.viestiRSM = viestiRSM;
    }
 
 }

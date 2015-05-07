@@ -4,19 +4,35 @@
 	<ace:tabPane label="Viestit">
 		<ace:tabSet>
 			<ace:tabPane label="Saapuvat">
-				<ace:dataTable value="#{kohde.saapuvatViestit}" var="_viesti">
+				<ace:dataTable value="#{kohde.saapuvatViestit}" var="_hviesti" rows="10" paginator="true" paginatorPosition="bottom"
+					paginatorAlwaysVisible="false" selectionMode="single" rowSelectListener="#{käyttäjäylläpito.viestiValittu}"
+					stateMap="#{käyttäjäylläpito.viestiRSM}">
 					<ace:column headerText="Lähetetty">
-						<h:outputText value="#{_viesti.luotu}">
+						<h:outputText value="#{_hviesti.viesti.luotu}">
 							<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="EET" />
 						</h:outputText>
 					</ace:column>
 					<ace:column headerText="Otsikko">
-						<h:outputText value="#{_viesti.otsikko}" />
+						<h:outputText value="#{_hviesti.viesti.otsikko}" />
 					</ace:column>
 					<ace:column headerText="Lähettäjä">
-						<h:outputText value="#{_viesti.lähettäjä.nimi}" />
+						<h:outputText value="#{_hviesti.viesti.lähettäjä.nimi}" />
+					</ace:column>
+					<ace:column headerText="Uusi">
+						<h:outputText value="*" rendered="#{!_hviesti.luettu}"/>
 					</ace:column>
 				</ace:dataTable>
+				<h:panelGrid rendered="#{viesti != null}">
+					<h:panelGrid columns="2">
+						<h:outputText value="#{viesti.viesti.otsikko}" />
+						<h:outputText value="#{viesti.viesti.luotu}">
+							<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="EET" />
+						</h:outputText>
+					</h:panelGrid>
+					<h:outputText value="#{viesti.viesti.lähettäjä.nimi}" />
+					<h:outputText value="#{viesti.viesti.sisältö}" />
+				</h:panelGrid>
+				<h:commandButton action="#{käyttäjäylläpito.arkistoiViesti}" value="A" rendered="#{viesti != null}"/>
 			</ace:tabPane>
 			<ace:tabPane label="Arkistoidut">
 			</ace:tabPane>

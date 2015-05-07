@@ -3,6 +3,7 @@ package fi.budokwai.isoveli.malli;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -36,9 +37,20 @@ public class Viestilaatikko
    @Enumerated(EnumType.STRING)
    private Viestilaatikkotyypi tyyppi;
 
-   @OneToMany(mappedBy = "viestilaatikko")
-   private List<Henkilöviesti> viestit = new ArrayList<>();   
-   
+   @OneToMany(mappedBy = "viestilaatikko", cascade =
+   { CascadeType.MERGE }, orphanRemoval = true)
+   private List<Henkilöviesti> viestit = new ArrayList<>();
+
+   public Viestilaatikko()
+   {
+   }
+
+   public Viestilaatikko(Henkilö omistaja, Viestilaatikkotyypi tyyppi)
+   {
+      this.omistaja = omistaja;
+      this.tyyppi = tyyppi;
+   }
+
    public int getId()
    {
       return id;
@@ -79,5 +91,14 @@ public class Viestilaatikko
       this.viestit = viestit;
    }
 
+   public void poistaViesti(Henkilöviesti viesti)
+   {
+      viestit.remove(viesti);
+   }
+
+   public void lisääViesti(Henkilöviesti viesti)
+   {
+      viestit.add(viesti);
+   }
 
 }

@@ -366,7 +366,7 @@ public class Henkilö implements Serializable
       this.viestilaatikot = viestilaatikot;
    }
 
-   public List<Viesti> getSaapuvatViestit()
+   public List<Henkilöviesti> getSaapuvatViestit()
    {
       Optional<Viestilaatikko> saapuvat = viestilaatikot.stream()
          .filter(v -> v.getTyyppi().equals(Viestilaatikkotyypi.I)).findFirst();
@@ -374,7 +374,16 @@ public class Henkilö implements Serializable
       {
          return new ArrayList<>();
       }
-      return saapuvat.get().getViestit().stream().map(v -> v.getViesti()).collect(Collectors.toList());
+      return saapuvat.get().getViestit();
+   }
+
+   public Viestilaatikko getViestilaatikko(Viestilaatikkotyypi tyyppi)
+   {
+      Optional<Viestilaatikko> viestilaatikko = viestilaatikot.stream().filter(v -> v.getTyyppi().equals(tyyppi)).findFirst();
+      if (viestilaatikko.isPresent()) {
+         return viestilaatikko.get();
+      }
+      return new Viestilaatikko(this, tyyppi);
    }
 
 }

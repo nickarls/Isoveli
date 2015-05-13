@@ -17,6 +17,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import fi.budokwai.isoveli.IsoveliPoikkeus;
+import fi.budokwai.isoveli.malli.BlobData;
 import jxl.Workbook;
 import jxl.format.Alignment;
 import jxl.write.DateFormat;
@@ -26,15 +28,14 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
-import fi.budokwai.isoveli.IsoveliPoikkeus;
-import fi.budokwai.isoveli.malli.BlobData;
 
 @Stateless
 @Startup
 public class DBExport
 {
 
-   @Resource//(lookup = "java:jboss/datasources/IsoveliDSXA")
+   @Resource
+   // (lookup = "java:jboss/datasources/IsoveliDSXA")
    private DataSource tietolähde;
 
    private class Saraketieto
@@ -57,10 +58,10 @@ public class DBExport
    @Inject
    private Loggaaja loggaja;
 
-//   @Schedule(minute = "*/1", hour = "*", persistent = false)
+   // @Schedule(minute = "*/1", hour = "*", persistent = false)
    public void teeVarmuuskopio()
    {
-//      loggaja.loggaa("Tekee varmuuskopioinnin");
+      // loggaja.loggaa("Tekee varmuuskopioinnin");
       byte[] xls = dumppaaKanta();
       String otsikko = String.format("Varmuuskopio %s", new SimpleDateFormat("dd.MM.yyyy").format(new Date()));
       BlobData tiedosto = BlobData.ZIP("isoveli.xls", xls);
@@ -102,8 +103,8 @@ public class DBExport
 
    }
 
-   private void tallennaTaulu(String taulu, Connection kanta, WritableWorkbook xls) throws SQLException,
-      RowsExceededException, WriteException
+   private void tallennaTaulu(String taulu, Connection kanta, WritableWorkbook xls)
+      throws SQLException, RowsExceededException, WriteException
    {
       WritableSheet välilehti = xls.createSheet(taulu.toLowerCase(), 0);
       ResultSet tulos = kanta.prepareStatement(String.format("select * from %s", taulu)).executeQuery();
@@ -181,8 +182,9 @@ public class DBExport
    private List<String> haeTaulunimet(Connection kanta) throws SQLException
    {
       List<String> nimet = new ArrayList<>();
-      ResultSet tulos = kanta.prepareStatement(
-         "select table_name from information_schema.tables where table_catalog ='ISOVELI' and table_type='TABLE'")
+      ResultSet tulos = kanta
+         .prepareStatement(
+            "select table_name from information_schema.tables where table_catalog ='ISOVELI' and table_type='TABLE'")
          .executeQuery();
       while (tulos.next())
       {
@@ -190,5 +192,6 @@ public class DBExport
       }
       return nimet;
    }
+
 
 }

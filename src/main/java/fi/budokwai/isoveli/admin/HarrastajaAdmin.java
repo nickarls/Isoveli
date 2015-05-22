@@ -1,7 +1,9 @@
 package fi.budokwai.isoveli.admin;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +29,7 @@ import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
 import fi.budokwai.isoveli.IsoveliPoikkeus;
+import fi.budokwai.isoveli.malli.BlobData;
 import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Osoite;
@@ -41,6 +44,8 @@ import fi.budokwai.isoveli.malli.Vyökoe;
 import fi.budokwai.isoveli.util.DateUtil;
 import fi.budokwai.isoveli.util.Loggaaja;
 import fi.budokwai.isoveli.util.Muuttui;
+import fi.budokwai.isoveli.util.PrintManager;
+import fi.budokwai.isoveli.util.Tilapäiskortti;
 import fi.budokwai.isoveli.util.Vyökoehelper;
 
 @Named
@@ -535,6 +540,21 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void setArkiiviMoodi(boolean arkiiviMoodi)
    {
       this.arkiiviMoodi = arkiiviMoodi;
+   }
+
+   public void tulostaTilapäisenMateriaalit() throws IOException
+   {
+      tulostaTilapäinenHarjoittelukortti();
+   }
+
+   @Inject
+   private PrintManager printManger;
+
+   private void tulostaTilapäinenHarjoittelukortti() throws IOException
+   {
+      byte[] kuva = Tilapäiskortti.teeKortti(harrastaja.getNimi(), harrastaja.getId() + 10000 + "");
+      printManger.tulostaTiedostot(Arrays.asList(new BlobData[]
+      { BlobData.PDF("kortti", kuva) }));
    }
 
 }

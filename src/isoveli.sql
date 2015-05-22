@@ -85,6 +85,8 @@ create table blobdata(
 	constraint uniikki_blobavain unique(avain)	
 );
 
+
+
 // HENKILÖ
 drop table if exists henkilo;
 create table henkilo(

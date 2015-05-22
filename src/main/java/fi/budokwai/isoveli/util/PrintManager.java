@@ -2,6 +2,7 @@ package fi.budokwai.isoveli.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +22,9 @@ import fi.budokwai.isoveli.Asetukset;
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.BlobData;
 
-public class PrintManager
+public class PrintManager implements Serializable
 {
+   private static final long serialVersionUID = 1L;
 
    @Inject
    private Asetukset asetukset;
@@ -30,21 +32,21 @@ public class PrintManager
    @Inject
    private Loggaaja loggaaja;
 
-   public void tulostaPDFt(List<BlobData> tiedostot)
+   public void tulostaTiedostot(List<BlobData> blobDatat)
    {
       File temppihakemisto = Files.createTempDir();
       try
       {
-         List<File> pdfTiedostot = tallennaPDFt(tiedostot, temppihakemisto);
-         for (File pdf : pdfTiedostot)
+         List<File> tiedostot = tallennaTiedostot(blobDatat, temppihakemisto);
+         for (File tiedosto : tiedostot)
          {
-            CommandLine komento = getCommandLine(pdf);
+            CommandLine komento = getCommandLine(tiedosto);
             suorita(komento, temppihakemisto);
          }
-         loggaaja.loggaa("Tulosti %d tiedostoa tulostimelle '%s'", tiedostot.size(), asetukset.getTulostin());
+         loggaaja.loggaa("Tulosti %d tiedostoa tulostimelle '%s'", blobDatat.size(), asetukset.getTulostin());
       } catch (IOException | InterruptedException e)
       {
-         throw new IsoveliPoikkeus(String.format("Virhe PDF-tulostuksessa", e));
+         throw new IsoveliPoikkeus(String.format("Virhe tulostuksessa", e));
       } finally
       {
          try
@@ -52,35 +54,40 @@ public class PrintManager
             FileUtils.forceDelete(temppihakemisto);
          } catch (IOException e)
          {
-            throw new IsoveliPoikkeus(String.format("Temppihakemiston '%s' poistaminen epäonnistui",
-               temppihakemisto.getAbsolutePath()), e);
+            throw new IsoveliPoikkeus(
+               String.format("Temppihakemiston '%s' poistaminen epäonnistui", temppihakemisto.getAbsolutePath()), e);
          }
       }
    }
 
-   private List<File> tallennaPDFt(List<BlobData> pdft, File temppihakemisto) throws IOException
+   private List<File> tallennaTiedostot(List<BlobData> blobDatat, File temppihakemisto) throws IOException
    {
-      List<File> pdfTiedostot = new ArrayList<>();
-      for (BlobData pdf : pdft)
+      List<File> tiedostot = new ArrayList<>();
+      for (BlobData blobData : blobDatat)
       {
-         File pdfTiedosto = File.createTempFile("lasku", ".pdf", temppihakemisto);
-         FileUtils.writeByteArrayToFile(pdfTiedosto, pdf.getTieto());
-         pdfTiedostot.add(pdfTiedosto);
+         File tiedosto = File.createTempFile(blobData.getNimi(), String.format(".%s", blobData.getTyyppi()),
+            temppihakemisto);
+         FileUtils.writeByteArrayToFile(tiedosto, blobData.getTieto());
+         tiedostot.add(tiedosto);
       }
-      return pdfTiedostot;
+      return tiedostot;
    }
 
-   private void suorita(CommandLine komento, File temppihakemisto) throws ExecuteException, IOException,
-      InterruptedException
+   private void suorita(CommandLine komento, File temppihakemisto)
+      throws ExecuteException, IOException, InterruptedException
    {
       DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
       ExecuteWatchdog watchdog = new ExecuteWatchdog(60 * 1000);
       Executor executor = new DefaultExecutor();
-      executor.setExitValue(1);
+      executor.setExitValue(0);
       executor.setWatchdog(watchdog);
       executor.setWorkingDirectory(temppihakemisto);
       executor.execute(komento, resultHandler);
       resultHandler.waitFor();
+      if (resultHandler.getException() != null)
+      {
+         throw new IsoveliPoikkeus("Tulostus epäonnistui", resultHandler.getException());
+      }
    }
 
    private CommandLine getCommandLine(File file)

@@ -5,42 +5,61 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
-import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.MemoryCacheImageOutputStream;
 
 import org.icefaces.apache.commons.io.output.ByteArrayOutputStream;
 import org.krysalis.barcode4j.HumanReadablePlacement;
 import org.krysalis.barcode4j.impl.code128.Code128Bean;
 import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 
+import com.lowagie.text.BadElementException;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Image;
+import com.lowagie.text.pdf.PdfWriter;
+
+import fi.budokwai.isoveli.IsoveliPoikkeus;
+
 public class Tilap‰iskortti
 {
-   public static byte[] teeKortti(String nimi, String viivakoodi) throws IOException
+   public static byte[] teeKortti(String nimi, String viivakoodi)
    {
       BufferedImage kortti = lataaKorttipohja();
       Graphics2D kangas = alustaKangas(kortti);
       kirjoitaNimi(nimi, kangas);
       kirjoitaViivakoodi(viivakoodi, kangas);
-      return tallennaKuva(kortti);
+      byte[] jpg = tallennaKuva(kortti);
+      return kuva2PDF(jpg);
    }
 
-   private static byte[] tallennaKuva(BufferedImage kortti) throws FileNotFoundException, IOException
+   private static byte[] tallennaKuva(BufferedImage kortti)
    {
       ByteArrayOutputStream tulos = new ByteArrayOutputStream();
       ImageWriter kirjoittaja = ImageIO.getImageWritersByFormatName("jpeg").next();
       ImageWriteParam parametrit = kirjoittaja.getDefaultWriteParam();
       parametrit.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
       parametrit.setCompressionQuality(1.0F);
-      kirjoittaja.setOutput(tulos);
-      kirjoittaja.write(null, new IIOImage(kortti, null, null), parametrit);
-      kirjoittaja.dispose();
+      MemoryCacheImageOutputStream ulos = new MemoryCacheImageOutputStream(tulos);
+      kirjoittaja.setOutput(ulos);
+      try
+      {
+         kirjoittaja.write(null, new IIOImage(kortti, null, null), parametrit);
+      } catch (IOException e)
+      {
+         throw new IsoveliPoikkeus("Kuvan tallennus ep‰onnistui", e);
+      } finally
+      {
+         if (kirjoittaja != null)
+         {
+            kirjoittaja.dispose();
+         }
+      }
       return tulos.toByteArray();
    }
 
@@ -49,10 +68,11 @@ public class Tilap‰iskortti
       BitmapCanvasProvider canvasProvider = new BitmapCanvasProvider(96, BufferedImage.TYPE_BYTE_BINARY, false, 0);
       Code128Bean bean = new Code128Bean();
       bean.setBarHeight(15);
+      bean.setModuleWidth(0.8f);
       bean.setMsgPosition(HumanReadablePlacement.HRP_BOTTOM);
       bean.setQuietZone(10);
       bean.generateBarcode(canvasProvider, viivakoodi);
-      kangas.drawImage(canvasProvider.getBufferedImage(), 500, 450, null);
+      kangas.drawImage(canvasProvider.getBufferedImage(), 450, 450, null);
    }
 
    private static void kirjoitaNimi(String nimi, Graphics2D kangas)
@@ -72,14 +92,47 @@ public class Tilap‰iskortti
       return kangas;
    }
 
-   private static BufferedImage lataaKorttipohja() throws IOException
+   private static BufferedImage lataaKorttipohja()
    {
-      return ImageIO.read(DBExport.class.getClassLoader().getResource("lajikokeilukortti.jpg").openStream());
+      try
+      {
+         return ImageIO.read(DBExport.class.getClassLoader().getResource("lajikokeilukortti.jpg").openStream());
+      } catch (IOException e)
+      {
+         throw new IsoveliPoikkeus("Korttipohjan lataus ep‰onnistui", e);
+      }
    }
 
-   public static void main(String... x) throws IOException
+   private static byte[] kuva2PDF(byte[] kuva)
    {
-      teeKortti("Nicklas Karlsson", "123123");
+      ByteArrayOutputStream tulos = new ByteArrayOutputStream();
+      Document dokumentti = new Document();
+      try
+      {
+         PdfWriter.getInstance(dokumentti, tulos);
+      } catch (DocumentException e)
+      {
+         throw new IsoveliPoikkeus("PDF-kirjoittajan alustus ep‰onnistui", e);
+      }
+      dokumentti.open();
+      Image kuvainstanssi;
+      try
+      {
+         kuvainstanssi = Image.getInstance(kuva);
+      } catch (BadElementException | IOException e)
+      {
+         throw new IsoveliPoikkeus("Kuvan alustus ep‰onnistui", e);
+      }
+      kuvainstanssi.scalePercent(30);
+      try
+      {
+         dokumentti.add(kuvainstanssi);
+      } catch (DocumentException e)
+      {
+         throw new IsoveliPoikkeus("Kuvan lis‰‰minen PDF:‰‰n ep‰onnistui", e);
+      }
+      dokumentti.close();
+      return tulos.toByteArray();
    }
 
 }

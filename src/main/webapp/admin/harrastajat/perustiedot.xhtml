@@ -76,7 +76,8 @@
 					</h:panelGrid>
 				</h:panelGrid>
 				<f:facet name="footer">
-					<h:panelGrid columns="2" style="width:100%">
+					<h:commandButton action="#{harrastajaAdmin.tulostaTilapäisenMateriaalit}" image="/kuvat/tulosta.png" rendered="#{harrastaja.tilapäinen and !harrastaja.tallentamaton}" style="height:50px; width:50px;"/>
+					<h:panelGrid columns="2" style="width:100%" rendered="#{!harrastaja.tilapäinen}">
 						<h:panelGrid columns="2" style="float:left">
 							<h:outputText value="Infotiskille" />
 							<h:panelGrid>
@@ -85,8 +86,8 @@
 							</h:panelGrid>
 						</h:panelGrid>
 						<h:panelGrid columns="2" style="float:right">
-							<h:outputText value="Arkistoitu" rendered="#{!harrastaja.tilapäinen}" />
-							<h:panelGrid rendered="#{!harrastaja.tilapäinen}">
+							<h:outputText value="Arkistoitu"/>
+							<h:panelGrid>
 								<ace:message for="form:arkistoitu" />
 								<h:selectBooleanCheckbox value="#{harrastaja.arkistoitu}" id="arkistoitu" />
 							</h:panelGrid>

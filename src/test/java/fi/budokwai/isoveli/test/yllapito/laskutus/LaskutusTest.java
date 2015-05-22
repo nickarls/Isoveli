@@ -284,7 +284,7 @@ public class LaskutusTest extends Perustesti
    {
       laskutusAdmin.laskutaSopimukset();
       Lasku lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
-      pm.tulostaPDFt(Arrays.asList(new BlobData[]
+      pm.tulostaTiedostot(Arrays.asList(new BlobData[]
       { lasku.getPdf() }));
    }
 

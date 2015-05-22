@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -22,7 +23,7 @@ import fi.budokwai.isoveli.Asetukset;
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.BlobData;
 
-public class PrintManager implements Serializable
+public class Tulostaja implements Serializable
 {
    private static final long serialVersionUID = 1L;
 
@@ -31,6 +32,12 @@ public class PrintManager implements Serializable
 
    @Inject
    private Loggaaja loggaaja;
+
+   public void tulostaTiedosto(BlobData blobData)
+   {
+      tulostaTiedostot(Arrays.asList(new BlobData[]
+      { blobData }));
+   }
 
    public void tulostaTiedostot(List<BlobData> blobDatat)
    {

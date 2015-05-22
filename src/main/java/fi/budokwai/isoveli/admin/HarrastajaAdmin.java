@@ -44,8 +44,8 @@ import fi.budokwai.isoveli.malli.Vyökoe;
 import fi.budokwai.isoveli.util.DateUtil;
 import fi.budokwai.isoveli.util.Loggaaja;
 import fi.budokwai.isoveli.util.Muuttui;
-import fi.budokwai.isoveli.util.PrintManager;
 import fi.budokwai.isoveli.util.Tilapäiskortti;
+import fi.budokwai.isoveli.util.Tulostaja;
 import fi.budokwai.isoveli.util.Vyökoehelper;
 
 @Named
@@ -76,6 +76,9 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
 
    @Inject
    private Loggaaja loggaaja;
+
+   @Inject
+   private Tulostaja tulostaja;
 
    @Inject
    @Muuttui
@@ -193,7 +196,6 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    @Named
    public Sopimus getSopimus()
    {
-      System.out.println("Returning " + sopimus);
       return sopimus;
    }
 
@@ -545,16 +547,27 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void tulostaTilapäisenMateriaalit() throws IOException
    {
       tulostaTilapäinenHarjoittelukortti();
+      tulostaMateriaali("säännöt");
+      tulostaMateriaali("hinnasto");
+      tulostaMateriaali("aikataulu");
+      tulostaMateriaali("yhteystiedot");
    }
 
-   @Inject
-   private PrintManager printManger;
+   private void tulostaMateriaali(String avain)
+   {
+      List<BlobData> materiaali = entityManager.createNamedQuery("nimetty_blobdata", BlobData.class)
+         .setParameter("nimi", avain).getResultList();
+      if (materiaali.isEmpty())
+      {
+         return;
+      }
+      tulostaja.tulostaTiedosto(materiaali.iterator().next());
+   }
 
    private void tulostaTilapäinenHarjoittelukortti() throws IOException
    {
       byte[] kuva = Tilapäiskortti.teeKortti(harrastaja.getNimi(), harrastaja.getId() + 10000 + "");
-      printManger.tulostaTiedostot(Arrays.asList(new BlobData[]
-      { BlobData.PDF("kortti", kuva) }));
+      tulostaja.tulostaTiedosto(BlobData.PDF("kortti", kuva));
    }
 
 }

@@ -24,7 +24,7 @@ import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.test.Perustesti;
 import fi.budokwai.isoveli.util.DateUtil;
-import fi.budokwai.isoveli.util.PrintManager;
+import fi.budokwai.isoveli.util.Tulostaja;
 
 @RunWith(Arquillian.class)
 public class LaskutusTest extends Perustesti
@@ -274,18 +274,17 @@ public class LaskutusTest extends Perustesti
    }
 
    @Inject
-   private PrintManager pm;
+   private Tulostaja tulostaja;
 
    @Test
    @ApplyScriptBefore(
    { "cleanup.sql", "seed.sql", "harrastajaperhe.sql", "harrastajasopimukset.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
-   public void testTulostLasku()
+   public void testTulostaLasku()
    {
       laskutusAdmin.laskutaSopimukset();
       Lasku lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
-      pm.tulostaTiedostot(Arrays.asList(new BlobData[]
-      { lasku.getPdf() }));
+      tulostaja.tulostaTiedosto(lasku.getPdf());
    }
 
    @Test

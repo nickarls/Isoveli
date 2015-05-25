@@ -27,7 +27,7 @@
 			<h:outputText value="#{_sopimus.treenikertojaTilattu}" rendered="#{_sopimus.tyyppi.treenikertoja}" />
 		</ace:column>
 		<ace:column headerText="Treenikrt jäl." styleClass="lefttext">
-			<h:outputText value="#{_sopimus.treenikertojaJäljellä}" rendered="#{_sopimus.tyyppi.treenikertoja}" />
+			<h:outputText value="#{_sopimus.treenikertojaJäljellä}" rendered="#{_sopimus.tyyppi.treenikertoja or _sopimus.tyyppi.koeaika}" />
 		</ace:column>
 		<ace:column headerText="Luotu" styleClass="lefttext">
 			<h:outputText value="#{_sopimus.luotu}">

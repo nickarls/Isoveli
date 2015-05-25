@@ -95,7 +95,6 @@ public class Sopimus
 
    public Sopimus()
    {
-      // TODO Auto-generated constructor stub
    }
 
    public Sopimus(Sopimustyyppi sopimustyyppi)

@@ -18,7 +18,7 @@
 			</h:outputText>
 		</ace:column>
 		<ace:column headerText="Ikä" styleClass="lefttext">
-			<h:outputText value="#{_harrastaja.ikä}" />
+			<h:outputText value="#{_harrastaja.ikä}" rendered="#{!_harrastaja.tilapäinen}" />
 		</ace:column>
 		<ace:column headerText="Sukupuoli">
 			<h:graphicImage value="/kuvat/uros.png" style="height:30px" rendered="#{_harrastaja.mies}" />

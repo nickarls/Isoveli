@@ -72,20 +72,19 @@ create table perhe
 insert into perhe(id, nimi, osoite) values (1, 'Karlsson', 1);
 insert into perhe(id, nimi, osoite) values (2, 'Rosqvist', 2);
 
-
+// BLOBDATA
 drop table if exists blobdata;
 create table blobdata(
 	id int not null auto_increment,
 	nimi varchar(20) not null,
 	tyyppi int not null,
 	tieto blob,
-	avain varchar(100) not null,
+	avain varchar(100),
+	vakiomateriaali varchar(1) default 'E' not null,
 	constraint pk_blobdata primary key(id),
 	constraint uniikki_blobnimi unique(nimi),
 	constraint uniikki_blobavain unique(avain)	
 );
-
-
 
 // HENKILÖ
 drop table if exists henkilo;
@@ -471,6 +470,7 @@ create table treenisessiovetaja(
 );
 insert into treenisessiovetaja(id, harrastaja, treenisessio) values (1, 1, 1);
 
+// VYÖKOETILAISUUS
 drop table if exists vyokoetilaisuus;
 create table vyokoetilaisuus(
 	id int not null auto_increment,
@@ -486,6 +486,7 @@ create table vyokoetilaisuus(
 
 insert into vyokoetilaisuus(id, koska, vyoalaraja, vyoylaraja, ikaalaraja, ikaylaraja, pitaja) values (1, parsedatetime('10.06.2015 18:00', 'dd.MM.yyyy HH:mm'), 2, 6, 10, 14, 1);
 
+// VYÖKOKELAS
 drop table if exists vyokokelas;
 create table vyokokelas(
 	id int not null auto_increment,
@@ -505,6 +506,7 @@ create table vyokokelas(
 
 insert into vyokokelas(id, vyokoetilaisuus, harrastaja, tavoite) values (1, 1, 1, 13);
 
+// VIESTI
 drop table if exists viesti;
 create table viesti(
 	id int not null auto_increment,
@@ -519,6 +521,7 @@ create table viesti(
 
 insert into viesti(id, otsikko, sisalto, lahettaja, vastaanottajat, luotu) values (1, 'otsikko', 'sisaltö', 1, 'Kaikki', parsedatetime('10.06.2015 18:00', 'dd.MM.yyyy HH:mm'));
 
+// VIESTILAATIKKO
 drop table if exists viestilaatikko;
 create table viestilaatikko (
 	id int not null auto_increment,
@@ -531,6 +534,7 @@ create table viestilaatikko (
 
 insert into viestilaatikko (id, omistaja, tyyppi) values (1, 1, 'I');
 
+// HENKILÖVIESTI
 drop table if exists henkiloviesti;
 create table henkiloviesti(
 	id int not null auto_increment,

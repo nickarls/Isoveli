@@ -15,6 +15,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Type;
 
 import fi.budokwai.isoveli.api.BlobLataus;
 import fi.budokwai.isoveli.util.Util;
@@ -25,6 +26,7 @@ import fi.budokwai.isoveli.util.Util;
 @Table(name = "blobdata")
 @NamedQueries(
 { @NamedQuery(name = "blobdata", query = "select b from BlobData b where b.avain=:avain"),
+   @NamedQuery(name = "vakiomateriaali", query = "select b from BlobData b where b.vakiomateriaali='K'"),
       @NamedQuery(name = "nimetty_blobdata", query = "select b from BlobData b where b.nimi=:nimi") })
 public class BlobData
 {
@@ -52,6 +54,9 @@ public class BlobData
    private Tiedostotyyppi tyyppi;
 
    private byte[] tieto;
+   
+   @Type(type = "Kyll‰Ei")
+   private boolean vakiomateriaali;   
 
    public BlobData()
    {
@@ -136,5 +141,15 @@ public class BlobData
    public String toString()
    {
       return String.format("%s [%d]", nimi, tieto.length);
+   }
+
+   public boolean isVakiomateriaali()
+   {
+      return vakiomateriaali;
+   }
+
+   public void setVakiomateriaali(boolean vakiomateriaali)
+   {
+      this.vakiomateriaali = vakiomateriaali;
    }
 }

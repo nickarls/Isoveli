@@ -11,25 +11,42 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.enterprise.inject.Produces;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 
+import fi.budokwai.isoveli.malli.BlobData;
+import fi.budokwai.isoveli.malli.Harrastaja;
+import fi.budokwai.isoveli.util.Tulostaja;
 import jxl.Workbook;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
-import fi.budokwai.isoveli.malli.BlobData;
-import fi.budokwai.isoveli.malli.Harrastaja;
 
 @Named
 public class RaporttiAdmin
 {
    @Inject
    private EntityManager entityManager;
+
+   @Produces
+   @Named
+   public List<BlobData> getVakiomateriaalit()
+   {
+      return entityManager.createNamedQuery("vakiomateriaali", BlobData.class).getResultList();
+   }
+
+   @Inject
+   private Tulostaja tulostaja;
+
+   public void tulostaMateriaali(BlobData materiaali)
+   {
+      tulostaja.tulostaTiedosto(materiaali);
+   }
 
    public BlobData muodostaJäsenkortit() throws RowsExceededException, WriteException, IOException
    {
@@ -54,8 +71,8 @@ public class RaporttiAdmin
       return BlobData.ZIP(nimi, bos.toByteArray());
    }
 
-   public static void addToZipFile(String nimi, byte[] tieto, ZipOutputStream zos) throws FileNotFoundException,
-      IOException
+   public static void addToZipFile(String nimi, byte[] tieto, ZipOutputStream zos)
+      throws FileNotFoundException, IOException
    {
       ZipEntry zipEntry = new ZipEntry(nimi);
       zos.putNextEntry(zipEntry);

@@ -40,7 +40,6 @@ import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.validointi.Taukotarkistus;
 import fi.budokwai.isoveli.malli.validointi.UniikitSopimukset;
 import fi.budokwai.isoveli.malli.validointi.UniikitVyökokeet;
-import fi.budokwai.isoveli.malli.validointi.UniikkiHenkilö;
 import fi.budokwai.isoveli.malli.validointi.Vyökoejärjestys;
 import fi.budokwai.isoveli.util.DateUtil;
 
@@ -49,8 +48,7 @@ import fi.budokwai.isoveli.util.DateUtil;
 @DynamicUpdate
 @Table(name = "harrastaja")
 @NamedQueries(
-{
-      @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.jäsennumero=:kortti"),
+{ @NamedQuery(name = "kortti", query = "select h from Harrastaja h where h.jäsennumero=:kortti"),
       @NamedQuery(name = "harrastajat_roolissa", query = "select h from Harrastaja h join h.roolit r where r.nimi=:rooli order by h.sukunimi, h.etunimi"),
       @NamedQuery(name = "sama_syntymäpäivä", query = "select h from Harrastaja h where h.syntynyt = :päivä"),
       @NamedQuery(name = "harrastajat", query = "select h from Harrastaja h where h.arkistoitu='E' order by h.sukunimi, h.etunimi"),
@@ -119,11 +117,11 @@ public class Harrastaja extends Henkilö
 
    @Type(type = "KylläEi")
    private boolean medialupa;
-   
+
    private String koulutus;
-   
+
    private String tulokset;
-   
+
    @Embedded
    private Jakso tauko = new Jakso();
 
@@ -213,8 +211,8 @@ public class Harrastaja extends Henkilö
 
    public Vyökoe getTuoreinVyökoe()
    {
-      Optional<Vyökoe> vyökoe = vyökokeet.stream().max(
-         (v1, v2) -> Integer.compare(v1.getVyöarvo().getJärjestys(), v2.getVyöarvo().getJärjestys()));
+      Optional<Vyökoe> vyökoe = vyökokeet.stream()
+         .max((v1, v2) -> Integer.compare(v1.getVyöarvo().getJärjestys(), v2.getVyöarvo().getJärjestys()));
       return vyökoe.isPresent() ? vyökoe.get() : Vyökoe.EI_OOTA;
    }
 
@@ -525,8 +523,8 @@ public class Harrastaja extends Henkilö
          @Override
          public int compare(Vyökoe v1, Vyökoe v2)
          {
-            return Integer.valueOf(v1.getVyöarvo().getJärjestys()).compareTo(
-               Integer.valueOf(v2.getVyöarvo().getJärjestys()));
+            return Integer.valueOf(v1.getVyöarvo().getJärjestys())
+               .compareTo(Integer.valueOf(v2.getVyöarvo().getJärjestys()));
          }
       });
    }
@@ -549,8 +547,8 @@ public class Harrastaja extends Henkilö
       perhe.getHuollettavat(this).forEach(h -> {
          stringJoiner.add(h.getEtunimi());
       });
-      String viesti = String.format("Harrastaja on huoltaja ja häntä ei voi poistaa (%dkpl: %s...)", perhe
-         .getHuollettavat(this).size(), stringJoiner.toString());
+      String viesti = String.format("Harrastaja on huoltaja ja häntä ei voi poistaa (%dkpl: %s...)",
+         perhe.getHuollettavat(this).size(), stringJoiner.toString());
       throw new IsoveliPoikkeus(viesti);
    }
 
@@ -571,7 +569,7 @@ public class Harrastaja extends Henkilö
 
    private void tarkistaSopimuskäyttö()
    {
-      if (sopimukset.isEmpty())
+      if (sopimukset.isEmpty() || (sopimukset.size() == 1 && sopimukset.iterator().next().getTyyppi().isKoeaika()))
       {
          return;
       }
@@ -652,4 +650,5 @@ public class Harrastaja extends Henkilö
    {
       this.tulokset = tulokset;
    }
+
 }

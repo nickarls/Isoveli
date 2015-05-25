@@ -3,7 +3,6 @@ package fi.budokwai.isoveli.admin;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -254,6 +253,10 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       {
          harrastaja.setPerhe(entityManager.merge(harrastaja.getPerhe()));
       }
+      if (harrastaja.isTallentamaton() && harrastaja.isTilapäinen())
+      {
+         harrastaja.lisääSopimus(teeKoeaikaSopimus());
+      }
       harrastaja = entityManager.merge(harrastaja);
       entityManager.flush();
       harrastajaRSM.get(harrastaja).setSelected(true);
@@ -266,6 +269,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void poistaHarrastaja()
    {
       harrastaja.poistotarkistus();
+      String poistetunNimi = harrastaja.getNimi();
       harrastaja = entityManager.merge(harrastaja);
       entityManager.remove(harrastaja);
       entityManager.flush();
@@ -273,7 +277,7 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
       harrastajat = null;
       harrastajaRSM.setAllSelected(false);
       info("Harrastaja poistettu");
-      loggaaja.loggaa("Poisti harrastajan '%s'", harrastaja);
+      loggaaja.loggaa("Poisti harrastajan '%s'", poistetunNimi);
    }
 
    public void tallennaVyökoe()

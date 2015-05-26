@@ -5,8 +5,8 @@
 		closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
 			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaVyöarvonPoisto').hide()"
-				actionListener="#{perustietoAdmin.poistaVyöarvo}" immediate="true" />
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaVyöarvonPoisto').hide()" immediate="true" />
+				actionListener="#{perustietoAdmin.poistaVyöarvo}" immediate="true" title="Poista vyöarvo"/>
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaVyöarvonPoisto').hide()" immediate="true" title="Peruuta vyöarvon poisto"/>
 		</h:panelGrid>
 	</ace:confirmationDialog>
 	<h:panelGrid>
@@ -32,14 +32,14 @@
 			</ace:dataTable>
 			<h:panelGrid columns="3">
 				<h:commandButton action="#{perustietoAdmin.lisääVyöarvo}" styleClass="ikoni" image="/kuvat/lisää.png"
-					immediate="true">
+					immediate="true" title="Lisää uusi vyöarvo">
 					<ace:ajax render="@form" />
 				</h:commandButton>
-				<h:commandButton rendered="#{vyöarvo != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
+				<h:commandButton rendered="#{vyöarvo != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg" title="Tallenna vyöarvo"
 					action="#{perustietoAdmin.tallennaVyöarvo}">
 					<f:ajax execute="@form" render="@form" />
 				</h:commandButton>
-				<h:commandButton rendered="#{vyöarvo != null}" styleClass="ikoni" image="/kuvat/poista.png" immediate="true"
+				<h:commandButton rendered="#{vyöarvo != null}" styleClass="ikoni" image="/kuvat/poista.png" immediate="true" title="Poista vyöarvo"
 					onclick="ice.ace.instance('form:vahvistaVyöarvonPoisto').show();" />
 			</h:panelGrid>
 			<h:panelGrid style="margin-left:20px; width:450px">

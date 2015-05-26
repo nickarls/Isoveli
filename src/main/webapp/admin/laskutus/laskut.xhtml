@@ -4,28 +4,28 @@
 	<ace:confirmationDialog id="vahvistaLaskunPoisto" message="Oletko varma?" header="Vahvista" width="350" height="200"
 		closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
-			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaLaskunPoisto').hide()"
+			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaLaskunPoisto').hide()" title="Poista lasku"
 				action="#{laskutusAdmin.piilotaLasku}" actionListener="#{laskutusAdmin.poistaLasku}" immediate="true" />
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaLaskunPoisto').hide()" immediate="true" />
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaLaskunPoisto').hide()" immediate="true" title="Peruuta laskun poisto"/>
 		</h:panelGrid>
 	</ace:confirmationDialog>
 	<ace:confirmationDialog id="vahvistaLaskurivinPoisto" message="Oletko varma?" header="Vahvista" width="350"
 		height="200" closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
 			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaLaskurivinPoisto').hide()"
-				actionListener="#{laskutusAdmin.poistaRivi(_laskurivi)}" immediate="true" />
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaLaskurivinPoisto').hide()" immediate="true" />
+				actionListener="#{laskutusAdmin.poistaRivi(_laskurivi)}" immediate="true" title="Poista laskurivi"/>
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaLaskurivinPoisto').hide()" immediate="true" title="Peruuta laskurivin poisto"/>
 		</h:panelGrid>
 	</ace:confirmationDialog>
 
 	<h:panelGrid columns="4">
-		<h:commandButton rendered="#{lasku != null}" styleClass="ikoni"
+		<h:commandButton rendered="#{lasku != null}" styleClass="ikoni" title="Poista lasku"
 			onclick="ice.ace.instance('form:vahvistaLaskunPoisto').show();" image="/kuvat/poista.png" immediate="true" />
-		<h:outputLink value="../API/laskut/zippaaLaskuttamattomat" target="_blank">
+		<h:outputLink value="../API/laskut/zippaaLaskuttamattomat" target="_blank" title="Zippaa laskuttamattomat">
 			<h:graphicImage value="/kuvat/zip.jpg" styleClass="ikoni" />
 		</h:outputLink>
-		<h:commandLink action="#{laskutusAdmin.lähetäLaskut}">
-			<h:graphicImage value="/kuvat/lähetä.jpg" styleClass="ikoni" />
+		<h:commandLink action="#{laskutusAdmin.lähetäLaskut}" title="Lähetä laskut">
+			<h:graphicImage value="/kuvat/lähetä.jpg" styleClass="ikoni"/>
 		</h:commandLink>
 	</h:panelGrid>
 	<ace:dataTable value="#{laskut}" var="_lasku" selectionMode="single" stateMap="#{laskutusAdmin.laskuRSM}" rows="10"
@@ -80,7 +80,7 @@
 		</ace:column>
 		<ace:column headerText="PDF">
 			<h:outputLink target="_blank" value="#{request.contextPath}/API/blob/lataa/#{_lasku.pdf.avain}"
-				rendered="#{_lasku.pdf != null}">
+				rendered="#{_lasku.pdf != null}" title="Lataa lasku PDF-muodossa">
 				<h:graphicImage value="/kuvat/pdf.png" style="width:24px" />
 			</h:outputLink>
 		</ace:column>
@@ -179,11 +179,11 @@
 			<ace:rowEditor rendered="#{_laskurivi.muokattavissa}" />
 		</ace:column>
 		<ace:column>
-			<h:commandButton image="/kuvat/poista.png" action="#{laskutusAdmin.poistaRivi(_laskurivi)}"
+			<h:commandButton image="/kuvat/poista.png" action="#{laskutusAdmin.poistaRivi(_laskurivi)}" title="Poista laskurivi"
 				rendered="#{_laskurivi.muokattavissa}" immediate="true" styleClass="pieniikoni">
 				<f:ajax render="@form" />
 			</h:commandButton>
-			<h:commandButton image="/kuvat/lisää.png" action="#{laskutusAdmin.lisääRivi()}"
+			<h:commandButton image="/kuvat/lisää.png" action="#{laskutusAdmin.lisääRivi()}" title="Lisää laskurivi"
 				rendered="#{_laskurivi.muokattavissa}" immediate="true" styleClass="pieniikoni">
 				<f:ajax render="@form" />
 			</h:commandButton>

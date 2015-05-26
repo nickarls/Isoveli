@@ -50,13 +50,13 @@
 		</ace:column>
 	</ace:dataTable>
 	<h:panelGrid columns="3">
-		<h:commandButton action="#{harrastajaAdmin.lisääHarrastaja}" value="x" styleClass="ikoni" image="/kuvat/lisää.png"
+		<h:commandButton action="#{harrastajaAdmin.lisääHarrastaja}" title="Lisää uusi harrastaja" styleClass="ikoni" image="/kuvat/lisää.png"
 			immediate="true">
 			<f:ajax render="@form" />
 		</h:commandButton>
 		<h:commandButton rendered="#{harrastaja != null}" styleClass="ikoni" action="#{harrastajaAdmin.tallennaHarrastaja}"
-			image="/kuvat/tallenna.jpg" />
-		<h:commandButton rendered="#{harrastaja != null}" styleClass="ikoni"
+			image="/kuvat/tallenna.jpg" title="Tallenna harrastaja"/>
+		<h:commandButton rendered="#{harrastaja != null}" styleClass="ikoni" title="Poista harrastaja"
 			onclick="ice.ace.instance('form:vahvistaHarrastajanPoisto').show();" image="/kuvat/poista.png" immediate="true" />
 	</h:panelGrid>
 	<ace:tabSet rendered="#{harrastaja != null}" binding="#{harrastajaAdmin.tabi}">

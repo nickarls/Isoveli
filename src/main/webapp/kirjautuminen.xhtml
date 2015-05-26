@@ -62,7 +62,7 @@
 					</h:panelGrid>
 				</h:panelGrid>
 				<h:panelGrid columns="2">
-					<h:commandButton action="#{salasananvaihto.vaihda()}" value="Vaihda" />
+					<h:commandButton action="#{salasananvaihto.vaihda()}" value="Vaihda" title="Vaihda salasana"/>
 					<h:commandButton onclick="ice.ace.instance('vaihtoform:salasanavaihto').hide();" value="Palaa" />
 				</h:panelGrid>
 			</ace:dialog>
@@ -85,15 +85,15 @@
 								onkeydown="if (event.keyCode == 13) document.getElementById('form:kirjaudu').click()" />
 						</h:panelGrid>
 						<h:outputText value="" />
-						<h:commandButton image="/kuvat/kirjaudu.png" action="#{kirjautuminen.kirjaudu}" styleClass="nappi" id="kirjaudu" />
+						<h:commandButton image="/kuvat/kirjaudu.png" action="#{kirjautuminen.kirjaudu}" styleClass="nappi" id="kirjaudu" title="Kirjaudu"/>
 					</h:panelGrid>
 				</h:panelGrid>
 				<h:panelGrid columns="2" style="width:100%">
-					<h:commandLink action="#{kirjautuminen.lähetäResetointipyyntö}">
+					<h:commandLink action="#{kirjautuminen.lähetäResetointipyyntö}" title="Lähetä salasana">
 						<h:outputText value="Salasana unohtunut?" />
 						<ace:ajax execute="form:käyttäjänimi" render="@all" />
 					</h:commandLink>
-					<h:commandLink onclick="ice.ace.instance('vaihtoform:salasanavaihto').show();" immediate="true" style="float:right">
+					<h:commandLink onclick="ice.ace.instance('vaihtoform:salasanavaihto').show();" immediate="true" style="float:right" title="Vaihda salasana">
 						<h:outputText value="Vaihda salasana" />
 					</h:commandLink>
 				</h:panelGrid>

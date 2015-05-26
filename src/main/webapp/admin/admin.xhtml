@@ -59,8 +59,8 @@
 	<f:view>
 		<h:form id="form">
 			<h:commandLink action="#{exceptionHandler.tapaSessio()}" value="Kirjaudu ulos" immediate="true"
-				style="margin-right:20px" />
-			<h:commandLink action="/käyttäjä/käyttäjä.xhtml?faces-redirect=true" value="Oma ylläpito" />
+				style="margin-right:20px" title="Kirjaudu ulos"/>
+			<h:commandLink action="/käyttäjä/käyttäjä.xhtml?faces-redirect=true" value="Oma ylläpito" title="Oma ylläpito"/>
 			<ace:tabSet tabChangeListener="#{harrastajaAdmin.päätabiMuuttui}">
 				<ace:tabPane label="Harrastajat">
 					<ui:include src="harrastajat/harrastajat.xhtml" />

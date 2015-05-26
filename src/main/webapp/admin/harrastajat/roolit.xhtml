@@ -2,7 +2,7 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:ace="http://www.icefaces.org/icefaces/components">
 	<h:panelGrid>
-		<h:commandButton styleClass="ikoni" image="/kuvat/tallenna.jpg" action="#{harrastajaAdmin.tallennaHarrastaja}" />
+		<h:commandButton styleClass="ikoni" image="/kuvat/tallenna.jpg" action="#{harrastajaAdmin.tallennaHarrastaja}" title="Tallenna harrastaja"/>
 		<ace:listControl style="width:500px">
 			<ace:list value="#{roolit}" var="_rooli_a" selectionMode="multiple">
 				<h:outputText value="#{_rooli_a.nimi}" />

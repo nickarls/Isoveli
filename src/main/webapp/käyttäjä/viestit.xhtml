@@ -32,7 +32,7 @@
 					<h:outputText value="#{viesti.viesti.lähettäjä.nimi}" />
 					<h:outputText value="#{viesti.viesti.sisältö}" />
 				</h:panelGrid>
-				<h:commandButton action="#{käyttäjäylläpito.arkistoiViesti}" value="A" rendered="#{viesti != null}"/>
+				<h:commandButton action="#{käyttäjäylläpito.arkistoiViesti}" value="A" title="Arkistoi viesti" rendered="#{viesti != null}"/>
 			</ace:tabPane>
 			<ace:tabPane label="Arkistoidut">
 			</ace:tabPane>

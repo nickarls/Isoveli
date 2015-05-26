@@ -5,8 +5,8 @@
 		closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
 			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaVyökokeenPoisto').hide()"
-				actionListener="#{harrastajaAdmin.poistaVyökoe}" immediate="true" />
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaVyökokeenPoisto').hide()" immediate="true" />
+				actionListener="#{harrastajaAdmin.poistaVyökoe}" immediate="true" title="Poista vyökoe"/>
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaVyökokeenPoisto').hide()" immediate="true" title="Peruuta vyökokeen poisto"/>
 		</h:panelGrid>
 	</ace:confirmationDialog>
 	<ace:dataTable value="#{harrastaja.vyökokeet}" var="_vyökoe" selectionMode="single" rows="10" paginator="true"
@@ -36,14 +36,14 @@
 		</ace:column>
 	</ace:dataTable>
 	<h:panelGrid columns="3">
-		<h:commandButton action="#{harrastajaAdmin.lisääVyökoe}" styleClass="ikoni" image="/kuvat/lisää.png" immediate="true">
+		<h:commandButton action="#{harrastajaAdmin.lisääVyökoe}" styleClass="ikoni" image="/kuvat/lisää.png" immediate="true" title="Lisää uusi vyökoe">
 			<ace:ajax render="@form" />
 		</h:commandButton>
 		<h:commandButton rendered="#{vyökoe != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
-			action="#{harrastajaAdmin.tallennaVyökoe}">
+			action="#{harrastajaAdmin.tallennaVyökoe}" title="Tallenna vyökoe">
 			<f:ajax execute="@form" render="@form" />
 		</h:commandButton>
-		<h:commandButton rendered="#{vyökoe != null}" styleClass="ikoni"
+		<h:commandButton rendered="#{vyökoe != null}" styleClass="ikoni" title="Poista vyökoe"
 			onclick="ice.ace.instance('form:vahvistaVyökokeenPoisto').show();" image="/kuvat/poista.png" immediate="true" />
 	</h:panelGrid>
 	<ace:panel header="Vyökoetiedot" rendered="#{vyökoe != null}" style="width:300px">

@@ -5,8 +5,8 @@
 		height="200" closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
 			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').hide()"
-				actionListener="#{ilmoittautumisAdmin.poistaTreenikäynti}" immediate="true" />
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').hide()" immediate="true" />
+				actionListener="#{ilmoittautumisAdmin.poistaTreenikäynti}" immediate="true" title="Poista treenikäynti"/>
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').hide()" immediate="true" title="Peruuta treenikäynnin poisto" />
 		</h:panelGrid>
 	</ace:confirmationDialog>
 	<ace:dataTable value="#{treenikäynnit}" var="_treenikäynti" selectionMode="single"
@@ -37,12 +37,12 @@
 	</ace:dataTable>
 	<h:panelGrid columns="3">
 		<h:commandButton action="#{ilmoittautumisAdmin.lisääTreenikäynti}" styleClass="ikoni" image="/kuvat/lisää.png"
-			immediate="true">
+			immediate="true" title="Lisää uusi treenikäynti">
 			<ace:ajax render="@form" />
 		</h:commandButton>
-		<h:commandButton rendered="#{treenikäynti != null}" styleClass="ikoni"
+		<h:commandButton rendered="#{treenikäynti != null}" styleClass="ikoni" title="Tallenna treenikäynti"
 			action="#{ilmoittautumisAdmin.tallennaTreenikäynti}" image="/kuvat/tallenna.jpg" />
-		<h:commandButton rendered="#{treenikäynti != null}" styleClass="ikoni"
+		<h:commandButton rendered="#{treenikäynti != null}" styleClass="ikoni" title="Poista treenikäynti"
 			onclick="ice.ace.instance('form:vahvistaTreenikäynninPoisto').show();" image="/kuvat/poista.png" immediate="true" />
 	</h:panelGrid>
 	<h:panelGrid columnClasses="tabletop, tabletop" rendered="#{treenikäynti != null}" id="treenikäynti">

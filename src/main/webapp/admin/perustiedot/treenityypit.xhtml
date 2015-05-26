@@ -5,8 +5,8 @@
 		height="200" closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
 			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaTreenityypinPoisto').hide()"
-				actionListener="#{perustietoAdmin.poistaTreenityyppi}" immediate="true" />
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreenityypinPoisto').hide()" immediate="true" />
+				actionListener="#{perustietoAdmin.poistaTreenityyppi}" immediate="true" title="Poista treenityyppi"/>
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaTreenityypinPoisto').hide()" immediate="true" title="Peruuta treenityypin poisto"/>
 		</h:panelGrid>
 	</ace:confirmationDialog>
 	<h:panelGrid>
@@ -32,14 +32,14 @@
 		</h:panelGrid>
 		<h:panelGrid columns="3">
 			<h:commandButton action="#{perustietoAdmin.lisääTreenityyppi}" styleClass="ikoni" image="/kuvat/lisää.png"
-				immediate="true">
+				immediate="true" title="Lisää uusi treenityyppi">
 				<ace:ajax render="@form" />
 			</h:commandButton>
 			<h:commandButton rendered="#{treenityyppi != null}" styleClass="ikoni" image="/kuvat/tallenna.jpg"
-				action="#{perustietoAdmin.tallennaTreenityyppi}">
+				action="#{perustietoAdmin.tallennaTreenityyppi}" title="Tallenna treenityyppi">
 				<f:ajax execute="@form" render="@form" />
 			</h:commandButton>
-			<h:commandButton rendered="#{treenityyppi != null}" styleClass="ikoni"
+			<h:commandButton rendered="#{treenityyppi != null}" styleClass="ikoni" title="Poista treenityyppi"
 				onclick="ice.ace.instance('form:vahvistaTreenityypinPoisto').show();" image="/kuvat/poista.png" immediate="true" />
 		</h:panelGrid>
 	</h:panelGrid>

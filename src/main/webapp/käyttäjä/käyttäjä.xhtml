@@ -50,7 +50,7 @@
 	</f:metadata>
 	<f:view>
 		<h:form id="form">
-			<h:commandLink action="#{exceptionHandler.tapaSessio()}" value="Kirjaudu ulos" />
+			<h:commandLink action="#{exceptionHandler.tapaSessio()}" value="Kirjaudu ulos" title="Kirjaudu ulos"/>
 			<ace:tabSet binding="#{käyttäjäylläpito.tabi}">
 				<ui:include src="perustiedot.xhtml" />
 				<ui:include src="viestit.xhtml"/>

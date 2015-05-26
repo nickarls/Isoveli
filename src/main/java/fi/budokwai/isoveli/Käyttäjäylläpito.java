@@ -86,8 +86,10 @@ public class K‰ytt‰j‰yll‰pito extends Perustoiminnallisuus
       Viestilaatikko arkisto = yll‰pidett‰v‰.getViestilaatikko(Viestilaatikkotyypi.A);
       saapuvat.poistaViesti(viesti);
       arkisto.lis‰‰Viesti(viesti);
+      viesti.setViestilaatikko(arkisto);
       saapuvat = entityManager.merge(saapuvat);
       arkisto = entityManager.merge(arkisto);
+      entityManager.flush();
    }
 
    public void esifokus()

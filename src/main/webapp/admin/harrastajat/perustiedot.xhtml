@@ -5,8 +5,8 @@
 		height="200" closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
 			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaHarrastajanPoisto').hide()"
-				actionListener="#{harrastajaAdmin.poistaHarrastaja}" immediate="true" />
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaHarrastajanPoisto').hide()" immediate="true" />
+				actionListener="#{harrastajaAdmin.poistaHarrastaja}" immediate="true" title="Poista harrastaja"/>
+			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaHarrastajanPoisto').hide()" immediate="true" title="Peruuta harrastajan poisto"/>
 		</h:panelGrid>
 	</ace:confirmationDialog>
 	<h:panelGrid columns="3" columnClasses="tabletop, tabletop, tabletop">
@@ -76,7 +76,7 @@
 					</h:panelGrid>
 				</h:panelGrid>
 				<f:facet name="footer">
-					<h:commandButton action="#{harrastajaAdmin.tulostaTilapäisenMateriaalit}" image="/kuvat/tulosta.png" rendered="#{harrastaja.tilapäinen and !harrastaja.tallentamaton}" style="height:50px; width:50px;"/>
+					<h:commandButton action="#{harrastajaAdmin.tulostaTilapäisenMateriaalit}" image="/kuvat/tulosta.png" rendered="#{harrastaja.tilapäinen and !harrastaja.tallentamaton}" style="height:50px; width:50px;" title="Tulosta koeharrastajan materiaalit"/>
 					<h:panelGrid columns="2" style="width:100%" rendered="#{!harrastaja.tilapäinen}">
 						<h:panelGrid columns="2" style="float:left">
 							<h:outputText value="Infotiskille" />
@@ -127,7 +127,7 @@
 								render="form:osoitepanel form:huoltajapanel form:henkilötietopanel" listener="#{harrastajaAdmin.perheMuuttui}" />
 						</h:selectOneMenu>
 						<h:commandButton action="#{harrastajaAdmin.lisääPerhe}" image="/kuvat/lisää_perhe.jpg"
-							style="height:50px; width:50px; margin-left:15px">
+							style="height:50px; width:50px; margin-left:15px" title="Lisää perhe">
 							<f:ajax execute="form:henkilötietopanel"
 								render="form:henkilötietopanel form:perhepanel form:sukunimigrid form:huoltajapanel" />
 						</h:commandButton>
@@ -150,7 +150,7 @@
 							</h:selectOneMenu>
 						</h:panelGrid>
 						<h:commandButton action="#{harrastajaAdmin.lisääHuoltaja}" image="/kuvat/lisää_huoltaja.jpg"
-							style="height:50px; width:50px; margin-left:15px">
+							style="height:50px; width:50px; margin-left:15px" title="Lisää huoltaja">
 							<f:ajax execute="form:sukunimi" render="form:huoltajapanel form:perhepanel" />
 						</h:commandButton>
 						<h:panelGrid columns="2" rendered="#{harrastaja.huoltaja != null}">

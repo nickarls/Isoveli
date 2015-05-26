@@ -388,6 +388,7 @@ public class Harrastaja extends Henkilö
 
    public void setTilapäinen(boolean tilapäinen)
    {
+      huomautus = tilapäinen ? "." : null;
    }
 
    public void muutaTilapäiseksi()

@@ -2,6 +2,7 @@ package fi.budokwai.isoveli.test.yllapito.harrastaja;
 
 import static org.junit.Assert.fail;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.inject.Instance;
@@ -65,7 +66,7 @@ public class HarrastajaTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-      { "cleanup.sql", "seed.sql", "nicklas.sql", "treenisessiokaytossa.sql" })
+   { "cleanup.sql", "seed.sql", "nicklas.sql", "treenisessiokaytossa.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testTreenikertojaJaljellaTreeneja()
    {
@@ -75,14 +76,64 @@ public class HarrastajaTest extends Perustesti
 
    @Test
    @ApplyScriptBefore(
-      { "cleanup.sql", "seed.sql", "vanhanicklas.sql", "treenisessiokaytossa.sql" })
+   { "cleanup.sql", "seed.sql", "vanhanicklas.sql", "treenisessiokaytossa.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
    public void testTreenikertojaJaljellaSiirtokertoja()
    {
       Harrastaja nicklas = entityManager.find(Harrastaja.class, 1);
       Assert.assertEquals(10, vyökoehelper.getJäljelläVyökokeeseen(nicklas).getTreenikertoja());
    }
-   
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testTilapaiskayttajallaKoesopimus()
+   {
+      harrastajaAdmin.lisääHarrastaja();
+      harrastajaAdmin.getHarrastaja().setEtunimi("Tila");
+      harrastajaAdmin.getHarrastaja().setSukunimi("Päinen");
+      harrastajaAdmin.getHarrastaja().setSukupuoli(Sukupuoli.M);
+      harrastajaAdmin.getHarrastaja().setTilapäinen(true);
+      harrastajaAdmin.getHarrastaja().setSyntynyt(new Date());
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      List<Harrastaja> harrastajat = entityManager.createQuery("select h from Harrastaja h", Harrastaja.class)
+         .getResultList();
+      Assert.assertEquals(1, harrastajat.size());
+      Harrastaja harrastaja = harrastajat.iterator().next();
+      Assert.assertEquals(1, harrastaja.getSopimukset().size());
+      Assert.assertTrue(harrastaja.getSopimukset().iterator().next().getTyyppi().isKoeaika());
+      Assert.assertEquals(2, harrastaja.getSopimukset().iterator().next().getTreenikertojaJäljellä());
+      Assert.assertTrue(harrastaja.isSopimuksetOK());
+   }
+
+   @Test
+   @ApplyScriptBefore(
+   { "cleanup.sql", "seed.sql" })
+   @Cleanup(phase = TestExecutionPhase.NONE)
+   public void testKaksiTilapaiskayttajaaTyhjentaaUuden()
+   {
+      harrastajaAdmin.lisääHarrastaja();
+      harrastajaAdmin.getHarrastaja().setEtunimi("Tila");
+      harrastajaAdmin.getHarrastaja().setSukunimi("Päinen");
+      harrastajaAdmin.getHarrastaja().setSukupuoli(Sukupuoli.M);
+      harrastajaAdmin.getHarrastaja().setTilapäinen(true);
+      harrastajaAdmin.getHarrastaja().setSyntynyt(new Date());
+      harrastajaAdmin.tallennaHarrastaja();
+      entityManager.clear();
+      List<Harrastaja> harrastajat = entityManager.createQuery("select h from Harrastaja h", Harrastaja.class)
+         .getResultList();
+      Assert.assertEquals(1, harrastajat.size());
+      harrastajaAdmin.poistaHarrastaja();
+      entityManager.clear();
+      harrastajat = entityManager.createQuery("select h from Harrastaja h", Harrastaja.class)
+         .getResultList();
+      Assert.assertEquals(0, harrastajat.size());
+      harrastajaAdmin.lisääHarrastaja();
+      Assert.assertNull(harrastajaAdmin.getHarrastaja().getEtunimi());
+   }
+
    @Test
    @ApplyScriptBefore(
    { "cleanup.sql" })
@@ -278,8 +329,7 @@ public class HarrastajaTest extends Perustesti
       emil = entityManager.find(Harrastaja.class, 3);
       Assert.assertEquals("Nix", emil.getHuoltaja().getEtunimi());
    }
-   
-   
+
    @Test
    @ApplyScriptBefore(
    { "cleanup.sql", "huoltajaperhe.sql" })

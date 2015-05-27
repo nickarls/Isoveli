@@ -33,6 +33,7 @@ import fi.budokwai.isoveli.malli.Harrastaja;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Perhe;
+import fi.budokwai.isoveli.malli.Rooli;
 import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimuslasku;
 import fi.budokwai.isoveli.malli.Sopimustarkistus;
@@ -110,6 +111,18 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void huoltajanPuhelinMuuttui(AjaxBehaviorEvent e)
    {
       harrastaja.setIce(harrastaja.getHuoltaja().getYhteystiedot().getPuhelinnumero());
+   }
+
+   @Produces
+   @Named
+   public List<Rooli> getMahdollisetRoolit()
+   {
+      List<Rooli> roolit = entityManager.createNamedQuery("roolit", Rooli.class).getResultList();
+      if (harrastaja != null)
+      {
+         roolit.removeAll(harrastaja.getRoolit());
+      }
+      return roolit;
    }
 
    public void tilapäisyysMuuttui(AjaxBehaviorEvent e)

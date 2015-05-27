@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
@@ -129,7 +129,8 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       }
       if (kaikkivetäjät == null)
       {
-         kaikkivetäjät = entityManager.createNamedQuery("harrastajat_roolissa", Harrastaja.class).setParameter("rooli", "Treenien vetäjä").getResultList();
+         kaikkivetäjät = entityManager.createNamedQuery("harrastajat_roolissa", Harrastaja.class)
+            .setParameter("rooli", "Treenien vetäjä").getResultList();
       }
       if (treenivetäjät == null)
       {
@@ -458,8 +459,8 @@ public class PerustietoAdmin extends Perustoiminnallisuus
       {
          StringJoiner stringJoiner = new StringJoiner(", ");
          käyttö.forEach(s -> stringJoiner.add(s.getHarrastaja().getNimi()));
-         String viesti = String.format("Sopimustyyppi on käytössä ja sitä ei voi poistaa (%dkpl: %s...)",
-            käyttö.size(), stringJoiner.toString());
+         String viesti = String.format("Sopimustyyppi on käytössä ja sitä ei voi poistaa (%dkpl: %s...)", käyttö.size(),
+            stringJoiner.toString());
          throw new IsoveliPoikkeus(viesti);
       }
    }

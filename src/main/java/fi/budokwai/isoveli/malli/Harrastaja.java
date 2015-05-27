@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import javax.enterprise.inject.Typed;
 import javax.persistence.CascadeType;
@@ -650,6 +651,11 @@ public class Harrastaja extends Henkilö
    public void setTulokset(String tulokset)
    {
       this.tulokset = tulokset;
+   }
+
+   public boolean onJoSuorittanut(Vyöarvo vyöarvo)
+   {
+      return vyökokeet.stream().map(v -> v.getVyöarvo()).collect(Collectors.toList()).contains(vyöarvo);
    }
 
 }

@@ -119,20 +119,16 @@ public class Vyökoe
    private Period getAikaEdellisestäKokeesta()
    {
       Optional<Vyökoe> edellinenVyökoe = harrastaja
-         .getVyökokeet()
-         .stream()
-         .filter(v -> v.getVyöarvo().getJärjestys() < vyöarvo.getJärjestys())
-         .sorted(
-            (v1, v2) -> Integer.valueOf(v2.vyöarvo.getJärjestys())
-               .compareTo(Integer.valueOf(v1.vyöarvo.getJärjestys()))).findFirst();
-      return edellinenVyökoe.isPresent() ? DateUtil.aikaväli(edellinenVyökoe.get().getPäivä()) : DateUtil
-         .aikaväli(harrastaja.getLuotu());
+         .getVyökokeet().stream().filter(v -> v.getVyöarvo().getJärjestys() < vyöarvo.getJärjestys()).sorted((v1,
+            v2) -> Integer.valueOf(v2.vyöarvo.getJärjestys()).compareTo(Integer.valueOf(v1.vyöarvo.getJärjestys())))
+         .findFirst();
+      return edellinenVyökoe.isPresent() ? DateUtil.aikaväli(edellinenVyökoe.get().getPäivä()) : Period.ZERO;
    }
 
    public String getAikaaVälissä()
    {
       Period aika = getAikaEdellisestäKokeesta().negated();
-      return aika == Period.ZERO ? "ei yhtään" : DateUtil.aikaväli2String(aika);
+      return aika == Period.ZERO ? "" : DateUtil.aikaväli2String(aika);
    }
 
    public boolean equals(Object toinen)

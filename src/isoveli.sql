@@ -97,6 +97,7 @@ create table henkilo(
 	perhe int,
 	salasana varchar(50),
 	kuva int,
+	paperilasku varchar(1) default 'E' not null,
 	arkistoitu varchar(1) default 'E' not null,
 	luotu date not null default current_timestamp,
 	constraint pk_henkilo primary key(id),

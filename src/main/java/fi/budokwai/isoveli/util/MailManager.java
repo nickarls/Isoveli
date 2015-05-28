@@ -3,10 +3,10 @@ package fi.budokwai.isoveli.util;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.annotation.Resource;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.inject.Model;
+import javax.inject.Inject;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -15,16 +15,21 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
+import fi.budokwai.isoveli.Asetukset;
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.BlobData;
 
-@RequestScoped
+@Model
 public class MailManager
 {
-   private static final String LÄHETTÄJÄ = "nickarls@gmail.com";
-
    @Resource(name = "java:jboss/mail/Isoveli")
    private Session mailiSessio;
+
+   @Inject
+   private Asetukset asetukset;
+
+   @Inject
+   private Loggaaja loggaaja;
 
    public void lähetäSähköposti(String osoite, String otsikko, String teksti)
    {
@@ -32,51 +37,45 @@ public class MailManager
       try
       {
          viesti.setRecipients(Message.RecipientType.TO, osoite);
-         viesti.setFrom(new InternetAddress(LÄHETTÄJÄ));
+         viesti.setFrom(new InternetAddress(asetukset.getSähköposti()));
          viesti.setSubject(otsikko);
          viesti.setSentDate(new java.util.Date());
          viesti.setText(teksti, "iso-8859-1", "html");
          Transport.send(viesti);
+         loggaaja.loggaa("Lähetti sähköpostin '%s' osoitteeseen %s", otsikko, osoite);
       } catch (MessagingException e)
       {
          throw new IsoveliPoikkeus("Sähköpostin lähetys epäonnistui", e);
       }
    }
 
-   public void lähetäSähköposti(String sähköposti, String otsikko, String teksti, BlobData pdf)
+   public void lähetäSähköposti(String osoite, String otsikko, String teksti, BlobData liite)
    {
       try
       {
-         MimeMessage viesti = teeViesti(sähköposti, otsikko);
-         MimeBodyPart messageBodyPart = new MimeBodyPart();
-         messageBodyPart.setText(teksti);
-         Multipart multipart = new MimeMultipart();
-         multipart.addBodyPart(messageBodyPart);
-         messageBodyPart = new MimeBodyPart();
-         DataSource source = new ByteArrayDataSource(pdf.getTieto(), pdf.getTyyppi().getMimetyyppi());
-         messageBodyPart.setDataHandler(new DataHandler(source));
-         messageBodyPart.setFileName(pdf.getNimi());
-         multipart.addBodyPart(messageBodyPart);
-         Transport.send(viesti);
-      } catch (MessagingException e)
-      {
-         throw new IsoveliPoikkeus(String.format("Viestin lähettäminen osoitteeseen %s epäonnistui", sähköposti), e);
-      }
-   }
-
-   private MimeMessage teeViesti(String sähköposti, String otsikko)
-   {
-      MimeMessage viesti = new MimeMessage(mailiSessio);
-      try
-      {
-         viesti.setRecipients(Message.RecipientType.TO, sähköposti);
-         viesti.setFrom(new InternetAddress(LÄHETTÄJÄ));
+         MimeBodyPart tekstiosa = new MimeBodyPart();
+         tekstiosa.setText(teksti);
+         DataSource tietolähde = new ByteArrayDataSource(liite.getTieto(), liite.getTyyppi().getMimetyyppi());
+         MimeBodyPart liiteosa = new MimeBodyPart();
+         liiteosa.setDataHandler(new DataHandler(tietolähde));
+         liiteosa.setFileName(liite.getNimi());
+         MimeMultipart mimeosa = new MimeMultipart();
+         mimeosa.addBodyPart(tekstiosa);
+         mimeosa.addBodyPart(liiteosa);
+         InternetAddress lähettäjä = new InternetAddress(asetukset.getSähköposti());
+         InternetAddress vastaanottaja = new InternetAddress(osoite);
+         MimeMessage viesti = new MimeMessage(mailiSessio);
+         viesti.setSender(lähettäjä);
          viesti.setSubject(otsikko);
-         viesti.setSentDate(new java.util.Date());
-      } catch (MessagingException e)
+         viesti.setRecipient(Message.RecipientType.TO, vastaanottaja);
+         viesti.setContent(mimeosa);
+         Transport.send(viesti);
+         loggaaja.loggaa("Lähetti sähköpostin '%s' (liite '%s') osoitteeseen %s", otsikko, liite.getNimi(), osoite);
+      } catch (Exception e)
       {
-         throw new IsoveliPoikkeus("Sähköpostin lähetys epäonnistui", e);
+         throw new IsoveliPoikkeus(String.format("Viestin lähettäminen osoitteeseen %s epäonnistui", osoite), e);
       }
-      return viesti;
+
    }
+
 }

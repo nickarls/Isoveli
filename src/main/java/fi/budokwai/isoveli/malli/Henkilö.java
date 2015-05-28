@@ -102,6 +102,9 @@ public class Henkilö implements Serializable
    @Temporal(TemporalType.DATE)
    protected Date luotu = new Date();
 
+   @Type(type = "KylläEi")   
+   private boolean paperilasku;
+   
    @OneToMany(mappedBy = "omistaja", cascade =
    { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
    private List<Viestilaatikko> viestilaatikot = new ArrayList<>();
@@ -384,6 +387,16 @@ public class Henkilö implements Serializable
          return viestilaatikko.get();
       }
       return new Viestilaatikko(this, tyyppi);
+   }
+
+   public boolean isPaperilasku()
+   {
+      return paperilasku;
+   }
+
+   public void setPaperilasku(boolean paperilasku)
+   {
+      this.paperilasku = paperilasku;
    }
 
 }

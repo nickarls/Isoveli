@@ -1,8 +1,5 @@
 package fi.budokwai.isoveli.test.yllapito.laskutus;
 
-import static org.junit.Assert.fail;
-
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -15,8 +12,6 @@ import org.jboss.arquillian.persistence.TestExecutionPhase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.google.common.collect.Lists;
 
 import fi.budokwai.isoveli.admin.LaskutusAdmin;
 import fi.budokwai.isoveli.malli.BlobData;
@@ -125,7 +120,7 @@ public class LaskutusTest extends Perustesti
          Assert.assertNotNull(lasku.getViitenumero());
          Assert.assertNotNull(lasku.getEräpäivä());
          Assert.assertNotNull(lasku.getId());
-         Assert.assertNotNull(lasku.getLuotu());
+         Assert.assertNotNull(lasku.getMuodostettu());
          Assert.assertNull(lasku.getMaksettu());
          Assert.assertEquals(LaskuTila.M, lasku.getTila());
          Assert.assertNotNull(laskurivi.getLasku());

@@ -40,7 +40,7 @@ import fi.budokwai.isoveli.util.DateUtil;
 @DynamicUpdate
 @Table(name = "lasku")
 @NamedQueries(
-{ @NamedQuery(name = "laskut", query = "select l from Lasku l order by l.luotu asc"),
+{ @NamedQuery(name = "laskut", query = "select l from Lasku l order by l.muodostettu asc"),
       @NamedQuery(name = "lasku_viitenumero", query = "select l from Lasku l where l.viitenumero=:viitenumero"),
       @NamedQuery(name = "laskuttamattomat_laskut", query = "select l from Lasku l where l.laskutettu='E'") })
 public class Lasku
@@ -69,7 +69,11 @@ public class Lasku
    private Henkilö henkilö;
 
    @Temporal(TemporalType.TIMESTAMP)
-   private Date luotu = new Date();
+   private Date muodostettu = new Date();
+
+   @Column(name = "lahetetty")
+   @Temporal(TemporalType.TIMESTAMP)
+   private Date lähetetty = new Date();
 
    @OneToOne(cascade =
    { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true)
@@ -149,16 +153,6 @@ public class Lasku
    public boolean isLaskuMaksettu()
    {
       return maksettu != null;
-   }
-
-   public Date getLuotu()
-   {
-      return luotu;
-   }
-
-   public void setLuotu(Date luotu)
-   {
-      this.luotu = luotu;
    }
 
    public Date getEräpäivä()
@@ -282,8 +276,7 @@ public class Lasku
 
    public void laskePerhealennukset()
    {
-      List<Laskurivi> harjoitusmaksut = laskurivit
-         .stream()
+      List<Laskurivi> harjoitusmaksut = laskurivit.stream()
          .filter(
             l -> l.getSopimuslasku() != null && l.getSopimuslasku().getSopimus().getTyyppi().isHarjoittelumaksutyyppi())
          .sorted((lr1, lr2) -> Double.valueOf(lr1.getRivihinta()).compareTo(Double.valueOf(lr2.getRivihinta())))
@@ -331,6 +324,26 @@ public class Lasku
    public String toString()
    {
       return String.format("%s: %d riviä, EUR%f", henkilö.getNimi(), laskurivit.size(), getYhteishinta());
+   }
+
+   public Date getLähetetty()
+   {
+      return lähetetty;
+   }
+
+   public void setLähetetty(Date lähetetty)
+   {
+      this.lähetetty = lähetetty;
+   }
+
+   public Date getMuodostettu()
+   {
+      return muodostettu;
+   }
+
+   public void setMuodostettu(Date muodostettu)
+   {
+      this.muodostettu = muodostettu;
    }
 
 }

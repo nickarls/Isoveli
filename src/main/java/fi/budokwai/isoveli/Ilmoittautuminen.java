@@ -28,7 +28,6 @@ import fi.budokwai.isoveli.malli.Treeni;
 import fi.budokwai.isoveli.malli.Treenikäynti;
 import fi.budokwai.isoveli.malli.Treenisessio;
 import fi.budokwai.isoveli.malli.Viikonpäivä;
-import fi.budokwai.isoveli.malli.Vyöarvo;
 import fi.budokwai.isoveli.util.Muuttui;
 
 @Named

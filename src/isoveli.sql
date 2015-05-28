@@ -86,7 +86,7 @@ create table blobdata(
 	constraint uniikki_blobavain unique(avain)	
 );
 
-// HENKIL√ñ
+// HENKIL÷ñ
 drop table if exists henkilo;
 create table henkilo(
 	id int not null auto_increment,
@@ -156,10 +156,10 @@ create table rooli(
 	constraint pk_rooli primary key(id),
 	constraint uniikki_roolinimi unique(nimi)
 );
-insert into rooli(id, nimi) values (1, 'Yll√§pit√§j√§');
-insert into rooli(id, nimi) values (2, 'Treenien vet√§j√§');
-insert into rooli(id, nimi) values (3, 'P√§ivyst√§j√§');
-insert into rooli(id, nimi) values (4, 'Vy√∂kokeen pit√§j√§');
+insert into rooli(id, nimi) values (1, 'Yll‰pit‰j‰');
+insert into rooli(id, nimi) values (2, 'Treenien vet‰j‰');
+insert into rooli(id, nimi) values (3, 'P‰ivyst‰j‰');
+insert into rooli(id, nimi) values (4, 'Vyˆkokeen pit‰j‰');
 
 // HENKILOROOLI
 drop table if exists henkilorooli;
@@ -297,9 +297,10 @@ create table lasku(
 	id int not null auto_increment,
 	henkilo int not null,
 	tila varchar(1) not null default 'A',
+	muodostettu datetime not null default current_timestamp,
+	lahetetty datetime,
 	erapaiva date,
 	maksettu date,
-	luotu datetime not null default current_timestamp,
 	pdf int,
 	laskutettu varchar(1) not null default 'E',
 	viitenumero varchar(50),
@@ -307,7 +308,7 @@ create table lasku(
 	constraint lasku_henkilo_viittaus foreign key(henkilo) references henkilo(id),
 	constraint lasku_pdf_viittaus foreign key(pdf) references blobdata(id)
 );
-insert into lasku(id, henkilo, erapaiva, maksettu, tila, laskutettu, viitenumero, luotu) values (1, 2, parsedatetime('14.1.2013', 'dd.MM.yyyy'), parsedatetime('10.1.2013', 'dd.MM.yyyy'), 'M', 'K', 12345, parsedatetime('1.1.2013', 'dd.MM.yyyy'));
+insert into lasku(id, henkilo, erapaiva, maksettu, tila, laskutettu, viitenumero) values (1, 2, parsedatetime('14.1.2013', 'dd.MM.yyyy'), parsedatetime('10.1.2013', 'dd.MM.yyyy'), 'M', 'K', 12345);
 
 drop table if exists laskurivi;
 create table laskurivi(

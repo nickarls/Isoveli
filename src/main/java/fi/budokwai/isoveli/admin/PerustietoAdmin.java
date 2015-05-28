@@ -9,7 +9,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
-import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;

@@ -55,9 +55,6 @@ public class DBExport
    @Inject
    private MailManager mailManager;
 
-   @Inject
-   private Loggaaja loggaja;
-
    // @Schedule(minute = "*/1", hour = "*", persistent = false)
    public void teeVarmuuskopio()
    {

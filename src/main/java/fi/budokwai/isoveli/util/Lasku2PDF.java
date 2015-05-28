@@ -114,7 +114,7 @@ public class Lasku2PDF
       Format format = Format.create().withFont("Helvetica", 12, Font.NORMAL);
       DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
       lis‰‰Solu(taulu, "P‰iv‰ys", format);
-      lis‰‰Solu(taulu, df.format(lasku.getLuotu()), format);
+      lis‰‰Solu(taulu, df.format(lasku.getMuodostettu()), format);
       lis‰‰Solu(taulu, "Laskunumero", format);
       lis‰‰Solu(taulu, "" + lasku.getId(), format);
       lis‰‰Solu(taulu, "Asiakasnumero", format);

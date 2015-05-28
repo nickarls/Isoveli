@@ -13,7 +13,6 @@ import org.icefaces.util.JavaScriptRunner;
 import fi.budokwai.isoveli.IsoveliPoikkeus;
 import fi.budokwai.isoveli.malli.Henkilö;
 import fi.budokwai.isoveli.malli.Tunnusvaihto;
-import fi.budokwai.isoveli.util.Util;
 
 @Model
 @Stateful

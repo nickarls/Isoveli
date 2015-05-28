@@ -43,7 +43,7 @@ create table osoite(
 	constraint pk_osoite primary key(id)
 );
 insert into osoite(id, osoite, postinumero, kaupunki) values (1, 'Vaakunatie 10 as 7', '20780', 'Kaarina');
-insert into osoite(id, osoite, postinumero, kaupunki) values (2, 'Diket 1', '20010', 'Kyrksläpp');
+insert into osoite(id, osoite, postinumero, kaupunki) values (2, 'Diket 1', '20010', 'Kyrkslapp');
 
 // YHTEYSTIETO
 drop table if exists yhteystieto;
@@ -55,8 +55,8 @@ create table yhteystieto(
 	constraint pk_yhteystieto primary key(id)
 );
 insert into yhteystieto(id, puhelinnumero, sahkoposti) values (1, '0405062266', 'nickarls@gmail.com');
-insert into yhteystieto(id, puhelinnumero, sahkoposti) values (2, '0407218809', 'heidi.karlsson@abo.fi');
-insert into yhteystieto(id, puhelinnumero, sahkoposti) values (3, '0507211234', 'patrik.rosqvist@iki.fi');
+insert into yhteystieto(id, puhelinnumero, sahkoposti) values (2, '0407218809', 'nickarls@gmail.com');
+insert into yhteystieto(id, puhelinnumero, sahkoposti) values (3, '0507211234', 'nickarls@gmail.com');
 
 
 // PERHE
@@ -302,13 +302,12 @@ create table lasku(
 	erapaiva date,
 	maksettu date,
 	pdf int,
-	laskutettu varchar(1) not null default 'E',
 	viitenumero varchar(50),
 	constraint pk_lasku primary key(id),
 	constraint lasku_henkilo_viittaus foreign key(henkilo) references henkilo(id),
 	constraint lasku_pdf_viittaus foreign key(pdf) references blobdata(id)
 );
-insert into lasku(id, henkilo, erapaiva, maksettu, tila, laskutettu, viitenumero) values (1, 2, parsedatetime('14.1.2013', 'dd.MM.yyyy'), parsedatetime('10.1.2013', 'dd.MM.yyyy'), 'M', 'K', 12345);
+//insert into lasku(id, henkilo, erapaiva, maksettu, tila, viitenumero) values (1, 2, parsedatetime('14.1.2013', 'dd.MM.yyyy'), parsedatetime('10.1.2013', 'dd.MM.yyyy'), 'M', 'K', 12345);
 
 drop table if exists laskurivi;
 create table laskurivi(

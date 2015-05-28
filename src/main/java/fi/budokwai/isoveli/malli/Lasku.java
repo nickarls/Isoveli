@@ -31,7 +31,6 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Type;
 
 import fi.budokwai.isoveli.util.DateUtil;
 
@@ -40,9 +39,10 @@ import fi.budokwai.isoveli.util.DateUtil;
 @DynamicUpdate
 @Table(name = "lasku")
 @NamedQueries(
-{ @NamedQuery(name = "laskut", query = "select l from Lasku l order by l.muodostettu asc"),
-      @NamedQuery(name = "lasku_viitenumero", query = "select l from Lasku l where l.viitenumero=:viitenumero"),
-      @NamedQuery(name = "laskuttamattomat_laskut", query = "select l from Lasku l where l.laskutettu='E'") })
+{ @NamedQuery(name = "lähettämättömät_laskut", query = "select l from Lasku l where l.lähetetty=null and l.tila='M' order by l.muodostettu asc"),
+      @NamedQuery(name = "maksamattomat_laskut", query = "select l from Lasku l where l.maksettu=null and l.tila='L' order by l.lähetetty asc"),
+      @NamedQuery(name = "maksetut_laskut", query = "select l from Lasku l where l.maksettu is not null and l.tila='K' order by l.maksettu asc"),
+      @NamedQuery(name = "lasku_viitenumero", query = "select l from Lasku l where l.viitenumero=:viitenumero") })
 public class Lasku
 {
    @Id
@@ -73,15 +73,12 @@ public class Lasku
 
    @Column(name = "lahetetty")
    @Temporal(TemporalType.TIMESTAMP)
-   private Date lähetetty = new Date();
+   private Date lähetetty;
 
    @OneToOne(cascade =
    { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true)
    @JoinColumn(name = "pdf")
    private BlobData pdf;
-
-   @Type(type = "KylläEi")
-   private boolean laskutettu;
 
    @Size(max = 50)
    private String viitenumero;
@@ -230,16 +227,6 @@ public class Lasku
    public boolean isLaskuMyöhässä()
    {
       return getMaksuaikaa() < 0;
-   }
-
-   public boolean isLaskutettu()
-   {
-      return laskutettu;
-   }
-
-   public void setLaskutettu(boolean laskutettu)
-   {
-      this.laskutettu = laskutettu;
    }
 
    public String getViitenumero()

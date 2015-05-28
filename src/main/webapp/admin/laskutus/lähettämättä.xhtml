@@ -1,5 +1,6 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"	
 	xmlns:ace="http://www.icefaces.org/icefaces/components">
 	<ace:confirmationDialog id="vahvistaLaskunPoisto" message="Oletko varma?" header="Vahvista" width="350" height="200"
 		closable="true" position="center">
@@ -18,17 +19,15 @@
 		</h:panelGrid>
 	</ace:confirmationDialog>
 
-	<h:panelGrid columns="4">
+	<h:panelGrid columns="2">
 		<h:commandButton rendered="#{lasku != null}" styleClass="ikoni" title="Poista lasku"
 			onclick="ice.ace.instance('form:vahvistaLaskunPoisto').show();" image="/kuvat/poista.png" immediate="true" />
-		<h:outputLink value="../API/laskut/zippaaLaskuttamattomat" target="_blank" title="Zippaa laskuttamattomat">
-			<h:graphicImage value="/kuvat/zip.jpg" styleClass="ikoni" />
-		</h:outputLink>
-		<h:commandLink action="#{laskutusAdmin.lähetäLaskut}" title="Lähetä laskut">
+		<h:commandLink action="#{laskutusAdmin.lähetäLaskut}" title="Lähetä laskut" rendered="#{fn:length(lähettämättömätLaskut) != 0}">
 			<h:graphicImage value="/kuvat/lähetä.jpg" styleClass="ikoni"/>
 		</h:commandLink>
 	</h:panelGrid>
-	<ace:dataTable value="#{laskut}" var="_lasku" selectionMode="single" stateMap="#{laskutusAdmin.laskuRSM}" rows="10"
+	
+	<ace:dataTable value="#{lähettämättömätLaskut}" var="_lasku" selectionMode="single" stateMap="#{laskutusAdmin.laskuRSM}" rows="10"
 		paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false"
 		rowSelectListener="#{laskutusAdmin.laskuValittu}">
 		<ace:column>
@@ -48,6 +47,12 @@
 				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
+		<ace:column headerText="Lähetetty" filterBy="#{_lasku.lähetetty}" filterMatchMode="contains" sortBy="#{_lasku.lähetetty}"
+			styleClass="lefttext">
+			<h:outputText value="#{_lasku.lähetetty}">
+				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET" />
+			</h:outputText>
+		</ace:column>
 		<ace:column headerText="Eräpäivä" filterBy="#{_lasku.eräpäivä}" filterMatchMode="contains" sortBy="#{_lasku.eräpäivä}"
 			styleClass="lefttext">
 			<h:outputText value="#{_lasku.eräpäivä}">
@@ -64,9 +69,6 @@
 			sortBy="#{_lasku.maksuaikaa}" styleClass="lefttext">
 			<h:outputText value="#{_lasku.maksuaikaa}" rendered="#{_lasku.maksettu == null}"
 				style="color:#{_lasku.maksuaikaa &lt; 0 ? 'red' : 'green'}" />
-		</ace:column>
-		<ace:column headerText="Tila" filterBy="#{_lasku.tila}" filterOptions="#{tilasuodatukset}" styleClass="lefttext">
-			<h:outputText value="#{_lasku.tila.nimi}" />
 		</ace:column>
 		<ace:column headerText="Laskurivejä" filterBy="#{_lasku.laskurivejä}" filterMatchMode="contains"
 			sortBy="#{_lasku.laskurivejä}" styleClass="lefttext">
@@ -93,7 +95,7 @@
 		</ace:column>
 	</ace:dataTable>
 	<ace:dataTable rows="10" value="#{lasku.laskurivit}" var="_laskurivi" paginator="true" paginatorPosition="bottom"
-		id="laskurivit" paginatorAlwaysVisible="false" rendered="#{lasku != null}" stateMap="#{laskutusAdmin.laskuriviRSM}">
+		id="llaskurivit" paginatorAlwaysVisible="false" rendered="#{lasku != null}" stateMap="#{laskutusAdmin.laskuriviRSM}">
 		<ace:ajax event="editSubmit" render="@all" listener="#{laskutusAdmin.tallennaRivi}" />
 		<ace:column headerText="#" styleClass="lefttext">
 			<h:outputText value="#{_laskurivi.rivinumero}" />

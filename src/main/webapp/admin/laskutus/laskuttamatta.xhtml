@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	<h:commandButton image="/kuvat/laskuta.png"
+		action="#{laskutusAdmin.laskutaSopimukset}" styleClass="ikoni"
+		rendered="#{fn:length(laskuttamattomatSopimukset) != 0}"
+		title="Laskuta laskuttamattomat sopimukset" />
+	<ace:dataTable value="#{laskuttamattomatSopimukset}" var="_sopimus"
+		paginator="true" paginatorPosition="bottom"
+		paginatorAlwaysVisible="false" rows="10">
+		<ace:column headerText="Harrastaja" styleClass="lefttext">
+			<h:outputText value="#{_sopimus.harrastaja.nimi}" />
+		</ace:column>
+		<ace:column headerText="Tyyppi" styleClass="lefttext">
+			<h:outputText value="#{_sopimus.tyyppi.nimi}" />
+		</ace:column>
+		<ace:column headerText="Maksuväli" styleClass="lefttext">
+			<h:outputText value="#{_sopimus.maksuväli}" />
+		</ace:column>
+		<ace:column headerText="Umpeutuu" styleClass="lefttext">
+			<h:outputText value="#{_sopimus.umpeutuu}">
+				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Treenikrt til." styleClass="lefttext">
+			<h:outputText value="#{_sopimus.treenikertojaTilattu}" rendered="#{_sopimus.tyyppi.treenikertoja}"/>
+		</ace:column>
+		<ace:column headerText="Treenikrt jäl." styleClass="lefttext">
+			<h:outputText value="#{_sopimus.treenikertojaJäljellä}" rendered="#{_sopimus.tyyppi.treenikertoja}"/>
+		</ace:column>
+		<ace:column headerText="Viime lask." styleClass="lefttext">
+			<h:outputText value="#{_sopimus.viimeksiLaskutettu}">
+				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
+			</h:outputText>
+		</ace:column>
+		<ace:column>
+			<h:graphicImage value="/kuvat/alivalikko.png" style="width:24px" id="alivalikko" />
+			<ace:contextMenu for="alivalikko">
+				<ace:menuItem value="Laskuta" action="#{laskutusAdmin.laskuta(_lasku)}" />
+			</ace:contextMenu>
+		</ace:column>		
+	</ace:dataTable>
+
+</ui:composition>

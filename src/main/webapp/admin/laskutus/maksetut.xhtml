@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<ace:dataTable value="#{maksetutLaskut}" var="_lasku" rows="10"
+		paginator="true" paginatorPosition="bottom"
+		paginatorAlwaysVisible="false">
+		<ace:column>
+			<ace:expansionToggler />
+		</ace:column>
+		<ace:column headerText="Viite" filterBy="#{_lasku.viitenumero}"
+			filterMatchMode="contains" sortBy="#{_lasku.viitenumero}"
+			styleClass="lefttext">
+			<h:outputText value="#{_lasku.viitenumero}" />
+		</ace:column>
+		<ace:column headerText="Harrastaja" filterBy="#{_lasku.henkilö.nimi}"
+			filterMatchMode="contains" sortBy="#{_lasku.henkilö.nimi}"
+			styleClass="lefttext">
+			<h:outputText value="#{_lasku.henkilö.nimi}" />
+		</ace:column>
+		<ace:column headerText="Muodostettu" filterBy="#{_lasku.muodostettu}"
+			filterMatchMode="contains" sortBy="#{_lasku.muodostettu}"
+			styleClass="lefttext">
+			<h:outputText value="#{_lasku.muodostettu}">
+				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Lähetetty" filterBy="#{_lasku.lähetetty}"
+			filterMatchMode="contains" sortBy="#{_lasku.lähetetty}"
+			styleClass="lefttext">
+			<h:outputText value="#{_lasku.lähetetty}">
+				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Eräpäivä" filterBy="#{_lasku.eräpäivä}"
+			filterMatchMode="contains" sortBy="#{_lasku.eräpäivä}"
+			styleClass="lefttext">
+			<h:outputText value="#{_lasku.eräpäivä}">
+				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Maksettu" filterBy="#{_lasku.maksettu}"
+			filterMatchMode="contains" sortBy="#{_lasku.maksettu}"
+			styleClass="lefttext">
+			<h:outputText value="#{_lasku.maksettu}">
+				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Maksuaikaa" filterBy="#{_lasku.maksuaikaa}"
+			filterMatchMode="contains" sortBy="#{_lasku.maksuaikaa}"
+			styleClass="lefttext">
+			<h:outputText value="#{_lasku.maksuaikaa}"
+				rendered="#{_lasku.maksettu == null}"
+				style="color:#{_lasku.maksuaikaa &lt; 0 ? 'red' : 'green'}" />
+		</ace:column>
+		<ace:column headerText="Laskurivejä" filterBy="#{_lasku.laskurivejä}"
+			filterMatchMode="contains" sortBy="#{_lasku.laskurivejä}"
+			styleClass="lefttext">
+			<h:outputText value="#{_lasku.laskurivejä}" />
+		</ace:column>
+		<ace:column headerText="Summa" filterBy="#{_lasku.yhteishinta}"
+			filterMatchMode="contains" sortBy="#{_lasku.yhteishinta}"
+			styleClass="lefttext">
+			<h:outputText value="#{_lasku.yhteishinta}">
+				<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="PDF">
+			<h:outputLink target="_blank"
+				value="#{request.contextPath}/API/blob/lataa/#{_lasku.pdf.avain}"
+				rendered="#{_lasku.pdf != null}" title="Lataa lasku PDF-muodossa">
+				<h:graphicImage value="/kuvat/pdf.png" style="width:24px" />
+			</h:outputLink>
+		</ace:column>
+	</ace:dataTable>
+	<ace:dataTable rows="10" value="#{lasku.laskurivit}" var="_laskurivi"
+		paginator="true" paginatorPosition="bottom" id="klaskurivit"
+		paginatorAlwaysVisible="false" rendered="#{lasku != null}">
+		<ace:column headerText="#" styleClass="lefttext">
+			<h:outputText value="#{_laskurivi.rivinumero}" />
+		</ace:column>
+		<ace:column headerText="Tuotenimi" styleClass="lefttext">
+			<h:outputText value="#{_laskurivi.tuotenimi}" />
+		</ace:column>
+		<ace:column headerText="Infotieto" styleClass="lefttext">
+			<h:outputText value="#{_laskurivi.infotieto}" />
+		</ace:column>
+		<ace:column headerText="Määrä" styleClass="lefttext">
+			<h:outputText value="#{_laskurivi.määrä}" />
+		</ace:column>
+		<ace:column headerText="Yks." styleClass="lefttext">
+			<h:outputText value="#{_laskurivi.yksikkö}" />
+		</ace:column>
+		<ace:column headerText="Yks. hinta" styleClass="lefttext">
+			<h:outputText value="#{_laskurivi.yksikköhinta}">
+				<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
+			</h:outputText>
+		</ace:column>
+		<ace:column headerText="Hinta" styleClass="lefttext">
+			<h:outputText value="#{_laskurivi.rivihinta}">
+				<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
+			</h:outputText>
+		</ace:column>
+	</ace:dataTable>
+
+</ui:composition>

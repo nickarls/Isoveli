@@ -1,21 +1,18 @@
 package fi.budokwai.isoveli.admin;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
-import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -41,7 +38,7 @@ import fi.budokwai.isoveli.util.DateUtil;
 import fi.budokwai.isoveli.util.Lasku2PDF;
 import fi.budokwai.isoveli.util.Loggaaja;
 import fi.budokwai.isoveli.util.MailManager;
-import fi.budokwai.isoveli.util.Zippaaja;
+import fi.budokwai.isoveli.util.Tulostaja;
 
 @Stateful
 @SessionScoped
@@ -58,31 +55,16 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    private Loggaaja loggaaja;
 
    private RowStateMap laskuRSM = new RowStateMap();
-   private RowStateMap laskuttamattomatRSM = new RowStateMap();
    private RowStateMap laskuriviRSM = new RowStateMap();
 
-   private List<Sopimus> laskuttamattomat;
-   private List<Lasku> laskut;
+   private List<Sopimus> laskuttamattomatSopimukset;
+   private List<Lasku> lähettämättömätLaskut;
+   private List<Lasku> maksamattomatLaskut;
+   private List<Lasku> maksetutLaskut;
+
    private Lasku lasku;
-   private Sopimus sopimus;
-   private List<SelectItem> tilasuodatukset;
 
    private String kuitattavatLaskut;
-
-   @PostConstruct
-   public void init()
-   {
-      tilasuodatukset = new ArrayList<SelectItem>();
-      tilasuodatukset.add(new SelectItem("", "Kaikki", "Kaikki", false, false, true));
-      tilasuodatukset.add(new SelectItem(LaskuTila.M.name(), LaskuTila.M.getNimi(), LaskuTila.M.getNimi(), false,
-         false, false));
-      tilasuodatukset.add(new SelectItem(LaskuTila.L.name(), LaskuTila.L.getNimi(), LaskuTila.L.getNimi(), false,
-         false, false));
-      tilasuodatukset.add(new SelectItem(LaskuTila.K.name(), LaskuTila.K.getNimi(), LaskuTila.K.getNimi(), false,
-         false, false));
-      tilasuodatukset.add(new SelectItem(LaskuTila.X.name(), LaskuTila.X.getNimi(), LaskuTila.X.getNimi(), false,
-         false, false));
-   }
 
    @Inject
    private Asetukset asetukset;
@@ -92,20 +74,6 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public Lasku getLasku()
    {
       return lasku;
-   }
-
-   @Produces
-   @Named
-   public Sopimus getLaskuttamatonSopimus()
-   {
-      return sopimus;
-   }
-
-   @Produces
-   @Named
-   public List<SelectItem> getTilasuodatukset()
-   {
-      return tilasuodatukset;
    }
 
    public void kuittaaLaskut()
@@ -144,33 +112,45 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       info("Kuittaus on suoritettu, onnistuneita on %d ja epäonnistuineita %d. Katso mahdolliset virheet logista",
          kuitattuja, virheitä);
       kuitattavatLaskut = null;
+      maksamattomatLaskut = null;
+      maksetutLaskut = null;
    }
+
+   @Inject
+   private Tulostaja tulostaja;
 
    public void lähetäLaskut()
    {
-      List<Lasku> laskuttamattomat = entityManager.createNamedQuery("laskuttamattomat_laskut", Lasku.class)
+      List<Lasku> laskuttamattomat = entityManager.createNamedQuery("lähettämättömät_laskut", Lasku.class)
          .getResultList();
-      laskuttamattomat.forEach(lasku -> {
+      laskuttamattomat.stream().filter(lasku -> !lasku.getHenkilö().isPaperilasku()).forEach(lasku -> {
          try
          {
             mailManager.lähetäSähköposti(lasku.getHenkilö().getYhteystiedot().getSähköposti(), "Lasku", "Liitteenä",
                lasku.getPdf());
-            lasku.setLaskutettu(true);
+            lasku.setLähetetty(new Date());
+            lasku.setTila(LaskuTila.L);
             lasku = entityManager.merge(lasku);
          } catch (IsoveliPoikkeus e)
          {
-
+            loggaaja.loggaa(e.getMessage());
          }
       });
+      info("Lähetti %d laskua", laskuttamattomat.size());
+      laskuttamattomat.stream().filter(lasku -> lasku.getHenkilö().isPaperilasku()).forEach(lasku -> {
+         tulostaja.tulostaTiedosto(lasku.getPdf());
+      });
+      lähettämättömätLaskut = null;
+      maksamattomatLaskut = null;
    }
 
    public void laskutaSopimukset()
    {
-      List<Sopimus> sopimukset = haeLaskuttamattomat();
-      Map<Osoite, List<Sopimus>> sopimuksetPerOsoite = sopimukset.stream().collect(
-         Collectors.groupingBy(sopimus -> sopimus.getLaskutusosoite()));
+      List<Sopimus> sopimukset = haeLaskuttamattomatSopimukset();
+      Map<Osoite, List<Sopimus>> sopimuksetPerOsoite = sopimukset.stream()
+         .collect(Collectors.groupingBy(sopimus -> sopimus.getLaskutusosoite()));
       sopimuksetPerOsoite.values().forEach(osoitteenSopimukset -> teeLaskuOsoitteelle(osoitteenSopimukset));
-      laskuttamattomat = haeLaskuttamattomat();
+      laskuttamattomatSopimukset = haeLaskuttamattomatSopimukset();
       info("Muodosti %d sopimuksesta %d laskua", sopimukset.size(), sopimuksetPerOsoite.keySet().size());
       loggaaja.loggaa("Suoritti laskutusajon");
    }
@@ -217,7 +197,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       entityManager.persist(lasku);
       lasku.laskeViitenumero();
       byte[] pdf = teePdfLasku(lasku);
-      lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), pdf));
+      lasku.setPdf(BlobData.PDF(String.format("lasku-%d.pdf", lasku.getId()), pdf));
       entityManager.persist(lasku);
       loggaaja.loggaa(String.format("Teki laskun henkilölle %s", henkilö.getNimi()));
    }
@@ -269,40 +249,57 @@ public class LaskutusAdmin extends Perustoiminnallisuus
 
    @Produces
    @Named
-   public List<Sopimus> getLaskuttamattomat()
+   public List<Sopimus> getLaskuttamattomatSopimukset()
    {
-      if (laskuttamattomat == null)
+      if (laskuttamattomatSopimukset == null)
       {
-         haeLaskuttamattomat();
+         laskuttamattomatSopimukset = haeLaskuttamattomatSopimukset();
       }
-      return laskuttamattomat;
+      return laskuttamattomatSopimukset;
    }
 
    @Produces
    @Named
-   public List<Lasku> getLaskut()
+   public List<Lasku> getLähettämättömätLaskut()
    {
-      if (laskut == null)
+      if (lähettämättömätLaskut == null)
       {
-         haeLaskut();
+         lähettämättömätLaskut = entityManager.createNamedQuery("lähettämättömät_laskut", Lasku.class).getResultList();
       }
-      return laskut;
+      return lähettämättömätLaskut;
    }
 
-   private void haeLaskut()
+   @Produces
+   @Named
+   public List<Lasku> getMaksamattomatLaskut()
    {
-      laskut = entityManager.createNamedQuery("laskut", Lasku.class).getResultList();
+      if (maksamattomatLaskut == null)
+      {
+         maksamattomatLaskut = entityManager.createNamedQuery("maksamattomat_laskut", Lasku.class).getResultList();
+      }
+      return maksamattomatLaskut;
    }
 
-   private List<Sopimus> haeLaskuttamattomat()
+   @Produces
+   @Named
+   public List<Lasku> getMaksetutLaskut()
    {
-      laskuttamattomat = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class)
+      if (maksetutLaskut == null)
+      {
+         maksetutLaskut = entityManager.createNamedQuery("maksetut_laskut", Lasku.class).getResultList();
+      }
+      return maksetutLaskut;
+   }
+
+   private List<Sopimus> haeLaskuttamattomatSopimukset()
+   {
+      List<Sopimus> sopimukset = null;
+      sopimukset = entityManager.createNamedQuery("laskuttamattomat_sopimukset", Sopimus.class)
          .setParameter("nyt", DateUtil.tänäänDate()).getResultList();
-      laskuttamattomat.addAll(entityManager.createNamedQuery("uudet_sopimukset", Sopimus.class)
+      sopimukset.addAll(entityManager.createNamedQuery("uudet_sopimukset", Sopimus.class)
          .setParameter("nyt", DateUtil.tänäänDate()).getResultList());
-      laskuttamattomat.addAll(entityManager.createNamedQuery("laskuttamattomat_kymppikerrat", Sopimus.class)
-         .getResultList());
-      return laskuttamattomat;
+      sopimukset.addAll(entityManager.createNamedQuery("laskuttamattomat_kymppikerrat", Sopimus.class).getResultList());
+      return sopimukset;
    }
 
    public void tabiMuuttui(ValueChangeEvent e)
@@ -311,9 +308,9 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       switch (uusiTabi)
       {
       case 0:
-         laskut = null;
+         laskuttamattomatSopimukset = null;
       case 1:
-         laskuttamattomat = null;
+         lähettämättömätLaskut = null;
       }
       entityManager.clear();
    }
@@ -321,16 +318,6 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public void laskuValittu(SelectEvent e)
    {
       lasku = (Lasku) e.getObject();
-   }
-   
-   public void sopimusValittu(SelectEvent e)
-   {
-      sopimus = (Sopimus) e.getObject();
-   }
-
-   public void piilotaSopimus()
-   {
-      sopimus = null;
    }
 
    public void piilotaLasku()
@@ -343,7 +330,6 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       entityManager.remove(lasku);
       entityManager.flush();
       info("Lasku poistettu");
-      laskut = null;
    }
 
    public RowStateMap getLaskuRSM()
@@ -354,27 +340,6 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public void setLaskuRSM(RowStateMap laskuRSM)
    {
       this.laskuRSM = laskuRSM;
-   }
-
-   public RowStateMap getLaskuttamattomatRSM()
-   {
-      return laskuttamattomatRSM;
-   }
-
-   public void setLaskuttamattomatRSM(RowStateMap laskuttamattomatRSM)
-   {
-      this.laskuttamattomatRSM = laskuttamattomatRSM;
-   }
-
-   public BlobData zippaaLaskuttamattomat()
-   {
-      List<Lasku> laskuttamattomat = entityManager.createNamedQuery("laskuttamattomat_laskut", Lasku.class)
-         .getResultList();
-      Zippaaja zippaaja = new Zippaaja();
-      laskuttamattomat.forEach(lasku -> {
-         zippaaja.lisääZipTiedostoon(String.format("%s.pdf", lasku.getHenkilö().getNimi()), lasku.getPdf().getTieto());
-      });
-      return zippaaja.haeZipTiedosto("laskuttamattomat");
    }
 
    public void tallennaRivi(AjaxBehaviorEvent e)

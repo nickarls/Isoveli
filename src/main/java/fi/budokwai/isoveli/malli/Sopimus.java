@@ -49,7 +49,9 @@ import fi.budokwai.isoveli.util.DateUtil;
          + "from Sopimus s, Harrastaja h "
          + "where s.harrastaja = h and s.tyyppi.treenikertoja='K' and h.arkistoitu = 'E' and (" 
          + "s.treenikertojaJäljellä = 0 or (not exists (select sl from Sopimuslasku sl where sl.sopimus=s)))"
-         ) })
+         ),
+      @NamedQuery(name="sopimukset_tyypillä", query="select s from Sopimus s where s.tyyppi=:tyyppi")
+      })
 public class Sopimus
 {
    public static final Sopimus EI_OOTA = new Sopimus();

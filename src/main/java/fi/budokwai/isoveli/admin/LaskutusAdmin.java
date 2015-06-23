@@ -34,6 +34,7 @@ import fi.budokwai.isoveli.malli.LaskuTila;
 import fi.budokwai.isoveli.malli.Laskurivi;
 import fi.budokwai.isoveli.malli.Osoite;
 import fi.budokwai.isoveli.malli.Sopimus;
+import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.util.DateUtil;
 import fi.budokwai.isoveli.util.Lasku2PDF;
 import fi.budokwai.isoveli.util.Loggaaja;
@@ -74,6 +75,25 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public Lasku getLasku()
    {
       return lasku;
+   }
+
+   public double getVuosikertymä(Sopimustyyppi sopimustyyppi)
+   {
+      List<Sopimus> sopimukset = entityManager.createNamedQuery("sopimukset_tyypillä", Sopimus.class)
+         .setParameter("tyyppi", sopimustyyppi).getResultList();
+      if (sopimustyyppi.isJäsenmaksutyyppi() || sopimustyyppi.isAlkeiskurssi())
+      {
+         return sopimukset.stream().mapToDouble(s -> s.getTyyppi().getHinta()).sum();
+      } else
+      {
+         return sopimukset.stream().mapToDouble(s -> s.getTyyppi().getHinta() * 12).sum();
+      }
+   }
+
+   public double getYhteisvuosikertymä()
+   {
+      List<Sopimustyyppi> tyypit = entityManager.createNamedQuery("sopimustyypit", Sopimustyyppi.class).getResultList();
+      return tyypit.stream().mapToDouble(t -> getVuosikertymä(t)).sum();
    }
 
    public void kuittaaLaskut()

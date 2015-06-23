@@ -67,6 +67,16 @@
 						<f:convertNumber pattern="0.00" />
 					</h:outputText>
 				</ace:column>
+				<ace:column headerText="Vuosi €">
+					<h:outputText value="#{laskutusAdmin.getVuosikertymä(_sopimustyyppi)}">
+						<f:convertNumber pattern="0.00" />
+					</h:outputText>
+				</ace:column>
+				<f:facet name="footer">
+					<h:outputText value="#{laskutusAdmin.yhteisvuosikertymä}" style="float:right">
+						<f:convertNumber pattern="0.00" />
+					</h:outputText>
+				</f:facet>
 			</ace:dataTable>
 		</h:panelGrid>
 		<h:panelGrid columns="3">

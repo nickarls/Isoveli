@@ -8,10 +8,10 @@
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<javaee.version>3.0.2.Final</javaee.version>
-		<icefaces.version>4.0.0</icefaces.version>
+		<icefaces.version>4.1.0-SNAPSHOT</icefaces.version>
 		<wildfly.version>8.1.0.Final</wildfly.version>
 		<wildfly.plugin.version>1.0.2.Final</wildfly.plugin.version>
-		<deltaspike.version>1.2.1</deltaspike.version>
+		<deltaspike.version>1.4.0</deltaspike.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>

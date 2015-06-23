@@ -1,195 +1,236 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"	
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ace="http://www.icefaces.org/icefaces/components">
-	<ace:confirmationDialog id="vahvistaLaskunPoisto" message="Oletko varma?" header="Vahvista" width="350" height="200"
+	<ace:confirmationDialog id="vahvistaLaskunPoisto"
+		message="Oletko varma?" header="Vahvista" width="350" height="200"
 		closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
-			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaLaskunPoisto').hide()" title="Poista lasku"
-				action="#{laskutusAdmin.piilotaLasku}" actionListener="#{laskutusAdmin.poistaLasku}" immediate="true" />
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaLaskunPoisto').hide()" immediate="true" title="Peruuta laskun poisto"/>
+			<h:commandButton value="Kyllä"
+				onclick="ice.ace.instance('form:vahvistaLaskunPoisto').hide()"
+				title="Poista lasku" action="#{laskutusAdmin.piilotaLasku}"
+				actionListener="#{laskutusAdmin.poistaLasku}" immediate="true" />
+			<h:commandButton value="Ei"
+				onclick="ice.ace.instance('form:vahvistaLaskunPoisto').hide()"
+				immediate="true" title="Peruuta laskun poisto" />
 		</h:panelGrid>
 	</ace:confirmationDialog>
-	<ace:confirmationDialog id="vahvistaLaskurivinPoisto" message="Oletko varma?" header="Vahvista" width="350"
-		height="200" closable="true" position="center">
+	<ace:confirmationDialog id="vahvistaLaskurivinPoisto"
+		message="Oletko varma?" header="Vahvista" width="350" height="200"
+		closable="true" position="center">
 		<h:panelGrid columns="2" styleClass="centeredPanelGrid">
-			<h:commandButton value="Kyllä" onclick="ice.ace.instance('form:vahvistaLaskurivinPoisto').hide()"
-				actionListener="#{laskutusAdmin.poistaRivi(_laskurivi)}" immediate="true" title="Poista laskurivi"/>
-			<h:commandButton value="Ei" onclick="ice.ace.instance('form:vahvistaLaskurivinPoisto').hide()" immediate="true" title="Peruuta laskurivin poisto"/>
+			<h:commandButton value="Kyllä"
+				onclick="ice.ace.instance('form:vahvistaLaskurivinPoisto').hide()"
+				actionListener="#{laskutusAdmin.poistaRivi(_laskurivi)}"
+				immediate="true" title="Poista laskurivi" />
+			<h:commandButton value="Ei"
+				onclick="ice.ace.instance('form:vahvistaLaskurivinPoisto').hide()"
+				immediate="true" title="Peruuta laskurivin poisto" />
 		</h:panelGrid>
 	</ace:confirmationDialog>
 
 	<h:panelGrid columns="2">
-		<h:commandButton rendered="#{lasku != null}" styleClass="ikoni" title="Poista lasku"
-			onclick="ice.ace.instance('form:vahvistaLaskunPoisto').show();" image="/kuvat/poista.png" immediate="true" />
-		<h:commandLink action="#{laskutusAdmin.lähetäLaskut}" title="Lähetä laskut" rendered="#{fn:length(lähettämättömätLaskut) != 0}">
-			<h:graphicImage value="/kuvat/lähetä.jpg" styleClass="ikoni"/>
+		<h:commandButton rendered="#{lasku != null}" styleClass="ikoni"
+			title="Poista lasku"
+			onclick="ice.ace.instance('form:vahvistaLaskunPoisto').show();"
+			image="/kuvat/poista.png" immediate="true" />
+		<h:commandLink action="#{laskutusAdmin.lähetäLaskut}"
+			title="Lähetä laskut"
+			rendered="#{fn:length(lähettämättömätLaskut) != 0}">
+			<h:graphicImage value="/kuvat/lähetä.jpg" styleClass="ikoni" />
 		</h:commandLink>
 	</h:panelGrid>
-	
-	<ace:dataTable value="#{lähettämättömätLaskut}" var="_lasku" selectionMode="single" stateMap="#{laskutusAdmin.laskuRSM}" rows="10"
-		paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false"
-		rowSelectListener="#{laskutusAdmin.laskuValittu}">
+
+	<ace:dataTable value="#{lähettämättömätLaskut}" var="_lasku"
+		rows="10" paginator="true" paginatorPosition="bottom"
+		paginatorAlwaysVisible="false">
 		<ace:column>
 			<ace:expansionToggler />
 		</ace:column>
-		<ace:column headerText="Viite" filterBy="#{_lasku.viitenumero}" filterMatchMode="contains"
-			sortBy="#{_lasku.viitenumero}" styleClass="lefttext">
+		<ace:column headerText="Viite" filterBy="#{_lasku.viitenumero}"
+			filterMatchMode="contains" sortBy="#{_lasku.viitenumero}"
+			styleClass="lefttext">
 			<h:outputText value="#{_lasku.viitenumero}" />
 		</ace:column>
-		<ace:column headerText="Harrastaja" filterBy="#{_lasku.henkilö.nimi}" filterMatchMode="contains"
-			sortBy="#{_lasku.henkilö.nimi}" styleClass="lefttext">
+		<ace:column headerText="Harrastaja" filterBy="#{_lasku.henkilö.nimi}"
+			filterMatchMode="contains" sortBy="#{_lasku.henkilö.nimi}"
+			styleClass="lefttext">
 			<h:outputText value="#{_lasku.henkilö.nimi}" />
 		</ace:column>
-		<ace:column headerText="Muodostettu" filterBy="#{_lasku.muodostettu}" filterMatchMode="contains" sortBy="#{_lasku.muodostettu}"
+		<ace:column headerText="Muodostettu" filterBy="#{_lasku.muodostettu}"
+			filterMatchMode="contains" sortBy="#{_lasku.muodostettu}"
 			styleClass="lefttext">
 			<h:outputText value="#{_lasku.muodostettu}">
 				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Lähetetty" filterBy="#{_lasku.lähetetty}" filterMatchMode="contains" sortBy="#{_lasku.lähetetty}"
+		<ace:column headerText="Lähetetty" filterBy="#{_lasku.lähetetty}"
+			filterMatchMode="contains" sortBy="#{_lasku.lähetetty}"
 			styleClass="lefttext">
 			<h:outputText value="#{_lasku.lähetetty}">
 				<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Eräpäivä" filterBy="#{_lasku.eräpäivä}" filterMatchMode="contains" sortBy="#{_lasku.eräpäivä}"
+		<ace:column headerText="Eräpäivä" filterBy="#{_lasku.eräpäivä}"
+			filterMatchMode="contains" sortBy="#{_lasku.eräpäivä}"
 			styleClass="lefttext">
 			<h:outputText value="#{_lasku.eräpäivä}">
 				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Maksettu" filterBy="#{_lasku.maksettu}" filterMatchMode="contains" sortBy="#{_lasku.maksettu}"
+		<ace:column headerText="Maksettu" filterBy="#{_lasku.maksettu}"
+			filterMatchMode="contains" sortBy="#{_lasku.maksettu}"
 			styleClass="lefttext">
 			<h:outputText value="#{_lasku.maksettu}">
 				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
 			</h:outputText>
 		</ace:column>
-		<ace:column headerText="Maksuaikaa" filterBy="#{_lasku.maksuaikaa}" filterMatchMode="contains"
-			sortBy="#{_lasku.maksuaikaa}" styleClass="lefttext">
-			<h:outputText value="#{_lasku.maksuaikaa}" rendered="#{_lasku.maksettu == null}"
+		<ace:column headerText="Maksuaikaa" filterBy="#{_lasku.maksuaikaa}"
+			filterMatchMode="contains" sortBy="#{_lasku.maksuaikaa}"
+			styleClass="lefttext">
+			<h:outputText value="#{_lasku.maksuaikaa}"
+				rendered="#{_lasku.maksettu == null}"
 				style="color:#{_lasku.maksuaikaa &lt; 0 ? 'red' : 'green'}" />
 		</ace:column>
-		<ace:column headerText="Laskurivejä" filterBy="#{_lasku.laskurivejä}" filterMatchMode="contains"
-			sortBy="#{_lasku.laskurivejä}" styleClass="lefttext">
+		<ace:column headerText="Laskurivejä" filterBy="#{_lasku.laskurivejä}"
+			filterMatchMode="contains" sortBy="#{_lasku.laskurivejä}"
+			styleClass="lefttext">
 			<h:outputText value="#{_lasku.laskurivejä}" />
 		</ace:column>
-		<ace:column headerText="Summa" filterBy="#{_lasku.yhteishinta}" filterMatchMode="contains"
-			sortBy="#{_lasku.yhteishinta}" styleClass="lefttext">
+		<ace:column headerText="Summa" filterBy="#{_lasku.yhteishinta}"
+			filterMatchMode="contains" sortBy="#{_lasku.yhteishinta}"
+			styleClass="lefttext">
 			<h:outputText value="#{_lasku.yhteishinta}">
 				<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 			</h:outputText>
 		</ace:column>
 		<ace:column headerText="PDF">
-			<h:outputLink target="_blank" value="#{request.contextPath}/API/blob/lataa/#{_lasku.pdf.avain}"
+			<h:outputLink target="_blank"
+				value="#{request.contextPath}/API/blob/lataa/#{_lasku.pdf.avain}"
 				rendered="#{_lasku.pdf != null}" title="Lataa lasku PDF-muodossa">
 				<h:graphicImage value="/kuvat/pdf.png" style="width:24px" />
 			</h:outputLink>
 		</ace:column>
 		<ace:column>
-			<h:graphicImage value="/kuvat/alivalikko.png" style="width:24px" id="alivalikko" />
+			<h:graphicImage value="/kuvat/alivalikko.png" style="width:24px"
+				id="alivalikko" />
 			<ace:contextMenu for="alivalikko">
-				<ace:menuItem value="Muodosta" action="#{laskutusAdmin.muodostaPDF(_lasku)}" />
-				<ace:menuItem value="Lähetä" action="#{laskutusAdmin.lähetäLasku(_lasku)}" />
+				<ace:menuItem value="Muodosta"
+					action="#{laskutusAdmin.muodostaPDF(_lasku)}" />
+				<ace:menuItem value="Lähetä"
+					action="#{laskutusAdmin.lähetäLasku(_lasku)}" />
 			</ace:contextMenu>
 		</ace:column>
-	</ace:dataTable>
-	<ace:dataTable rows="10" value="#{lasku.laskurivit}" var="_laskurivi" paginator="true" paginatorPosition="bottom"
-		id="llaskurivit" paginatorAlwaysVisible="false" rendered="#{lasku != null}" stateMap="#{laskutusAdmin.laskuriviRSM}">
-		<ace:ajax event="editSubmit" render="@all" listener="#{laskutusAdmin.tallennaRivi}" />
-		<ace:column headerText="#" styleClass="lefttext">
-			<h:outputText value="#{_laskurivi.rivinumero}" />
-		</ace:column>
-		<ace:column headerText="Tuotenimi" styleClass="lefttext">
-			<ace:cellEditor>
-				<f:facet name="output">
-					<h:outputText value="#{_laskurivi.tuotenimi}" />
-				</f:facet>
-				<f:facet name="input">
-					<h:panelGrid>
-						<ace:message for="tuotenimi" />
-						<h:inputText value="#{_laskurivi.tuotenimi}" id="tuotenimi" />
-					</h:panelGrid>
-				</f:facet>
-			</ace:cellEditor>
-		</ace:column>
-		<ace:column headerText="Infotieto" styleClass="lefttext">
-			<ace:cellEditor>
-				<f:facet name="output">
-					<h:outputText value="#{_laskurivi.infotieto}" />
-				</f:facet>
-				<f:facet name="input">
-					<h:panelGrid>
-						<ace:message for="infotieto" />
-						<h:inputText value="#{_laskurivi.infotieto}" id="infotieto" />
-					</h:panelGrid>
-				</f:facet>
-			</ace:cellEditor>
-		</ace:column>
-		<ace:column headerText="Määrä" styleClass="lefttext">
-			<ace:cellEditor>
-				<f:facet name="output">
-					<h:outputText value="#{_laskurivi.määrä}" />
-				</f:facet>
-				<f:facet name="input">
-					<h:panelGrid>
-						<ace:message for="määrä" />
-						<h:inputText value="#{_laskurivi.määrä}" size="4" id="määrä">
-							<f:ajax execute="@this" render="@form" />
-						</h:inputText>
-					</h:panelGrid>
-				</f:facet>
-			</ace:cellEditor>
-		</ace:column>
-		<ace:column headerText="Yks." styleClass="lefttext">
-			<ace:cellEditor>
-				<f:facet name="output">
-					<h:outputText value="#{_laskurivi.yksikkö}" />
-				</f:facet>
-				<f:facet name="input">
-					<h:panelGrid>
-						<ace:message for="yksikkö" />
-						<h:inputText value="#{_laskurivi.yksikkö}" size="4" id="yksikkö" />
-					</h:panelGrid>
-				</f:facet>
-			</ace:cellEditor>
-		</ace:column>
-		<ace:column headerText="Yks. hinta" styleClass="lefttext">
-			<ace:cellEditor>
-				<f:facet name="output">
-					<h:outputText value="#{_laskurivi.yksikköhinta}">
+		<ace:panelExpansion>
+			<ace:dataTable rows="10" value="#{_lasku.laskurivit}" var="_laskurivi"
+				paginator="true" paginatorPosition="bottom" id="llaskurivit"
+				paginatorAlwaysVisible="false">
+				<ace:ajax event="editSubmit" render="@all"
+					listener="#{laskutusAdmin.tallennaRivi}" />
+				<ace:column headerText="#" styleClass="lefttext">
+					<h:outputText value="#{_laskurivi.rivinumero}" />
+				</ace:column>
+				<ace:column headerText="Tuotenimi" styleClass="lefttext">
+					<ace:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{_laskurivi.tuotenimi}" />
+						</f:facet>
+						<f:facet name="input">
+							<h:panelGrid>
+								<ace:message for="tuotenimi" />
+								<h:inputText value="#{_laskurivi.tuotenimi}" id="tuotenimi" />
+							</h:panelGrid>
+						</f:facet>
+					</ace:cellEditor>
+				</ace:column>
+				<ace:column headerText="Infotieto" styleClass="lefttext">
+					<ace:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{_laskurivi.infotieto}" />
+						</f:facet>
+						<f:facet name="input">
+							<h:panelGrid>
+								<ace:message for="infotieto" />
+								<h:inputText value="#{_laskurivi.infotieto}" id="infotieto" />
+							</h:panelGrid>
+						</f:facet>
+					</ace:cellEditor>
+				</ace:column>
+				<ace:column headerText="Määrä" styleClass="lefttext">
+					<ace:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{_laskurivi.määrä}" />
+						</f:facet>
+						<f:facet name="input">
+							<h:panelGrid>
+								<ace:message for="määrä" />
+								<h:inputText value="#{_laskurivi.määrä}" size="4" id="määrä">
+									<f:ajax execute="@this" render="@form" />
+								</h:inputText>
+							</h:panelGrid>
+						</f:facet>
+					</ace:cellEditor>
+				</ace:column>
+				<ace:column headerText="Yks." styleClass="lefttext">
+					<ace:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{_laskurivi.yksikkö}" />
+						</f:facet>
+						<f:facet name="input">
+							<h:panelGrid>
+								<ace:message for="yksikkö" />
+								<h:inputText value="#{_laskurivi.yksikkö}" size="4" id="yksikkö" />
+							</h:panelGrid>
+						</f:facet>
+					</ace:cellEditor>
+				</ace:column>
+				<ace:column headerText="Yks. hinta" styleClass="lefttext">
+					<ace:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{_laskurivi.yksikköhinta}">
+								<f:convertNumber type="currency" currencySymbol="€"
+									locale="fi-FI" />
+							</h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<h:panelGrid>
+								<ace:message for="yksikköhinta" />
+								<h:inputText value="#{_laskurivi.yksikköhinta}" size="4"
+									id="yksikköhinta">
+									<f:ajax execute="@this" render="@form" />
+									<f:convertNumber type="currency" currencySymbol="€"
+										locale="fi-FI" />
+								</h:inputText>
+							</h:panelGrid>
+						</f:facet>
+					</ace:cellEditor>
+				</ace:column>
+				<ace:column headerText="Hinta" styleClass="lefttext">
+					<h:outputText value="#{_laskurivi.rivihinta}">
 						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
 					</h:outputText>
-				</f:facet>
-				<f:facet name="input">
-					<h:panelGrid>
-						<ace:message for="yksikköhinta" />
-						<h:inputText value="#{_laskurivi.yksikköhinta}" size="4" id="yksikköhinta">
-							<f:ajax execute="@this" render="@form" />
-							<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
-						</h:inputText>
-					</h:panelGrid>
-				</f:facet>
-			</ace:cellEditor>
-		</ace:column>
-		<ace:column headerText="Hinta" styleClass="lefttext">
-			<h:outputText value="#{_laskurivi.rivihinta}">
-				<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
-			</h:outputText>
-		</ace:column>
-		<ace:column>
-			<ace:rowEditor rendered="#{_laskurivi.muokattavissa}" />
-		</ace:column>
-		<ace:column>
-			<h:commandButton image="/kuvat/poista.png" action="#{laskutusAdmin.poistaRivi(_laskurivi)}" title="Poista laskurivi"
-				rendered="#{_laskurivi.muokattavissa}" immediate="true" styleClass="pieniikoni">
-				<f:ajax render="@form" />
-			</h:commandButton>
-			<h:commandButton image="/kuvat/lisää.png" action="#{laskutusAdmin.lisääRivi()}" title="Lisää laskurivi"
-				rendered="#{_laskurivi.muokattavissa}" immediate="true" styleClass="pieniikoni">
-				<f:ajax render="@form" />
-			</h:commandButton>
-		</ace:column>
+				</ace:column>
+				<ace:column>
+					<ace:rowEditor rendered="#{_laskurivi.muokattavissa}"/>
+				</ace:column>
+				<ace:column>
+					<h:commandButton image="/kuvat/poista.png"
+						action="#{laskutusAdmin.poistaRivi(_laskurivi)}"
+						title="Poista laskurivi" rendered="#{_laskurivi.muokattavissa}"
+						immediate="true" styleClass="pieniikoni">
+						<f:ajax render="@form" />
+					</h:commandButton>
+					<h:commandButton image="/kuvat/lisää.png"
+						action="#{laskutusAdmin.lisääRivi()}" title="Lisää laskurivi"
+						rendered="#{_laskurivi.muokattavissa}" immediate="true"
+						styleClass="pieniikoni">
+						<f:ajax render="@form" />
+					</h:commandButton>
+				</ace:column>
+			</ace:dataTable>
+		</ace:panelExpansion>
 	</ace:dataTable>
 
 </ui:composition>

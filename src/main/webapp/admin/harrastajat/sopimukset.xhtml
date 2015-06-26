@@ -38,6 +38,7 @@
 			<h:outputText value="#{_sopimus.viimeksiLaskutettu}">
 				<f:convertDateTime pattern="dd.MM.yyyy" timeZone="EET" />
 			</h:outputText>
+			<h:graphicImage value="/kuvat/info.png" styleClass="ikoni" title="#{laskutusAdmin.laskutushistoria(_sopimus)}" />
 		</ace:column>
 	</ace:dataTable>
 	<h:panelGrid columns="3">

@@ -1,11 +1,20 @@
 package fi.budokwai.isoveli.admin;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
@@ -75,6 +84,29 @@ public class LaskutusAdmin extends Perustoiminnallisuus
    public Lasku getLasku()
    {
       return lasku;
+   }
+
+   public String laskutushistoria(Sopimus sopimus)
+   {
+      StringBuilder sb = new StringBuilder();
+      SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+      NumberFormat nf = DecimalFormat.getCurrencyInstance(Locale.GERMANY);
+      sopimus.getSopimuslaskut().stream().map(s -> s.getLaskurivi()).forEach(lr -> {
+         sb.append(String.format("%s: %s\n", sdf.format(lr.getLasku().getEr‰p‰iv‰()), nf.format(lr.getRivihinta())));
+      });
+      sb.append("------------\n");
+      LocalDate seuraava = DateUtil.Date2LocalDate(sopimus.getViimeksiLaskutettu());
+      if (seuraava == null)
+      {
+         seuraava = DateUtil.t‰n‰‰n();
+      }
+      for (int i = 0; i < 5; i++)
+      {
+         seuraava = seuraava.plus(sopimus.getMaksuv‰li(), ChronoUnit.MONTHS);
+         sb.append(String.format("%s: %s\n", sdf.format(DateUtil.LocalDate2Date(seuraava)),
+            nf.format(sopimus.getTyyppi().getHinta() * sopimus.getMaksuv‰li())));
+      }
+      return sb.toString();
    }
 
    public double getVuosikertym‰(Sopimustyyppi sopimustyyppi)

@@ -31,7 +31,7 @@ create table asetukset(
 	tulostin varchar(100),
 	constraint pk_asetukset primary key(installaatio)
 );
-insert into asetukset(installaatio, saaja, iban, bic, viitenumero, osoite, postinumero, kaupunki, ytunnus, alvtunnus, puhelin, sahkoposti, kotisivut, viivastysprosentti, maksuaikaa, huomio, ylaotsikko, ghostscript, tulostin) values ('Budokwai', 'Budokwai ry Taekwondo', 'OKOYFIHH', 'FI04 5711 6140 0501 84', 1, 'Kirstinkatu 1', '20200', 'Turku', '1012368-8', 'FI10123688', '0405960298', 'laskut@budokwai.fi', 'www.budokwai.fi/taekwondo', 5, 14, 'KÃ„YTTÃ„KÃ„Ã„ AINA\nVIITENUMEROA MAKSAESSANNE', 'LASKU', 'c:/Program Files/gs/gs9.15/bin/gswin64c.exe', '\\KUUTTI\TKU2-RATA-4250');
+insert into asetukset(installaatio, saaja, iban, bic, viitenumero, osoite, postinumero, kaupunki, ytunnus, alvtunnus, puhelin, sahkoposti, kotisivut, viivastysprosentti, maksuaikaa, huomio, ylaotsikko, ghostscript, tulostin) values ('Budokwai', 'Budokwai ry Taekwondo', 'OKOYFIHH', 'FI04 5711 6140 0501 84', 1, 'Kirstinkatu 1', '20200', 'Turku', '1012368-8', 'FI10123688', '0405960298', 'laskut@budokwai.fi', 'www.budokwai.fi/taekwondo', 5, 14, 'KÄYTTÄ„KÄÄ„ AINA\nVIITENUMEROA MAKSAESSANNE', 'LASKU', 'c:/Program Files/gs/gs9.15/bin/gswin64c.exe', '\\KUUTTI\TKU2-RATA-4250');
 
 // OSOITE
 drop table if exists osoite;
@@ -112,7 +112,7 @@ insert into henkilo(id, etunimi, sukunimi, yhteystiedot, salasana, perhe) values
 insert into henkilo(id, etunimi, sukunimi, salasana, perhe) values (4, 'Vilmer', 'Rosqvist', '9DD4E461268C8034F5C8564E155C67A6', 2);
 insert into henkilo(id, etunimi, sukunimi, salasana, perhe) values (5, 'Leo', 'Rosqvist', '9DD4E461268C8034F5C8564E155C67A6', 2);
 insert into henkilo(id, etunimi, sukunimi, salasana, perhe) values (6, 'Karolina', 'Rosqvist', '9DD4E461268C8034F5C8564E155C67A6', 2);
-insert into henkilo(id, etunimi, sukunimi, salasana) values (7, 'Erkki', 'SeppÃ¤', '9DD4E461268C8034F5C8564E155C67A6');
+insert into henkilo(id, etunimi, sukunimi, salasana) values (7, 'Erkki', 'Seppä', '9DD4E461268C8034F5C8564E155C67A6');
 insert into henkilo(id, etunimi, sukunimi, salasana, perhe) values (8, 'Emil', 'Karlsson', '9DD4E461268C8034F5C8564E155C67A6', 1);
 insert into henkilo(id, etunimi, sukunimi, salasana, perhe) values (9, 'Anton', 'Karlsson', '9DD4E461268C8034F5C8564E155C67A6', 1);
 
@@ -194,8 +194,8 @@ create table vyoarvo(
 );
 insert into vyoarvo (id, nimi, kuvaus, minimikuukaudet, minimitreenit, jarjestys) values (1, '8.kup', 'Keltainen', 2, 15, 1);
 insert into vyoarvo (id, nimi, kuvaus, minimikuukaudet, minimitreenit, jarjestys) values (2, '7.kup', 'Keltainen+natsa', 3, 25, 2);
-insert into vyoarvo (id, nimi, kuvaus, minimikuukaudet, minimitreenit, jarjestys) values (3, '6.kup', 'VihreÃ¤', 3, 25, 3);
-insert into vyoarvo (id, nimi, kuvaus, minimikuukaudet, minimitreenit, jarjestys) values (4, '5.kup', 'VihreÃ¤+natsa', 3, 25, 4);
+insert into vyoarvo (id, nimi, kuvaus, minimikuukaudet, minimitreenit, jarjestys) values (3, '6.kup', 'Vihreä', 3, 25, 3);
+insert into vyoarvo (id, nimi, kuvaus, minimikuukaudet, minimitreenit, jarjestys) values (4, '5.kup', 'Vihreä+natsa', 3, 25, 4);
 insert into vyoarvo (id, nimi, kuvaus, minimikuukaudet, minimitreenit, jarjestys) values (5, '4.kup', 'Sininen', 4, 35, 5);
 insert into vyoarvo (id, nimi, kuvaus, minimikuukaudet, minimitreenit, jarjestys) values (6, '3.kup', 'Sininen+natsa', 4, 35, 6);
 insert into vyoarvo (id, nimi, kuvaus, minimikuukaudet, minimitreenit, jarjestys) values (7, '2.kup', 'Punainen', 5, 40, 7);
@@ -278,7 +278,7 @@ create table sopimustyyppi(
 	constraint uniikki_sopimusnimi unique(nimi)
 );
 
-insert into sopimustyyppi(id, nimi, jasenmaksu, laskutettava, hinta) values (1, 'JÃ¤senmaksu', 'K', 'K', 10);
+insert into sopimustyyppi(id, nimi, jasenmaksu, laskutettava, hinta) values (1, 'Jäsenmaksu', 'K', 'K', 10);
 insert into sopimustyyppi(id, nimi, harjoittelumaksu, oletusmaksuvali, laskutettava, hinta, alaikaraja, ylaikaraja) values (2, 'Harjoittelu (4-6v)', 'K', 3, 'K', 19, 4, 6);
 insert into sopimustyyppi(id, nimi, harjoittelumaksu, oletusmaksuvali, laskutettava, hinta, alaikaraja, ylaikaraja) values (3, 'Harjoittelu (7-17v)', 'K', 3, 'K', 29, 7, 17);
 insert into sopimustyyppi(id, nimi, harjoittelumaksu, oletusmaksuvali, laskutettava, hinta, alaikaraja) values (4, 'Harjoittelu (18+v)', 'K', 3, 'K', 39, 18);
@@ -301,13 +301,13 @@ create table lasku(
 	lahetetty datetime,
 	erapaiva date,
 	maksettu date,
-	pdf int,
+	pdf int default null,
 	viitenumero varchar(50),
 	constraint pk_lasku primary key(id),
 	constraint lasku_henkilo_viittaus foreign key(henkilo) references henkilo(id),
 	constraint lasku_pdf_viittaus foreign key(pdf) references blobdata(id)
 );
-//insert into lasku(id, henkilo, erapaiva, maksettu, tila, viitenumero) values (1, 2, parsedatetime('14.1.2013', 'dd.MM.yyyy'), parsedatetime('10.1.2013', 'dd.MM.yyyy'), 'M', 'K', 12345);
+insert into lasku(id, henkilo, erapaiva, maksettu, viitenumero, tila) values (1, 2, parsedatetime('14.1.2013', 'dd.MM.yyyy'), parsedatetime('10.1.2013', 'dd.MM.yyyy'), 12345, 'K');
 
 drop table if exists laskurivi;
 create table laskurivi(
@@ -341,20 +341,21 @@ create table sopimus(
 	maksuvali int default 12,
 	arkistoitu varchar(1) not null default 'E',
 	siirtomaksuvoimassa date,
-	pdf blob,
+	pdf int,
 	constraint pk_sopimus primary key(id),
+	constraint sopimus_pdf_viittaus foreign key(pdf) references blobdata(id),	
 	constraint sopimus_harrastaja_viittaus foreign key(harrastaja) references harrastaja(id),
 	constraint sopimus_tyyppi_viittaus foreign key(tyyppi) references sopimustyyppi(id)
 );
 
-//insert into sopimus(id, harrastaja, tyyppi, luotu) values (1, 1, 1, parsedatetime('02.01.2015', 'dd.MM.yyyy')); 					// Nicklas, jÃ¤senmaksu
+//insert into sopimus(id, harrastaja, tyyppi, luotu) values (1, 1, 1, parsedatetime('02.01.2015', 'dd.MM.yyyy')); 					// Nicklas, jäsenmaksu
 //insert into sopimus(id, harrastaja, tyyppi, luotu) values (2, 1, 6, parsedatetime('03.01.2015', 'dd.MM.yyyy')); 					// Nicklas, vapautus
-//insert into sopimus(id, harrastaja, tyyppi, luotu) values (7, 2, 1, parsedatetime('04.01.2015', 'dd.MM.yyyy')); 					// Heidi, jÃ¤senmaksu
+//insert into sopimus(id, harrastaja, tyyppi, luotu) values (7, 2, 1, parsedatetime('04.01.2015', 'dd.MM.yyyy')); 					// Heidi, jäsenmaksu
 insert into sopimus(id, harrastaja, tyyppi, luotu) values (3, 2, 2, parsedatetime('05.01.2015', 'dd.MM.yyyy'));						// Heidi, harjoittelumaksu 
-//insert into sopimus(id, harrastaja, tyyppi, luotu) values (4, 4, 1, parsedatetime('06.01.2015', 'dd.MM.yyyy')); 					// Vilmer, jÃ¤senmaksu
+//insert into sopimus(id, harrastaja, tyyppi, luotu) values (4, 4, 1, parsedatetime('06.01.2015', 'dd.MM.yyyy')); 					// Vilmer, jäsenmaksu
 //insert into sopimus(id, harrastaja, tyyppi, treenikertoja, luotu) values (6, 4, 3, 0, parsedatetime('07.01.2015', 'dd.MM.yyyy'));	// Vilmer, kymppikerta 
 //insert into sopimus(id, harrastaja, tyyppi, luotu) values (5, 5, 1, parsedatetime('08.01.2015', 'dd.MM.yyyy')); 					// Leo, alkeiskurssi
-//insert into sopimus(id, harrastaja, tyyppi, luotu) values (8, 5, 4, parsedatetime('09.01.2015', 'dd.MM.yyyy')); 					// Leo, jÃ¤senmaksu
+//insert into sopimus(id, harrastaja, tyyppi, luotu) values (8, 5, 4, parsedatetime('09.01.2015', 'dd.MM.yyyy')); 					// Leo, jäsenmaksu
 //insert into sopimus(id, harrastaja, tyyppi, treenikertoja, luotu) values (9, 6, 5, 3, parsedatetime('10.01.2015', 'dd.MM.yyyy')); 	// Karolina, koekertoja
 
 // Sopimuslasku
@@ -472,7 +473,7 @@ create table treenisessiovetaja(
 );
 insert into treenisessiovetaja(id, harrastaja, treenisessio) values (1, 1, 1);
 
-// VYÃ–KOETILAISUUS
+// VYÖ–KOETILAISUUS
 drop table if exists vyokoetilaisuus;
 create table vyokoetilaisuus(
 	id int not null auto_increment,
@@ -488,7 +489,7 @@ create table vyokoetilaisuus(
 
 insert into vyokoetilaisuus(id, koska, vyoalaraja, vyoylaraja, ikaalaraja, ikaylaraja, pitaja) values (1, parsedatetime('10.06.2015 18:00', 'dd.MM.yyyy HH:mm'), 2, 6, 10, 14, 1);
 
-// VYÃ–KOKELAS
+// VYÖ–KOKELAS
 drop table if exists vyokokelas;
 create table vyokokelas(
 	id int not null auto_increment,
@@ -521,7 +522,7 @@ create table viesti(
 	constraint viesti_lahettaja_viittaus foreign key(lahettaja) references harrastaja(id)
 );
 
-insert into viesti(id, otsikko, sisalto, lahettaja, vastaanottajat, luotu) values (1, 'otsikko', 'sisaltÃ¶', 1, 'Kaikki', parsedatetime('10.06.2015 18:00', 'dd.MM.yyyy HH:mm'));
+insert into viesti(id, otsikko, sisalto, lahettaja, vastaanottajat, luotu) values (1, 'otsikko', 'sisaltö', 1, 'Kaikki', parsedatetime('10.06.2015 18:00', 'dd.MM.yyyy HH:mm'));
 
 // VIESTILAATIKKO
 drop table if exists viestilaatikko;
@@ -536,7 +537,7 @@ create table viestilaatikko (
 
 insert into viestilaatikko (id, omistaja, tyyppi) values (1, 1, 'I');
 
-// HENKILÃ–VIESTI
+// HENKILÖ–VIESTI
 drop table if exists henkiloviesti;
 create table henkiloviesti(
 	id int not null auto_increment,

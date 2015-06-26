@@ -341,6 +341,7 @@ create table sopimus(
 	maksuvali int default 12,
 	arkistoitu varchar(1) not null default 'E',
 	siirtomaksuvoimassa date,
+	pdf blob,
 	constraint pk_sopimus primary key(id),
 	constraint sopimus_harrastaja_viittaus foreign key(harrastaja) references harrastaja(id),
 	constraint sopimus_tyyppi_viittaus foreign key(tyyppi) references sopimustyyppi(id)

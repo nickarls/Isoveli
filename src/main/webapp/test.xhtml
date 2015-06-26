@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+</h:head>
+<h:body>
+	<f:view>
+		<h:form>
+			<ace:dataTable value="#{items}" var="_item">
+				<ace:column>
+					<ace:expansionToggler />
+				</ace:column>
+				<ace:column headerText="Data">
+					<h:outputText value="#{_item.data}" />
+				</ace:column>
+				<ace:panelExpansion>
+					<ace:dataTable value="#{_item.subItems}" var="_subItem">
+						<ace:column>
+							<ace:rowEditor />
+						</ace:column>
+						<ace:column headerText="Data">
+							<ace:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{_subItem.data}" />
+								</f:facet>
+								<f:facet name="input">
+									<h:inputText value="#{_subItem.data}" />
+								</f:facet>
+							</ace:cellEditor>
+						</ace:column>
+						<ace:column>
+							<h:commandButton action="#{bean.action(_subItem)}" value="X" />
+						</ace:column>
+					</ace:dataTable>
+				</ace:panelExpansion>
+			</ace:dataTable>
+			<ace:dataTable value="#{items[0].subItems}" var="_subItem">
+				<ace:column>
+					<ace:rowEditor />
+				</ace:column>
+				<ace:column headerText="Data">
+					<ace:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{_subItem.data}" />
+						</f:facet>
+						<f:facet name="input">
+							<h:inputText value="#{_subItem.data}" />
+						</f:facet>
+					</ace:cellEditor>
+				</ace:column>
+				<ace:column>
+					<h:commandButton action="#{bean.action(_subItem)}" value="X" />
+				</ace:column>
+			</ace:dataTable>
+		</h:form>
+	</f:view>
+</h:body>
+
+</html>

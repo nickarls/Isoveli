@@ -1,0 +1,1404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.2.v201410272105 Build &lt;4.4.2.v20150217-1805></property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">9</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">9</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">9</property>
+        </structure>
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">8</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">8</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">8</property>
+        </structure>
+    </list-property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="Tila" id="123">
+            <text-property name="promptText">Tila</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">M</value>
+            </simple-property-list>
+            <list-property name="selectionList">
+                <structure>
+                    <property name="value">M</property>
+                    <property name="label">Muodostettu</property>
+                </structure>
+                <structure>
+                    <property name="value">L</property>
+                    <property name="label">Lähetetty</property>
+                </structure>
+                <structure>
+                    <property name="value">K</property>
+                    <property name="label">Maksettu</property>
+                </structure>
+                <structure>
+                    <property name="value">X</property>
+                    <property name="label">Mitätöity</property>
+                </structure>
+            </list-property>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <property name="mustMatch">false</property>
+            <property name="fixedOrder">true</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Isoveli" id="7">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">org.h2.Driver</property>
+            <property name="odaURL">jdbc:h2:tcp://localhost/~/Isoveli</property>
+            <property name="odaUser">sa</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">c2E=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Laskut" id="8">
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">NIMI</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">NIMI</text-property>
+                    <text-property name="heading">NIMI</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">VIITENUMERO</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">VIITENUMERO</text-property>
+                    <text-property name="heading">VIITENUMERO</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">TILA</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">TILA</text-property>
+                    <text-property name="heading">TILA</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">ERAPAIVA</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">ERAPAIVA</text-property>
+                    <text-property name="heading">ERAPAIVA</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">MUODOSTETTU</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">MUODOSTETTU</text-property>
+                    <text-property name="heading">MUODOSTETTU</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">LAHETETTY</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">LAHETETTY</text-property>
+                    <text-property name="heading">LAHETETTY</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">MAKSETTU</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">MAKSETTU</text-property>
+                    <text-property name="heading">MAKSETTU</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">ID</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">ID</text-property>
+                    <text-property name="heading">ID</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">SUMMA</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">SUMMA</text-property>
+                    <text-property name="heading">SUMMA</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">tila</property>
+                    <property name="paramName">Tila</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">NIMI</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">VIITENUMERO</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">TILA</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">ERAPAIVA</property>
+                        <property name="dataType">date</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">MUODOSTETTU</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">LAHETETTY</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">MAKSETTU</property>
+                        <property name="dataType">date</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">ID</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">SUMMA</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Isoveli</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">NIMI</property>
+                    <property name="nativeName">NIMI</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">VIITENUMERO</property>
+                    <property name="nativeName">VIITENUMERO</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">TILA</property>
+                    <property name="nativeName">TILA</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">ERAPAIVA</property>
+                    <property name="nativeName">ERAPAIVA</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">MUODOSTETTU</property>
+                    <property name="nativeName">MUODOSTETTU</property>
+                    <property name="dataType">date-time</property>
+                    <property name="nativeDataType">93</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">LAHETETTY</property>
+                    <property name="nativeName">LAHETETTY</property>
+                    <property name="dataType">date-time</property>
+                    <property name="nativeDataType">93</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">MAKSETTU</property>
+                    <property name="nativeName">MAKSETTU</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">ID</property>
+                    <property name="nativeName">ID</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">SUMMA</property>
+                    <property name="nativeName">SUMMA</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select 
+  concat(h.etunimi, ' ', h.sukunimi) as nimi, 
+  l.viitenumero, 
+  l.tila, 
+  l.erapaiva, 
+  l.muodostettu, 
+  l.lahetetty, 
+  l.maksettu, 
+  l.id, 
+  sum(select lr.maara * lr.yksikkohinta from laskurivi lr where lr.lasku=l.id) as summa
+from lasku l left outer join henkilo h on l.henkilo=h.id
+where l.tila=?
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>1</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>ID</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>ID</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>ID</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>HENKILO</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>HENKILO</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>HENKILO</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>TILA</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>1</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>TILA</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>TILA</design:label>
+            <design:formattingHints>
+              <design:displaySize>1</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>MUODOSTETTU</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+            <design:precision>23</design:precision>
+            <design:scale>10</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>MUODOSTETTU</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>MUODOSTETTU</design:label>
+            <design:formattingHints>
+              <design:displaySize>23</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>LAHETETTY</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+            <design:precision>23</design:precision>
+            <design:scale>10</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>LAHETETTY</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>LAHETETTY</design:label>
+            <design:formattingHints>
+              <design:displaySize>23</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>ERAPAIVA</design:name>
+              <design:position>6</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+            <design:precision>8</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>ERAPAIVA</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>ERAPAIVA</design:label>
+            <design:formattingHints>
+              <design:displaySize>10</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>MAKSETTU</design:name>
+              <design:position>7</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+            <design:precision>8</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>MAKSETTU</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>MAKSETTU</design:label>
+            <design:formattingHints>
+              <design:displaySize>10</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>PDF</design:name>
+              <design:position>8</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>PDF</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>PDF</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>VIITENUMERO</design:name>
+              <design:position>9</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>50</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>VIITENUMERO</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>VIITENUMERO</design:label>
+            <design:formattingHints>
+              <design:displaySize>50</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Laskurivit" id="9">
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="computedColumns">
+                <structure>
+                    <property name="name">RIVIHINTA</property>
+                    <expression name="expression">row["MAARA"]*row["YKSIKKOHINTA"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ID</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">ID</text-property>
+                    <text-property name="heading">ID</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">LASKU</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">LASKU</text-property>
+                    <text-property name="heading">LASKU</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">RIVINUMERO</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">RIVINUMERO</text-property>
+                    <text-property name="heading">RIVINUMERO</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">SOPIMUSLASKU</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">SOPIMUSLASKU</text-property>
+                    <text-property name="heading">SOPIMUSLASKU</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">TUOTENIMI</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">TUOTENIMI</text-property>
+                    <text-property name="heading">TUOTENIMI</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">INFOTIETO</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">INFOTIETO</text-property>
+                    <text-property name="heading">INFOTIETO</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">MAARA</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">MAARA</text-property>
+                    <text-property name="heading">MAARA</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">YKSIKKO</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">YKSIKKO</text-property>
+                    <text-property name="heading">YKSIKKO</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">YKSIKKOHINTA</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">YKSIKKOHINTA</text-property>
+                    <text-property name="heading">YKSIKKOHINTA</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">LUOTU</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">LUOTU</text-property>
+                    <text-property name="heading">LUOTU</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">lasku</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="javascript">1</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ID</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">LASKU</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">RIVINUMERO</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">SOPIMUSLASKU</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">TUOTENIMI</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">INFOTIETO</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">MAARA</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">YKSIKKO</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">YKSIKKOHINTA</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">LUOTU</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">RIVIHINTA</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Isoveli</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">ID</property>
+                    <property name="nativeName">ID</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">LASKU</property>
+                    <property name="nativeName">LASKU</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">RIVINUMERO</property>
+                    <property name="nativeName">RIVINUMERO</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">SOPIMUSLASKU</property>
+                    <property name="nativeName">SOPIMUSLASKU</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">TUOTENIMI</property>
+                    <property name="nativeName">TUOTENIMI</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">INFOTIETO</property>
+                    <property name="nativeName">INFOTIETO</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">MAARA</property>
+                    <property name="nativeName">MAARA</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">YKSIKKO</property>
+                    <property name="nativeName">YKSIKKO</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">YKSIKKOHINTA</property>
+                    <property name="nativeName">YKSIKKOHINTA</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">LUOTU</property>
+                    <property name="nativeName">LUOTU</property>
+                    <property name="dataType">date-time</property>
+                    <property name="nativeDataType">93</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select *
+from laskurivi
+where lasku=?]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>ID</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>ID</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>ID</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>LASKU</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>LASKU</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>LASKU</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>RIVINUMERO</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>RIVINUMERO</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>RIVINUMERO</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>SOPIMUSLASKU</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>SOPIMUSLASKU</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>SOPIMUSLASKU</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>TUOTENIMI</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>50</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>TUOTENIMI</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>TUOTENIMI</design:label>
+            <design:formattingHints>
+              <design:displaySize>50</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>INFOTIETO</design:name>
+              <design:position>6</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>200</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>INFOTIETO</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>INFOTIETO</design:label>
+            <design:formattingHints>
+              <design:displaySize>200</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>MAARA</design:name>
+              <design:position>7</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>MAARA</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>MAARA</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>YKSIKKO</design:name>
+              <design:position>8</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>20</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>YKSIKKO</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>YKSIKKO</design:label>
+            <design:formattingHints>
+              <design:displaySize>20</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>YKSIKKOHINTA</design:name>
+              <design:position>9</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>8</design:nativeDataTypeCode>
+            <design:precision>17</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>YKSIKKOHINTA</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>YKSIKKOHINTA</design:label>
+            <design:formattingHints>
+              <design:displaySize>24</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>LUOTU</design:name>
+              <design:position>10</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+            <design:precision>23</design:precision>
+            <design:scale>10</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>LUOTU</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>LUOTU</design:label>
+            <design:formattingHints>
+              <design:displaySize>23</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="report" id="4">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">10pt</property>
+        </style>
+        <style name="crosstab" id="5">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="crosstab-cell" id="6">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="11">
+            <property name="dataSet">Laskut</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">HENKILO</property>
+                    <text-property name="displayName">NIMI</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["NIMI"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">TILA</property>
+                    <text-property name="displayName">TILA</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["TILA"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">MUODOSTETTU</property>
+                    <text-property name="displayName">MUODOSTETTU</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["MUODOSTETTU"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">LAHETETTY</property>
+                    <text-property name="displayName">LAHETETTY</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["LAHETETTY"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">ERAPAIVA</property>
+                    <text-property name="displayName">ERAPAIVA</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ERAPAIVA"]</expression>
+                    <property name="dataType">date</property>
+                </structure>
+                <structure>
+                    <property name="name">MAKSETTU</property>
+                    <text-property name="displayName">MAKSETTU</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["MAKSETTU"]</expression>
+                    <property name="dataType">date</property>
+                </structure>
+                <structure>
+                    <property name="name">VIITENUMERO</property>
+                    <text-property name="displayName">VIITENUMERO</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["VIITENUMERO"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">ID</property>
+                    <expression name="expression" type="javascript">dataSetRow["ID"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">NIMI</property>
+                    <text-property name="displayName">NIMI</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["NIMI"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Summa</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["SUMMA"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <column id="50"/>
+            <column id="51"/>
+            <column id="52"/>
+            <column id="53"/>
+            <column id="54"/>
+            <column id="55"/>
+            <column id="56"/>
+            <header>
+                <row id="12">
+                    <property name="textAlign">left</property>
+                    <cell id="13">
+                        <label id="14">
+                            <text-property name="text">Henkilö</text-property>
+                        </label>
+                    </cell>
+                    <cell id="15">
+                        <label id="16">
+                            <text-property name="text">Tila</text-property>
+                        </label>
+                    </cell>
+                    <cell id="17">
+                        <label id="18">
+                            <text-property name="text">Muodostettu</text-property>
+                        </label>
+                    </cell>
+                    <cell id="19">
+                        <label id="20">
+                            <text-property name="text">Lähetetty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="21">
+                        <label id="22">
+                            <text-property name="text">Eräpäivä</text-property>
+                        </label>
+                    </cell>
+                    <cell id="23">
+                        <label id="24">
+                            <text-property name="text">Maksettu</text-property>
+                        </label>
+                    </cell>
+                    <cell id="25">
+                        <label id="26">
+                            <text-property name="text">Viite</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="27">
+                    <property name="textAlign">left</property>
+                    <cell id="28">
+                        <data id="120">
+                            <property name="resultSetColumn">NIMI</property>
+                        </data>
+                    </cell>
+                    <cell id="30">
+                        <data id="31">
+                            <property name="resultSetColumn">TILA</property>
+                        </data>
+                    </cell>
+                    <cell id="32">
+                        <data id="33">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd.MM.yyyy</property>
+                            </structure>
+                            <property name="resultSetColumn">MUODOSTETTU</property>
+                        </data>
+                    </cell>
+                    <cell id="34">
+                        <data id="35">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd.MM.yyyy</property>
+                            </structure>
+                            <property name="resultSetColumn">LAHETETTY</property>
+                        </data>
+                    </cell>
+                    <cell id="36">
+                        <data id="37">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd.MM.yyyy</property>
+                            </structure>
+                            <property name="resultSetColumn">ERAPAIVA</property>
+                        </data>
+                    </cell>
+                    <cell id="38">
+                        <data id="39">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd.MM.yyyy</property>
+                            </structure>
+                            <property name="resultSetColumn">MAKSETTU</property>
+                        </data>
+                    </cell>
+                    <cell id="40">
+                        <data id="41">
+                            <property name="resultSetColumn">VIITENUMERO</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="57">
+                    <property name="textAlign">left</property>
+                    <cell id="58"/>
+                    <cell id="59">
+                        <property name="colSpan">6</property>
+                        <property name="rowSpan">1</property>
+                        <table id="65">
+                            <property name="width">6.75in</property>
+                            <property name="dataSet">Laskurivit</property>
+                            <list-property name="paramBindings">
+                                <structure>
+                                    <property name="paramName">lasku</property>
+                                    <simple-property-list name="expression">
+                                        <value type="javascript">row["ID"]</value>
+                                    </simple-property-list>
+                                </structure>
+                            </list-property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">RIVINUMERO</property>
+                                    <text-property name="displayName">RIVINUMERO</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["RIVINUMERO"]</expression>
+                                    <property name="dataType">integer</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">SOPIMUSLASKU</property>
+                                    <text-property name="displayName">SOPIMUSLASKU</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["SOPIMUSLASKU"]</expression>
+                                    <property name="dataType">integer</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">TUOTENIMI</property>
+                                    <text-property name="displayName">TUOTENIMI</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["TUOTENIMI"]</expression>
+                                    <property name="dataType">string</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">INFOTIETO</property>
+                                    <text-property name="displayName">INFOTIETO</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["INFOTIETO"]</expression>
+                                    <property name="dataType">string</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">MAARA</property>
+                                    <text-property name="displayName">MAARA</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["MAARA"]</expression>
+                                    <property name="dataType">integer</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">YKSIKKO</property>
+                                    <text-property name="displayName">YKSIKKO</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["YKSIKKO"]</expression>
+                                    <property name="dataType">string</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">YKSIKKOHINTA</property>
+                                    <text-property name="displayName">YKSIKKOHINTA</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["YKSIKKOHINTA"]</expression>
+                                    <property name="dataType">float</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">RIVIHINTA</property>
+                                    <text-property name="displayName">RIVIHINTA</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["RIVIHINTA"]</expression>
+                                    <property name="dataType">float</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Summa</property>
+                                    <property name="dataType">float</property>
+                                    <property name="aggregateFunction">SUM</property>
+                                    <list-property name="arguments">
+                                        <structure>
+                                            <property name="name">Expression</property>
+                                            <expression name="value" type="javascript">dataSetRow["RIVIHINTA"]</expression>
+                                        </structure>
+                                    </list-property>
+                                    <property name="allowExport">true</property>
+                                </structure>
+                            </list-property>
+                            <column id="104">
+                                <property name="width">0.3125in</property>
+                            </column>
+                            <column id="106">
+                                <property name="width">1.7083333333333333in</property>
+                            </column>
+                            <column id="107">
+                                <property name="width">2.2604166666666665in</property>
+                            </column>
+                            <column id="108">
+                                <property name="width">0.6458333333333334in</property>
+                            </column>
+                            <column id="109">
+                                <property name="width">0.4895833333333333in</property>
+                            </column>
+                            <column id="110">
+                                <property name="width">0.375in</property>
+                            </column>
+                            <column id="114">
+                                <property name="width">0.9583333333333334in</property>
+                            </column>
+                            <header>
+                                <row id="66">
+                                    <cell id="67">
+                                        <label id="68">
+                                            <text-property name="text">#</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="71">
+                                        <label id="72">
+                                            <text-property name="text">Tuote</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="73">
+                                        <label id="74">
+                                            <text-property name="text">Info</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="75">
+                                        <label id="76">
+                                            <text-property name="text">Määrä</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="77">
+                                        <label id="78">
+                                            <text-property name="text">Yks.</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="79">
+                                        <label id="80">
+                                            <text-property name="text">à</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="111">
+                                        <label id="115">
+                                            <text-property name="text">Hinta</text-property>
+                                        </label>
+                                    </cell>
+                                </row>
+                            </header>
+                            <detail>
+                                <row id="81">
+                                    <cell id="82">
+                                        <data id="83">
+                                            <property name="resultSetColumn">RIVINUMERO</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="86">
+                                        <data id="87">
+                                            <property name="resultSetColumn">TUOTENIMI</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="88">
+                                        <data id="89">
+                                            <property name="resultSetColumn">INFOTIETO</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="90">
+                                        <data id="91">
+                                            <property name="resultSetColumn">MAARA</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="92">
+                                        <data id="93">
+                                            <property name="resultSetColumn">YKSIKKO</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="94">
+                                        <data id="95">
+                                            <property name="resultSetColumn">YKSIKKOHINTA</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="112">
+                                        <data id="116">
+                                            <property name="resultSetColumn">RIVIHINTA</property>
+                                        </data>
+                                    </cell>
+                                </row>
+                            </detail>
+                            <footer>
+                                <row id="96">
+                                    <cell id="97"/>
+                                    <cell id="99"/>
+                                    <cell id="100"/>
+                                    <cell id="101"/>
+                                    <cell id="102"/>
+                                    <cell id="103"/>
+                                    <cell id="113">
+                                        <data id="119">
+                                            <property name="resultSetColumn">Summa</property>
+                                        </data>
+                                    </cell>
+                                </row>
+                            </footer>
+                        </table>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="42">
+                    <cell id="43"/>
+                    <cell id="44"/>
+                    <cell id="45"/>
+                    <cell id="46"/>
+                    <cell id="47"/>
+                    <cell id="48"/>
+                    <cell id="49">
+                        <data id="122">
+                            <property name="resultSetColumn">Summa</property>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

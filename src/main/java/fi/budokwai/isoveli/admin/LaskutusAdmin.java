@@ -29,6 +29,7 @@ import javax.persistence.NoResultException;
 
 import org.icefaces.ace.component.column.Column;
 import org.icefaces.ace.component.datatable.DataTable;
+import org.icefaces.ace.event.RowEditEvent;
 import org.icefaces.ace.event.SelectEvent;
 import org.icefaces.ace.model.table.RowStateMap;
 
@@ -394,9 +395,10 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       this.laskuRSM = laskuRSM;
    }
 
-   public void tallennaRivi(AjaxBehaviorEvent e)
+   public void foo(RowEditEvent e)
    {
-      lasku = entityManager.merge(lasku);
+      Laskurivi rivi = (Laskurivi) e.getObject();
+      lasku = entityManager.merge(rivi.getLasku());
       if (lasku.getPdf() == null)
       {
          lasku.setPdf(BlobData.PDF(String.format("lasku-%d", lasku.getId()), teePdfLasku(lasku)));

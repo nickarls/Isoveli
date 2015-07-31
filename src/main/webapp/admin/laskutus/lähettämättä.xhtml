@@ -127,8 +127,10 @@
 			<ace:dataTable rows="10" value="#{_lasku.laskurivit}" var="_laskurivi"
 				paginator="true" paginatorPosition="bottom" id="llaskurivit"
 				paginatorAlwaysVisible="false">
+<!-- 				
 				<ace:ajax event="editSubmit" render="@all"
 					listener="#{laskutusAdmin.tallennaRivi}" />
+-->					
 				<ace:column headerText="#" styleClass="lefttext">
 					<h:outputText value="#{_laskurivi.rivinumero}" />
 				</ace:column>
@@ -213,7 +215,7 @@
 					</h:outputText>
 				</ace:column>
 				<ace:column>
-					<ace:rowEditor rendered="#{_laskurivi.muokattavissa}"/>
+					<ace:rowEditor rendered="#{_laskurivi.muokattavissa}" rowEditListener="#{laskutusAdmin.foo}"/>
 				</ace:column>
 				<ace:column>
 					<h:commandButton image="/kuvat/poista.png"

@@ -96,7 +96,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
          sb.append(String.format("%s: %s\n", sdf.format(lr.getLasku().getEr‰p‰iv‰()), nf.format(lr.getRivihinta())));
       });
       sb.append("------------\n");
-      LocalDate seuraava = DateUtil.Date2LocalDate(sopimus.getViimeksiLaskutettu());
+      LocalDate seuraava = sopimus.getViimeksiLaskutettu() == null ? DateUtil.t‰n‰‰n() : DateUtil.Date2LocalDate(sopimus.getViimeksiLaskutettu());
       if (seuraava == null)
       {
          seuraava = DateUtil.t‰n‰‰n();
@@ -395,7 +395,7 @@ public class LaskutusAdmin extends Perustoiminnallisuus
       this.laskuRSM = laskuRSM;
    }
 
-   public void foo(RowEditEvent e)
+   public void tallennaRivi(RowEditEvent e)
    {
       Laskurivi rivi = (Laskurivi) e.getObject();
       lasku = entityManager.merge(rivi.getLasku());

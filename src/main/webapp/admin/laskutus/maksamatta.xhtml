@@ -4,7 +4,6 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ace="http://www.icefaces.org/icefaces/components">
-
 	<ace:dataTable value="#{maksamattomatLaskut}" var="_lasku" rows="10"
 		paginator="true" paginatorPosition="bottom"
 		paginatorAlwaysVisible="false">
@@ -75,35 +74,37 @@
 				<h:graphicImage value="/kuvat/pdf.png" style="width:24px" />
 			</h:outputLink>
 		</ace:column>
-	</ace:dataTable>
-	<ace:dataTable rows="10" value="#{lasku.laskurivit}" var="_laskurivi"
-		paginator="true" paginatorPosition="bottom" id="mlaskurivit"
-		paginatorAlwaysVisible="false" rendered="#{lasku != null}">
-		<ace:column headerText="#" styleClass="lefttext">
-			<h:outputText value="#{_laskurivi.rivinumero}" />
-		</ace:column>
-		<ace:column headerText="Tuotenimi" styleClass="lefttext">
-			<h:outputText value="#{_laskurivi.tuotenimi}" />
-		</ace:column>
-		<ace:column headerText="Infotieto" styleClass="lefttext">
-			<h:outputText value="#{_laskurivi.infotieto}" />
-		</ace:column>
-		<ace:column headerText="Määrä" styleClass="lefttext">
-			<h:outputText value="#{_laskurivi.määrä}" />
-		</ace:column>
-		<ace:column headerText="Yks." styleClass="lefttext">
-			<h:outputText value="#{_laskurivi.yksikkö}" />
-		</ace:column>
-		<ace:column headerText="Yks. hinta" styleClass="lefttext">
-			<h:outputText value="#{_laskurivi.yksikköhinta}">
-				<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
-			</h:outputText>
-		</ace:column>
-		<ace:column headerText="Hinta" styleClass="lefttext">
-			<h:outputText value="#{_laskurivi.rivihinta}">
-				<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
-			</h:outputText>
-		</ace:column>
+		<ace:panelExpansion>
+			<ace:dataTable rows="10" value="#{_lasku.laskurivit}"
+				var="_laskurivi" paginator="true" paginatorPosition="bottom"
+				id="llaskurivit" paginatorAlwaysVisible="false">
+				<ace:column headerText="#" styleClass="lefttext">
+					<h:outputText value="#{_laskurivi.rivinumero}" />
+				</ace:column>
+				<ace:column headerText="Tuotenimi" styleClass="lefttext">
+					<h:outputText value="#{_laskurivi.tuotenimi}" />
+				</ace:column>
+				<ace:column headerText="Infotieto" styleClass="lefttext">
+					<h:outputText value="#{_laskurivi.infotieto}" />
+				</ace:column>
+				<ace:column headerText="Määrä" styleClass="lefttext">
+					<h:outputText value="#{_laskurivi.määrä}" />
+				</ace:column>
+				<ace:column headerText="Yks." styleClass="lefttext">
+					<h:outputText value="#{_laskurivi.yksikkö}" />
+				</ace:column>
+				<ace:column headerText="Yks. hinta" styleClass="lefttext">
+					<h:outputText value="#{_laskurivi.yksikköhinta}">
+						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
+					</h:outputText>
+				</ace:column>
+				<ace:column headerText="Hinta" styleClass="lefttext">
+					<h:outputText value="#{_laskurivi.rivihinta}">
+						<f:convertNumber type="currency" currencySymbol="€" locale="fi-FI" />
+					</h:outputText>
+				</ace:column>
+			</ace:dataTable>
+		</ace:panelExpansion>
 	</ace:dataTable>
 
 </ui:composition>

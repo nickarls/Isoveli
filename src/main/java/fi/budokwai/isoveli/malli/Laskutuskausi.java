@@ -40,4 +40,10 @@ public class Laskutuskausi
       return taukopäiviä > 0;
    }
 
+   @Override
+   public String toString()
+   {
+      return String.format("Kausi: %s, tauko: %s", kausi, tauko);
+   }
+
 }

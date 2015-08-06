@@ -42,8 +42,7 @@ import fi.budokwai.isoveli.util.Util;
 @DynamicUpdate
 @Table(name = "henkilo")
 @NamedQueries(
-{
-      @NamedQuery(name = "henkilö", query = "select h from Henkilö h where h.salasana = :salasana and h.etunimi = :etunimi and h.sukunimi = :sukunimi"),
+{ @NamedQuery(name = "henkilö", query = "select h from Henkilö h where h.salasana = :salasana and h.etunimi = :etunimi and h.sukunimi = :sukunimi"),
       @NamedQuery(name = "samanniminen_käyttäjä", query = "select h from Henkilö h where h.etunimi = :etunimi and h.sukunimi = :sukunimi and h.id <> :id"),
       @NamedQuery(name = "nimetty_henkilö", query = "select h from Henkilö h where h.etunimi = :etunimi and h.sukunimi = :sukunimi") })
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -78,7 +77,7 @@ public class Henkilö implements Serializable
    @Valid
    protected Yhteystieto yhteystiedot;
 
-   @ManyToMany
+   @ManyToMany(cascade = CascadeType.REMOVE)
    @JoinTable(name = "henkilorooli", joinColumns =
    { @JoinColumn(name = "henkilo", referencedColumnName = "id") }, inverseJoinColumns =
    { @JoinColumn(name = "rooli", referencedColumnName = "id") })
@@ -102,9 +101,9 @@ public class Henkilö implements Serializable
    @Temporal(TemporalType.DATE)
    protected Date luotu = new Date();
 
-   @Type(type = "KylläEi")   
+   @Type(type = "KylläEi")
    private boolean paperilasku;
-   
+
    @OneToMany(mappedBy = "omistaja", cascade =
    { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
    private List<Viestilaatikko> viestilaatikot = new ArrayList<>();
@@ -382,8 +381,10 @@ public class Henkilö implements Serializable
 
    public Viestilaatikko getViestilaatikko(Viestilaatikkotyypi tyyppi)
    {
-      Optional<Viestilaatikko> viestilaatikko = viestilaatikot.stream().filter(v -> v.getTyyppi().equals(tyyppi)).findFirst();
-      if (viestilaatikko.isPresent()) {
+      Optional<Viestilaatikko> viestilaatikko = viestilaatikot.stream().filter(v -> v.getTyyppi().equals(tyyppi))
+         .findFirst();
+      if (viestilaatikko.isPresent())
+      {
          return viestilaatikko.get();
       }
       return new Viestilaatikko(this, tyyppi);

@@ -5,6 +5,8 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.icefaces.ace.component.datatable.DataTable;
+import org.icefaces.ace.event.RowEditEvent;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.persistence.ApplyScriptBefore;
 import org.jboss.arquillian.persistence.Cleanup;
@@ -26,7 +28,7 @@ import fi.budokwai.isoveli.util.Tulostaja;
 @RunWith(Arquillian.class)
 public class LaskutusTest extends Perustesti
 {
-
+   
    @Inject
    private LaskutusAdmin laskutusAdmin;
 
@@ -206,7 +208,7 @@ public class LaskutusTest extends Perustesti
       lasku.lis‰‰Rivi(rivi);
       laskutusAdmin.setLasku(lasku);
       laskutusAdmin.getLaskuRSM().get(lasku).setSelected(true);
-      laskutusAdmin.tallennaRivi(null);
+      laskutusAdmin.tallennaRivi(new RowEditEvent(new DataTable(), rivi));
       entityManager.clear();
       lasku = entityManager.find(Lasku.class, 1);
       Assert.assertEquals(1, lasku.getLaskurivej‰());
@@ -299,7 +301,7 @@ public class LaskutusTest extends Perustesti
       rivi.setInfotieto("infotieto");
       lasku.lis‰‰Rivi(rivi);
       laskutusAdmin.getLaskuRSM().get(lasku).setSelected(true);
-      laskutusAdmin.tallennaRivi(null);
+      laskutusAdmin.tallennaRivi(new RowEditEvent(new DataTable(), rivi));
       entityManager.clear();
       lasku = entityManager.createQuery("select l from Lasku l", Lasku.class).getResultList().iterator().next();
       Assert.assertEquals(4, lasku.getLaskurivej‰());

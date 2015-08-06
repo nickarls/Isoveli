@@ -48,7 +48,7 @@ public class TreeniTest extends Perustesti
       treeni.setNimi("Treeni");
       SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
       treeni.setAlkaa(sdf.parse("16:00"));
-      treeni.setP‰‰ttyy(sdf.parse("16:00"));
+      treeni.setP‰‰ttyy(sdf.parse("16:01"));
       treeni.setP‰iv‰(Viikonp‰iv‰.Maanantai);
       treeni.setTyyppi(treenityyppi);
       perustietoAdmin.setTreeni(treeni);

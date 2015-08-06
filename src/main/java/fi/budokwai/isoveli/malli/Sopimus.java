@@ -47,8 +47,8 @@ import fi.budokwai.isoveli.util.DateUtil;
       @NamedQuery(name = "laskuttamattomat_kymppikerrat", query = ""
          + "select s "
          + "from Sopimus s, Harrastaja h "
-         + "where s.harrastaja = h and s.tyyppi.treenikertoja='K' and h.arkistoitu = 'E' and (" 
-         + "s.treenikertojaJ‰ljell‰ = 0 or (not exists (select sl from Sopimuslasku sl where sl.sopimus=s)))"
+         + "where s.harrastaja = h and s.tyyppi.treenikertoja='K' and h.arkistoitu = 'E' and " 
+         + "s.treenikertojaJ‰ljell‰ = 0"
          ),
       @NamedQuery(name="sopimukset_tyypill‰", query="select s from Sopimus s where s.tyyppi=:tyyppi")
       })
@@ -393,7 +393,7 @@ public class Sopimus
       {
          return DateUtil.LocalDate2Date(DateUtil.kuukausienP‰‰st‰(alkaa, tyyppi.getOletusKuukaudetVoimassa()));
       }
-      while (loppu.isBefore(DateUtil.t‰n‰‰n()) || DateUtil.samat(alkaa, loppu))
+      while (loppu.isBefore(DateUtil.t‰n‰‰n().plusDays(1)) )
       {
          loppu = loppu.plus(maksuv‰li, ChronoUnit.MONTHS);
       }

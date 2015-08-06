@@ -6,21 +6,17 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAmount;
-import java.time.temporal.TemporalUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -96,7 +92,8 @@ public class LaskutusAdmin extends Perustoiminnallisuus
          sb.append(String.format("%s: %s\n", sdf.format(lr.getLasku().getEr‰p‰iv‰()), nf.format(lr.getRivihinta())));
       });
       sb.append("------------\n");
-      LocalDate seuraava = sopimus.getViimeksiLaskutettu() == null ? DateUtil.t‰n‰‰n() : DateUtil.Date2LocalDate(sopimus.getViimeksiLaskutettu());
+      LocalDate seuraava = sopimus.getViimeksiLaskutettu() == null ? DateUtil.t‰n‰‰n()
+         : DateUtil.Date2LocalDate(sopimus.getViimeksiLaskutettu());
       if (seuraava == null)
       {
          seuraava = DateUtil.t‰n‰‰n();

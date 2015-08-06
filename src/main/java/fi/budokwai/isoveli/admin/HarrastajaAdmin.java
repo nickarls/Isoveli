@@ -282,6 +282,8 @@ public class HarrastajaAdmin extends Perustoiminnallisuus
    public void poistaHarrastaja()
    {
       harrastaja.poistotarkistus();
+      tarkistaVyökoetilausuuskäyttö();
+      tarkistaTreenisessiokäyttö();
       String poistetunNimi = harrastaja.getNimi();
       harrastaja = entityManager.merge(harrastaja);
       entityManager.remove(harrastaja);

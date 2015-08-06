@@ -256,7 +256,7 @@ public class DateUtil
 
    private static boolean onkoAiemmin(LocalDate alkaa, LocalDate loppuu)
    {
-      return ChronoUnit.DAYS.between(alkaa, loppuu) >= 0;
+      return ChronoUnit.DAYS.between(alkaa, loppuu) > 0;
    }
 
    public static boolean onkoAiemmin(Date alkaa, LocalDate loppuu)
@@ -276,7 +276,7 @@ public class DateUtil
 
    private static boolean onkoAikaAikaisemmin(LocalDateTime alkaa, LocalDateTime loppuu)
    {
-      return ChronoUnit.MINUTES.between(alkaa, loppuu) >= 0;
+      return ChronoUnit.MINUTES.between(alkaa, loppuu) > 0;
    }
 
    public static String p‰iv‰Tekstiksi(Date p‰iv‰)

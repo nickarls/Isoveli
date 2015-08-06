@@ -14,6 +14,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.persistence.ApplyScriptBefore;
 import org.jboss.arquillian.persistence.Cleanup;
 import org.jboss.arquillian.persistence.TestExecutionPhase;
+import org.jboss.arquillian.transaction.api.annotation.Transactional;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +30,7 @@ import fi.budokwai.isoveli.malli.Sopimus;
 import fi.budokwai.isoveli.malli.Sopimustyyppi;
 import fi.budokwai.isoveli.malli.Sukupuoli;
 import fi.budokwai.isoveli.malli.Vyöarvo;
+import fi.budokwai.isoveli.malli.Vyökoetilaisuus;
 import fi.budokwai.isoveli.malli.Yhteystieto;
 import fi.budokwai.isoveli.test.Perustesti;
 import fi.budokwai.isoveli.util.DateUtil;
@@ -88,6 +90,7 @@ public class HarrastajaTest extends Perustesti
    @ApplyScriptBefore(
    { "cleanup.sql", "seed.sql" })
    @Cleanup(phase = TestExecutionPhase.NONE)
+   @Transactional
    public void testTilapaiskayttajallaKoesopimus()
    {
       harrastajaAdmin.lisääHarrastaja();

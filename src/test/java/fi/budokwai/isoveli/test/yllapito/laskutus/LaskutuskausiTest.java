@@ -2,6 +2,8 @@ package fi.budokwai.isoveli.test.yllapito.laskutus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,15 +18,28 @@ import fi.budokwai.isoveli.util.DateUtil;
 
 public class LaskutuskausiTest extends Perustesti
 {
+   public static class Nyt
+   {
+      public static LocalDate localDate = DateUtil.t‰n‰‰n();
+      public static Date date = DateUtil.t‰n‰‰nDate();
+      public static String string = DateUtil.p‰iv‰Tekstiksi(date);
+
+      public static String kuukausienP‰‰st‰(long kk)
+      {
+         return DateUtil.p‰iv‰Tekstiksi(DateUtil.LocalDate2Date(localDate.plusMonths(kk)));
+      }
+   }
+
    @Test
-   public void testTuoreSopimus() {
-      Sopimus sopimus = teeHarjoittelusopimus(new Harrastaja(), "23.02.2015", 3);
+   public void testTuoreSopimus()
+   {
+      Sopimus sopimus = teeHarjoittelusopimus(new Harrastaja(), Nyt.string, 3);
       Laskutuskausi kausi = sopimus.getLaskutuskausi();
-      Assert.assertEquals("23.02.2015", DateUtil.formatoi(kausi.getKausi().getAlkaa()));
-      Assert.assertEquals("23.05.2015", DateUtil.formatoi(kausi.getKausi().getP‰‰ttyy()));
+      Assert.assertEquals(Nyt.string, DateUtil.formatoi(kausi.getKausi().getAlkaa()));
+      Assert.assertEquals(Nyt.kuukausienP‰‰st‰(3), DateUtil.formatoi(kausi.getKausi().getP‰‰ttyy()));
       Assert.assertEquals(3, kausi.getKausikuukausia());
    }
-   
+
    @Test
    public void testYhdenVuodenJ‰senmaksu()
    {
@@ -48,31 +63,31 @@ public class LaskutuskausiTest extends Perustesti
    @Test
    public void test1kkHarjoitusmaksu()
    {
-      Sopimus sopimus = teeHarjoittelusopimus(new Harrastaja(), "02.02.2015", 1);
+      Sopimus sopimus = teeHarjoittelusopimus(new Harrastaja(), Nyt.string, 1);
       Laskutuskausi kausi = sopimus.getLaskutuskausi();
-      Assert.assertEquals("02.02.2015", DateUtil.formatoi(kausi.getKausi().getAlkaa()));
-      Assert.assertEquals("02.04.2015", DateUtil.formatoi(kausi.getKausi().getP‰‰ttyy()));
-      Assert.assertEquals(2, kausi.getKausikuukausia());
+      Assert.assertEquals(Nyt.string, DateUtil.formatoi(kausi.getKausi().getAlkaa()));
+      Assert.assertEquals(Nyt.kuukausienP‰‰st‰(1), DateUtil.formatoi(kausi.getKausi().getP‰‰ttyy()));
+      Assert.assertEquals(1, kausi.getKausikuukausia());
    }
 
    @Test
    public void test6kkHarjoitusmaksu()
    {
-      Sopimus sopimus = teeHarjoittelusopimus(new Harrastaja(), "02.01.2015", 6);
+      Sopimus sopimus = teeHarjoittelusopimus(new Harrastaja(), Nyt.string, 6);
       Laskutuskausi kausi = sopimus.getLaskutuskausi();
-      Assert.assertEquals("02.01.2015", DateUtil.formatoi(kausi.getKausi().getAlkaa()));
-      Assert.assertEquals("02.07.2015", DateUtil.formatoi(kausi.getKausi().getP‰‰ttyy()));
+      Assert.assertEquals(Nyt.string, DateUtil.formatoi(kausi.getKausi().getAlkaa()));
+      Assert.assertEquals(Nyt.kuukausienP‰‰st‰(6), DateUtil.formatoi(kausi.getKausi().getP‰‰ttyy()));
       Assert.assertEquals(6, kausi.getKausikuukausia());
    }
 
    @Test
    public void test6kkVanhaHarjoitusmaksu()
    {
-      Sopimus sopimus = teeHarjoittelusopimus(new Harrastaja(), "02.01.2014", 6);
+      Sopimus sopimus = teeHarjoittelusopimus(new Harrastaja(), Nyt.kuukausienP‰‰st‰(-6), 6);
       Laskutuskausi kausi = sopimus.getLaskutuskausi();
-      Assert.assertEquals("02.01.2014", DateUtil.formatoi(kausi.getKausi().getAlkaa()));
-      Assert.assertEquals("02.07.2015", DateUtil.formatoi(kausi.getKausi().getP‰‰ttyy()));
-      Assert.assertEquals(18, kausi.getKausikuukausia());
+      Assert.assertEquals(DateUtil.p‰iv‰Tekstiksi(DateUtil.LocalDate2Date(Nyt.localDate.minusMonths(6))), DateUtil.formatoi(kausi.getKausi().getAlkaa()));
+      Assert.assertEquals(DateUtil.p‰iv‰Tekstiksi(DateUtil.LocalDate2Date(Nyt.localDate.plusMonths(6))), DateUtil.formatoi(kausi.getKausi().getP‰‰ttyy()));
+      Assert.assertEquals(12, kausi.getKausikuukausia());
    }
 
    @Test
@@ -133,12 +148,24 @@ public class LaskutuskausiTest extends Perustesti
    @Test
    public void testTaukoEiOsu()
    {
+      LocalDate nyt = DateUtil.t‰n‰‰n();
       Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "01.01.2015");
-      teeHarjoittelusopimus(harrastaja, "01.01.2015", 6);
-      harrastaja.getTauko().setAlkaa(DateUtil.LocalDate2Date(DateUtil.silloin("01.04.2016")));
-      harrastaja.getTauko().setP‰‰ttyy(DateUtil.LocalDate2Date(DateUtil.silloin("01.05.2016")));
+      teeHarjoittelusopimus(harrastaja, Nyt.string, 6);
+      harrastaja.getTauko().setAlkaa(DateUtil.LocalDate2Date(nyt.plusMonths(8)));
+      harrastaja.getTauko().setP‰‰ttyy(DateUtil.LocalDate2Date(nyt.plusMonths(9)));
       Laskutuskausi kausi = harrastaja.getSopimukset().iterator().next().getLaskutuskausi();
-      Assert.assertEquals("01.01.2015-01.07.2015", kausi.getKausi().getKuvaus());
+      Assert.assertEquals(String.format("%s-%s", Nyt.string, Nyt.kuukausienP‰‰st‰(6)), kausi.getKausi().getKuvaus());
+      Assert.assertEquals("", kausi.getTauko().getKuvaus());
+      Assert.assertEquals(0, kausi.getTaukop‰ivi‰());
+   }
+
+   @Test
+   public void testEiTaukoa()
+   {
+      Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "01.01.2015");
+      teeHarjoittelusopimus(harrastaja, Nyt.string, 6);
+      Laskutuskausi kausi = harrastaja.getSopimukset().iterator().next().getLaskutuskausi();
+      Assert.assertEquals(String.format("%s-%s", Nyt.string, Nyt.kuukausienP‰‰st‰(6)), kausi.getKausi().getKuvaus());
       Assert.assertEquals("", kausi.getTauko().getKuvaus());
       Assert.assertEquals(0, kausi.getTaukop‰ivi‰());
    }
@@ -146,51 +173,84 @@ public class LaskutuskausiTest extends Perustesti
    @Test
    public void testTaukoOsuu()
    {
+      LocalDate nyt = DateUtil.t‰n‰‰n();
       Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "01.01.2015");
-      teeHarjoittelusopimus(harrastaja, "01.01.2015", 6);
-      harrastaja.getTauko().setAlkaa(DateUtil.LocalDate2Date(DateUtil.silloin("01.04.2015")));
-      harrastaja.getTauko().setP‰‰ttyy(DateUtil.LocalDate2Date(DateUtil.silloin("01.05.2015")));
+      teeHarjoittelusopimus(harrastaja, Nyt.string, 6);
+      harrastaja.getTauko().setAlkaa(DateUtil.LocalDate2Date(nyt.plusMonths(1)));
+      harrastaja.getTauko().setP‰‰ttyy(DateUtil.LocalDate2Date(nyt.plusMonths(2)));
+      long taukoa = DateUtil.p‰ivi‰V‰liss‰(harrastaja.getTauko().getAlkaa(), harrastaja.getTauko().getP‰‰ttyy());
       Laskutuskausi kausi = harrastaja.getSopimukset().iterator().next().getLaskutuskausi();
       Assert.assertEquals(30, kausi.getTaukop‰ivi‰());
-      Assert.assertEquals("01.01.2015-01.07.2015", kausi.getKausi().getKuvaus());
-      Assert.assertEquals("01.04.2015-01.05.2015", kausi.getTauko().getKuvaus());
+      Assert.assertEquals(String.format("%s-%s", Nyt.string, Nyt.kuukausienP‰‰st‰(6)), kausi.getKausi().getKuvaus());
+      Assert.assertEquals(String.format("%s-%s", Nyt.kuukausienP‰‰st‰(1), Nyt.kuukausienP‰‰st‰(2)),
+         kausi.getTauko().getKuvaus());
+      Assert.assertEquals(taukoa, kausi.getTaukop‰ivi‰());
    }
-   
+
    @Test
-   public void testUmpeutuvaSopimus() {
-      Sopimus sopimus = teeHarjoittelusopimus(new Harrastaja(), "02.01.2015", 6);
+   public void testUmpeutuvaSopimusEiUmpeudu()
+   {
+      Sopimus sopimus = teeHarjoittelusopimus(new Harrastaja(), Nyt.string, 6);
       sopimus.setUmpeutuu(DateUtil.silloinD("01.01.2020"));
       Laskutuskausi kausi = sopimus.getLaskutuskausi();
-      Assert.assertEquals("02.01.2015", DateUtil.formatoi(kausi.getKausi().getAlkaa()));
-      Assert.assertEquals("02.07.2015", DateUtil.formatoi(kausi.getKausi().getP‰‰ttyy()));
+      Assert.assertEquals(Nyt.string, DateUtil.formatoi(kausi.getKausi().getAlkaa()));
+      Assert.assertEquals(Nyt.kuukausienP‰‰st‰(6), DateUtil.formatoi(kausi.getKausi().getP‰‰ttyy()));
       Assert.assertEquals(6, kausi.getKausikuukausia());
-     
+   }
+
+   @Test
+   public void testUmpeutuvaSopimusUmpeutuu()
+   {
+      Sopimus sopimus = teeHarjoittelusopimus(new Harrastaja(), Nyt.string, 6);
+      sopimus.setUmpeutuu(DateUtil.kuukausienP‰‰st‰(2));
+      Laskutuskausi kausi = sopimus.getLaskutuskausi();
+      Assert.assertEquals(Nyt.string, DateUtil.formatoi(kausi.getKausi().getAlkaa()));
+      Assert.assertEquals(Nyt.kuukausienP‰‰st‰(2), DateUtil.formatoi(kausi.getKausi().getP‰‰ttyy()));
+      Assert.assertEquals(2, kausi.getKausikuukausia());
    }
 
    @Test
    public void testTaukoAlkuOsuu()
    {
       Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "01.01.2015");
-      teeHarjoittelusopimus(harrastaja, "01.01.2015", 6);
-      harrastaja.getTauko().setAlkaa(DateUtil.LocalDate2Date(DateUtil.silloin("30.06.2015")));
-      harrastaja.getTauko().setP‰‰ttyy(DateUtil.LocalDate2Date(DateUtil.silloin("30.08.2015")));
+      teeHarjoittelusopimus(harrastaja, Nyt.string, 6);
+
+      LocalDate taukoAlkaa = Nyt.localDate.minusMonths(1);
+      LocalDate taukoP‰‰ttyy = Nyt.localDate.plusMonths(1);
+      long taukoa = DateUtil.p‰ivi‰V‰liss‰(DateUtil.LocalDate2Date(taukoAlkaa), DateUtil.LocalDate2Date(taukoP‰‰ttyy));
+
+      harrastaja.getTauko().setAlkaa(DateUtil.LocalDate2Date(taukoAlkaa));
+      harrastaja.getTauko().setP‰‰ttyy(DateUtil.LocalDate2Date(taukoP‰‰ttyy));
       Laskutuskausi kausi = harrastaja.getSopimukset().iterator().next().getLaskutuskausi();
-      Assert.assertEquals("01.01.2015-01.07.2015", kausi.getKausi().getKuvaus());
-      Assert.assertEquals("30.06.2015-01.07.2015", kausi.getTauko().getKuvaus());
-      Assert.assertEquals(1, kausi.getTaukop‰ivi‰());
+      Assert.assertEquals(String.format("%s-%s", Nyt.string, Nyt.kuukausienP‰‰st‰(6)), kausi.getKausi().getKuvaus());
+      Assert.assertEquals(
+         String.format("%s-%s", Nyt.string, DateUtil.p‰iv‰Tekstiksi(DateUtil.LocalDate2Date(taukoP‰‰ttyy))),
+         kausi.getTauko().getKuvaus());
+      Assert.assertEquals(taukoa - DateUtil.p‰ivi‰V‰liss‰(DateUtil.LocalDate2Date(taukoAlkaa), Nyt.date),
+         kausi.getTaukop‰ivi‰());
    }
 
    @Test
    public void testTaukoLoppuOsuu()
    {
       Harrastaja harrastaja = teeHarrastaja("Nicklas Karlsson", "01.01.2015");
-      teeHarjoittelusopimus(harrastaja, "01.01.2015", 6);
-      harrastaja.getTauko().setAlkaa(DateUtil.LocalDate2Date(DateUtil.silloin("01.12.2014")));
-      harrastaja.getTauko().setP‰‰ttyy(DateUtil.LocalDate2Date(DateUtil.silloin("02.01.2015")));
+      teeHarjoittelusopimus(harrastaja, Nyt.string, 6);
+
+      LocalDate taukoAlkaa = Nyt.localDate.plusMonths(5);
+      LocalDate taukoP‰‰ttyy = Nyt.localDate.plusMonths(7);
+      long taukoa = DateUtil.p‰ivi‰V‰liss‰(DateUtil.LocalDate2Date(taukoAlkaa), DateUtil.LocalDate2Date(taukoP‰‰ttyy));
+
+      harrastaja.getTauko().setAlkaa(DateUtil.LocalDate2Date(taukoAlkaa));
+      harrastaja.getTauko().setP‰‰ttyy(DateUtil.LocalDate2Date(taukoP‰‰ttyy));
       Laskutuskausi kausi = harrastaja.getSopimukset().iterator().next().getLaskutuskausi();
-      Assert.assertEquals(1, kausi.getTaukop‰ivi‰());
-      Assert.assertEquals("01.01.2015-01.07.2015", kausi.getKausi().getKuvaus());
-      Assert.assertEquals("01.01.2015-02.01.2015", kausi.getTauko().getKuvaus());
+      Assert.assertEquals(String.format("%s-%s", Nyt.string, Nyt.kuukausienP‰‰st‰(6)), kausi.getKausi().getKuvaus());
+      Assert.assertEquals(
+         String.format("%s-%s", DateUtil.p‰iv‰Tekstiksi(DateUtil.LocalDate2Date(Nyt.localDate.plusMonths(5))),
+            DateUtil.p‰iv‰Tekstiksi(DateUtil.LocalDate2Date(Nyt.localDate.plusMonths(6)))),
+         kausi.getTauko().getKuvaus());
+      Assert.assertEquals(taukoa - DateUtil.p‰ivi‰V‰liss‰(DateUtil.LocalDate2Date(Nyt.localDate.plusMonths(6)),
+         DateUtil.LocalDate2Date(taukoP‰‰ttyy)), kausi.getTaukop‰ivi‰());
+
    }
 
 }

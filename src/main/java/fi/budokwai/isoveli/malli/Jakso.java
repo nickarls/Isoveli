@@ -1,5 +1,7 @@
 package fi.budokwai.isoveli.malli;
 
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -111,5 +113,14 @@ public class Jakso
    public boolean isRajatRistiss‰()
    {
       return alkaa != null && p‰‰ttyy != null && !DateUtil.onkoAiemmin(alkaa, p‰‰ttyy);
+   }
+
+   @Override
+   public String toString()
+   {
+      DateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+      String alkaaStr = alkaa == null ? "" : sdf.format(alkaa);
+      String p‰‰ttyyStr = p‰‰ttyy == null ? "" : sdf.format(p‰‰ttyy);
+      return (alkaaStr == null && p‰‰ttyyStr == null) ? "" : String.format("%s -> %s", alkaaStr, p‰‰ttyyStr);
    }
 }
